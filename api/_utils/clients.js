@@ -1,0 +1,58 @@
+import { createClient } from '@supabase/supabase-js';
+import { Resend } from 'resend';
+
+// Initialize Supabase Client
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+// Check if the keys are valid (and not placeholder templates)
+const isSupabaseValid = supabaseUrl && supabaseServiceKey && supabaseServiceKey.startsWith('eyJ');
+export const supabase = isSupabaseValid 
+  ? createClient(supabaseUrl, supabaseServiceKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      }
+    })
+  : null;
+
+// Initialize Resend Client (Resend keys usually start with 're_')
+const resendApiKey = process.env.RESEND_API_KEY;
+const isResendValid = resendApiKey && resendApiKey.startsWith('re_');
+export const resend = isResendValid ? new Resend(resendApiKey) : null;
+
+// Helper to check authorization for internal calls (like welcome email called from subscribe)
+export function authorizeInternal(req) {
+  const authHeader = req.headers.authorization;
+  const secretKey = process.env.API_SECRET_KEY;
+  if (!secretKey) return true; // Fallback if not configured in dev
+  return authHeader === `Bearer ${secretKey}`;
+}
+
+// Helper to check authorization for Cron jobs
+export function authorizeCron(req) {
+  const authHeader = req.headers.authorization;
+  const cronSecret = process.env.CRON_SECRET;
+  
+  // Vercel Crons pass a bearer token equal to CRON_SECRET, or x-vercel-cron header
+  if (req.headers['x-vercel-cron'] === '1') {
+    return true;
+  }
+  if (!cronSecret) return true; // Fallback if not configured in dev
+  return authHeader === `Bearer ${cronSecret}`;
+}
+
+// Helper to get sender email
+export function getFromEmail() {
+  return process.env.RESEND_FROM_EMAIL || 'Casa Loy <onboarding@resend.dev>';
+}
+
+// Helper to get site URL for absolute paths
+export function getSiteUrl(req) {
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  const host = req.headers.host || 'localhost:5173';
+  const protocol = req.headers['x-forwarded-proto'] || 'http';
+  return `${protocol}://${host}`;
+}

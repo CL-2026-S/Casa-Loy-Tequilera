@@ -1,0 +1,14 @@
+{
+  "crons": [
+    {
+      "path": "/api/email/monthly-newsletter",
+      "schedule": "0 0 1 * *"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

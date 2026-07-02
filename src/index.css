@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface-container-high: #ebe8e2;
+  --color-tertiary-container: #596b69;
+  --color-primary-container: #9a5625;
+  --color-on-primary: #ffffff;
+  --color-primary: #7d3f0f;
+  --color-outline: #867369;
+  --color-on-secondary-fixed: #351000;
+  --color-on-surface-variant: #53443a;
+  --color-on-surface: #1c1c18;
+  --color-inverse-on-surface: #f3f0ea;
+  --color-on-primary-fixed: #311300;
+  --color-on-background: #1c1c18;
+  --color-surface-dim: #dcdad4;
+  --color-tertiary: #415351;
+  --color-error: #ba1a1a;
+  --color-surface-container-low: #f6f3ed;
+  --color-tertiary-fixed: #d3e6e3;
+  --color-surface-tint: #8f4d1d;
+  --color-primary-fixed: #ffdbc7;
+  --color-surface-bright: #fcf9f3;
+  --color-secondary: #914b27;
+  --color-on-tertiary-fixed: #0d1e1d;
+  --color-on-tertiary-container: #d8ebe8;
+  --color-on-primary-container: #ffe1d1;
+  --color-surface: #fcf9f3;
+  --color-secondary-fixed-dim: #ffb694;
+  --color-on-tertiary-fixed-variant: #394a48;
+  --color-on-primary-fixed-variant: #723606;
+  --color-outline-variant: #d9c2b6;
+  --color-on-secondary-container: #773714;
+  --color-error-container: #ffdad6;
+  --color-surface-container: #f0eee8;
+  --color-surface-container-highest: #e5e2dc;
+  --color-on-error: #ffffff;
+  --color-background: #fcf9f3;
+  --color-on-error-container: #93000a;
+  --color-tertiary-fixed-dim: #b7cac7;
+  --color-on-tertiary: #ffffff;
+  --color-surface-variant: #e5e2dc;
+  --color-inverse-surface: #31312d;
+  --color-on-secondary: #ffffff;
+  --color-secondary-fixed: #ffdbcc;
+  --color-secondary-container: #fda377;
+  --color-on-secondary-fixed-variant: #743412;
+  --color-primary-fixed-dim: #ffb689;
+  --color-surface-container-lowest: #ffffff;
+  --color-inverse-primary: #ffb689;
+  --color-canvas-ivory: #F6F2EA;
+  --color-terroir-clay: #8C4723;
+  --color-volcanic-stone: #EDE7DE;
+
+  --radius-default: 0.125rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.5rem;
+  --radius-full: 9999px;
+
+  --spacing-gutter: 32px;
+  --spacing-container-max: 1280px;
+  --spacing-margin-mobile: 24px;
+  --spacing-margin-desktop: 64px;
+  --spacing-section-gap: 200px;
+
+  --font-headline-md: "EB Garamond", serif;
+  --font-navigation: "Montserrat", sans-serif;
+  --font-label-caps: "Montserrat", sans-serif;
+  --font-display-hero: "EB Garamond", serif;
+  --font-headline-lg: "EB Garamond", serif;
+  --font-body-md: "Montserrat", sans-serif;
+  --font-body-lg: "Montserrat", sans-serif;
+  --font-headline-lg-mobile: "EB Garamond", serif;
+
+  --animate-fade-in-slide: fade-in-slide 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+
+  @keyframes fade-in-slide {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@utility material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@utility glass-nav {
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  background-color: rgba(252, 249, 243, 0.85);
+}
+
+@utility hero-overlay {
+  background: linear-gradient(to bottom, rgba(28, 28, 24, 0.3) 0%, rgba(28, 28, 24, 0.1) 50%, rgba(28, 28, 24, 0.5) 100%);
+}
+
+@utility vertical-rl {
+  writing-mode: vertical-rl;
+}
+
+@utility transition-organic {
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@utility premium-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50;
+  box-sizing: border-box;
+  transition: height 0.5s cubic-bezier(0.22, 1, 0.36, 1), 
+              background-color 0.5s cubic-bezier(0.22, 1, 0.36, 1), 
+              background-image 0.5s cubic-bezier(0.22, 1, 0.36, 1), 
+              box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+              backdrop-filter 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+              -webkit-backdrop-filter 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  -webkit-backdrop-filter: blur(0px);
+  backdrop-filter: blur(0px);
+}
+
+@utility header-scrolled {
+  height: 72px;
+  background-color: rgba(252, 249, 243, 0.85);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 4px 20px rgba(28, 28, 24, 0.02), 0 1px 0 rgba(140, 71, 35, 0.08);
+}
+
+@utility header-unscrolled-dark {
+  height: 80px;
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0) 100%);
+  background-color: transparent;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0);
+}
+
+@utility header-unscrolled-light {
+  height: 80px;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: 0 1px 0 rgba(28, 28, 24, 0);
+}
