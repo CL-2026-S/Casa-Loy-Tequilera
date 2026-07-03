@@ -88,6 +88,8 @@ export default function App() {
   if (!hasBypass) {
     return (
       <TeaserPage
+        lang={lang}
+        setLang={setLang}
         onUnlock={() => {
           localStorage.setItem("casa_loy_preview_bypass", "true");
           setHasBypass(true);

@@ -1,11 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function TeaserPage({ onUnlock }) {
+const localTranslations = {
+  es: {
+    phrase: "Algo extraordinario está por revelarse.",
+    comingSoon: "Casa Loy Tequilera • Próximamente",
+    warning: "EVITA EL EXCESO",
+    accessCode: "Código de acceso",
+    enterCode: "Ingrese el código de acceso para desbloquear el sitio.",
+    enter: "Acceder",
+    error: "Código incorrecto",
+    testMode: "Modo de Pruebas"
+  },
+  en: {
+    phrase: "Something extraordinary is about to be revealed.",
+    comingSoon: "Casa Loy Tequilera • Coming Soon",
+    warning: "AVOID EXCESS",
+    accessCode: "Access code",
+    enterCode: "Enter the access code to unlock the site.",
+    enter: "Access",
+    error: "Incorrect code",
+    testMode: "Test Mode"
+  }
+};
+
+export default function TeaserPage({ onUnlock, lang = "es", setLang }) {
   const [clickCount, setClickCount] = useState(0);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const t = localTranslations[lang];
 
   // Auto-reset click count if inactive for 3 seconds
   useEffect(() => {
@@ -31,7 +56,7 @@ export default function TeaserPage({ onUnlock }) {
     if (cleanPassword === "casaloy2026" || cleanPassword === "admin" || cleanPassword === "preview") {
       onUnlock();
     } else {
-      setError("Código incorrecto");
+      setError(t.error);
       // Clear error after 2 seconds
       setTimeout(() => setError(""), 2000);
     }
@@ -41,6 +66,29 @@ export default function TeaserPage({ onUnlock }) {
     <div 
       className="relative flex flex-col items-center justify-center min-h-screen w-full px-6 text-[#1c1c18] overflow-hidden select-none bg-[#fcf9f3]"
     >
+      {/* Language Selector in Top Right Corner */}
+      <div className="absolute top-6 right-6 sm:top-8 sm:right-8 z-20 flex items-center gap-3 text-[10.5px] tracking-[0.2em] font-semibold text-[#1c1c18]/60 font-sans">
+        <button
+          type="button"
+          onClick={() => setLang("es")}
+          className={`transition-colors duration-300 cursor-pointer ${
+            lang === "es" ? "text-[#8C4723] font-bold" : "hover:text-[#1c1c18]"
+          }`}
+        >
+          ES
+        </button>
+        <span className="text-[#1c1c18]/25 font-light">|</span>
+        <button
+          type="button"
+          onClick={() => setLang("en")}
+          className={`transition-colors duration-300 cursor-pointer ${
+            lang === "en" ? "text-[#8C4723] font-bold" : "hover:text-[#1c1c18]"
+          }`}
+        >
+          EN
+        </button>
+      </div>
+
       {/* Background Image Watermark (Quiet Luxury & Agave) */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-[0.25] mix-blend-luminosity bg-cover bg-center bg-no-repeat transition-opacity duration-1000"
@@ -100,10 +148,10 @@ export default function TeaserPage({ onUnlock }) {
             className="text-2xl sm:text-3xl md:text-4xl tracking-[0.06em] font-light text-[#1c1c18] font-serif italic leading-relaxed"
             style={{ fontFamily: "'EB Garamond', serif" }}
           >
-            Algo extraordinario está por revelarse.
+            {t.phrase}
           </h1>
           <p className="text-[10px] sm:text-xs tracking-[0.35em] uppercase text-[#1c1c18]/50 font-sans mt-4">
-            Casa Loy Tequilera • Próximamente
+            {t.comingSoon}
           </p>
         </motion.div>
       </div>
@@ -142,10 +190,10 @@ export default function TeaserPage({ onUnlock }) {
                   <span className="material-symbols-outlined text-2xl">lock</span>
                 </div>
                 <h3 className="text-lg font-serif tracking-wider text-[#1c1c18]">
-                  Modo de Pruebas
+                  {t.testMode}
                 </h3>
                 <p className="text-xs text-[#1c1c18]/50 mt-1 font-sans">
-                  Ingrese el código de acceso para desbloquear el sitio.
+                  {t.enterCode}
                 </p>
               </div>
 
@@ -155,7 +203,7 @@ export default function TeaserPage({ onUnlock }) {
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Código de acceso"
+                    placeholder={t.accessCode}
                     className="w-full bg-[#F6F2EA] border border-[#8C4723]/20 rounded px-4 py-2.5 text-center text-sm text-[#1c1c18] placeholder-[#1c1c18]/30 focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] transition-all duration-300 font-sans"
                     autoFocus
                   />
@@ -178,7 +226,7 @@ export default function TeaserPage({ onUnlock }) {
                   type="submit"
                   className="w-full bg-[#8C4723] hover:bg-[#723618] active:bg-[#5a2a12] text-white rounded py-2.5 text-xs font-bold tracking-[0.2em] uppercase transition-all duration-300 cursor-pointer shadow-[0_4px_12px_rgba(140,71,35,0.12)] focus:outline-none"
                 >
-                  Acceder
+                  {t.enter}
                 </button>
               </form>
             </motion.div>
@@ -186,9 +234,9 @@ export default function TeaserPage({ onUnlock }) {
         )}
       </AnimatePresence>
 
-      {/* Tiny Admin Indicator at the bottom, very subtle and blend-in */}
-      <div className="absolute bottom-4 text-[9px] tracking-[0.3em] uppercase text-[#1c1c18]/25 select-none font-sans">
-        Casa Loy Tequilera v1.0
+      {/* Legal Health Warning (Ad-hoc with Silent Luxury & Agave) */}
+      <div className="absolute bottom-6 text-[10px] tracking-[0.25em] uppercase text-[#1c1c18]/65 select-none font-semibold font-sans">
+        {t.warning}
       </div>
     </div>
   );
