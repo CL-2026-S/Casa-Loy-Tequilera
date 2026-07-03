@@ -85,6 +85,23 @@ export default function App() {
     }
   }, []);
 
+  useEffect(() => {
+    if (!hasBypass) return;
+    window.scrollTo(0, 0);
+  }, [page, hasBypass]);
+
+  useEffect(() => {
+    if (!hasBypass) return;
+    if (page === "editorial-preview") {
+      window.history.pushState({}, "", "/editorial-preview");
+    } else if (page === "privacy") {
+      window.history.pushState({}, "", "/privacy-policy");
+    } else {
+      // Clear path back to root for other state-routed pages
+      window.history.pushState({}, "", "/");
+    }
+  }, [page, hasBypass]);
+
   if (!hasBypass) {
     return (
       <TeaserPage
@@ -97,21 +114,6 @@ export default function App() {
       />
     );
   }
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [page]);
-
-  useEffect(() => {
-    if (page === "editorial-preview") {
-      window.history.pushState({}, "", "/editorial-preview");
-    } else if (page === "privacy") {
-      window.history.pushState({}, "", "/privacy-policy");
-    } else {
-      // Clear path back to root for other state-routed pages
-      window.history.pushState({}, "", "/");
-    }
-  }, [page]);
 
   const renderPage = () => {
     switch (page) {
