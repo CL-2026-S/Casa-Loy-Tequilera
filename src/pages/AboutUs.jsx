@@ -11,49 +11,64 @@ const timeline = [
     year: "Décadas Posteriores",
     title: "El Campo Como Origen",
     desc: "La familia Loy desarrolla una sólida experiencia en el sector agropecuario, especialmente en la crianza y comercialización de ganado porcino. Esta etapa marca la base productiva y familiar de lo que más tarde se convertiría en un ecosistema empresarial.",
-    img: "/Campo de Agaves Casa Loy Tequilera 1.webp",
+    img: "/siembra-escritorio.webp",
+    imgMobile: "/siembra-movil.webp",
+    imgRetina: "/siembra-retina.webp",
   },
   {
     year: "1963",
     title: "IPASA Procesos Agropecuarios",
     desc: "Se vincula el origen de IPASA Procesos Agropecuarios, dedicada a la producción porcina en Ayotlán, Jalisco. Esta empresa representa una de las primeras raíces agropecuarias del grupo.",
-    img: "/IPASA.webp",
+    img: "/IPASA-escritorio.webp",
+    imgMobile: "/IPASA-movil.webp",
+    imgRetina: "/IPASA-retina.webp",
   },
   {
     year: "1985",
     title: "Grupo ORBE XXI",
     desc: "Con el paso de los años, la visión familiar toma forma empresarial. Nace Grupo ORBE XXI como una expresión de crecimiento, unión y continuidad; un ecosistema construido con paciencia, decisiones firmes y una mirada puesta en el futuro.",
-    img: "/ORBE XXI.webp",
+    img: "/ORBE-escritorio.webp",
+    imgMobile: "/ORBE-movil.webp",
+    imgRetina: "/ORBE-retina.webp",
   },
   {
     year: "1990",
     title: "OMEX Alimentaria",
     desc: "Don Manuel Loy Aceves impulsa OMEX Alimentaria, empresa enfocada en carnes frías, embutidos y productos alimenticios. Con ella, la familia avanza de la producción agropecuaria hacia la industrialización de alimentos.",
-    img: "/OMEX.webp",
+    img: "/OMEX-escritorio.webp",
+    imgMobile: "/OMEX-movil.webp",
+    imgRetina: "/OMEX-retina.webp",
   },
   {
     year: "1992",
     title: "Teknoagrox",
     desc: "Teknoagrox nace como respuesta al campo y sus necesidades. La innovación se une a la experiencia agrícola, fortaleciendo una relación profunda con la tierra y con quienes la trabajan todos los días.",
-    img: "/TeknoAgrox.webp",
+    img: "/tecno-escritorio.webp",
+    imgMobile: "/tecno-movil.webp",
+    imgRetina: "/tecno-retina.webp",
   },
   {
     year: "2004",
     title: "Nutriagaves",
     desc: "El agave comienza a ocupar un lugar esencial en esta historia. Nace Nutriagaves, dedicada a la producción de miel de agave y productos derivados, con presencia en mercados internacionales.",
-    img: "/Nutriagaves.webp",
+    img: "/nutriagaves-escritorio.webp",
+    imgMobile: "/nutriagaves-movil.webp",
+    imgRetina: "/nutriagaves-retina.webp",
   },
   {
     year: "2015",
     title: "PAOSA / Procesadora De Alimentos OMEX",
     desc: "Se consolida PAOSA, Procesadora de Alimentos OMEX, orientada a productos cárnicos de cerdo bajo procesos de calidad e inocuidad. Esta etapa fortalece la experiencia del grupo en transformación, producción y control alimentario.",
-    img: "/PAOSA.webp",
+    img: "/paosa-escritorio.webp",
+    imgMobile: "/paosa-movil.webp",
+    imgRetina: "/paosa-retina.webp",
   },
   {
     year: "2017",
     title: "Loydeal",
     desc: "Con Loydeal, la familia diversifica su presencia empresarial a través de una red de carnicerías, acercando sus productos al consumidor final y ampliando su vínculo con el mercado.",
-    img: "/Loydeal Carnicerias.webp",
+    img: "/loydeal-escritorio.webp",
+    imgRetina: "/loydeal-retina.webp",
   },
   {
     year: "2019",
@@ -77,7 +92,9 @@ const timeline = [
     year: "2022",
     title: "La Certificación Que Abre El Camino",
     desc: "Casa Loy Tequilera obtiene la certificación del Consejo Regulador del Tequila bajo la NOM 1633. Con este paso, queda autorizada para producir tequila oficialmente, marcando el inicio de una nueva historia dentro de la industria tequilera.",
-    img: "/Calidad Casa Loy Tequilera.webp",
+    img: "/nom-escritorio.webp",
+    imgMobile: "/nom-movil.webp",
+    imgRetina: "/nom-retina.webp",
   },
   {
     year: "2022",
@@ -90,6 +107,8 @@ const timeline = [
     title: "Nacen Las Marcas",
     desc: "Se lanzan Casa Loy Tequila, TADDEL y Tierra Zafiro. Cada marca representa una forma distinta de interpretar el agave, pero todas comparten un mismo origen: una familia que decidió transformar su historia en identidad.",
     img: "/Casa Loy Tequilera-escritorio.webp",
+    imgMobile: "/Casa Loy Tequilera-movil.webp",
+    imgRetina: "/Casa Loy Tequilera-retina.webp",
   },
   {
     year: "2023",
@@ -107,7 +126,9 @@ const timeline = [
     year: "2025",
     title: "El Regreso A La Tradición",
     desc: "La casa incorpora el método de producción con tahona, una técnica ancestral que exige paciencia, fuerza y respeto por el agave. Con este paso, Casa Loy no solo mira hacia el futuro: también vuelve al origen, a los procesos que honran el tiempo y la tradición.",
-    img: "/Tahona.webp",
+    img: "/molienda-escritorio.webp",
+    imgMobile: "/molienda-movil.webp",
+    imgRetina: "/molienda-retina.webp",
   },
   {
     year: "2025",
@@ -120,6 +141,8 @@ const timeline = [
     title: "Piedra Y Agave",
     desc: "Nace Casa Loy Piedra y Agave, la primera expresión elaborada con tahona. Un tequila que reúne tierra, legado, piedra y paciencia; una creación que no solo se bebe, también se cuenta, se recuerda y se comparte.",
     img: "/Banner Casa Loy Piedra y Agave-escritorio.webp",
+    imgMobile: "/Banner Casa Loy Piedra y Agave-movil.webp",
+    imgRetina: "/Banner Casa Loy Piedra y Agave-retina.webp",
   },
   {
     year: "2026",
@@ -201,11 +224,15 @@ function TimelinePairRow({ pair, pairIdx }) {
 
             {/* Photograph Frame */}
             <div className="relative flex-shrink-0 w-44 lg:w-48 xl:w-56 aspect-square overflow-hidden border border-[#8C4723]/15 bg-white/30 shadow-sm transition-all duration-700 group-hover/item:shadow-md rounded-full">
-              <img
-                alt={itemA.title}
-                className="w-full h-full object-cover grayscale opacity-95 transition-all duration-[1200ms] group-hover/item:grayscale-0 group-hover/item:scale-[1.05] group-hover/item:opacity-100 ease-out"
-                src={itemA.img}
-              />
+              <picture className="w-full h-full">
+                {itemA.imgMobile && <source media="(max-width: 768px)" srcSet={itemA.imgMobile} />}
+                <img
+                  alt={itemA.title}
+                  className="w-full h-full object-cover grayscale opacity-95 transition-all duration-[1200ms] group-hover/item:grayscale-0 group-hover/item:scale-[1.05] group-hover/item:opacity-100 ease-out"
+                  src={itemA.img}
+                  srcSet={itemA.imgRetina ? `${itemA.imgRetina} 2x` : undefined}
+                />
+              </picture>
             </div>
           </div>
         </div>
@@ -222,11 +249,15 @@ function TimelinePairRow({ pair, pairIdx }) {
             <div className="w-[calc(50%-2.5rem)] ml-auto mr-0 text-left flex flex-row items-center justify-start gap-6 pl-6">
               {/* Photograph Frame */}
               <div className="relative flex-shrink-0 w-44 lg:w-48 xl:w-56 aspect-square overflow-hidden border border-[#8C4723]/15 bg-white/30 shadow-sm transition-all duration-700 group-hover/item:shadow-md rounded-full">
-                <img
-                  alt={itemB.title}
-                  className="w-full h-full object-cover grayscale opacity-95 transition-all duration-[1200ms] group-hover/item:grayscale-0 group-hover/item:scale-[1.05] group-hover/item:opacity-100 ease-out"
-                  src={itemB.img}
-                />
+                <picture className="w-full h-full">
+                  {itemB.imgMobile && <source media="(max-width: 768px)" srcSet={itemB.imgMobile} />}
+                  <img
+                    alt={itemB.title}
+                    className="w-full h-full object-cover grayscale opacity-95 transition-all duration-[1200ms] group-hover/item:grayscale-0 group-hover/item:scale-[1.05] group-hover/item:opacity-100 ease-out"
+                    src={itemB.img}
+                    srcSet={itemB.imgRetina ? `${itemB.imgRetina} 2x` : undefined}
+                  />
+                </picture>
               </div>
 
               {/* Narrative Text */}
@@ -265,7 +296,15 @@ function TimelinePairRow({ pair, pairIdx }) {
             </p>
           </div>
           <div className="relative flex-shrink-0 w-full max-w-[200px] aspect-square overflow-hidden border border-[#8C4723]/15 bg-white/30 shadow-sm rounded-full">
-            <img alt={itemA.title} className="w-full h-full object-cover" src={itemA.img} />
+            <picture className="w-full h-full">
+              {itemA.imgMobile && <source media="(max-width: 768px)" srcSet={itemA.imgMobile} />}
+              <img
+                alt={itemA.title}
+                className="w-full h-full object-cover"
+                src={itemA.img}
+                srcSet={itemA.imgRetina ? `${itemA.imgRetina} 2x` : undefined}
+              />
+            </picture>
           </div>
         </div>
 
@@ -286,6 +325,19 @@ function TimelinePairRow({ pair, pairIdx }) {
                 {itemB.desc}
               </p>
             </div>
+            {itemB.img && (
+              <div className="relative flex-shrink-0 w-full max-w-[200px] aspect-square overflow-hidden border border-[#8C4723]/15 bg-white/30 shadow-sm rounded-full">
+                <picture className="w-full h-full">
+                  {itemB.imgMobile && <source media="(max-width: 768px)" srcSet={itemB.imgMobile} />}
+                  <img
+                    alt={itemB.title}
+                    className="w-full h-full object-cover"
+                    src={itemB.img}
+                    srcSet={itemB.imgRetina ? `${itemB.imgRetina} 2x` : undefined}
+                  />
+                </picture>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -304,49 +356,64 @@ const timelineEn = [
     year: "Subsequent Decades",
     title: "The Field as Origin",
     desc: "The Loy family develops solid experience in the agricultural sector, particularly in swine breeding and commercialization. This stage builds the family and productive foundation of what would later become a business ecosystem.",
-    img: "/Campo de Agaves Casa Loy Tequilera 1.webp",
+    img: "/siembra-escritorio.webp",
+    imgMobile: "/siembra-movil.webp",
+    imgRetina: "/siembra-retina.webp",
   },
   {
     year: "1963",
     title: "IPASA Agricultural Processes",
     desc: "The origin of IPASA Procesos Agropecuarios is established, dedicated to pig farming in Ayotlán, Jalisco. This company represents one of the group's earliest agricultural roots.",
-    img: "/IPASA.webp",
+    img: "/IPASA-escritorio.webp",
+    imgMobile: "/IPASA-movil.webp",
+    imgRetina: "/IPASA-retina.webp",
   },
   {
     year: "1985",
     title: "Grupo ORBE XXI",
     desc: "Over the years, the family vision takes corporate shape. Grupo ORBE XXI is born as an expression of growth, unity, and continuity; an ecosystem built with patience, firm decisions, and a forward-looking vision.",
-    img: "/ORBE XXI.webp",
+    img: "/ORBE-escritorio.webp",
+    imgMobile: "/ORBE-movil.webp",
+    imgRetina: "/ORBE-retina.webp",
   },
   {
     year: "1990",
     title: "OMEX Alimentaria",
     desc: "Don Manuel Loy Aceves drives OMEX Alimentaria, a company focused on cold cuts, sausages, and food products. With it, the family advances from farming to food industrialization.",
-    img: "/OMEX.webp",
+    img: "/OMEX-escritorio.webp",
+    imgMobile: "/OMEX-movil.webp",
+    imgRetina: "/OMEX-retina.webp",
   },
   {
     year: "1992",
     title: "Teknoagrox",
     desc: "Teknoagrox is born as a response to the countryside and its needs. Innovation joins agricultural experience, strengthening a deep bond with the land and those who work it daily.",
-    img: "/TeknoAgrox.webp",
+    img: "/tecno-escritorio.webp",
+    imgMobile: "/tecno-movil.webp",
+    imgRetina: "/tecno-retina.webp",
   },
   {
     year: "2004",
     title: "Nutriagaves",
     desc: "Agave begins to occupy an essential place in this history. Nutriagaves is born, dedicated to the production of agave nectar and derived products, with a presence in international markets.",
-    img: "/Nutriagaves.webp",
+    img: "/nutriagaves-escritorio.webp",
+    imgMobile: "/nutriagaves-movil.webp",
+    imgRetina: "/nutriagaves-retina.webp",
   },
   {
     year: "2015",
     title: "PAOSA / OMEX Food Processor",
     desc: "PAOSA is consolidated, oriented towards pork meat products under strict quality and safety processes. This stage strengthens the group's experience in food processing and control.",
-    img: "/PAOSA.webp",
+    img: "/paosa-escritorio.webp",
+    imgMobile: "/paosa-movil.webp",
+    imgRetina: "/paosa-retina.webp",
   },
   {
     year: "2017",
     title: "Loydeal",
     desc: "With Loydeal, the family diversifies its commercial presence through a network of butcher shops, bringing its products closer to the end consumer and expanding its market reach.",
-    img: "/Loydeal Carnicerias.webp",
+    img: "/loydeal-escritorio.webp",
+    imgRetina: "/loydeal-retina.webp",
   },
   {
     year: "2019",
@@ -370,7 +437,9 @@ const timelineEn = [
     year: "2022",
     title: "The Certification that Opens the Way",
     desc: "Casa Loy Tequilera obtains certification from the Tequila Regulatory Council under NOM 1633. With this step, it is officially authorized to produce tequila, marking the beginning of a new story within the tequila industry.",
-    img: "/Calidad Casa Loy Tequilera.webp",
+    img: "/nom-escritorio.webp",
+    imgMobile: "/nom-movil.webp",
+    imgRetina: "/nom-retina.webp",
   },
   {
     year: "2022",
@@ -383,6 +452,8 @@ const timelineEn = [
     title: "The Brands are Born",
     desc: "Casa Loy Tequila, TADDEL, and Tierra Zafiro are launched. Each brand represents a different way of interpreting agave, but all share a common origin: a family that decided to transform its history into identity.",
     img: "/Casa Loy Tequilera-escritorio.webp",
+    imgMobile: "/Casa Loy Tequilera-movil.webp",
+    imgRetina: "/Casa Loy Tequilera-retina.webp",
   },
   {
     year: "2023",
@@ -394,13 +465,15 @@ const timelineEn = [
     year: "2024",
     title: "History Crosses Borders",
     desc: "Casa Loy Tequilera reaches the United States and Guatemala. What was born from the land and family begins to travel further, carrying the flavor, character, and history of Casa Loy.",
-    img: "/Empleado Casa Loy Tequilera en campos de Ayotlán.webp",
+    img: "/Empleado Casa Loy Tequilera in campos of Ayotlán.webp",
   },
   {
     year: "2025",
     title: "The Return to Tradition",
     desc: "The house incorporates the tahona production method, an ancestral technique demanding patience, strength, and respect for agave. With this step, Casa Loy not only looks to the future: it also returns to the origin, to the processes honoring time and tradition.",
-    img: "/Tahona.webp",
+    img: "/molienda-escritorio.webp",
+    imgMobile: "/molienda-movil.webp",
+    imgRetina: "/molienda-retina.webp",
   },
   {
     year: "2025",
@@ -412,7 +485,9 @@ const timelineEn = [
     year: "2026",
     title: "Piedra y Agave",
     desc: "Casa Loy Piedra and Agave is born, the first expression crafted with tahona. A tequila uniting land, legacy, stone, and patience; a creation that is not only tasted, but also narrated, remembered, and shared.",
-    img: "/Banner Casa Loy Piedra y Agave-escritorio.webp",
+    img: "/Banner Casa Loy Piedra and Agave-escritorio.webp",
+    imgMobile: "/Banner Casa Loy Piedra and Agave-movil.webp",
+    imgRetina: "/Banner Casa Loy Piedra and Agave-retina.webp",
   },
   {
     year: "2026",
