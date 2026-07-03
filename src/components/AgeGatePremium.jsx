@@ -283,7 +283,7 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
               onError={() => setVideoError(true)}
             >
               <source
-                src="https://assets.mixkit.co/videos/preview/mixkit-cinematic-view-of-a-field-of-blue-agave-34241-large.mp4"
+                src="/recorrido-campos-casa-loy.mp4"
                 type="video/mp4"
               />
             </video>
@@ -334,7 +334,7 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
               onError={() => setVideoError(true)}
             >
               <source
-                src="https://assets.mixkit.co/videos/preview/mixkit-cinematic-view-of-a-field-of-blue-agave-34241-large.mp4"
+                src="/recorrido-campos-casa-loy.mp4"
                 type="video/mp4"
               />
             </video>
