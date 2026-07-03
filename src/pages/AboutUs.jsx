@@ -89,7 +89,7 @@ const timeline = [
     year: "2022",
     title: "Nacen Las Marcas",
     desc: "Se lanzan Casa Loy Tequila, TADDEL y Tierra Zafiro. Cada marca representa una forma distinta de interpretar el agave, pero todas comparten un mismo origen: una familia que decidió transformar su historia en identidad.",
-    img: "/Banner Casa Loy Tequila.webp",
+    img: "/Casa Loy Tequilera-escritorio.webp",
   },
   {
     year: "2023",
@@ -119,7 +119,7 @@ const timeline = [
     year: "2026",
     title: "Piedra Y Agave",
     desc: "Nace Casa Loy Piedra y Agave, la primera expresión elaborada con tahona. Un tequila que reúne tierra, legado, piedra y paciencia; una creación que no solo se bebe, también se cuenta, se recuerda y se comparte.",
-    img: "/Banner Casa Loy Piedra y Agave.webp",
+    img: "/Banner Casa Loy Piedra y Agave-escritorio.webp",
   },
   {
     year: "2026",
@@ -382,7 +382,7 @@ const timelineEn = [
     year: "2022",
     title: "The Brands are Born",
     desc: "Casa Loy Tequila, TADDEL, and Tierra Zafiro are launched. Each brand represents a different way of interpreting agave, but all share a common origin: a family that decided to transform its history into identity.",
-    img: "/Banner Casa Loy Tequila.webp",
+    img: "/Casa Loy Tequilera-escritorio.webp",
   },
   {
     year: "2023",
@@ -412,7 +412,7 @@ const timelineEn = [
     year: "2026",
     title: "Piedra y Agave",
     desc: "Casa Loy Piedra and Agave is born, the first expression crafted with tahona. A tequila uniting land, legacy, stone, and patience; a creation that is not only tasted, but also narrated, remembered, and shared.",
-    img: "/Banner Casa Loy Piedra y Agave.webp",
+    img: "/Banner Casa Loy Piedra y Agave-escritorio.webp",
   },
   {
     year: "2026",

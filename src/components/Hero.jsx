@@ -12,13 +12,20 @@ export default function Hero({ t, setPage }) {
   return (
     <section className="relative h-screen w-full overflow-hidden flex items-center justify-center bg-zinc-950">
       {/* Background Image with Slow Scale Zoom on Load */}
-      <img
-        alt="Agave Fields Hero"
-        className={`absolute inset-0 w-full h-full object-cover grayscale-[10%] transition-transform duration-[4000ms] ease-out ${
-          loaded ? "scale-100 brightness-[0.82]" : "scale-110 brightness-[0.70]"
-        }`}
-        src="/Banner Casa Loy Tequila.webp"
-      />
+      <picture>
+        <source media="(max-width: 768px)" srcSet="/Casa Loy Tequilera-movil.webp" />
+        <source 
+          media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
+          srcSet="/Casa Loy Tequilera-retina.webp" 
+        />
+        <img
+          alt="Agave Fields Hero"
+          className={`absolute inset-0 w-full h-full object-cover grayscale-[10%] transition-transform duration-[4000ms] ease-out ${
+            loaded ? "scale-100 brightness-[0.82]" : "scale-110 brightness-[0.70]"
+          }`}
+          src="/Casa Loy Tequilera-escritorio.webp"
+        />
+      </picture>
       
       {/* Gradient Dark Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/45"></div>

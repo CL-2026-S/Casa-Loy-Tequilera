@@ -15,7 +15,9 @@ export default function Solutions({ t, setPage }) {
       title: t.solutions.card2Title,
       desc: t.solutions.card2Desc,
       action: t.solutions.card2Action,
-      img: "/Banner Casa Loy Tequila.webp",
+      img: "/Casa Loy Tequilera-escritorio.webp",
+      imgMobile: "/Casa Loy Tequilera-movil.webp",
+      imgRetina: "/Casa Loy Tequilera-retina.webp",
       route: "brands",
     },
     {
@@ -23,7 +25,9 @@ export default function Solutions({ t, setPage }) {
       title: t.solutions.card3Title,
       desc: t.solutions.card3Desc,
       action: t.solutions.card3Action,
-      img: "/Banner Experiencias.webp",
+      img: "/Banner Experiencias-escritorio.webp",
+      imgMobile: "/Banner Experiencias-movil.webp",
+      imgRetina: "/Banner Experiencias-retina.webp",
       route: "turismo",
     },
   ];
@@ -47,11 +51,20 @@ export default function Solutions({ t, setPage }) {
             className="group relative aspect-[3/4.5] overflow-hidden cursor-pointer shadow-md text-left"
           >
             {/* Background Image zooming on Hover */}
-            <img
-              alt={card.title}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1500ms] cubic-bezier(0.22, 1, 0.36, 1) group-hover:scale-110"
-              src={card.img}
-            />
+            <picture>
+              {card.imgMobile && <source media="(max-width: 768px)" srcSet={card.imgMobile} />}
+              {card.imgRetina && (
+                <source 
+                  media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
+                  srcSet={card.imgRetina} 
+                />
+              )}
+              <img
+                alt={card.title}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1500ms] cubic-bezier(0.22, 1, 0.36, 1) group-hover:scale-110"
+                src={card.img}
+              />
+            </picture>
 
             {/* Dark vignette overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#1c1c18]/90 via-[#1c1c18]/25 to-transparent"></div>

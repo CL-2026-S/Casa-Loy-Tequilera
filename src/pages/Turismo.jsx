@@ -114,11 +114,18 @@ export default function Turismo({ t, lang }) {
       {/* Cinematic Hero */}
       <section className="relative h-screen w-full bg-zinc-950 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img
-            alt="Agave fields experience background"
-            className="w-full h-full object-cover brightness-[0.82]"
-            src="/Banner Experiencias.webp"
-          />
+          <picture>
+            <source media="(max-width: 768px)" srcSet="/Banner Experiencias-movil.webp" />
+            <source 
+              media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
+              srcSet="/Banner Experiencias-retina.webp" 
+            />
+            <img
+              alt="Agave fields experience background"
+              className="w-full h-full object-cover brightness-[0.82]"
+              src="/Banner Experiencias-escritorio.webp"
+            />
+          </picture>
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/45"></div>
         </div>
         <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center h-full pt-16 pb-28">

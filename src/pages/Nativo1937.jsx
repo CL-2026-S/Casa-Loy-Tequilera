@@ -108,15 +108,15 @@ export default function Nativo1937({ lang = "es" }) {
       <section className="relative h-screen w-full bg-zinc-950 overflow-hidden" id="experience">
         <div className="absolute inset-0 z-0">
           <picture>
-            <source media="(max-width: 768px)" srcSet="/Banner Restaurante 1937 Nativo.webp-movil.jpg" />
+            <source media="(max-width: 768px)" srcSet="/Banner Restaurante 1937 Nativo-movil.webp" />
             <source 
               media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
-              srcSet="/Banner Restaurante 1937 Nativo.webp-retina.jpg" 
+              srcSet="/Banner Restaurante 1937 Nativo-retina.webp" 
             />
             <img
               alt="Cinematic view of Restaurante 1937 Nativo restaurant terrace"
               className="w-full h-full object-cover brightness-[0.82]"
-              src="/Banner Restaurante 1937 Nativo.webp-escritorio.jpg"
+              src="/Banner Restaurante 1937 Nativo-escritorio.webp"
             />
           </picture>
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/45"></div>
@@ -319,11 +319,18 @@ export default function Nativo1937({ lang = "es" }) {
 
             <div className="lg:col-span-8 mt-12 lg:mt-0">
               <div className="bg-[#fcf9f3]/60 backdrop-blur-md p-4 shadow-md overflow-hidden relative group">
-                <img
-                  alt="Highlands of Jalisco map locator details"
-                  className="w-full aspect-[16/10] object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000"
-                  src="/Casa Loy Tequilera.webp"
-                />
+                <picture>
+                  <source media="(max-width: 768px)" srcSet="/Casa Loy Tequilera-movil.webp" />
+                  <source 
+                    media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
+                    srcSet="/Casa Loy Tequilera-retina.webp" 
+                  />
+                  <img
+                    alt="Highlands of Jalisco map locator details"
+                    className="w-full aspect-[16/10] object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000"
+                    src="/Casa Loy Tequilera-escritorio.webp"
+                  />
+                </picture>
                 <div className="absolute inset-0 flex items-center justify-center z-10">
                   <button className="bg-primary text-on-primary p-6 rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-transform">
                     <span className="material-symbols-outlined text-[32px] text-white">location_on</span>

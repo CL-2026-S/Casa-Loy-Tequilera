@@ -279,7 +279,7 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
               playsInline
               preload="auto"
               className="w-full h-full object-cover"
-              poster="/Campo de Agave Ayotlán Casa Loy Tequilera.webp"
+              poster="/Verificador-escritorio.webp"
               onError={() => setVideoError(true)}
             >
               <source
@@ -288,11 +288,18 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
               />
             </video>
           ) : (
-            <img
-              alt="Campos de Agave"
-              src="/Campo de Agave Ayotlán Casa Loy Tequilera.webp"
-              className="w-full h-full object-cover"
-            />
+            <picture>
+              <source media="(max-width: 768px)" srcSet="/verificador-movil.webp" />
+              <source 
+                media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
+                srcSet="/Verificador-retina.webp" 
+              />
+              <img
+                alt="Campos de Agave"
+                src="/Verificador-escritorio.webp"
+                className="w-full h-full object-cover"
+              />
+            </picture>
           )}
           <div className="absolute inset-0 bg-[#fcf9f3]/90 backdrop-blur-[1px]" />
           {/* Handmade paper agave fiber watermark texture overlay */}
@@ -323,7 +330,7 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
               playsInline
               preload="auto"
               className="w-full h-full object-cover"
-              poster="/Campo de Agave Ayotlán Casa Loy Tequilera.webp"
+              poster="/Verificador-escritorio.webp"
               onError={() => setVideoError(true)}
             >
               <source
@@ -332,11 +339,18 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
               />
             </video>
           ) : (
-            <img
-              alt="Campos de Agave"
-              src="/Campo de Agave Ayotlán Casa Loy Tequilera.webp"
-              className="w-full h-full object-cover"
-            />
+            <picture>
+              <source media="(max-width: 768px)" srcSet="/verificador-movil.webp" />
+              <source 
+                media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
+                srcSet="/Verificador-retina.webp" 
+              />
+              <img
+                alt="Campos de Agave"
+                src="/Verificador-escritorio.webp"
+                className="w-full h-full object-cover"
+              />
+            </picture>
           )}
           <div className="absolute inset-0 bg-[#fcf9f3]/90 backdrop-blur-[1px]" />
           {/* Handmade paper agave fiber watermark texture overlay */}

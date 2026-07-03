@@ -228,11 +228,18 @@ export default function HomeInteractive({ lang = "es", setPage }) {
             {/* Brand 1 */}
             <div className="group cursor-pointer text-left" onClick={() => setPage("brands")}>
               <div className="aspect-[3/4] bg-white overflow-hidden mb-8 shadow-md">
-                <img
-                  className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105"
-                  alt="Tequila Casa Loy bottle"
-                  src="/Banner Casa Loy Tequila.webp"
-                />
+                <picture>
+                  <source media="(max-width: 768px)" srcSet="/Casa Loy Tequilera-movil.webp" />
+                  <source 
+                    media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
+                    srcSet="/Casa Loy Tequilera-retina.webp" 
+                  />
+                  <img
+                    className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105"
+                    alt="Tequila Casa Loy bottle"
+                    src="/Casa Loy Tequilera-escritorio.webp"
+                  />
+                </picture>
               </div>
               <span className="font-label-caps text-[9px] text-secondary tracking-[0.2em] font-bold block mb-2">
                 {t.brand1Cat}
@@ -291,13 +298,20 @@ export default function HomeInteractive({ lang = "es", setPage }) {
       {/* Tourism & Culinary Parallax Background Section */}
       <section className="relative h-[80vh] flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img
-            id="parallax-img-1"
-            className="w-full h-[120%] object-cover scale-105 brightness-[0.45] pointer-events-none"
-            alt="Scenic agave landscape and distillery"
-            src="/Banner Experiencias.webp"
-            style={{ transform: `translateY(${-parallaxOffset * 0.4}px)` }}
-          />
+          <picture>
+            <source media="(max-width: 768px)" srcSet="/Banner Experiencias-movil.webp" />
+            <source 
+              media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
+              srcSet="/Banner Experiencias-retina.webp" 
+            />
+            <img
+              id="parallax-img-1"
+              className="w-full h-[120%] object-cover scale-105 brightness-[0.45] pointer-events-none"
+              alt="Scenic agave landscape and distillery"
+              src="/Banner Experiencias-escritorio.webp"
+              style={{ transform: `translateY(${-parallaxOffset * 0.4}px)` }}
+            />
+          </picture>
         </div>
         <div className="relative z-10 px-gutter w-full max-w-container-max mx-auto text-center">
           <div className="max-w-2xl mx-auto space-y-6">
