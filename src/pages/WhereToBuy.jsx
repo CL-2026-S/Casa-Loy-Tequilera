@@ -253,7 +253,7 @@ export default function WhereToBuy({ lang }) {
                     {store.retailer}
                   </h4>
                   <h3 className="font-headline-md text-[18px] font-semibold mb-1">{store.name}</h3>
-                  <p className="text-on-surface-variant/80 text-xs font-light leading-snug mb-3">
+                  <p className="text-on-surface-variant/80 text-sm font-normal leading-snug mb-3">
                     {store.address}
                   </p>
                   <div className="flex justify-between items-center text-xs">
@@ -288,7 +288,7 @@ export default function WhereToBuy({ lang }) {
                 <p className="font-headline-md text-sm font-semibold text-on-surface">
                   {activeStore.retailer}
                 </p>
-                <p className="text-xs text-on-surface-variant font-light">{activeStore.name}</p>
+                <p className="text-sm text-on-surface-variant font-normal">{activeStore.name}</p>
               </div>
             </div>
 

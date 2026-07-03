@@ -593,7 +593,7 @@ export default function Maquilas({ lang = "es" }) {
                 <p className="font-body-md text-primary text-xs uppercase font-semibold">
                   {currentT.pmRole}
                 </p>
-                <div className="flex flex-col gap-1 text-xs font-navigation text-on-surface-variant font-light">
+                <div className="flex flex-col gap-1 text-sm font-navigation text-on-surface-variant font-normal">
                   <a className="hover:text-primary transition-colors" href="mailto:f.quintana@casaloy.com">
                     f.quintana@casaloy.com
                   </a>

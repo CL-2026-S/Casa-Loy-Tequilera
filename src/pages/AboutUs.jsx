@@ -701,7 +701,7 @@ export default function AboutUs({ t, lang, setPage }) {
                 {activeT.heroQuote}
               </p>
 
-              <div className="space-y-4 text-xs lg:text-[clamp(12px,0.95vw,14px)] text-[#1c1c18]/70 leading-relaxed font-sans font-light">
+              <div className="space-y-4 text-sm lg:text-[clamp(14px,0.95vw,16px)] text-[#1c1c18]/70 leading-relaxed font-sans font-normal">
                 <p>
                   {activeT.heroDesc1}
                 </p>
@@ -1119,7 +1119,7 @@ export default function AboutUs({ t, lang, setPage }) {
 
             {/* Content Card with animation */}
             <div key={`mob-${activeStep}`} className="bg-white p-6 border border-[#8C4723]/10 shadow-sm space-y-4 animate-fade-in-slide">
-              <p className="text-[#1A1615]/80 font-sans text-xs leading-relaxed font-light italic">
+              <p className="text-[#1A1615]/80 font-sans text-sm leading-relaxed font-normal italic">
                 "{processSteps[activeStep].desc}"
               </p>
               

@@ -816,7 +816,7 @@ export default function HomeEditorialV2({ lang = "es", setPage, setLang }) {
                     {item.title}
                   </h4>
                 </div>
-                <p className="font-body-md text-[#53443a] text-xs lg:text-[13px] leading-relaxed font-light">
+                <p className="font-body-md text-[#53443a] text-sm lg:text-[15px] leading-relaxed font-normal">
                   {item.desc}
                 </p>
               </Reveal>
@@ -883,7 +883,7 @@ export default function HomeEditorialV2({ lang = "es", setPage, setLang }) {
                   
                   {/* Floating Content */}
                   <div className="relative z-10 p-6 md:p-8 w-full flex flex-col justify-end h-full">
-                    <p className="font-body-md text-white/70 text-xs leading-relaxed font-light max-w-xs mb-6">
+                    <p className="font-body-md text-white/70 text-sm leading-relaxed font-normal max-w-xs mb-6">
                       {sol.desc}
                     </p>
                     
