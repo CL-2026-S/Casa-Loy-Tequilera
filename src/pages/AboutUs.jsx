@@ -878,18 +878,14 @@ export default function AboutUs({ t, lang, setPage }) {
         >
           {(lang === "en" ? [
             { title: "Solar Energy", text: "We harness clean energy through solar panels to reduce our environmental impact and operate more sustainably.", img: "/Paneles Solares.webp" },
-            { title: "Vinaza Sump", text: "Cooling and management system for vinazas using a geotextile membrane that protects the water table and facilitates transport for composting.", img: "/Vinazas.webp" },
-            { title: "Composting Center", text: "Vinazas and organic components are transformed into natural nutrients to strengthen our agave fields.", img: "/Fibras de Agave Cocido.webp" },
-            { title: "Water Treatment", text: "We implement water treatment and responsible management processes to reduce environmental impact and contribute to the care of our natural resources.", img: "/Casa Loy Tequilera Naves.webp" },
-            { title: "Biomass Boiler", text: "We generate natural energy from organic waste, reducing the use of fossil fuels.", img: "/Caldera de Biomasa.webp" },
-            { title: "Social & Family Development", text: "We promote the well-being of harvesting families and preserve the traditions that give life to our land.", img: "/Empleado Jimador Casa Loy Tequilera.webp" },
+            { title: "Composting Center", text: "Specialized space for the sustainable transformation of organic waste from the tequila process, converting vinazas and bagasse into valuable compost for the fields.", img: "/Vinazas.webp" },
+            { title: "Vinazas Management & Compost", text: "Utilization system where the vinazas are distributed via spreader trucks and compost windrows, favoring organic integration and natural soil enrichment.", img: "/Fibras de Agave Cocido.webp" },
+            { title: "Social & Family Development", text: "We promote the development and well-being of rural communities, strengthening opportunities, employment, and local growth around the agave culture.", img: "/Empleado Jimador Casa Loy Tequilera.webp" },
           ] : [
             { title: "Energía Solar", text: "Aprovechamos energía limpia mediante paneles solares para reducir nuestro impacto ambiental y operar de forma más sustentable.", img: "/Paneles Solares.webp" },
-            { title: "Cárcamo para vinazas", text: "Sistema de enfriamiento y manejo de vinazas con membrana geotextil que protege los mantos freáticos y facilita su traslado al compostaje.", img: "/Vinazas.webp" },
-            { title: "Centro de Compostaje", text: "Las vinazas y componentes orgánicos se transforman en nutrientes naturales para fortalecer nuestros campos de agave.", img: "/Fibras de Agave Cocido.webp" },
-            { title: "Tratamiento de Agua", text: "Implementamos procesos de tratamiento y manejo responsable del agua para reducir el impacto ambiental y contribuir al cuidado de nuestros recursos naturales.", img: "/Casa Loy Tequilera Naves.webp" },
-            { title: "Caldera de Biomasa", text: "Generamos energía natural a partir de residuos orgánicos, reduciendo el uso de combustibles fósiles.", img: "/Caldera de Biomasa.webp" },
-            { title: "Desarrollo Social y Familiar", text: "Impulsamos el bienestar de las familias jimadoras y preservamos las tradiciones que dan vida a nuestra tierra.", img: "/Empleado Jimador Casa Loy Tequilera.webp" },
+            { title: "Centro de Compostaje", text: "Espacio especializado para la transformación sustentable de residuos orgánicos del proceso tequilero, convirtiendo vinazas y bagazo en composta de valor para el campo.", img: "/Vinazas.webp" },
+            { title: "Manejo de Vinazas y Composta", text: "Sistema de aprovechamiento donde las vinazas son distribuidas mediante camiones con vertedor y cordones de composta, favoreciendo la integración orgánica y el enriquecimiento natural del suelo.", img: "/Fibras de Agave Cocido.webp" },
+            { title: "Desarrollo Social y Familiar", text: "Impulsamos el desarrollo y bienestar de las comunidades rurales, fortaleciendo oportunidades, empleo y crecimiento local alrededor de la cultura del agave.", img: "/Empleado Jimador Casa Loy Tequilera.webp" },
           ]).map((pillar, idx) => (
             <div
               key={idx}
