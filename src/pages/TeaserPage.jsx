@@ -43,7 +43,7 @@ export default function TeaserPage({ onUnlock }) {
     >
       {/* Background Image Watermark (Quiet Luxury & Agave) */}
       <div 
-        className="absolute inset-0 pointer-events-none opacity-[0.07] mix-blend-luminosity bg-cover bg-center bg-no-repeat transition-opacity duration-1000"
+        className="absolute inset-0 pointer-events-none opacity-[0.25] mix-blend-luminosity bg-cover bg-center bg-no-repeat transition-opacity duration-1000"
         style={{
           backgroundImage: "url('/Campo de Agave Ayotlán Casa Loy Tequilera.webp')"
         }}
