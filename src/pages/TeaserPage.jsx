@@ -66,7 +66,7 @@ export default function TeaserPage({ onUnlock }) {
           <img
             src="/Logotipo Casa Loy Tequilera.png"
             alt="Logotipo Casa Loy Tequilera"
-            className="h-[140px] sm:h-[180px] md:h-[200px] w-auto object-contain brightness-0 invert transition-all duration-500 drop-shadow-[0_2px_10px_rgba(255,255,255,0.1)]"
+            className="h-[140px] sm:h-[180px] md:h-[200px] w-auto object-contain transition-all duration-500 drop-shadow-[0_4px_25px_rgba(140,71,35,0.25)]"
             draggable="false"
           />
         </motion.div>
