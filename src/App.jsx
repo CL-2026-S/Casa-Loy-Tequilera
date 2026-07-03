@@ -23,8 +23,12 @@ import CareerDetail from "./pages/CareerDetail";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import CookiePolicy from "./pages/CookiePolicy";
 import TermsConditions from "./pages/TermsConditions";
+import TeaserPage from "./pages/TeaserPage";
 
 export default function App() {
+  const [hasBypass, setHasBypass] = useState(() => {
+    return localStorage.getItem("casa_loy_preview_bypass") === "true";
+  });
   const [lang, setLang] = useState("es"); // Default language set to Spanish (ES)
   const [page, setPage] = useState(() => {
     const path = window.location.pathname;
@@ -61,6 +65,36 @@ export default function App() {
   });
 
   const t = translations[lang];
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("preview") === "true" || params.get("test") === "true" || params.get("bypass") === "true") {
+      localStorage.setItem("casa_loy_preview_bypass", "true");
+      setHasBypass(true);
+      const url = new URL(window.location);
+      url.searchParams.delete("preview");
+      url.searchParams.delete("test");
+      url.searchParams.delete("bypass");
+      window.history.replaceState({}, document.title, url.pathname + url.search);
+    } else if (params.get("lock") === "true") {
+      localStorage.removeItem("casa_loy_preview_bypass");
+      setHasBypass(false);
+      const url = new URL(window.location);
+      url.searchParams.delete("lock");
+      window.history.replaceState({}, document.title, url.pathname + url.search);
+    }
+  }, []);
+
+  if (!hasBypass) {
+    return (
+      <TeaserPage
+        onUnlock={() => {
+          localStorage.setItem("casa_loy_preview_bypass", "true");
+          setHasBypass(true);
+        }}
+      />
+    );
+  }
 
   useEffect(() => {
     window.scrollTo(0, 0);
