@@ -49,10 +49,16 @@ export function getFromEmail() {
 
 // Helper to get site URL for absolute paths
 export function getSiteUrl(req) {
+  // If the request has a host header, use it to dynamically match the active domain (e.g. casaloy.com)
+  if (req && req.headers && req.headers.host) {
+    const host = req.headers.host;
+    const isLocal = host.includes('localhost') || host.includes('127.0.0.1');
+    const protocol = req.headers['x-forwarded-proto'] || (isLocal ? 'http' : 'https');
+    return `${protocol}://${host}`;
+  }
+  // Fallback to VERCEL_URL if host header is not available
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
   }
-  const host = req.headers.host || 'localhost:5173';
-  const protocol = req.headers['x-forwarded-proto'] || 'http';
-  return `${protocol}://${host}`;
+  return 'https://casaloy.com';
 }
