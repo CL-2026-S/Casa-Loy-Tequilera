@@ -152,20 +152,32 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
 
   const countryName = lang === "es"
     ? countryData[selectedCountry]?.nameEs
-    : countryData[selectedCountry]?.nameEn;
+    : countryData[selectedCountry]?.nameE  // Framer Motion variants for cinematic fade, zoom and blur transition
+  const pageVariants = {
+    initial: { 
+      opacity: 0,
+      scale: 1.02
+    },
+    animate: { 
+      opacity: 1, 
+      scale: 1,
+      transition: { duration: 0.8, ease: "easeOut" } 
+    },
+    exit: {
+      opacity: 0,
+      scale: 1.05,
+      filter: "blur(12px)",
+      transition: { duration: 1.2, ease: [0.43, 0.13, 0.23, 0.96] }
+    }
+  };
 
   return (
     <motion.div
-      className="fixed inset-0 z-[9999] overflow-hidden select-none flex items-center justify-center"
-      style={{
-        backgroundColor: "#fcf9f3",
-        backgroundImage: "linear-gradient(to bottom, rgba(252, 249, 243, 0.94), rgba(252, 249, 243, 0.96)), url('/Tahona Agave Molienda.webp')",
-        backgroundSize: "cover",
-        backgroundPosition: "center"
-      }}
+      variants={pageVariants}
       initial="initial"
       animate="animate"
       exit="exit"
+      className="fixed inset-0 z-[9999] overflow-hidden select-none flex items-center justify-center bg-black"
     >
       <style dangerouslySetInnerHTML={{
         __html: `
@@ -173,17 +185,16 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
           position: relative;
           overflow: hidden;
           background: transparent;
-          color: #8C4723;
-          border: 1px solid rgba(140, 71, 35, 0.45);
+          color: #fcf9f3;
+          border: 1px solid rgba(252, 249, 243, 0.4);
           transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-          box-shadow: 0 2px 8px rgba(140, 71, 35, 0.05);
         }
         .copper-metallic-btn:hover {
           background: linear-gradient(135deg, #8c4723 0%, #b86e42 25%, #d89c74 50%, #a85c32 75%, #8c4723 100%);
           background-size: 200% auto;
           color: #fcf9f3;
           border-color: #8c4723;
-          box-shadow: 0 6px 20px rgba(140, 71, 35, 0.25);
+          box-shadow: 0 6px 20px rgba(140, 71, 35, 0.35);
           transform: translateY(-1px);
         }
         .copper-metallic-btn:hover {
@@ -213,266 +224,134 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
           opacity: 1;
           left: 130%;
         }
-        @media (max-height: 680px) {
-          .age-gate-logo {
-            height: 90px !important;
-          }
-          .age-gate-container {
-            gap: 12px !important;
-          }
-          .age-gate-form {
-            gap: 12px !important;
-          }
-          .age-gate-title {
-            font-size: 19px !important;
-          }
-          .age-gate-subtitle {
-            font-size: 10px !important;
-          }
-          .logo-box {
-            padding-top: 8px !important;
-            padding-bottom: 8px !important;
-          }
-        }
-        @media (max-height: 560px) {
-          .age-gate-logo {
-            height: 75px !important;
-          }
-          .age-gate-container {
-            gap: 8px !important;
-          }
-          .age-gate-form {
-            gap: 8px !important;
-          }
-          .age-gate-title {
-            font-size: 16px !important;
-          }
-          .age-gate-subtitle {
-            font-size: 9px !important;
-          }
-          .age-gate-footer {
-            margin-top: 4px !important;
-            padding-top: 8px !important;
-          }
-          .logo-box {
-            padding-top: 4px !important;
-            padding-bottom: 4px !important;
-          }
-        }
       ` }} />
 
-      {/* LEFT PANEL / DOOR */}
-      <motion.div
-        variants={{
-          initial: { x: 0 },
-          animate: { x: 0 },
-          exit: { x: "-100%", transition: { duration: 1.6, ease: [0.76, 0, 0.24, 1] } }
-        }}
-        className="absolute inset-y-0 left-0 w-1/2 overflow-hidden bg-[#fcf9f3] z-10 border-r border-[#C8A86B]/20"
-      >
-        <div className="absolute top-0 left-0 w-[100vw] h-full pointer-events-none">
-          {!videoError ? (
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
+      {/* SINGLE UNIFIED FULL-SCREEN BACKGROUND VIDEO */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
+        {!videoError ? (
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className="w-full h-full object-cover"
+            poster="/Verificador-escritorio.webp"
+            onError={() => setVideoError(true)}
+          >
+            <source
+              src="/recorrido-campos-casa-loy.mp4"
+              type="video/mp4"
+            />
+          </video>
+        ) : (
+          <picture>
+            <source media="(max-width: 768px)" srcSet="/verificador-movil.webp" />
+            <source 
+              media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
+              srcSet="/Verificador-retina.webp" 
+            />
+            <img
+              alt="Campos de Agave"
+              src="/Verificador-escritorio.webp"
               className="w-full h-full object-cover"
-              poster="/Verificador-escritorio.webp"
-              onError={() => setVideoError(true)}
-            >
-              <source
-                src="/recorrido-campos-casa-loy.mp4"
-                type="video/mp4"
-              />
-            </video>
-          ) : (
-            <picture>
-              <source media="(max-width: 768px)" srcSet="/verificador-movil.webp" />
-              <source 
-                media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
-                srcSet="/Verificador-retina.webp" 
-              />
-              <img
-                alt="Campos de Agave"
-                src="/Verificador-escritorio.webp"
-                className="w-full h-full object-cover"
-              />
-            </picture>
-          )}
-          <div className="absolute inset-0 bg-[#fcf9f3]/90 backdrop-blur-[1px]" />
-          {/* Handmade paper agave fiber watermark texture overlay */}
-          <div
-            className="absolute inset-0 opacity-[0.06] mix-blend-multiply bg-cover bg-center"
-            style={{ backgroundImage: "url('/Fibras de Agave Cocido.webp')" }}
-          />
-          {/* Subtle shadow on the split edge */}
-          <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-black/5 to-transparent" />
-        </div>
-      </motion.div>
+            />
+          </picture>
+        )}
+        
+        {/* Cinematic dark overlay with NO backdrop blur so the video is fully visible and sharp */}
+        <div className="absolute inset-0 bg-black/45" />
+        
+        {/* Handmade paper agave fiber watermark texture overlay for premium craft brand feel */}
+        <div
+          className="absolute inset-0 opacity-[0.04] mix-blend-overlay bg-cover bg-center"
+          style={{ backgroundImage: "url('/Fibras de Agave Cocido.webp')" }}
+        />
+      </div>
 
-      {/* RIGHT PANEL / DOOR */}
-      <motion.div
-        variants={{
-          initial: { x: 0 },
-          animate: { x: 0 },
-          exit: { x: "100%", transition: { duration: 1.6, ease: [0.76, 0, 0.24, 1] } }
-        }}
-        className="absolute inset-y-0 right-0 w-1/2 overflow-hidden bg-[#fcf9f3] z-10 border-l border-[#C8A86B]/20"
-      >
-        <div className="absolute top-0 right-0 w-[100vw] h-full pointer-events-none" style={{ left: "-50vw" }}>
-          {!videoError ? (
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-              className="w-full h-full object-cover"
-              poster="/Verificador-escritorio.webp"
-              onError={() => setVideoError(true)}
-            >
-              <source
-                src="/recorrido-campos-casa-loy.mp4"
-                type="video/mp4"
-              />
-            </video>
-          ) : (
-            <picture>
-              <source media="(max-width: 768px)" srcSet="/verificador-movil.webp" />
-              <source 
-                media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
-                srcSet="/Verificador-retina.webp" 
-              />
-              <img
-                alt="Campos de Agave"
-                src="/Verificador-escritorio.webp"
-                className="w-full h-full object-cover"
-              />
-            </picture>
-          )}
-          <div className="absolute inset-0 bg-[#fcf9f3]/90 backdrop-blur-[1px]" />
-          {/* Handmade paper agave fiber watermark texture overlay */}
-          <div
-            className="absolute inset-0 opacity-[0.06] mix-blend-multiply bg-cover bg-center"
-            style={{ backgroundImage: "url('/Fibras de Agave Cocido.webp')" }}
-          />
-          {/* Subtle shadow on the split edge */}
-          <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-black/5 to-transparent" />
-        </div>
-      </motion.div>
+      {/* Language Selector (Top Right) */}
+      <div className="absolute top-5 right-5 sm:top-7 sm:right-8 z-50 flex items-center gap-4 text-[10px] tracking-[0.25em] font-bold text-[#fcf9f3]">
+        <button
+          type="button"
+          onClick={() => setLang("es")}
+          className={`transition-all duration-300 hover:text-[#C8A86B] cursor-pointer ${lang === "es"
+              ? "text-[#C8A86B] font-bold text-[10.5px]"
+              : "text-[#fcf9f3]/65"
+            }`}
+        >
+          ESPAÑOL
+        </button>
+        <span className="opacity-30 text-[#fcf9f3]">|</span>
+        <button
+          type="button"
+          onClick={() => setLang("en")}
+          className={`transition-all duration-300 hover:text-[#C8A86B] cursor-pointer ${lang === "en"
+              ? "text-[#C8A86B] font-bold text-[10.5px]"
+              : "text-[#fcf9f3]/65"
+            }`}
+        >
+          ENGLISH
+        </button>
+      </div>
 
-      {/* CONTENT INTERFACE (Single Block, No Scroll) */}
-      <div className="relative z-10 w-full h-full overflow-hidden flex flex-col items-center justify-center p-4 sm:p-6 md:p-8">
-        <div className="w-full max-w-[760px] flex flex-col items-center gap-y-4 sm:gap-y-5 md:gap-y-6 text-center age-gate-container">
-          <AnimatePresence mode="wait">
-            {!isUnderage ? (
-              <motion.div
-                key="verification-content"
-                variants={{
-                  initial: { opacity: 0, y: 15 },
-                  animate: {
-                    opacity: 1,
-                    y: 0,
-                    transition: {
-                      duration: 1.8,
-                      ease: [0.16, 1, 0.3, 1],
-                      staggerChildren: 0.15
-                    }
-                  },
-                  exit: {
-                    opacity: 0,
-                    scale: 0.95,
-                    transition: { duration: 0.8, ease: "easeInOut" }
+      {/* INTERFACE CONTAINER (No card/borders, light text on dark video background) */}
+      <div className="relative z-10 w-full h-full overflow-y-auto flex items-center justify-center p-4 sm:p-6 md:p-8" style={{ scrollbarWidth: "none" }}>
+        <AnimatePresence mode="wait">
+          {!isUnderage ? (
+            <motion.div
+              key="verification-content"
+              variants={{
+                initial: { opacity: 0, scale: 0.96, y: 15 },
+                animate: {
+                  opacity: 1,
+                  scale: 1,
+                  y: 0,
+                  transition: {
+                    duration: 1.2,
+                    ease: [0.16, 1, 0.3, 1]
                   }
-                }}
-                className="w-full flex flex-col items-center gap-y-4 sm:gap-y-5 text-center text-[#1c1c18]"
-              >
-                {/* Logo with top spacing and bottom padding */}
-                <motion.div
-                  variants={{
-                    initial: { opacity: 0, y: 10 },
-                    animate: { opacity: 1, y: 0, transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] } }
-                  }}
-                  className="w-full flex justify-center pt-3 pb-3 sm:pt-5 sm:pb-4 logo-box"
-                >
+                },
+                exit: {
+                  opacity: 0,
+                  scale: 0.96,
+                  y: -10,
+                  transition: { duration: 0.5, ease: "easeInOut" }
+                }
+              }}
+              className="w-full max-w-[540px] flex flex-col items-center gap-y-6 text-center text-[#fcf9f3] relative"
+            >
+              <div className="relative z-10 w-full flex flex-col items-center gap-y-5">
+                {/* Logo (Color Blanco version for dark bg) */}
+                <div className="w-full flex justify-center pb-1">
                   <img
                     alt="Logo Casa Loy Tequilera"
-                    className="h-[120px] sm:h-[140px] md:h-[160px] w-auto object-contain age-gate-logo"
-                    src="/Logotipo Casa Loy Tequilera.png"
+                    className="h-[80px] sm:h-[90px] md:h-[100px] w-auto object-contain age-gate-logo animate-fade-in"
+                    src="/Logotipo Casa Loy Tequilera Color Blanco.png"
                   />
-                </motion.div>
-
-                {/* Language Selector */}
-                <motion.div
-                  variants={{
-                    initial: { opacity: 0, y: 10 },
-                    animate: { opacity: 1, y: 0, transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] } }
-                  }}
-                  className="flex items-center gap-4 text-[10.5px] tracking-[0.25em] font-bold text-[#1c1c18]"
-                >
-                  <button
-                    type="button"
-                    onClick={() => setLang("es")}
-                    className={`transition-all duration-300 hover:text-[#1c1c18] cursor-pointer ${lang === "es"
-                        ? "text-[#8C4723] font-bold text-[11px]"
-                        : "hover:text-[#1c1c18]/80"
-                      }`}
-                  >
-                    ESPAÑOL
-                  </button>
-                  <span className="opacity-35 text-[#1c1c18]">|</span>
-                  <button
-                    type="button"
-                    onClick={() => setLang("en")}
-                    className={`transition-all duration-300 hover:text-[#1c1c18] cursor-pointer ${lang === "en"
-                        ? "text-[#8C4723] font-bold text-[11px]"
-                        : "hover:text-[#1c1c18]/80"
-                      }`}
-                  >
-                    ENGLISH
-                  </button>
-                </motion.div>
+                </div>
 
                 {/* Editorial Titles */}
-                <motion.div
-                  variants={{
-                    initial: { opacity: 0, y: 10 },
-                    animate: { opacity: 1, y: 0, transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] } }
-                  }}
-                  className="space-y-2.5 sm:space-y-3 max-w-[90vw] md:max-w-none"
-                >
-                  <h1
-                    style={{ fontFamily: "'EB Garamond', serif" }}
-                    className="text-[21px] sm:text-[25px] md:text-[29px] text-[#1c1c18] font-medium tracking-[0.06em] uppercase leading-tight italic whitespace-normal md:whitespace-nowrap age-gate-title"
-                  >
-                    {lang === "es" ? "El legado se disfruta con el tiempo" : "The legacy is savored with time"}
-                  </h1>
+                <div className="space-y-3 w-full flex flex-col items-center">
                   <p
                     style={{ fontFamily: "'Montserrat', sans-serif" }}
-                    className="text-[11px] sm:text-[12.5px] text-[#1c1c18] leading-relaxed font-semibold max-w-[90vw] md:max-w-none mx-auto tracking-[0.2em] uppercase whitespace-normal md:whitespace-nowrap age-gate-subtitle"
+                    className="text-[8.5px] sm:text-[9.5px] md:text-[10.5px] text-[#fcf9f3]/85 leading-relaxed font-semibold tracking-[0.18em] sm:tracking-[0.22em] uppercase whitespace-nowrap"
                   >
                     {lang === "es"
-                      ? "Desde el corazón del Ayotlán, hasta los momentos que trascienden generaciones"
+                      ? "Desde el corazón de Ayotlán, hasta los momentos que trascienden generaciones"
                       : "From the heart of Ayotlán, to the moments that transcend generations"}
                   </p>
 
-                  <div className="flex items-center justify-center gap-2 pt-1">
+                  <div className="flex items-center justify-center gap-2 pt-0.5">
                     <div className="w-8 h-[0.5px] bg-[#C8A86B]/30" />
-                    <span className="text-[8px] text-[#C8A86B]">◆</span>
+                    <span className="text-[7px] text-[#C8A86B]">◆</span>
                     <div className="w-8 h-[0.5px] bg-[#C8A86B]/30" />
                   </div>
-                </motion.div>
+                </div>
 
                 {/* Validation Form */}
-                <motion.form
-                  variants={{
-                    initial: { opacity: 0, y: 10 },
-                    animate: { opacity: 1, y: 0, transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] } }
-                  }}
+                <form
                   onSubmit={handleValidate}
-                  className="w-full flex flex-col gap-4 sm:gap-5 max-w-[320px] mt-1 relative z-30 age-gate-form"
+                  className="w-full flex flex-col gap-4 max-w-[300px] mt-1 relative z-30"
                 >
                   {/* Custom Country Selector */}
                   <div className="relative w-full z-40">
@@ -480,17 +359,17 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
                       type="button"
                       onClick={() => setShowCountryList(!showCountryList)}
                       style={{ fontFamily: "'Montserrat', sans-serif" }}
-                      className="w-full flex items-center justify-between bg-transparent border-b border-[#C8A86B]/30 hover:border-[#8C4723]/50 py-2.5 text-[11px] font-medium text-[#1c1c18] transition-all duration-300 outline-none"
+                      className="w-full flex items-center justify-between bg-transparent border-b border-[#C8A86B]/30 hover:border-[#C8A86B]/60 py-2 text-[10.5px] font-medium text-[#fcf9f3] transition-all duration-300 outline-none"
                     >
                       <span className="tracking-[0.15em] uppercase text-left flex items-center gap-1.5">
                         {lang === "es" ? "Elige tu país: " : "Choose your country: "}
-                        <span className="text-[#8C4723] font-bold ml-1 flex items-center gap-2">
+                        <span className="text-[#C8A86B] font-bold ml-1 flex items-center gap-1.5">
                           {renderFlag(selectedCountry)}
                           <span>{countryName}</span>
                         </span>
                       </span>
                       <span
-                        className="material-symbols-outlined text-[13px] text-[#C8A86B] transition-transform duration-300"
+                        className="material-symbols-outlined text-[12px] text-[#C8A86B] transition-transform duration-300"
                         style={{ transform: showCountryList ? "rotate(180deg)" : "rotate(0deg)" }}
                       >
                         expand_more
@@ -503,7 +382,7 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
                           initial={{ opacity: 0, y: -4 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -4 }}
-                          className="absolute left-0 right-0 mt-1 max-h-[140px] overflow-y-auto bg-[#fcf9f3] border border-[#1c1c18]/15 shadow-xl z-50 text-left backdrop-blur-md"
+                          className="absolute left-0 right-0 mt-1 max-h-[140px] overflow-y-auto bg-[#fcf9f3] border border-[#1c1c18]/15 shadow-xl z-50 text-left rounded-md"
                           style={{ scrollbarWidth: "none" }}
                         >
                           {Object.entries(countryData).map(([code, c]) => (
@@ -515,7 +394,7 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
                                 setShowCountryList(false);
                               }}
                               style={{ fontFamily: "'Montserrat', sans-serif" }}
-                              className={`w-full text-left px-4 py-2.5 text-[11px] font-semibold tracking-wider hover:bg-[#8C4723]/10 transition-colors uppercase flex items-center gap-2.5 ${selectedCountry === code ? "text-[#8C4723] font-bold bg-[#8C4723]/5" : "text-[#1c1c18]"
+                              className={`w-full text-left px-4 py-2 text-[10.5px] font-semibold tracking-wider hover:bg-[#8C4723]/10 transition-colors uppercase flex items-center gap-2 ${selectedCountry === code ? "text-[#8C4723] font-bold bg-[#8C4723]/5" : "text-[#1c1c18]"
                                 }`}
                             >
                               {renderFlag(code)}
@@ -531,7 +410,7 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
                   <div className="flex flex-col items-center gap-1.5 w-full">
                     <p
                       style={{ fontFamily: "'Montserrat', sans-serif" }}
-                      className="text-[11px] sm:text-[12.5px] text-[#1c1c18] leading-relaxed font-bold uppercase tracking-[0.15em] mb-1.5 whitespace-nowrap"
+                      className="text-[10px] sm:text-[11px] text-[#fcf9f3] leading-relaxed font-bold uppercase tracking-[0.15em] mb-0.5 whitespace-nowrap"
                     >
                       {lang === "es"
                         ? "POR FAVOR Introduce tu año de nacimiento"
@@ -539,7 +418,6 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
                     </p>
 
                     <div className="flex justify-center items-center">
-                      {/* Year Input only */}
                       <div className="flex flex-col items-center">
                         <input
                           ref={yearRef}
@@ -550,9 +428,9 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
                           value={year}
                           onChange={handleYearInput}
                           placeholder="YYYY"
-                          className="w-24 bg-transparent border-b-2 border-[#1c1c18]/50 focus:border-[#C8A86B] text-center text-xl sm:text-2xl font-bold text-[#1c1c18] outline-none py-1 transition-colors tracking-widest placeholder-[#1c1c18]/30 font-mono"
+                          className="w-24 bg-transparent border-b-2 border-[#fcf9f3]/40 focus:border-[#C8A86B] text-center text-lg sm:text-xl font-bold text-[#fcf9f3] outline-none py-1 transition-colors tracking-widest placeholder-[#fcf9f3]/35 font-mono"
                         />
-                        <span style={{ fontFamily: "'Montserrat', sans-serif" }} className="text-[9px] tracking-[0.15em] text-[#1c1c18]/85 uppercase font-bold mt-1.5">
+                        <span style={{ fontFamily: "'Montserrat', sans-serif" }} className="text-[8.5px] tracking-[0.15em] text-[#fcf9f3]/70 uppercase font-bold mt-1">
                           {lang === "es" ? "Año" : "Year"}
                         </span>
                       </div>
@@ -563,7 +441,7 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
                   {error && (
                     <div
                       style={{ fontFamily: "'Montserrat', sans-serif" }}
-                      className="text-[9px] text-[#ba1a1a] tracking-wider uppercase font-medium -mt-2 animate-pulse"
+                      className="text-[8.5px] text-[#ba1a1a] tracking-wider uppercase font-medium -mt-2 animate-pulse"
                     >
                       {error}
                     </div>
@@ -571,7 +449,7 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
 
                   {/* Checkbox */}
                   <div className="flex items-center justify-center select-none py-0.5 z-10">
-                    <label className="flex items-center gap-2.5 cursor-pointer group">
+                    <label className="flex items-center gap-2 cursor-pointer group">
                       <div className="relative flex items-center">
                         <input
                           type="checkbox"
@@ -579,12 +457,12 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
                           onChange={(e) => setRememberMe(e.target.checked)}
                           className="sr-only"
                         />
-                        <div className="w-[14px] h-[14px] border border-[#1c1c18]/45 group-hover:border-[#C8A86B]/60 rounded-sm transition-all duration-300 flex items-center justify-center bg-white/40">
+                        <div className="w-[13px] h-[13px] border border-[#fcf9f3]/45 group-hover:border-[#C8A86B]/60 rounded-sm transition-all duration-300 flex items-center justify-center bg-white/10">
                           {rememberMe && (
                             <motion.span
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
-                              className="material-symbols-outlined text-[10px] text-[#8C4723] font-bold"
+                              className="material-symbols-outlined text-[9px] text-[#C8A86B] font-bold"
                             >
                               check
                             </motion.span>
@@ -593,7 +471,7 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
                       </div>
                       <span
                         style={{ fontFamily: "'Montserrat', sans-serif" }}
-                        className="text-[11px] font-bold text-[#1c1c18] transition-colors select-none tracking-wider uppercase"
+                        className="text-[10px] font-bold text-[#fcf9f3] transition-colors select-none tracking-wider uppercase"
                       >
                         {lang === "es"
                           ? "Recordar mi acceso"
@@ -606,89 +484,81 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
                   <button
                     type="submit"
                     style={{ fontFamily: "'Montserrat', sans-serif" }}
-                    className="copper-metallic-btn w-full active:scale-[0.98] font-bold text-[11px] tracking-[0.3em] py-3.5 px-6 transition-all duration-500 uppercase cursor-pointer select-none focus:outline-none"
+                    className="copper-metallic-btn w-full active:scale-[0.98] font-bold text-[10px] tracking-[0.3em] py-3 px-6 transition-all duration-500 uppercase cursor-pointer select-none focus:outline-none rounded-sm"
                   >
                     {lang === "es" ? "Entrar" : "Enter"}
                   </button>
-                </motion.form>
+                </form>
 
                 {/* Bottom Footer Section */}
-                <motion.div
-                  variants={{
-                    initial: { opacity: 0, y: 10 },
-                    animate: { opacity: 1, y: 0, transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] } }
-                  }}
-                  className="w-full border-t border-[#1c1c18]/20 pt-4 mt-1 flex flex-row flex-wrap items-center justify-center gap-x-4 gap-y-1 text-center age-gate-footer"
-                >
+                <div className="w-full border-t border-[#fcf9f3]/15 pt-3 mt-1 flex flex-row flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center">
                   <span
                     style={{ fontFamily: "'Montserrat', sans-serif" }}
-                    className="text-[10px] tracking-[0.2em] font-bold text-[#1c1c18]/85 uppercase whitespace-nowrap"
+                    className="text-[9px] tracking-[0.2em] font-bold text-[#fcf9f3]/75 uppercase whitespace-nowrap"
                   >
                     {selectedCountry === "MX"
                       ? "Evita el exceso."
                       : "Please drink responsibly."}
                   </span>
 
-                  <span className="text-[#1c1c18]/40 hidden min-[380px]:inline">|</span>
+                  <span className="text-[#fcf9f3]/30 hidden min-[360px]:inline">|</span>
 
                   <button
                     type="button"
                     onClick={() => setShowPrivacyPopup(true)}
                     style={{ fontFamily: "'Montserrat', sans-serif" }}
-                    className="text-[10px] tracking-[0.1em] font-bold text-[#1c1c18]/85 hover:text-[#8C4723] transition-colors uppercase border-b border-transparent hover:border-[#8C4723]/30 whitespace-nowrap cursor-pointer focus:outline-none"
+                    className="text-[9px] tracking-[0.1em] font-bold text-[#fcf9f3]/75 hover:text-[#C8A86B] transition-colors uppercase border-b border-transparent hover:border-[#C8A86B]/30 whitespace-nowrap cursor-pointer focus:outline-none"
                   >
                     {lang === "es" ? "Aviso de Privacidad" : "Privacy Notice"}
                   </button>
-                </motion.div>
-              </motion.div>
-            ) : (
-              /* Underage Screen */
-              <motion.div
-                key="underage-screen"
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="w-full flex flex-col items-center gap-y-6 text-center text-[#1c1c18] px-4"
-              >
-                {/* Elegant SVG Custom Lock */}
-                <svg className="w-16 h-16 text-[#8C4723] mb-2 drop-shadow-sm" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  {/* Lock Shackle */}
+                </div>
+              </div>
+            </motion.div>
+          ) : (
+            /* Underage Screen */
+            <motion.div
+              key="underage-screen"
+              initial={{ opacity: 0, scale: 0.96, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: -10 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="w-full max-w-[480px] flex flex-col items-center gap-y-6 text-center text-[#fcf9f3] relative"
+            >
+              <div className="relative z-10 w-full flex flex-col items-center gap-y-5">
+                <svg className="w-12 h-12 text-[#C8A86B] mb-1 drop-shadow-sm" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M18 28V18C18 10.268 24.268 4 32 4C39.732 4 46 10.268 46 18V28" stroke="#C8A86B" strokeWidth="2.5" strokeLinecap="round" />
-                  {/* Lock Body */}
-                  <rect x="10" y="26" width="44" height="34" rx="4" fill="#F6F2EA" stroke="#8C4723" strokeWidth="2.5" />
-                  {/* Keyhole details */}
-                  <circle cx="32" cy="40" r="4" fill="#8C4723" />
-                  <path d="M30 43.5L34 43.5L35 50L29 50Z" fill="#8C4723" />
-                  {/* Outer decorative gold diamond overlay */}
+                  <rect x="10" y="26" width="44" height="34" rx="4" fill="none" stroke="#C8A86B" strokeWidth="2.5" />
+                  <circle cx="32" cy="40" r="4" fill="#C8A86B" />
+                  <path d="M30 43.5L34 43.5L35 50L29 50Z" fill="#C8A86B" />
                   <path d="M32 30L34 32L32 34L30 32Z" fill="#C8A86B" />
                 </svg>
 
-                <div className="space-y-4 max-w-[650px] flex flex-col items-center">
+                <div className="space-y-3 max-w-[420px] flex flex-col items-center">
                   <h2
                     style={{ fontFamily: "'EB Garamond', serif" }}
-                    className="text-3xl sm:text-4xl text-[#5C1D24] font-medium tracking-[0.25em] uppercase"
+                    className="text-2xl sm:text-3xl text-[#C8A86B] font-medium tracking-[0.2em] uppercase leading-tight"
                   >
                     {lang === "es" ? "Acceso restringido" : "Access Restricted"}
                   </h2>
 
-                  <div className="flex items-center justify-center gap-3 my-2">
-                    <div className="w-10 h-[0.5px] bg-[#C8A86B]/30" />
-                    <span className="text-[10px] text-[#C8A86B]">◆</span>
-                    <div className="w-10 h-[0.5px] bg-[#C8A86B]/30" />
+                  <div className="flex items-center justify-center gap-3 my-1">
+                    <div className="w-8 h-[0.5px] bg-[#C8A86B]/30" />
+                    <span className="text-[8px] text-[#C8A86B]">◆</span>
+                    <div className="w-8 h-[0.5px] bg-[#C8A86B]/30" />
                   </div>
 
                   <p
                     style={{ fontFamily: "'Montserrat', sans-serif" }}
-                    className="text-[13.5px] sm:text-[15px] text-[#1c1c18] font-semibold leading-relaxed tracking-wide"
+                    className="text-[11.5px] sm:text-[12.5px] text-[#fcf9f3]/90 font-semibold leading-relaxed tracking-wide"
                   >
                     {lang === "es"
-                      ? "Casa Loy Tequilera es una experiencia reservada exclusivamente para mayores de edad conforme a la legislación de su país o región."
+                      ? "Casa Loy Tequilera es una experience reservada exclusivamente para mayores de edad conforme a la legislación de su país o región."
                       : "Casa Loy Tequilera is an experience reserved exclusively for adults in accordance with the legislation of their country or region."}
                   </p>
 
                   <p
                     style={{ fontFamily: "'EB Garamond', serif" }}
-                    className="text-lg sm:text-xl text-[#8C4723] font-medium italic tracking-wider pt-2"
+                    className="text-base sm:text-lg text-[#C8A86B] font-medium italic tracking-wider pt-1"
                   >
                     {lang === "es"
                       ? "Promovemos el consumo responsable y consciente."
@@ -696,36 +566,36 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
                   </p>
                 </div>
 
-                <div className="flex flex-col items-center gap-4 mt-4">
+                <div className="flex flex-col items-center gap-3 mt-2">
                   <a
                     href={countryData[selectedCountry]?.redirect || "https://www.iard.org/"}
                     style={{ fontFamily: "'Montserrat', sans-serif" }}
-                    className="px-10 py-4 bg-[#8C4723] hover:bg-[#2F403E] text-[#fcf9f3] text-[10px] sm:text-[11px] font-bold tracking-[0.3em] uppercase rounded-[2px] shadow-[0_4px_16px_rgba(140,71,35,0.15)] hover:shadow-[0_6px_24px_rgba(47,64,62,0.25)] transition-all duration-500 hover:-translate-y-[1px] active:translate-y-0 cursor-pointer select-none inline-block"
+                    className="px-8 py-3 bg-[#8C4723] hover:bg-[#b86e42] text-[#fcf9f3] text-[9.5px] font-bold tracking-[0.25em] uppercase rounded-[2px] shadow-[0_4px_12px_rgba(140,71,35,0.15)] transition-all duration-500 hover:-translate-y-[1px] active:translate-y-0 cursor-pointer select-none inline-block"
                   >
                     {lang === "es" ? "Consumo Responsable" : "Responsible Consumption"}
                   </a>
 
-                  <div className="flex items-center justify-center gap-2.5 mt-2">
+                  <div className="flex items-center justify-center gap-2 mt-1">
                     {redirectCount > 0 && (
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#8C4723] animate-ping" />
+                      <div className="w-1.2 h-1.2 rounded-full bg-[#C8A86B] animate-ping" />
                     )}
                     <span
                       style={{ fontFamily: "'Montserrat', sans-serif" }}
-                      className="text-[9px] sm:text-[10px] tracking-[0.2em] text-[#1c1c18]/55 uppercase font-medium"
+                      className="text-[8.5px] tracking-[0.15em] text-[#fcf9f3]/60 uppercase font-medium"
                     >
                       {lang === "es"
-                        ? "Casa Loy Tequilera - Redireccionando..."
-                        : "Casa Loy Tequilera - Redirecting..."}{" "}
+                        ? "Redireccionando..."
+                        : "Redirecting..."}{" "}
                       {redirectCount > 0 && (
-                        <span className="text-[#8C4723] font-bold ml-1">{redirectCount}</span>
+                        <span className="text-[#C8A86B] font-bold ml-1">{redirectCount}</span>
                       )}
                     </span>
                   </div>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Privacy Policy Popup Modal */}

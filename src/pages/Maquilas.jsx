@@ -1,9 +1,54 @@
 import React, { useState } from "react";
 
+const MexicoFlag = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20" className="w-5 h-3.5 shadow-sm border border-black/10 flex-shrink-0 inline-block align-middle">
+    <rect width="10" height="20" fill="#006847" />
+    <rect x="10" width="10" height="20" fill="#FFFFFF" />
+    <rect x="20" width="10" height="20" fill="#C8102E" />
+    <path d="M14 11a1 1 0 1 1 2 0v1h-2v-1z" fill="#78521a" />
+    <circle cx="15" cy="9.5" r="1.5" fill="#cca625" />
+  </svg>
+);
+
+const USFlag = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 74 39" className="w-5 h-3.5 shadow-sm border border-black/10 flex-shrink-0 inline-block align-middle">
+    <rect width="74" height="39" fill="#B22234" />
+    <rect y="3" width="74" height="3" fill="#FFFFFF" />
+    <rect y="9" width="74" height="3" fill="#FFFFFF" />
+    <rect y="15" width="74" height="3" fill="#FFFFFF" />
+    <rect y="21" width="74" height="3" fill="#FFFFFF" />
+    <rect y="27" width="74" height="3" fill="#FFFFFF" />
+    <rect y="33" width="74" height="3" fill="#FFFFFF" />
+    <rect width="30" height="21" fill="#3C3B6E" />
+    <g fill="#FFFFFF">
+      <rect x="4" y="3" width="2" height="2" rx="1" />
+      <rect x="10" y="3" width="2" height="2" rx="1" />
+      <rect x="16" y="3" width="2" height="2" rx="1" />
+      <rect x="22" y="3" width="2" height="2" rx="1" />
+      <rect x="7" y="6" width="2" height="2" rx="1" />
+      <rect x="13" y="6" width="2" height="2" rx="1" />
+      <rect x="19" y="6" width="2" height="2" rx="1" />
+      <rect x="4" y="9" width="2" height="2" rx="1" />
+      <rect x="10" y="9" width="2" height="2" rx="1" />
+      <rect x="16" y="9" width="2" height="2" rx="1" />
+      <rect x="22" y="9" width="2" height="2" rx="1" />
+      <rect x="7" y="12" width="2" height="2" rx="1" />
+      <rect x="13" y="12" width="2" height="2" rx="1" />
+      <rect x="19" y="12" width="2" height="2" rx="1" />
+      <rect x="4" y="15" width="2" height="2" rx="1" />
+      <rect x="10" y="15" width="2" height="2" rx="1" />
+      <rect x="16" y="15" width="2" height="2" rx="1" />
+      <rect x="22" y="15" width="2" height="2" rx="1" />
+    </g>
+  </svg>
+);
+
 export default function Maquilas({ lang = "es" }) {
   // Diagnostic Quiz State
   const [quizStep, setQuizStep] = useState(1);
-  const [quizAnswers, setQuizAnswers] = useState({ model: "", infra: "", volume: "" });
+  const [quizAnswers, setQuizAnswers] = useState({ solution: "", objective: "", stage: "" });
+  const [contactForm, setContactForm] = useState({ name: "", company: "", lada: "", phone: "", email: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Booking State
   const [selectedDate, setSelectedDate] = useState(lang === "es" ? "Lun, 24 Oct" : "Mon, Oct 24");
@@ -17,25 +62,48 @@ export default function Maquilas({ lang = "es" }) {
       heroTitleItalic: "El arte de la Maquila con Legado.",
       heroBtn: "Inicia tu Proyecto",
       
-      quizOvertitle: "Estrategia Operativa",
-      quizTitle: "Define el futuro de tu destilado",
-      quizDesc: "A través de nuestro diagnóstico de infraestructura, determinamos el modelo operativo exacto que requiere su visión comercial para el mercado global.",
+      quizOvertitle: "Quiz estratégico de 3 preguntas",
+      quizTitle: "¿Qué tipo de proyecto buscas desarrollar?",
+      quizDesc: "Completa este diagnóstico de 3 preguntas para recibir una propuesta adaptada a tus necesidades y objetivos.",
       
-      stepLabel: "Paso",
-      stepModelTitle: "¿Cuál es tu modelo de negocio?",
-      stepInfraTitle: "¿Qué nivel de infraestructura posees?",
-      stepVolumeTitle: "¿Cuál es tu alcance proyectado?",
+      stepLabel: "Pregunta",
+      step1Title: "¿Qué solución necesitas actualmente?",
+      step2Title: "¿Cuál es tu objetivo principal?",
+      step3Title: "¿En qué etapa se encuentra tu proyecto?",
       
-      modelOpts: ["Maquila Integral", "Granel", "Desarrollo de Perfil"],
-      infraOpts: ["Turnkey - Todo incluido", "Solo Envasado y Logística"],
-      volumeOpts: ["Volumen Masivo (+10k cajas)", "Ediciones de Nicho"],
+      step1Opts: [
+        "Maquila completa de tequila",
+        "Desarrollo de marca privada (Private Label)",
+        "Compra de tequila a granel",
+        "Embotellado para mi marca",
+        "Desarrollo desde cero"
+      ],
+      step2Opts: [
+        "Lanzar una nueva marca",
+        "Escalar producción actual",
+        "Exportar",
+        "Tener producto para retail/distribución",
+        "Buscar mejor proveedor"
+      ],
+      step3Opts: [
+        "Idea inicial",
+        "Ya tengo marca o concepto",
+        "Ya vendo actualmente",
+        "Busco producción inmediata",
+        "Estoy comparando proveedores"
+      ],
       
-      profileIdentified: "Perfil Identificado",
-      modelLabel: "Modelo:",
-      infraLabel: "Infraestructura:",
-      scopeLabel: "Alcance:",
-      quizSuccessText: "Nuestro equipo de Project Management analizará sus respuestas. Un especialista se pondrá en contacto en menos de 24 horas.",
-      resetQuizBtn: "Reiniciar Consulta",
+      ctaTitle: "Recibe asesoría personalizada para tu proyecto",
+      formName: "Nombre",
+      formCompany: "Empresa",
+      formPhone: "Teléfono",
+      formEmail: "Correo",
+      formSubmitBtn: "Enviar y Recibir Asesoría",
+      formSubmitting: "Enviando...",
+      
+      successTitle: "¡Diagnóstico Enviado!",
+      successDesc: "Muchas gracias por tu interés. Un especialista se pondrá en contacto en menos de 24 horas.",
+      resetQuizBtn: "Realizar otro diagnóstico",
       
       servicesOvertitle: "Excelencia en cada eslabón",
       servicesTitle: "Sinergia entre maestría y rigor logístico",
@@ -92,7 +160,7 @@ export default function Maquilas({ lang = "es" }) {
       ],
       
       contactTitle: "Conversaciones que destilan negocios",
-      pmRole: "Project Manager Comercio Exterior",
+      pmRole: "Key Account Executive - Bulk & International Markets",
       pmQuote: "“Nuestra prioridad es blindar el prestigio de su marca a través de un proceso técnico impecable y una trazabilidad absoluta, garantizando el éxito comercial en el extranjero.”",
       pmCommitment: "Compromiso Casa Loy",
       
@@ -111,25 +179,48 @@ export default function Maquilas({ lang = "es" }) {
       heroTitleItalic: "The Art of Private Label with Legacy.",
       heroBtn: "Start your Project",
       
-      quizOvertitle: "Operational Strategy",
-      quizTitle: "Define the future of your distillate",
-      quizDesc: "Through our infrastructure diagnostic, we determine the exact operational model required for your commercial vision in the global market.",
+      quizOvertitle: "Strategic 3-Question Quiz",
+      quizTitle: "What type of project are you looking to develop?",
+      quizDesc: "Complete this 3-question diagnostic to receive a proposal tailored to your needs and goals.",
       
-      stepLabel: "Step",
-      stepModelTitle: "What is your business model?",
-      stepInfraTitle: "What level of infrastructure do you have?",
-      stepVolumeTitle: "What is your projected volume?",
+      stepLabel: "Question",
+      step1Title: "What solution do you currently need?",
+      step2Title: "What is your main objective?",
+      step3Title: "What stage is your project in?",
       
-      modelOpts: ["Full Private Label", "Bulk Supply", "Profile Development"],
-      infraOpts: ["Turnkey - All Inclusive", "Bottling & Logistics Only"],
-      volumeOpts: ["Mass Volume (+10k cases)", "Niche Editions"],
+      step1Opts: [
+        "Full tequila contract bottling",
+        "Private label development (Private Label)",
+        "Bulk tequila purchase",
+        "Bottling for my brand",
+        "Development from scratch"
+      ],
+      step2Opts: [
+        "Launch a new brand",
+        "Scale current production",
+        "Export",
+        "Have product for retail/distribution",
+        "Find a better supplier"
+      ],
+      step3Opts: [
+        "Initial idea",
+        "Already have a brand or concept",
+        "Currently selling",
+        "Looking for immediate production",
+        "Comparing suppliers"
+      ],
       
-      profileIdentified: "Profile Identified",
-      modelLabel: "Model:",
-      infraLabel: "Infrastructure:",
-      scopeLabel: "Volume:",
-      quizSuccessText: "Our Project Management team will analyze your answers. A specialist will get in touch in less than 24 hours.",
-      resetQuizBtn: "Reset Consultation",
+      ctaTitle: "Receive personalized advisory for your project",
+      formName: "Name",
+      formCompany: "Company",
+      formPhone: "Phone",
+      formEmail: "Email",
+      formSubmitBtn: "Submit and Receive Advisory",
+      formSubmitting: "Submitting...",
+      
+      successTitle: "Diagnostic Sent!",
+      successDesc: "Thank you for your interest. A specialist will get in touch in less than 24 hours.",
+      resetQuizBtn: "Take quiz again",
       
       servicesOvertitle: "Excellence in every link",
       servicesTitle: "Synergy between mastery and logistical rigor",
@@ -186,7 +277,7 @@ export default function Maquilas({ lang = "es" }) {
       ],
       
       contactTitle: "Conversations that distill business",
-      pmRole: "Foreign Trade Project Manager",
+      pmRole: "Key Account Executive - Bulk & International Markets",
       pmQuote: "“Our priority is to shield the prestige of your brand through an impeccable technical process and absolute traceability, guaranteeing commercial success abroad.”",
       pmCommitment: "Casa Loy Commitment",
       
@@ -208,8 +299,19 @@ export default function Maquilas({ lang = "es" }) {
     setQuizStep(next);
   };
 
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    // Simulate API call for premium feel
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setQuizStep(5);
+    }, 1000);
+  };
+
   const handleResetQuiz = () => {
-    setQuizAnswers({ model: "", infra: "", volume: "" });
+    setQuizAnswers({ solution: "", objective: "", stage: "" });
+    setContactForm({ name: "", company: "", lada: "", phone: "", email: "" });
     setQuizStep(1);
   };
 
@@ -274,18 +376,18 @@ export default function Maquilas({ lang = "es" }) {
       </section>
 
       {/* Interactive Quiz Section */}
-      <section className="relative py-section-gap overflow-hidden bg-zinc-900 text-white" id="quiz">
+      <section className="relative py-section-gap overflow-hidden bg-[#1C1A19] text-white" id="quiz">
         <div className="absolute inset-0 z-0">
           <img
             alt="Agave Hearts Background"
-            className="w-full h-full object-cover brightness-[0.2] opacity-40"
+            className="w-full h-full object-cover brightness-[0.45] opacity-55"
             src="/Piñas de Agave Tequilana Weber.webp"
           />
         </div>
         <div className="relative z-10 px-margin-desktop max-w-container-max mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
             
-            <div className="lg:col-span-5 text-left space-y-8">
+            <div className="lg:col-span-5 text-left space-y-8 animate-fade-in">
               <span className="font-label-caps text-primary-fixed mb-4 block tracking-widest uppercase">
                 {currentT.quizOvertitle}
               </span>
@@ -302,94 +404,218 @@ export default function Maquilas({ lang = "es" }) {
             </div>
 
             {/* Glassmorphic Quiz Controller */}
-            <div className="lg:col-span-7 p-8 md:p-16 bg-[#fcf9f3]/10 backdrop-blur-2xl border border-white/10 rounded-none shadow-2xl">
+            <div className="lg:col-span-7 p-6 md:p-10 bg-white/15 backdrop-blur-3xl border border-white/20 rounded-none shadow-2xl transition-all duration-300 w-full">
               
               {quizStep === 1 && (
-                <div className="space-y-6 text-left">
-                  <span className="font-label-caps text-primary mb-2 block">{currentT.stepLabel} 01 / 03</span>
-                  <h3 className="font-headline-md text-2xl md:text-3xl mb-8 text-white select-none">
-                    {currentT.stepModelTitle}
+                <div className="space-y-4 text-left animate-fade-in">
+                  <span className="font-label-caps text-[#FDA377] font-bold tracking-wider mb-1 block text-xs">{currentT.stepLabel} 01 / 03</span>
+                  <h3 className="font-headline-md text-xl md:text-2xl mb-6 text-white select-none">
+                    {currentT.step1Title}
                   </h3>
-                  <div className="grid grid-cols-1 gap-4">
-                    {currentT.modelOpts.map((opt) => (
-                      <button
-                        key={opt}
-                        onClick={() => handleNextStep("model", opt, 2)}
-                        className="w-full text-left p-6 border border-white/20 bg-white/5 hover:border-primary hover:bg-white hover:text-black transition-all flex justify-between items-center group font-navigation"
-                      >
-                        <span className="font-body-lg text-white group-hover:text-black">{opt}</span>
-                        <span className="material-symbols-outlined text-white group-hover:text-black opacity-0 group-hover:opacity-100 transition-opacity">
-                          arrow_forward
-                        </span>
-                      </button>
-                    ))}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {currentT.step1Opts.map((opt, idx) => {
+                      const letters = ["A", "B", "C", "D", "E"];
+                      return (
+                        <button
+                          key={opt}
+                          onClick={() => handleNextStep("solution", opt, 2)}
+                          className={`w-full text-left p-4 border border-white/20 bg-white/10 hover:border-primary hover:bg-white hover:text-black transition-all duration-300 flex justify-between items-center group font-navigation ${
+                            idx === 4 ? 'md:col-span-2' : ''
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-[10px] font-bold text-primary group-hover:text-white bg-white/20 group-hover:bg-primary px-1.5 py-0.5 rounded border border-white/20 group-hover:border-transparent transition-colors">
+                              {letters[idx]}
+                            </span>
+                            <span className="text-sm font-light text-white group-hover:text-black leading-tight">{opt}</span>
+                          </div>
+                          <span className="material-symbols-outlined text-sm text-primary group-hover:text-black opacity-0 group-hover:opacity-100 transition-opacity">
+                            arrow_forward
+                          </span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               )}
 
               {quizStep === 2 && (
-                <div className="space-y-6 text-left">
-                  <span className="font-label-caps text-primary mb-2 block">{currentT.stepLabel} 02 / 03</span>
-                  <h3 className="font-headline-md text-2xl md:text-3xl mb-8 text-white select-none">
-                    {currentT.stepInfraTitle}
+                <div className="space-y-4 text-left animate-fade-in">
+                  <span className="font-label-caps text-[#FDA377] font-bold tracking-wider mb-1 block text-xs">{currentT.stepLabel} 02 / 03</span>
+                  <h3 className="font-headline-md text-xl md:text-2xl mb-6 text-white select-none">
+                    {currentT.step2Title}
                   </h3>
-                  <div className="grid grid-cols-1 gap-4">
-                    {currentT.infraOpts.map((opt) => (
-                      <button
-                        key={opt}
-                        onClick={() => handleNextStep("infra", opt, 3)}
-                        className="w-full text-left p-6 border border-white/20 bg-white/5 hover:border-primary hover:bg-white hover:text-black transition-all flex justify-between items-center group font-navigation"
-                      >
-                        <span className="font-body-lg text-white group-hover:text-black">{opt}</span>
-                        <span className="material-symbols-outlined text-white group-hover:text-black opacity-0 group-hover:opacity-100 transition-opacity">
-                          arrow_forward
-                        </span>
-                      </button>
-                    ))}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {currentT.step2Opts.map((opt, idx) => {
+                      const letters = ["A", "B", "C", "D", "E"];
+                      return (
+                        <button
+                          key={opt}
+                          onClick={() => handleNextStep("objective", opt, 3)}
+                          className={`w-full text-left p-4 border border-white/20 bg-white/10 hover:border-primary hover:bg-white hover:text-black transition-all duration-300 flex justify-between items-center group font-navigation ${
+                            idx === 4 ? 'md:col-span-2' : ''
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-[10px] font-bold text-primary group-hover:text-white bg-white/20 group-hover:bg-primary px-1.5 py-0.5 rounded border border-white/20 group-hover:border-transparent transition-colors">
+                              {letters[idx]}
+                            </span>
+                            <span className="text-sm font-light text-white group-hover:text-black leading-tight">{opt}</span>
+                          </div>
+                          <span className="material-symbols-outlined text-sm text-primary group-hover:text-black opacity-0 group-hover:opacity-100 transition-opacity">
+                            arrow_forward
+                          </span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               )}
 
               {quizStep === 3 && (
-                <div className="space-y-6 text-left">
-                  <span className="font-label-caps text-primary mb-2 block">{currentT.stepLabel} 03 / 03</span>
-                  <h3 className="font-headline-md text-2xl md:text-3xl mb-8 text-white select-none">
-                    {currentT.stepVolumeTitle}
+                <div className="space-y-4 text-left animate-fade-in">
+                  <span className="font-label-caps text-[#FDA377] font-bold tracking-wider mb-1 block text-xs">{currentT.stepLabel} 03 / 03</span>
+                  <h3 className="font-headline-md text-xl md:text-2xl mb-6 text-white select-none">
+                    {currentT.step3Title}
                   </h3>
-                  <div className="grid grid-cols-1 gap-4">
-                    {currentT.volumeOpts.map((opt) => (
-                      <button
-                        key={opt}
-                        onClick={() => handleNextStep("volume", opt, 4)}
-                        className="w-full text-left p-6 border border-white/20 bg-white/5 hover:border-primary hover:bg-white hover:text-black transition-all flex justify-between items-center group font-navigation"
-                      >
-                        <span className="font-body-lg text-white group-hover:text-black">{opt}</span>
-                        <span className="material-symbols-outlined text-white group-hover:text-black opacity-0 group-hover:opacity-100 transition-opacity">
-                          arrow_forward
-                        </span>
-                      </button>
-                    ))}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {currentT.step3Opts.map((opt, idx) => {
+                      const letters = ["A", "B", "C", "D", "E"];
+                      return (
+                        <button
+                          key={opt}
+                          onClick={() => handleNextStep("stage", opt, 4)}
+                          className={`w-full text-left p-4 border border-white/20 bg-white/10 hover:border-primary hover:bg-white hover:text-black transition-all duration-300 flex justify-between items-center group font-navigation ${
+                            idx === 4 ? 'md:col-span-2' : ''
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-[10px] font-bold text-primary group-hover:text-white bg-white/20 group-hover:bg-primary px-1.5 py-0.5 rounded border border-white/20 group-hover:border-transparent transition-colors">
+                              {letters[idx]}
+                            </span>
+                            <span className="text-sm font-light text-white group-hover:text-black leading-tight">{opt}</span>
+                          </div>
+                          <span className="material-symbols-outlined text-sm text-primary group-hover:text-black opacity-0 group-hover:opacity-100 transition-opacity">
+                            arrow_forward
+                          </span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               )}
 
               {quizStep === 4 && (
-                <div className="text-center py-8 space-y-6">
-                  <span className="material-symbols-outlined text-6xl text-primary mb-2 animate-bounce">
+                <form onSubmit={handleFormSubmit} className="space-y-5 text-left animate-fade-in">
+                  <h3 className="font-headline-md text-xl md:text-2xl mb-4 text-white select-none">
+                    {currentT.ctaTitle}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="relative border-b border-white/35 focus-within:border-primary transition-all duration-300">
+                      <input
+                        required
+                        type="text"
+                        value={contactForm.name}
+                        onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                        className="w-full border-0 focus:ring-0 bg-transparent py-2.5 font-body-md placeholder:text-white/60 focus:outline-none text-white text-sm"
+                        placeholder={currentT.formName}
+                      />
+                    </div>
+                    <div className="relative border-b border-white/35 focus-within:border-primary transition-all duration-300">
+                      <input
+                        required
+                        type="text"
+                        value={contactForm.company}
+                        onChange={(e) => setContactForm({ ...contactForm, company: e.target.value })}
+                        className="w-full border-0 focus:ring-0 bg-transparent py-2.5 font-body-md placeholder:text-white/60 focus:outline-none text-white text-sm"
+                        placeholder={currentT.formCompany}
+                      />
+                    </div>
+                    <div className="flex gap-2 items-end border-b border-white/35 focus-within:border-primary transition-all duration-300 pb-0.5">
+                      <span className="text-white/40 text-sm select-none pb-2 font-body-md">+</span>
+                      <input
+                        required
+                        type="text"
+                        maxLength="4"
+                        value={contactForm.lada}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, "");
+                          setContactForm({ ...contactForm, lada: val });
+                        }}
+                        className="w-14 border-0 focus:ring-0 bg-transparent py-2.5 font-body-md placeholder:text-white/40 focus:outline-none text-white text-sm text-center"
+                        placeholder="LADA"
+                      />
+                      <div className="h-6 w-[1px] bg-white/20 self-center mb-2"></div>
+                      <input
+                        required
+                        type="tel"
+                        value={contactForm.phone}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, "");
+                          setContactForm({ ...contactForm, phone: val });
+                        }}
+                        className="flex-1 border-0 focus:ring-0 bg-transparent py-2.5 font-body-md placeholder:text-white/60 focus:outline-none text-white text-sm"
+                        placeholder={currentT.formPhone}
+                      />
+                    </div>
+                    <div className="relative border-b border-white/35 focus-within:border-primary transition-all duration-300">
+                      <input
+                        required
+                        type="email"
+                        value={contactForm.email}
+                        onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                        className="w-full border-0 focus:ring-0 bg-transparent py-2.5 font-body-md placeholder:text-white/60 focus:outline-none text-white text-sm"
+                        placeholder={currentT.formEmail}
+                      />
+                    </div>
+                  </div>
+                  
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full mt-6 py-3.5 bg-primary text-white font-label-caps uppercase tracking-[0.2em] text-xs transition-all hover:bg-[#8C4723] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>{currentT.formSubmitting}</span>
+                      </>
+                    ) : (
+                      currentT.formSubmitBtn
+                    )}
+                  </button>
+                </form>
+              )}
+
+              {quizStep === 5 && (
+                <div className="text-center py-6 space-y-5 animate-fade-in">
+                  <span className="material-symbols-outlined text-5xl text-[#FDA377] mb-1 animate-bounce">
                     verified
                   </span>
-                  <h3 className="font-headline-md text-3xl mb-4 text-white">{currentT.profileIdentified}</h3>
-                  <div className="p-4 bg-white/5 border border-white/10 max-w-sm mx-auto text-left font-sans text-xs space-y-2 mb-6">
-                    <p>• <span className="opacity-50">{currentT.modelLabel}</span> {quizAnswers.model}</p>
-                    <p>• <span className="opacity-50">{currentT.infraLabel}</span> {quizAnswers.infra}</p>
-                    <p>• <span className="opacity-50">{currentT.scopeLabel}</span> {quizAnswers.volume}</p>
+                  <h3 className="font-headline-md text-2xl mb-3 text-white">{currentT.successTitle}</h3>
+                  <div className="p-4 bg-white/5 border border-white/10 max-w-md mx-auto text-left font-sans text-xs space-y-2 mb-5">
+                    <p className="text-[#FDA377] font-semibold uppercase tracking-wider text-[10px] mb-1">Respuestas:</p>
+                    <p>• <span className="opacity-50">{currentT.step1Title}:</span> {quizAnswers.solution}</p>
+                    <p>• <span className="opacity-50">{currentT.step2Title}:</span> {quizAnswers.objective}</p>
+                    <p>• <span className="opacity-50">{currentT.step3Title}:</span> {quizAnswers.stage}</p>
+                    
+                    <div className="h-[1px] bg-white/10 my-3"></div>
+                    
+                    <p className="text-[#FDA377] font-semibold uppercase tracking-wider text-[10px] mb-1">Contacto:</p>
+                    <p>• <span className="opacity-50">{currentT.formName}:</span> {contactForm.name}</p>
+                    <p>• <span className="opacity-50">{currentT.formCompany}:</span> {contactForm.company}</p>
+                    <p>• <span className="opacity-50">{currentT.formPhone}:</span> +{contactForm.lada} {contactForm.phone}</p>
+                    <p>• <span className="opacity-50">{currentT.formEmail}:</span> {contactForm.email}</p>
                   </div>
-                  <p className="font-body-md text-white/70 max-w-md mx-auto leading-relaxed">
-                    {currentT.quizSuccessText}
+                  <p className="font-body-md text-white/70 max-w-md mx-auto text-sm leading-relaxed">
+                    {currentT.successDesc}
                   </p>
                   <button
                     onClick={handleResetQuiz}
-                    className="text-primary font-label-caps border-b border-primary pb-1 hover:opacity-70 transition-opacity mt-8"
+                    className="text-[#FDA377] font-label-caps border-b border-[#FDA377] pb-0.5 hover:text-white hover:border-white transition-all mt-6 text-xs"
                   >
                     {currentT.resetQuizBtn}
                   </button>
@@ -585,7 +811,7 @@ export default function Maquilas({ lang = "es" }) {
                 <img
                   alt="Fernanda Quintana"
                   className="w-full h-full object-cover"
-                  src="/Empleado Casa Loy Tequilera.webp"
+                  src="/Ejecutiva.jpeg"
                 />
               </div>
               <div className="space-y-2">
@@ -594,10 +820,25 @@ export default function Maquilas({ lang = "es" }) {
                   {currentT.pmRole}
                 </p>
                 <div className="flex flex-col gap-1 text-sm font-navigation text-on-surface-variant font-normal">
-                  <a className="hover:text-primary transition-colors" href="mailto:f.quintana@casaloy.com">
-                    f.quintana@casaloy.com
+                  <a className="hover:text-primary transition-colors" href="mailto:fquintana@casaloy.com">
+                    fquintana@casaloy.com
                   </a>
-                  <span>+52 (33) 3250 4359</span>
+                  <div className="mt-3 space-y-2 text-sm">
+                    <a 
+                      href="tel:+5213332557018" 
+                      className="flex items-center gap-2 hover:text-primary transition-colors group w-fit"
+                    >
+                      <MexicoFlag />
+                      <span className="text-[#1c1c18]/70 group-hover:text-primary transition-colors">+52 1 33 3255 7018</span>
+                    </a>
+                    <a 
+                      href="tel:+523332557018" 
+                      className="flex items-center gap-2 hover:text-primary transition-colors group w-fit"
+                    >
+                      <USFlag />
+                      <span className="text-[#1c1c18]/70 group-hover:text-primary transition-colors">011 52 33 3255 7018</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
