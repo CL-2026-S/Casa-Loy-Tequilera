@@ -101,7 +101,28 @@ export default function App() {
 
   const t = translations[lang];
 
+  const fetchTourismData = async () => {
+    try {
+      const res = await fetch('/api/tourism');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.maxCapacityLimit !== undefined) {
+          setMaxCapacityLimit(data.maxCapacityLimit);
+        }
+        if (data.blockedDates !== undefined) {
+          setBlockedDates(data.blockedDates);
+        }
+        if (data.bookingsCapacity !== undefined) {
+          setBookingsCapacity(data.bookingsCapacity);
+        }
+      }
+    } catch (e) {
+      console.warn("Could not fetch tourism data from API, using default mock local state.", e);
+    }
+  };
+
   useEffect(() => {
+    fetchTourismData();
     const params = new URLSearchParams(window.location.search);
     
     // Check if code query param is present (QR scan validation link)
@@ -250,6 +271,7 @@ export default function App() {
             setBlockedDates={setBlockedDates}
             bookingsCapacity={bookingsCapacity}
             setBookingsCapacity={setBookingsCapacity}
+            refreshData={fetchTourismData}
           />
         );
       default:

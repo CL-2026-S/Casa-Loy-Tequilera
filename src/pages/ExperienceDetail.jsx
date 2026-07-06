@@ -478,27 +478,63 @@ export default function ExperienceDetail({
     }
   };
 
-  const saveBookingToLog = (code) => {
+  const saveBookingToLog = async (code) => {
+    const bookingPayload = {
+      action: 'create_booking',
+      code,
+      customer_name: clientName || "Cliente Simulado",
+      customer_email: clientEmail || "correo@ejemplo.com",
+      customer_phone: clientPhone || "+52 1 33...",
+      tour_id: packageId,
+      date_str: selectedDateStr,
+      time_str: selectedTime,
+      guests: numGuests,
+      total_paid: numGuests * pricePerPerson,
+      payment_method: selectedPaymentMethod === "paypal" ? "PayPal" : "Mercado Pago"
+    };
+
     try {
-      const existing = localStorage.getItem("casa_loy_bookings_log");
-      const list = existing ? JSON.parse(existing) : [];
-      const newBooking = {
-        code,
-        name: clientName || "Cliente Simulado",
-        email: clientEmail || "correo@ejemplo.com",
-        phone: clientPhone || "+52 1 33...",
-        packageName: activeData.title,
-        date: selectedDateStr,
-        time: selectedTime,
-        guests: numGuests,
-        amount: numGuests * pricePerPerson,
-        method: selectedPaymentMethod === "paypal" ? "PayPal" : "Mercado Pago",
-        timestamp: new Date().toLocaleString()
-      };
-      list.unshift(newBooking);
-      localStorage.setItem("casa_loy_bookings_log", JSON.stringify(list));
+      const res = await fetch('/api/tourism', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(bookingPayload)
+      });
+      
+      if (!res.ok) {
+        const errData = await res.json();
+        if (errData.error === 'SOLD_OUT') {
+          throw new Error('SOLD_OUT');
+        }
+        throw new Error(errData.error || 'API_ERROR');
+      }
     } catch (e) {
-      console.error(e);
+      console.error("Supabase backup error:", e);
+      if (e.message === 'SOLD_OUT') {
+        throw e;
+      }
+      
+      // Local backup fallback
+      try {
+        const existing = localStorage.getItem("casa_loy_bookings_log");
+        const list = existing ? JSON.parse(existing) : [];
+        const newBooking = {
+          code,
+          name: clientName || "Cliente Simulado",
+          email: clientEmail || "correo@ejemplo.com",
+          phone: clientPhone || "+52 1 33...",
+          packageName: activeData.title,
+          date: selectedDateStr,
+          time: selectedTime,
+          guests: numGuests,
+          amount: numGuests * pricePerPerson,
+          method: selectedPaymentMethod === "paypal" ? "PayPal" : "Mercado Pago",
+          timestamp: new Date().toLocaleString()
+        };
+        list.unshift(newBooking);
+        localStorage.setItem("casa_loy_bookings_log", JSON.stringify(list));
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
@@ -506,23 +542,36 @@ export default function ExperienceDetail({
     if (!selectedPaymentMethod) return;
     setIsPaying(true);
 
-    setTimeout(() => {
+    setTimeout(async () => {
       const code = `CL-${packageId.toUpperCase()}-${selectedDateStr.replace(/-/g, '')}${Math.floor(1000 + Math.random() * 9000)}`;
       
-      // Deduct spots in client state
-      setBookingsCapacity((prev) => ({
-        ...prev,
-        [selectedDateStr]: {
-          ...(prev[selectedDateStr] || {}),
-          [selectedTime]: occupiedSpots + numGuests,
-        },
-      }));
-      
-      saveBookingToLog(code);
-      setReservationCode(code);
-      setIsPaying(false);
-      setBookingConfirmed(true);
-      setPaymentStep(false);
+      try {
+        await saveBookingToLog(code);
+        
+        // Deduct spots in client state
+        setBookingsCapacity((prev) => ({
+          ...prev,
+          [selectedDateStr]: {
+            ...(prev[selectedDateStr] || {}),
+            [selectedTime]: occupiedSpots + numGuests,
+          },
+        }));
+        
+        setReservationCode(code);
+        setIsPaying(false);
+        setBookingConfirmed(true);
+        setPaymentStep(false);
+      } catch (e) {
+        setIsPaying(false);
+        if (e.message === 'SOLD_OUT') {
+          alert(lang === "es"
+            ? "¡Lo sentimos! Este horario se ha quedado sin cupos disponibles mientras realizabas el pago. Por favor, selecciona otra hora o fecha."
+            : "Sorry! This slot has run out of available spots while you were checking out. Please select another time or date."
+          );
+        } else {
+          alert(lang === "es" ? "Error al registrar la reserva en el servidor." : "Error registering reservation on the server.");
+        }
+      }
     }, 1500);
   };
 
@@ -887,7 +936,25 @@ export default function ExperienceDetail({
                                   <PayPalButtons
                                     forceReRender={[numGuests, pricePerPerson, selectedDateStr, selectedTime, clientName, clientEmail, clientPhone]}
                                     style={{ layout: "vertical", color: "gold", shape: "rect", label: "paypal", height: 40 }}
-                                    createOrder={(data, actions) => {
+                                    createOrder={async (data, actions) => {
+                                      try {
+                                        const checkRes = await fetch('/api/tourism');
+                                        if (checkRes.ok) {
+                                          const checkData = await checkRes.json();
+                                          const currentOccupied = checkData.bookingsCapacity?.[selectedDateStr]?.[selectedTime] || 0;
+                                          const currentLimit = checkData.maxCapacityLimit || 20;
+                                          if (currentOccupied + numGuests > currentLimit) {
+                                            alert(lang === "es"
+                                              ? "¡Lo sentimos! Este horario se ha quedado sin cupos disponibles. Selecciona otra fecha u hora."
+                                              : "Sorry! This slot has run out of available spots. Please choose another date or time."
+                                            );
+                                            return Promise.reject(new Error("SOLD_OUT"));
+                                          }
+                                        }
+                                      } catch (e) {
+                                        return Promise.reject(e);
+                                      }
+
                                       return actions.order.create({
                                         purchase_units: [
                                           {

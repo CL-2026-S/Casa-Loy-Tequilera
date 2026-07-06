@@ -8,7 +8,8 @@ export default function AdminPanel({
   blockedDates,
   setBlockedDates,
   bookingsCapacity,
-  setBookingsCapacity
+  setBookingsCapacity,
+  refreshData
 }) {
   const [isRegistered, setIsRegistered] = useState(() => {
     return localStorage.getItem("casa_loy_admin_registered") === "true";
@@ -31,59 +32,40 @@ export default function AdminPanel({
   const [searchedTicket, setSearchedTicket] = useState(null);
   const [searchStatus, setSearchStatus] = useState(""); // "", "found_valid", "found_used", "not_found"
   const [scanValidatedTime, setScanValidatedTime] = useState("");
+  const [validationSuccessMsg, setValidationSuccessMsg] = useState("");
 
-  // Slots editor states
-  const [editPackageId, setEditPackageId] = useState("oro");
-  const [editDateStr, setEditDateStr] = useState("");
-  const [editTimeSlot, setEditTimeSlot] = useState("10:00 AM");
-  const [editSpotsValue, setEditSpotsValue] = useState(0);
+  // Bulk Edit States
+  const [bulkStartDate, setBulkStartDate] = useState("");
+  const [bulkEndDate, setBulkEndDate] = useState("");
+  const [selectedWeekdays, setSelectedWeekdays] = useState({
+    1: true, // Monday
+    2: true, // Tuesday
+    3: true, // Wednesday
+    4: true, // Thursday
+    5: true, // Friday
+    6: true, // Saturday
+    0: true  // Sunday
+  });
+  const [bulkTimeSlot, setBulkTimeSlot] = useState("10:00 AM");
+  const [bulkOccupancyValue, setBulkOccupancyValue] = useState(0);
+  const [isSubmittingBulk, setIsSubmittingBulk] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    // Load bookings log from localstorage
-    loadBookingsLog();
+    loadData();
   }, []);
 
-  const loadBookingsLog = () => {
+  const loadData = async () => {
     try {
-      const saved = localStorage.getItem("casa_loy_bookings_log");
-      if (saved) {
-        setBookingsLog(JSON.parse(saved));
-      } else {
-        // Mock default bookings log if empty for visual demo
-        const mockLog = [
-          {
-            code: "CL-ORO-202607153928",
-            name: "Juan Carlos Gómez",
-            email: "jc.gomez@gmail.com",
-            phone: "+52 331 456 7890",
-            packageName: "Experiencia Casa Loy Oro",
-            date: "2026-07-15",
-            time: "10:00 AM",
-            guests: 2,
-            amount: 1100,
-            method: "PayPal",
-            timestamp: "05/07/2026 14:32:10"
-          },
-          {
-            code: "CL-DIAMANTE-202607204928",
-            name: "María Fernanda Ortiz",
-            email: "mafer.ortiz@outlook.com",
-            phone: "+52 552 189 0456",
-            packageName: "Experiencia Casa Loy Diamante",
-            date: "2026-07-20",
-            time: "11:00 AM",
-            guests: 4,
-            amount: 3000,
-            method: "Mercado Pago",
-            timestamp: "06/07/2026 10:15:45"
-          }
-        ];
-        localStorage.setItem("casa_loy_bookings_log", JSON.stringify(mockLog));
-        setBookingsLog(mockLog);
+      const res = await fetch("/api/tourism");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.bookingsLog) {
+          setBookingsLog(data.bookingsLog);
+        }
       }
     } catch (e) {
-      console.error(e);
+      console.error("Could not fetch reservations log from API.", e);
     }
   };
 
@@ -113,6 +95,7 @@ export default function AdminPanel({
       setIsLoggedIn(true);
       setEmailInput("");
       setPasswordInput("");
+      loadData();
     } else {
       setErrorMsg(lang === "es" ? "Credenciales incorrectas. Para pruebas usa: admin@casaloy.com / admin" : "Incorrect credentials. For testing use: admin@casaloy.com / admin");
     }
@@ -123,41 +106,179 @@ export default function AdminPanel({
     setIsLoggedIn(false);
   };
 
-  // Search Ticket manually in panel
+  // Helper to generate matching dates based on date range and weekdays selector
+  const getMatchingDates = () => {
+    if (!bulkStartDate || !bulkEndDate) return [];
+    const start = new Date(bulkStartDate + "T00:00:00");
+    const end = new Date(bulkEndDate + "T00:00:00");
+    
+    if (end < start) return [];
+    
+    const dates = [];
+    let current = new Date(start);
+    
+    while (current <= end) {
+      const dayOfWeek = current.getDay();
+      if (selectedWeekdays[dayOfWeek]) {
+        const y = current.getFullYear();
+        const m = String(current.getMonth() + 1).padStart(2, "0");
+        const d = String(current.getDate()).padStart(2, "0");
+        dates.push(`${y}-${m}-${d}`);
+      }
+      current.setDate(current.getDate() + 1);
+    }
+    return dates;
+  };
+
+  // Bulk Actions
+  const handleBulkBlock = async (shouldBlock) => {
+    const dates = getMatchingDates();
+    if (dates.length === 0) {
+      alert(lang === "es" ? "Selecciona un rango de fechas válido y al menos un día de la semana." : "Select a valid date range and at least one day of the week.");
+      return;
+    }
+
+    if (
+      !confirm(
+        lang === "es"
+          ? `¿Confirmas que deseas ${shouldBlock ? "BLOQUEAR" : "DESBLOQUEAR"} ${dates.length} días seleccionados?`
+          : `Confirm you want to ${shouldBlock ? "BLOCK" : "UNBLOCK"} ${dates.length} selected days?`
+      )
+    ) {
+      return;
+    }
+
+    setIsSubmittingBulk(true);
+    try {
+      const res = await fetch("/api/tourism", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: shouldBlock ? "block_dates" : "unblock_dates",
+          dates
+        })
+      });
+
+      if (res.ok) {
+        alert(
+          lang === "es"
+            ? `¡Se han ${shouldBlock ? "bloqueado" : "desbloqueado"} ${dates.length} días con éxito en Supabase!`
+            : `Successfully ${shouldBlock ? "blocked" : "unblocked"} ${dates.length} days in Supabase!`
+        );
+        if (refreshData) await refreshData();
+      } else {
+        alert("Error al actualizar la base de datos.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error de conexión con el servidor.");
+    } finally {
+      setIsSubmittingBulk(false);
+    }
+  };
+
+  const handleBulkSetOccupancy = async () => {
+    const dates = getMatchingDates();
+    if (dates.length === 0) {
+      alert(lang === "es" ? "Selecciona un rango de fechas válido." : "Select a valid date range.");
+      return;
+    }
+
+    if (
+      !confirm(
+        lang === "es"
+          ? `¿Confirmas que deseas fijar la ocupación del horario ${bulkTimeSlot} a ${bulkOccupancyValue} lugares en ${dates.length} días?`
+          : `Confirm you want to set occupancy for slot ${bulkTimeSlot} to ${bulkOccupancyValue} places in ${dates.length} days?`
+      )
+    ) {
+      return;
+    }
+
+    setIsSubmittingBulk(true);
+    try {
+      const slotOverrides = dates.map((d) => ({
+        date_str: d,
+        time_str: bulkTimeSlot,
+        occupied_count: parseInt(bulkOccupancyValue) || 0
+      }));
+
+      const res = await fetch("/api/tourism", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "bulk_set_occupancy",
+          slotOverrides
+        })
+      });
+
+      if (res.ok) {
+        alert(lang === "es" ? "Ocupación masiva actualizada con éxito en Supabase." : "Bulk occupancy successfully updated in Supabase.");
+        if (refreshData) await refreshData();
+      } else {
+        alert("Error al actualizar ocupaciones.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error de conexión.");
+    } finally {
+      setIsSubmittingBulk(false);
+    }
+  };
+
+  const handleUpdateGeneralCapacity = async () => {
+    if (maxCapacityLimit < 1) return;
+    try {
+      const res = await fetch("/api/tourism", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "set_capacity",
+          capacity: maxCapacityLimit
+        })
+      });
+      if (res.ok) {
+        alert(lang === "es" ? "Límite de capacidad general actualizado en Supabase" : "General capacity limit updated in Supabase");
+        if (refreshData) await refreshData();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // Search Ticket manually or scanned
   const handleSearchTicket = () => {
     setSearchStatus("");
     setSearchedTicket(null);
+    setValidationSuccessMsg("");
     if (!ticketSearchCode) return;
 
-    // Search in localstorage logs
     const ticket = bookingsLog.find((b) => b.code.trim().toUpperCase() === ticketSearchCode.trim().toUpperCase());
-    
-    // Check in localstorage if used
-    const usedTime = localStorage.getItem(`used_ticket_${ticketSearchCode.trim().toUpperCase()}`);
 
     if (ticket) {
       setSearchedTicket(ticket);
-      if (usedTime) {
+      if (ticket.used_at) {
         setSearchStatus("found_used");
-        setScanValidatedTime(usedTime);
+        setScanValidatedTime(ticket.used_at);
       } else {
         setSearchStatus("found_valid");
       }
     } else {
-      // If code matches mock syntax but not in list, make a simulation ticket
       if (ticketSearchCode.toUpperCase().startsWith("CL-")) {
+        // Fallback simulated card if not found in table yet
         const simTicket = {
           code: ticketSearchCode.toUpperCase(),
           name: "Cliente Externo",
           packageName: ticketSearchCode.includes("DIAMANTE") ? "Experiencia Casa Loy Diamante" : ticketSearchCode.includes("PLATINO") ? "Experiencia Casa Loy Platino" : "Experiencia Casa Loy Oro",
-          date: new Date().toISOString().split('T')[0],
+          date: new Date().toISOString().split("T")[0],
           time: "10:00 AM",
           guests: 2
         };
         setSearchedTicket(simTicket);
-        if (usedTime) {
+        // check used status in localstorage
+        const used = localStorage.getItem(`used_ticket_${ticketSearchCode.toUpperCase()}`);
+        if (used) {
           setSearchStatus("found_used");
-          setScanValidatedTime(usedTime);
+          setScanValidatedTime(used);
         } else {
           setSearchStatus("found_valid");
         }
@@ -167,48 +288,51 @@ export default function AdminPanel({
     }
   };
 
-  const handleMarkTicketAsUsed = () => {
+  const handleMarkTicketAsUsed = async () => {
     if (!searchedTicket) return;
-    const nowStr = new Date().toLocaleString();
-    localStorage.setItem(`used_ticket_${searchedTicket.code}`, nowStr);
-    setScanValidatedTime(nowStr);
-    setSearchStatus("found_used");
-    loadBookingsLog(); // reload logs to keep sync
-  };
+    try {
+      const res = await fetch("/api/tourism", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "validate_ticket",
+          code: searchedTicket.code
+        })
+      });
 
-  const handleToggleBlockDate = () => {
-    if (!editDateStr) {
-      alert("Selecciona una fecha");
-      return;
-    }
-    if (blockedDates.includes(editDateStr)) {
-      setBlockedDates(blockedDates.filter((d) => d !== editDateStr));
-    } else {
-      setBlockedDates([...blockedDates, editDateStr]);
-    }
-  };
-
-  const handleUpdateSlotSpots = () => {
-    if (!editDateStr) {
-      alert("Selecciona una fecha");
-      return;
-    }
-    setBookingsCapacity((prev) => ({
-      ...prev,
-      [editDateStr]: {
-        ...(prev[editDateStr] || {}),
-        [editTimeSlot]: parseInt(editSpotsValue) || 0
+      if (res.ok) {
+        const data = await res.json();
+        setScanValidatedTime(data.used_at);
+        setSearchStatus("found_used");
+        setValidationSuccessMsg(lang === "es" ? "¡Ticket Validado Exitosamente!" : "Ticket Successfully Validated!");
+        
+        // Update local logs
+        await loadData();
+      } else {
+        // Fallback local storage
+        const nowStr = new Date().toLocaleString();
+        localStorage.setItem(`used_ticket_${searchedTicket.code}`, nowStr);
+        setScanValidatedTime(nowStr);
+        setSearchStatus("found_used");
+        setValidationSuccessMsg(lang === "es" ? "¡Ticket Validado Localmente (Offline)!" : "Ticket Validated Locally (Offline)!");
       }
-    }));
-    alert("Cupo ocupado actualizado con éxito");
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const toggleWeekday = (dayNum) => {
+    setSelectedWeekdays({
+      ...selectedWeekdays,
+      [dayNum]: !selectedWeekdays[dayNum]
+    });
   };
 
   return (
     <div className="bg-[#fcf9f3] min-h-screen text-on-surface py-24 font-sans select-text">
       
-      {/* 1. Login & Registration Layout (If not logged in) */}
       {!isLoggedIn ? (
-        <div className="w-full max-w-md mx-auto bg-white border border-outline-variant/30 p-8 shadow-2xl space-y-6">
+        <div className="w-full max-w-md mx-auto bg-white border border-outline-variant/35 p-8 shadow-2xl space-y-6">
           <div className="text-center border-b border-outline-variant/20 pb-4">
             <span className="font-serif text-2xl font-bold tracking-widest text-[#1c1c18] block uppercase">CASA LOY</span>
             <span className="text-[10px] text-primary tracking-widest uppercase font-semibold block mt-1">
@@ -277,18 +401,17 @@ export default function AdminPanel({
         </div>
       ) : (
         
-        /* 2. CMS Admin Dashboard */
         <div className="max-w-6xl mx-auto px-6 space-y-8">
           
-          {/* Header Bar */}
-          <div className="bg-white border border-outline-variant/30 p-6 flex flex-col md:flex-row md:justify-between md:items-center gap-4 shadow-sm">
+          {/* Header */}
+          <div className="bg-white border border-outline-variant/35 p-6 flex flex-col md:flex-row md:justify-between md:items-center gap-4 shadow-sm">
             <div className="text-left">
               <div className="flex items-center gap-2 text-primary">
                 <span className="material-symbols-outlined">dashboard</span>
-                <h4 className="font-serif text-xl font-bold uppercase tracking-wider">Casa Loy CMS Panel</h4>
+                <h4 className="font-serif text-xl font-bold uppercase tracking-wider">Hacienda Casa Loy CMS</h4>
               </div>
               <p className="text-xs text-on-surface-variant/80 mt-0.5">
-                Panel centralizado para control de turismo, cupos de experiencias y validación de entradas.
+                Administración multi-días en lote, configuración de aforo y validación en tiempo real conectada a Supabase.
               </p>
             </div>
             
@@ -308,7 +431,7 @@ export default function AdminPanel({
             </div>
           </div>
 
-          {/* Navigation Tabs (Shopify Admin Style) */}
+          {/* Navigation tabs */}
           <div className="flex border-b border-outline-variant/20 gap-6">
             <button
               onClick={() => setActiveTab("calendar")}
@@ -316,7 +439,7 @@ export default function AdminPanel({
                 activeTab === "calendar" ? "border-primary text-primary" : "border-transparent text-stone-500 hover:text-stone-800"
               }`}
             >
-              📅 Control de Cupos
+              📅 Gestión Masiva de Cupos
             </button>
             <button
               onClick={() => setActiveTab("validate")}
@@ -324,7 +447,7 @@ export default function AdminPanel({
                 activeTab === "validate" ? "border-primary text-primary" : "border-transparent text-stone-500 hover:text-stone-800"
               }`}
             >
-              🔍 Validar Tickets
+              🔍 Escáner QR de Entrada
             </button>
             <button
               onClick={() => setActiveTab("log")}
@@ -332,155 +455,225 @@ export default function AdminPanel({
                 activeTab === "log" ? "border-primary text-primary" : "border-transparent text-stone-500 hover:text-stone-800"
               }`}
             >
-              📋 Bitácora de Reservas
+              📋 Bitácora Supabase ({bookingsLog.length})
             </button>
           </div>
 
-          {/* CMS Tab Content */}
           <div className="bg-white border border-outline-variant/35 p-8 shadow-md">
             
-            {/* TAB A: Calendar Capacity Controls */}
+            {/* TAB A: Bulk Date Scheduling */}
             {activeTab === "calendar" && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 text-left">
                 
-                {/* Left section: Settings forms */}
-                <div className="lg:col-span-6 space-y-6">
-                  <div className="space-y-4">
-                    <h5 className="font-navigation text-sm uppercase tracking-wider text-primary font-bold border-b border-stone-100 pb-2">
-                      Límite de Cupo General
+                {/* Configuration Columns */}
+                <div className="lg:col-span-8 space-y-6">
+                  
+                  {/* General Capacity Limit */}
+                  <div className="bg-stone-50 p-4 border border-outline-variant/25">
+                    <h5 className="font-navigation text-xs uppercase tracking-wider text-primary font-bold mb-2">
+                      Aforo / Cupo Máximo General
                     </h5>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
                       <input
                         type="number"
                         min="1"
                         max="100"
                         value={maxCapacityLimit}
                         onChange={(e) => setMaxCapacityLimit(parseInt(e.target.value) || 20)}
-                        className="bg-stone-50 border border-outline-variant p-3 w-28 text-center text-sm font-sans focus:outline-none focus:border-primary"
+                        className="bg-white border border-outline-variant p-2 w-24 text-center text-sm font-bold focus:outline-none"
                       />
-                      <span className="text-xs text-on-surface-variant font-light leading-relaxed">
-                        Lugares disponibles máximos por turno y horario (se aplica por defecto a todos los slots).
-                      </span>
+                      <button
+                        onClick={handleUpdateGeneralCapacity}
+                        className="bg-primary hover:bg-[#8c4723] text-white px-4 py-2 text-xs font-semibold uppercase tracking-wider cursor-pointer"
+                      >
+                        Actualizar en Supabase
+                      </button>
                     </div>
                   </div>
 
-                  <div className="space-y-4 pt-4 border-t border-stone-100">
-                    <h5 className="font-navigation text-sm uppercase tracking-wider text-primary font-bold border-b border-stone-100 pb-2">
-                      Bloquear o Modificar Turnos
+                  {/* Multi-date selection range form */}
+                  <div className="space-y-4">
+                    <h5 className="font-navigation text-xs uppercase tracking-wider text-[#1c1c18] font-bold border-b border-stone-100 pb-2">
+                      1. Definir Rango de Fechas y Días
                     </h5>
-                    
-                    <div className="space-y-4">
-                      {/* Date picker */}
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[10px] font-semibold uppercase text-stone-500 mb-1">Fecha</label>
+                        <label className="block text-[10px] font-semibold text-stone-500 uppercase mb-1">Desde (Fecha Inicio)</label>
                         <input
                           type="date"
-                          value={editDateStr}
-                          onChange={(e) => setEditDateStr(e.target.value)}
+                          value={bulkStartDate}
+                          onChange={(e) => setBulkStartDate(e.target.value)}
                           className="bg-stone-50 border border-outline-variant p-3 w-full text-xs font-sans focus:outline-none focus:border-primary"
                         />
                       </div>
+                      <div>
+                        <label className="block text-[10px] font-semibold text-stone-500 uppercase mb-1">Hasta (Fecha Fin)</label>
+                        <input
+                          type="date"
+                          value={bulkEndDate}
+                          onChange={(e) => setBulkEndDate(e.target.value)}
+                          className="bg-stone-50 border border-outline-variant p-3 w-full text-xs font-sans focus:outline-none focus:border-primary"
+                        />
+                      </div>
+                    </div>
 
-                      {/* Action blocks */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                        {/* Block Date */}
-                        <div className="border border-stone-100 p-4 space-y-2 bg-stone-50/50">
-                          <span className="text-[10px] font-bold text-stone-700 block uppercase">
-                            Bloqueo Completo
-                          </span>
+                    {/* Weekdays multi-select check-list */}
+                    <div>
+                      <label className="block text-[10px] font-semibold text-stone-500 uppercase mb-2">
+                        Aplicar solo a los siguientes días de la semana:
+                      </label>
+                      <div className="flex flex-wrap gap-2">
+                        {[
+                          { name: "Lun", val: 1 },
+                          { name: "Mar", val: 2 },
+                          { name: "Mié", val: 3 },
+                          { name: "Jue", val: 4 },
+                          { name: "Vie", val: 5 },
+                          { name: "Sáb", val: 6 },
+                          { name: "Dom", val: 0 }
+                        ].map((day) => (
                           <button
-                            onClick={handleToggleBlockDate}
-                            disabled={!editDateStr}
-                            className={`w-full py-2.5 text-xs font-semibold text-white tracking-wider cursor-pointer uppercase ${
-                              blockedDates.includes(editDateStr) 
-                                ? "bg-emerald-600 hover:bg-emerald-700" 
-                                : "bg-red-600 hover:bg-red-700"
+                            key={day.val}
+                            type="button"
+                            onClick={() => toggleWeekday(day.val)}
+                            className={`px-3 py-1.5 text-xs font-bold transition-all border ${
+                              selectedWeekdays[day.val]
+                                ? "bg-primary text-white border-primary"
+                                : "bg-stone-50 text-stone-500 border-outline-variant/30 hover:border-stone-400"
                             }`}
                           >
-                            {blockedDates.includes(editDateStr) ? "🔓 Desbloquear Fecha" : "🔒 Bloquear Fecha"}
+                            {day.name}
                           </button>
-                        </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
 
-                        {/* Adjust Occupancy */}
-                        <div className="border border-stone-100 p-4 space-y-3 bg-stone-50/50">
-                          <span className="text-[10px] font-bold text-stone-700 block uppercase">
-                            Registrar Lugares Ocupados
-                          </span>
-                          <div className="flex gap-2 items-center">
-                            <select
-                              value={editTimeSlot}
-                              onChange={(e) => setEditTimeSlot(e.target.value)}
-                              className="bg-white border border-outline-variant p-2 flex-1 text-xs focus:outline-none"
-                            >
-                              <option value="10:00 AM">10:00 AM</option>
-                              <option value="11:00 AM">11:00 AM</option>
-                            </select>
-                            <input
-                              type="number"
-                              min="0"
-                              max="100"
-                              value={editSpotsValue}
-                              onChange={(e) => setEditSpotsValue(parseInt(e.target.value) || 0)}
-                              className="bg-white border border-outline-variant p-2 w-16 text-center text-xs focus:outline-none"
-                              placeholder="0"
-                            />
-                          </div>
+                  {/* Actions Grid */}
+                  <div className="space-y-4 pt-4 border-t border-stone-100">
+                    <h5 className="font-navigation text-xs uppercase tracking-wider text-[#1c1c18] font-bold pb-1">
+                      2. Seleccionar Acción a Aplicar en Lote
+                    </h5>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Action block 1: Blocking/Unblocking */}
+                      <div className="border border-outline-variant/30 p-4 space-y-3 bg-stone-50/50">
+                        <span className="text-[10px] font-bold text-stone-700 block uppercase">
+                          Hacienda Abierta / Cerrada
+                        </span>
+                        <p className="text-[10px] text-stone-500 font-light leading-normal">
+                          Bloquea las fechas del rango seleccionado para que ningún cliente pueda agendar tours.
+                        </p>
+                        <div className="flex gap-2">
                           <button
-                            onClick={handleUpdateSlotSpots}
-                            disabled={!editDateStr}
-                            className="w-full bg-primary hover:bg-[#8c4723] text-white py-2 text-xs font-semibold uppercase tracking-wider cursor-pointer"
+                            onClick={() => handleBulkBlock(true)}
+                            disabled={isSubmittingBulk || !bulkStartDate || !bulkEndDate}
+                            className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 text-xs font-semibold uppercase tracking-wider cursor-pointer"
                           >
-                            Aplicar Ocupación
+                            🔒 Bloquear
+                          </button>
+                          <button
+                            onClick={() => handleBulkBlock(false)}
+                            disabled={isSubmittingBulk || !bulkStartDate || !bulkEndDate}
+                            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 text-xs font-semibold uppercase tracking-wider cursor-pointer"
+                          >
+                            🔓 Habilitar
                           </button>
                         </div>
+                      </div>
+
+                      {/* Action block 2: Occupancy Overrides */}
+                      <div className="border border-outline-variant/30 p-4 space-y-3 bg-stone-50/50">
+                        <span className="text-[10px] font-bold text-stone-700 block uppercase">
+                          Establecer Ocupación por Turno
+                        </span>
+                        <p className="text-[10px] text-stone-500 font-light leading-normal">
+                          Configura la cantidad de lugares ya ocupados en un horario determinado para todos los días en lote.
+                        </p>
+                        <div className="flex gap-2 items-center">
+                          <select
+                            value={bulkTimeSlot}
+                            onChange={(e) => setBulkTimeSlot(e.target.value)}
+                            className="bg-white border border-outline-variant p-2 flex-1 text-xs focus:outline-none"
+                          >
+                            <option value="10:00 AM">10:00 AM</option>
+                            <option value="11:00 AM">11:00 AM</option>
+                          </select>
+                          <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={bulkOccupancyValue}
+                            onChange={(e) => setBulkOccupancyValue(parseInt(e.target.value) || 0)}
+                            className="bg-white border border-outline-variant p-2 w-16 text-center text-xs focus:outline-none"
+                            placeholder="0"
+                          />
+                        </div>
+                        <button
+                          onClick={handleBulkSetOccupancy}
+                          disabled={isSubmittingBulk || !bulkStartDate || !bulkEndDate}
+                          className="w-full bg-primary hover:bg-[#8c4723] text-white py-2.5 text-xs font-semibold uppercase tracking-wider cursor-pointer"
+                        >
+                          Aplicar Ocupación Masiva
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Right section: List of blocked dates */}
-                <div className="lg:col-span-6 space-y-4 lg:pl-6 lg:border-l border-stone-100">
-                  <h5 className="font-navigation text-sm uppercase tracking-wider text-primary font-bold border-b border-stone-100 pb-2">
-                    Fechas Bloqueadas
+                {/* Right Column: Summaries and active blocks list */}
+                <div className="lg:col-span-4 space-y-4 lg:pl-6 lg:border-l border-stone-100">
+                  <h5 className="font-navigation text-xs uppercase tracking-wider text-primary font-bold border-b border-stone-100 pb-2">
+                    Fechas Bloqueadas ({blockedDates.length})
                   </h5>
                   {blockedDates.length === 0 ? (
-                    <p className="text-xs text-stone-400 font-light italic">No hay fechas inhabilitadas actualmente.</p>
+                    <p className="text-xs text-stone-400 font-light italic">No hay fechas bloqueadas actualmente en la nube.</p>
                   ) : (
-                    <div className="space-y-2 max-h-72 overflow-y-auto">
+                    <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
                       {blockedDates.map((dateStr) => {
-                        const parts = dateStr.split('-');
+                        const parts = dateStr.split("-");
                         const formatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
                         return (
-                          <div key={dateStr} className="flex justify-between items-center bg-stone-50 border border-stone-100 p-3">
-                            <span className="text-xs font-bold text-stone-700">🔒 Hacienda Cerrada el {formatted}</span>
+                          <div key={dateStr} className="flex justify-between items-center bg-stone-50 border border-stone-100 p-2.5">
+                            <span className="text-[10px] font-bold text-stone-700">🔒 Cerrado {formatted}</span>
                             <button
-                              onClick={() => setBlockedDates(blockedDates.filter((d) => d !== dateStr))}
-                              className="text-xs text-red-600 hover:text-red-800 font-semibold cursor-pointer"
+                              onClick={async () => {
+                                try {
+                                  const res = await fetch("/api/tourism", {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ action: "unblock_dates", dates: [dateStr] })
+                                  });
+                                  if (res.ok) {
+                                    if (refreshData) await refreshData();
+                                  }
+                                } catch (e) {
+                                  console.error(e);
+                                }
+                              }}
+                              className="text-[10px] text-red-600 hover:text-red-800 font-bold uppercase cursor-pointer"
                             >
-                              Habilitar
+                              Abrir
                             </button>
                           </div>
                         );
                       })}
                     </div>
                   )}
-
-                  <div className="bg-[#fcf9f3] p-4 text-xs font-sans text-stone-600 leading-relaxed border border-stone-200/40 pt-4 mt-6">
-                    <strong>💡 Tip de administración:</strong> Al bloquear una fecha o registrar cupos ocupados desde este panel, los clientes que visiten la web pública verán los horarios bloqueados o con el stock reducido inmediatamente al agendar en tiempo real.
-                  </div>
                 </div>
               </div>
             )}
 
-            {/* TAB B: Ticket verification search */}
+            {/* TAB B: QR Scan & Ticket Verification */}
             {activeTab === "validate" && (
               <div className="max-w-xl mx-auto space-y-6 text-left py-4">
                 <div className="space-y-2">
                   <h5 className="font-navigation text-sm uppercase tracking-wider text-primary font-bold">
-                    Ingresa o Escanea el Código del Ticket
+                    Escaneo QR / Búsqueda de Acceso
                   </h5>
                   <p className="text-xs text-stone-400 font-light">
-                    Ingresa el código único del ticket (ej: CL-ORO-XXXX) para validar los datos del visitante y marcar su entrada.
+                    Ingresa o pega el código único del ticket QR (ej: CL-ORO-XXXX) para validar los datos en Supabase y marcar su entrada.
                   </p>
                 </div>
 
@@ -500,13 +693,18 @@ export default function AdminPanel({
                   </button>
                 </div>
 
-                {/* Validation status cards */}
+                {validationSuccessMsg && (
+                  <div className="bg-emerald-500 text-white p-3 text-xs font-bold text-center animate-pulse">
+                    ✅ {validationSuccessMsg}
+                  </div>
+                )}
+
                 {searchStatus === "not_found" && (
                   <div className="bg-red-50 border border-red-200/40 p-5 text-center space-y-2">
                     <span className="material-symbols-outlined text-4xl text-red-500">error</span>
                     <h6 className="font-serif text-sm font-bold text-red-800">Ticket No Encontrado</h6>
                     <p className="text-xs text-red-700/80 font-light">
-                      El código ingresado no existe en los registros de reservas de Casa Loy. Por favor, revisa que esté escrito correctamente.
+                      El código ingresado no existe en los registros de Supabase. Revisa la escritura del código.
                     </p>
                   </div>
                 )}
@@ -514,9 +712,9 @@ export default function AdminPanel({
                 {searchStatus === "found_valid" && searchedTicket && (
                   <div className="space-y-4">
                     <div className="bg-emerald-50 border border-emerald-200 p-4 py-6 flex flex-col items-center gap-2 text-center">
-                      <span className="material-symbols-outlined text-5xl text-emerald-500">check_circle</span>
+                      <span className="material-symbols-outlined text-5xl text-emerald-500 animate-bounce">check_circle</span>
                       <h6 className="text-emerald-700 font-bold uppercase tracking-wider text-xs">
-                        TICKET VÁLIDO - SIN ACCESAR
+                        TICKET VÁLIDO - LISTO PARA ACCESO
                       </h6>
                       <span className="font-mono text-xs text-stone-500 font-bold">{searchedTicket.code}</span>
                     </div>
@@ -526,6 +724,12 @@ export default function AdminPanel({
                         <span className="text-stone-500">Nombre del Visitante:</span>
                         <span className="font-bold text-stone-800">{searchedTicket.name}</span>
                       </div>
+                      {searchedTicket.email && (
+                        <div className="flex justify-between border-b border-stone-200/30 pb-2">
+                          <span className="text-stone-500">Correo:</span>
+                          <span className="font-semibold text-stone-800">{searchedTicket.email}</span>
+                        </div>
+                      )}
                       <div className="flex justify-between border-b border-stone-200/30 pb-2">
                         <span className="text-stone-500">Experiencia:</span>
                         <span className="font-bold text-stone-800">{searchedTicket.packageName}</span>
@@ -535,7 +739,7 @@ export default function AdminPanel({
                         <span className="font-bold text-stone-800">{searchedTicket.date} a las {searchedTicket.time}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-stone-500">Visitantes autorizados:</span>
+                        <span className="text-stone-500">Número de Personas:</span>
                         <span className="font-bold text-stone-800">{searchedTicket.guests} pax</span>
                       </div>
                     </div>
@@ -554,7 +758,7 @@ export default function AdminPanel({
                     <div className="bg-red-50 border border-red-200 p-4 py-6 flex flex-col items-center gap-2 text-center">
                       <span className="material-symbols-outlined text-5xl text-red-500">warning</span>
                       <h6 className="text-red-700 font-bold uppercase tracking-wider text-xs">
-                        ACCESO YA REGISTRADO (TICKET USADO)
+                        ACCESO DENEGADO (TICKET YA USADO)
                       </h6>
                       <span className="font-mono text-xs text-stone-500 font-bold">{searchedTicket.code}</span>
                     </div>
@@ -562,7 +766,7 @@ export default function AdminPanel({
                     <div className="bg-stone-50 p-4 border border-stone-200/40 space-y-2.5 text-xs">
                       <div className="text-stone-700 border-b border-stone-200/30 pb-2 font-medium">
                         <span className="font-semibold block text-[10px] text-stone-500 uppercase">Validado por Staff en:</span>
-                        <span className="block mt-0.5 text-stone-800 font-bold">✅ {scanValidatedTime}</span>
+                        <span className="block mt-0.5 text-red-600 font-bold">✅ {scanValidatedTime}</span>
                       </div>
                       <div className="flex justify-between border-b border-stone-200/30 pb-2">
                         <span className="text-stone-500">Nombre del Visitante:</span>
@@ -573,42 +777,24 @@ export default function AdminPanel({
                         <span className="font-bold text-stone-800">{searchedTicket.packageName} • {searchedTicket.guests} pax</span>
                       </div>
                     </div>
-
-                    <button
-                      onClick={() => {
-                        if (confirm("¿Deseas reactivar esta entrada para permitir el check-in de nuevo?")) {
-                          localStorage.removeItem(`used_ticket_${searchedTicket.code}`);
-                          setSearchStatus("found_valid");
-                          setScanValidatedTime("");
-                          loadBookingsLog();
-                        }
-                      }}
-                      className="w-full py-2.5 border border-outline-variant hover:bg-stone-50 text-stone-600 font-medium text-xs text-center cursor-pointer"
-                    >
-                      Re-activar Entrada (Habilitar Check-in)
-                    </button>
                   </div>
                 )}
               </div>
             )}
 
-            {/* TAB C: Bookings log */}
+            {/* TAB C: Bookings log from Supabase */}
             {activeTab === "log" && (
               <div className="space-y-4 text-left">
                 <div className="flex justify-between items-center border-b border-stone-100 pb-3">
                   <h5 className="font-navigation text-sm uppercase tracking-wider text-primary font-bold">
-                    Historial y Registro de Reservaciones
+                    Historial de Reservaciones en Supabase
                   </h5>
                   <button
-                    onClick={() => {
-                      if (confirm("¿Seguro que deseas limpiar la bitácora?")) {
-                        localStorage.removeItem("casa_loy_bookings_log");
-                        loadBookingsLog();
-                      }
-                    }}
-                    className="text-xs text-red-600 hover:text-red-800 font-semibold cursor-pointer"
+                    onClick={loadData}
+                    className="text-xs text-stone-600 hover:text-stone-800 font-semibold cursor-pointer border border-stone-200 px-3 py-1 flex items-center gap-1.5"
                   >
-                    Limpiar Bitácora
+                    <span className="material-symbols-outlined text-xs">refresh</span>
+                    Actualizar
                   </button>
                 </div>
 
@@ -628,11 +814,11 @@ export default function AdminPanel({
                     <tbody className="divide-y divide-stone-100">
                       {bookingsLog.length === 0 ? (
                         <tr>
-                          <td colSpan="7" className="p-8 text-center text-stone-400 italic">No hay registros de reservaciones.</td>
+                          <td colSpan="7" className="p-8 text-center text-stone-400 italic">No hay registros de reservaciones en Supabase.</td>
                         </tr>
                       ) : (
                         bookingsLog.map((log) => {
-                          const isUsed = localStorage.getItem(`used_ticket_${log.code}`);
+                          const isUsed = log.used_at || localStorage.getItem(`used_ticket_${log.code}`);
                           return (
                             <tr key={log.code} className="hover:bg-stone-50/50 text-stone-700">
                               <td className="p-3 font-mono font-bold text-primary select-all">{log.code}</td>
@@ -657,7 +843,7 @@ export default function AdminPanel({
                                     ? "bg-red-50 text-red-700 border border-red-200/30" 
                                     : "bg-emerald-50 text-emerald-700 border border-emerald-200/30"
                                 }`}>
-                                  {isUsed ? "Acceso Realizado" : "Vigente"}
+                                  {isUsed ? "Acceso Completado" : "Vigente"}
                                 </span>
                               </td>
                             </tr>
