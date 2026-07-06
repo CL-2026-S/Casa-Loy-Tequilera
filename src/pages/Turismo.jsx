@@ -1,10 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-export default function Turismo({ t, lang }) {
-  // Calendar Scheduler State
-  const [selectedDay, setSelectedDay] = useState(1);
-  const [selectedTime, setSelectedTime] = useState("");
-  const [bookingConfirmed, setBookingConfirmed] = useState(false);
+export default function Turismo({ lang, setPage }) {
 
   const localT = {
     es: {
@@ -18,21 +14,37 @@ export default function Turismo({ t, lang }) {
       expTitle: "Un viaje sensorial a través del tiempo.",
       expDesc: "Cada tour está diseñado para ofrecer una visión íntima de nuestro proceso artesanal, desde el campo hasta la cava subterránea.",
       
+      tourOroTitle: "Experiencia Casa Loy Oro",
+      tourOroPrice: "MXN 550.00 / Persona",
+      tourOroBullet1: "✓ Recorrido campo de agaves",
+      tourOroBullet2: "✓ Murales e Historia",
+      tourOroBullet3: "✓ Recorrido por la fábrica",
+      tourOroBullet4: "✓ Cata en cava subterránea",
+      tourOroBullet5: "✓ Mixología de autor",
+      tourOroBullet6: "✓ Botella de TADDEL 200 ML",
+      tourOroBtn: "Reservar Oro",
+
       tourPlatinoTitle: "Experiencia Casa Loy Platino",
-      tourPlatinoPrice: "MXN 650.00 / Persona",
-      tourPlatinoBullet1: "✓ Visita completa a campos de agave",
-      tourPlatinoBullet2: "✓ Historia a través de murales",
-      tourPlatinoBullet3: "✓ Cata privada en cava subterránea",
-      tourPlatinoBullet4: "✓ Mixología y comida de 3 tiempos",
+      tourPlatinoPrice: "MXN 750.00 / Persona",
+      tourPlatinoBullet1: "✓ Recorrido campo de agaves",
+      tourPlatinoBullet2: "✓ Murales e Historia",
+      tourPlatinoBullet3: "✓ Recorrido por la fábrica",
+      tourPlatinoBullet4: "✓ Cata en cava subterránea",
+      tourPlatinoBullet5: "✓ Mixología de autor",
+      tourPlatinoBullet6: "✓ Comida (Entrada, Plato a escoger, Postre)",
+      tourPlatinoBullet7: "✓ Bebida (2 por persona)",
       tourPlatinoBtn: "Reservar Platino",
       
-      tourOroTitle: "Experiencia Casa Loy Oro",
-      tourOroPrice: "MXN 450.00 / Persona",
-      tourOroBullet1: "✓ Recorrido por la destilería artesanal",
-      tourOroBullet2: "✓ Explicación técnica de jimado",
-      tourOroBullet3: "✓ Cata guiada de 3 expresiones",
-      tourOroBullet4: "✓ Clase magistral de mixología",
-      tourOroBtn: "Reservar Oro",
+      tourDiamanteTitle: "Experiencia Casa Loy Diamante",
+      tourDiamantePrice: "MXN 750.00 / Persona",
+      tourDiamanteBullet1: "✓ Recorrido campo de agaves",
+      tourDiamanteBullet2: "✓ Murales e Historia",
+      tourDiamanteBullet3: "✓ Recorrido por la fábrica",
+      tourDiamanteBullet4: "✓ Cata en cava subterránea",
+      tourDiamanteBullet5: "✓ Mixología de autor",
+      tourDiamanteBullet6: "✓ Comida (Entrada, Plato a escoger, Postre)",
+      tourDiamanteBullet7: "✓ Bebida (2 por persona)",
+      tourDiamanteBtn: "Reservar Diamante",
       
       planTitle: "Planea tu visita.",
       planDesc: "Nuestras puertas están abiertas de Martes a Domingo. Selecciona el horario que mejor se adapte a tu viaje y asegura tu lugar en la mesa.",
@@ -52,6 +64,11 @@ export default function Turismo({ t, lang }) {
       eventsDesc: "Celebra tus momentos más importantes en un entorno donde la elegancia y la herencia se encuentran. Ofrecemos espacios exclusivos para grupos reducidos y eventos corporativos de alto nivel.",
       eventsBtnQuote: "Cotiza Aquí",
       eventsBtnFolleto: "Descargar Folleto",
+
+      guestsLabel: "Número de Personas",
+      remainingSpots: "Lugares disponibles: {spots} de 20",
+      soldOut: "Horario Agotado (Límite 20 cupos)",
+      selectTourLabel: "Experiencia seleccionada",
     },
     en: {
       overtitle: "Tradition and Excellence",
@@ -62,23 +79,39 @@ export default function Turismo({ t, lang }) {
       btnGastronomy: "enjoy the GASTRONOMY",
       expOvertitle: "Our Experiences",
       expTitle: "A sensory journey through time.",
-      expDesc: "Each tour is designed to offer an intimate view of our database-driven process, from the field to the underground cellar.",
-      
-      tourPlatinoTitle: "Casa Loy Platinum Experience",
-      tourPlatinoPrice: "MXN 650.00 / Person",
-      tourPlatinoBullet1: "✓ Full visit to agave fields",
-      tourPlatinoBullet2: "✓ History through murals",
-      tourPlatinoBullet3: "✓ Private tasting in underground cellar",
-      tourPlatinoBullet4: "✓ Mixology and 3-course meal",
-      tourPlatinoBtn: "Book Platinum",
+      expDesc: "Each tour is designed to offer an intimate view of our process, from the field to the underground cellar.",
       
       tourOroTitle: "Casa Loy Gold Experience",
-      tourOroPrice: "MXN 450.00 / Person",
-      tourOroBullet1: "✓ Tour of the artisanal distillery",
-      tourOroBullet2: "✓ Technical explanation of harvesting",
-      tourOroBullet3: "✓ Guided tasting of 3 expressions",
-      tourOroBullet4: "✓ Master mixology class",
+      tourOroPrice: "MXN 550.00 / Person",
+      tourOroBullet1: "✓ Agave fields tour",
+      tourOroBullet2: "✓ Murals & History",
+      tourOroBullet3: "✓ Tour of the factory",
+      tourOroBullet4: "✓ Tasting in underground cellar",
+      tourOroBullet5: "✓ Signature mixology",
+      tourOroBullet6: "✓ TADDEL 200 ML Bottle",
       tourOroBtn: "Book Gold",
+
+      tourPlatinoTitle: "Casa Loy Platinum Experience",
+      tourPlatinoPrice: "MXN 750.00 / Person",
+      tourPlatinoBullet1: "✓ Agave fields tour",
+      tourPlatinoBullet2: "✓ Murals & History",
+      tourPlatinoBullet3: "✓ Tour of the factory",
+      tourPlatinoBullet4: "✓ Tasting in underground cellar",
+      tourPlatinoBullet5: "✓ Signature mixology",
+      tourPlatinoBullet6: "✓ Meal (Appetizer, Choice of main, Dessert)",
+      tourPlatinoBullet7: "✓ Drinks (2 per person)",
+      tourPlatinoBtn: "Book Platinum",
+      
+      tourDiamanteTitle: "Casa Loy Diamond Experience",
+      tourDiamantePrice: "MXN 750.00 / Person",
+      tourDiamanteBullet1: "✓ Agave fields tour",
+      tourDiamanteBullet2: "✓ Murals & History",
+      tourDiamanteBullet3: "✓ Tour of the factory",
+      tourDiamanteBullet4: "✓ Tasting in underground cellar",
+      tourDiamanteBullet5: "✓ Signature mixology",
+      tourDiamanteBullet6: "✓ Meal (Appetizer, Choice of main, Dessert)",
+      tourDiamanteBullet7: "✓ Drinks (2 per person)",
+      tourDiamanteBtn: "Book Diamond",
       
       planTitle: "Plan your visit.",
       planDesc: "Our doors are open from Tuesday to Sunday. Select the time that best suits your trip and secure your place at the table.",
@@ -98,16 +131,16 @@ export default function Turismo({ t, lang }) {
       eventsDesc: "Celebrate your most important moments in a setting where elegance and heritage meet. We offer exclusive spaces for small groups and high-level corporate events.",
       eventsBtnQuote: "Get a Quote",
       eventsBtnFolleto: "Download Brochure",
+
+      guestsLabel: "Number of Guests",
+      remainingSpots: "Available spots: {spots} of 20",
+      soldOut: "Time Slot Sold Out (Limit 20 spots)",
+      selectTourLabel: "Selected Experience",
     }
   };
 
   const activeT = localT[lang] || localT["es"];
 
-  const handleBook = () => {
-    if (selectedTime) {
-      setBookingConfirmed(true);
-    }
-  };
 
   return (
     <div className="bg-background text-on-surface">
@@ -200,227 +233,111 @@ export default function Turismo({ t, lang }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-left">
-          {/* Platino Package */}
-          <div className="group relative overflow-hidden shadow-lg h-[600px] cursor-pointer">
-            <img
-              alt="Casa Loy Platino experience fields"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              src="/Casa Loy Experiencias Platico.webp"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 text-left">
+          {[
+            {
+              id: "oro",
+              title: activeT.tourOroTitle,
+              price: activeT.tourOroPrice,
+              bullets: [
+                activeT.tourOroBullet1,
+                activeT.tourOroBullet2,
+                activeT.tourOroBullet3,
+                activeT.tourOroBullet4,
+                activeT.tourOroBullet5,
+                activeT.tourOroBullet6,
+              ],
+              btnText: activeT.tourOroBtn,
+              img: "/Casa Loy Experiencias Oro.webp"
+            },
+            {
+              id: "platino",
+              title: activeT.tourPlatinoTitle,
+              price: activeT.tourPlatinoPrice,
+              bullets: [
+                activeT.tourPlatinoBullet1,
+                activeT.tourPlatinoBullet2,
+                activeT.tourPlatinoBullet3,
+                activeT.tourPlatinoBullet4,
+                activeT.tourPlatinoBullet5,
+                activeT.tourPlatinoBullet6,
+                activeT.tourPlatinoBullet7,
+              ],
+              btnText: activeT.tourPlatinoBtn,
+              img: "/Casa Loy Experiencias Platino.webp"
+            },
+            {
+              id: "diamante",
+              title: activeT.tourDiamanteTitle,
+              price: activeT.tourDiamantePrice,
+              bullets: [
+                activeT.tourDiamanteBullet1,
+                activeT.tourDiamanteBullet2,
+                activeT.tourDiamanteBullet3,
+                activeT.tourDiamanteBullet4,
+                activeT.tourDiamanteBullet5,
+                activeT.tourDiamanteBullet6,
+                activeT.tourDiamanteBullet7,
+              ],
+              btnText: activeT.tourDiamanteBtn,
+              img: "/Casa Loy Experiencias Diamante.webp"
+            }
+          ].map((exp) => (
+            <div key={exp.id} className="group relative overflow-hidden shadow-lg h-[620px] cursor-pointer">
+              <img
+                alt={exp.title}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                src={exp.img}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent"></div>
 
-            <div className="absolute bottom-0 left-0 p-10 w-full transition-all duration-500 transform translate-y-24 group-hover:translate-y-0">
-              <div className="flex justify-between items-end mb-6">
-                <div>
-                  <h3 className="font-headline-md text-headline-md text-white text-2xl md:text-3xl font-semibold">
-                    {activeT.tourPlatinoTitle}
-                  </h3>
-                  <p className="font-label-caps text-label-caps text-secondary-fixed mt-2">
-                    {activeT.tourPlatinoPrice}
-                  </p>
-                </div>
-              </div>
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 space-y-6">
-                <ul className="text-white/80 space-y-2 font-body-md text-sm font-light">
-                  <li className="flex items-center gap-2">{activeT.tourPlatinoBullet1}</li>
-                  <li className="flex items-center gap-2">{activeT.tourPlatinoBullet2}</li>
-                  <li className="flex items-center gap-2">{activeT.tourPlatinoBullet3}</li>
-                  <li className="flex items-center gap-2">{activeT.tourPlatinoBullet4}</li>
-                </ul>
-                <a
-                  href="#booking"
-                  className="w-full bg-white text-primary py-4 font-label-caps text-label-caps uppercase tracking-widest hover:bg-secondary-fixed transition-colors block text-center shadow-lg"
-                >
-                  {activeT.tourPlatinoBtn}
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Oro Package */}
-          <div className="group relative overflow-hidden shadow-lg h-[600px] cursor-pointer">
-            <img
-              alt="Casa Loy Oro experience fields"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              src="/Casa Loy Experiencias Oro.webp"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
-
-            <div className="absolute bottom-0 left-0 p-10 w-full transition-all duration-500 transform translate-y-24 group-hover:translate-y-0">
-              <div className="flex justify-between items-end mb-6">
-                <div>
-                  <h3 className="font-headline-md text-headline-md text-white text-2xl md:text-3xl font-semibold">
-                    {activeT.tourOroTitle}
-                  </h3>
-                  <p className="font-label-caps text-label-caps text-secondary-fixed mt-2">
-                    {activeT.tourOroPrice}
-                  </p>
-                </div>
-              </div>
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 space-y-6">
-                <ul className="text-white/80 space-y-2 font-body-md text-sm font-light">
-                  <li className="flex items-center gap-2">{activeT.tourOroBullet1}</li>
-                  <li className="flex items-center gap-2">{activeT.tourOroBullet2}</li>
-                  <li className="flex items-center gap-2">{activeT.tourOroBullet3}</li>
-                  <li className="flex items-center gap-2">{activeT.tourOroBullet4}</li>
-                </ul>
-                <a
-                  href="#booking"
-                  className="w-full bg-white text-primary py-4 font-label-caps text-label-caps uppercase tracking-widest hover:bg-secondary-fixed transition-colors block text-center shadow-lg"
-                >
-                  {activeT.tourOroBtn}
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Booking Calendar System */}
-      <section className="bg-[#f0eee8]/30 py-section-gap overflow-hidden text-left" id="booking">
-        <div className="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
-            
-            <div className="lg:col-span-5 space-y-8">
-              <h2 className="font-headline-lg text-4xl md:text-6xl font-medium">{activeT.planTitle}</h2>
-              <p className="font-body-lg text-body-lg text-on-surface-variant font-light leading-relaxed">
-                {activeT.planDesc}
-              </p>
-              
-              <div className="flex items-center gap-8 py-8 border-y border-outline-variant/30">
-                <div className="flex flex-col">
-                  <span className="font-label-caps text-label-caps text-primary text-[10px] uppercase">
-                    {activeT.scheduleLabel}
-                  </span>
-                  <span className="font-headline-md text-xl md:text-2xl font-bold">10:00 AM & 11:00 AM</span>
-                </div>
-                <div className="w-px h-12 bg-outline-variant/30"></div>
-                <div className="flex flex-col">
-                  <span className="font-label-caps text-label-caps text-primary text-[10px] uppercase">
-                    {activeT.daysLabel}
-                  </span>
-                  <span className="font-headline-md text-xl md:text-2xl font-bold">{activeT.daysValue}</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-6 opacity-60 select-none">
-                <span className="font-label-caps text-[10px]">{activeT.paymentLabel}</span>
-                <svg className="h-5" viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ maxHeight: "20px" }}>
-                  <text x="0" y="24" fontFamily="sans-serif" fontWeight="900" fontStyle="italic" fontSize="24" fill="#003087">PayPal</text>
-                </svg>
-                <svg className="h-5" viewBox="0 0 150 32" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ maxHeight: "20px" }}>
-                  <text x="0" y="24" fontFamily="sans-serif" fontWeight="bold" fontSize="20" fill="#009EE3">mercado pago</text>
-                </svg>
-              </div>
-            </div>
-
-            {/* Interactive Calendar System */}
-            <div className="lg:col-span-6 lg:col-start-7">
-              <div className="bg-white border border-outline-variant p-8 md:p-12 shadow-2xl relative">
-                
-                <div className="flex justify-between items-center mb-8 select-none">
-                  <span className="font-headline-md text-xl font-bold">{activeT.monthName}</span>
-                  <div className="flex gap-2">
-                    <button className="p-2 hover:bg-surface-container-high rounded-full transition-colors">
-                      ◀
-                    </button>
-                    <button className="p-2 hover:bg-surface-container-high rounded-full transition-colors">
-                      ▶
-                    </button>
+              <div className="absolute bottom-0 left-0 p-8 w-full transition-all duration-500 transform translate-y-[295px] group-hover:translate-y-0">
+                <div className="flex justify-between items-end mb-6">
+                  <div>
+                    <h3 className="font-headline-md text-white text-xl md:text-2xl font-semibold leading-tight">
+                      {exp.title}
+                    </h3>
+                    <p className="font-label-caps text-secondary-fixed mt-2">
+                      {exp.price}
+                    </p>
                   </div>
                 </div>
-
-                {bookingConfirmed ? (
-                  <div className="py-16 text-center space-y-6">
-                    <span className="material-symbols-outlined text-6xl text-primary animate-pulse">
-                      check_circle
-                    </span>
-                    <h4 className="font-headline-md text-2xl font-bold">{activeT.successTitle}</h4>
-                    <p className="font-body-md text-on-surface-variant max-w-xs mx-auto font-light leading-relaxed">
-                      {activeT.successDesc.replace("{day}", selectedDay).replace("{time}", selectedTime)}
-                    </p>
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 space-y-6">
+                  <ul className="text-white/80 space-y-2 font-body-md text-xs font-light">
+                    {exp.bullets.map((bullet, idx) => (
+                      <li key={idx} className="flex items-start gap-1.5 leading-relaxed">
+                        {bullet}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="flex flex-col gap-3">
                     <button
                       onClick={() => {
-                        setBookingConfirmed(false);
-                        setSelectedTime("");
+                        setPage(`experience-${exp.id}`);
+                        setTimeout(() => {
+                          const element = document.getElementById("booking");
+                          if (element) {
+                            element.scrollIntoView({ behavior: "smooth" });
+                          }
+                        }, 200);
                       }}
-                      className="text-primary font-label-caps border-b border-primary pb-1 font-semibold"
+                      className="w-full bg-white text-primary py-3.5 font-label-caps text-xs text-center uppercase tracking-widest hover:bg-secondary-fixed hover:text-white transition-all block shadow-md font-semibold cursor-pointer"
                     >
-                      {activeT.successBtn}
+                      {exp.btnText}
+                    </button>
+                    <button
+                      onClick={() => setPage(`experience-${exp.id}`)}
+                      className="w-full border border-white/50 text-white hover:border-white hover:bg-white/10 py-3.5 font-label-caps text-xs text-center uppercase tracking-widest transition-all block font-bold cursor-pointer"
+                    >
+                      {lang === "es" ? "Ver Detalles" : "View Details"}
                     </button>
                   </div>
-                ) : (
-                  <>
-                    {/* Calendar grid representation */}
-                    <div className="grid grid-cols-7 gap-2 mb-8 text-center select-none font-navigation text-xs text-on-surface-variant/70 font-semibold border-b border-outline-variant/20 pb-4">
-                      {activeT.daysOfWeek.map(d => <div key={d}>{d}</div>)}
-                    </div>
-                    
-                    <div className="grid grid-cols-7 gap-2 mb-8 text-center font-navigation text-sm font-medium">
-                      {/* Blank placeholders */}
-                      <div className="h-12 flex items-center justify-center text-on-surface/20 cursor-not-allowed">
-                        29
-                      </div>
-                      <div className="h-12 flex items-center justify-center text-on-surface/20 cursor-not-allowed">
-                        30
-                      </div>
-                      
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((day) => (
-                        <div
-                          key={day}
-                          onClick={() => {
-                            if (day !== 7) setSelectedDay(day);
-                          }}
-                          className={`h-12 flex items-center justify-center cursor-pointer transition-all ${
-                            day === 7
-                              ? "text-on-surface/20 cursor-not-allowed"
-                              : selectedDay === day
-                              ? "bg-primary text-white scale-105 shadow-md"
-                              : "hover:bg-primary-fixed"
-                          }`}
-                        >
-                          {day}
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="flex gap-4 mb-8">
-                      {["10:00 AM", "11:00 AM"].map((time) => (
-                        <button
-                          key={time}
-                          onClick={() => setSelectedTime(time)}
-                          className={`flex-1 py-4 border font-label-caps text-xs text-center uppercase tracking-widest transition-all ${
-                            selectedTime === time
-                              ? "border-primary bg-primary text-white shadow-md"
-                              : "border-outline text-on-surface hover:bg-[#fcf9f3]"
-                          }`}
-                        >
-                          {time}
-                        </button>
-                      ))}
-                    </div>
-
-                    <button
-                      onClick={handleBook}
-                      disabled={!selectedTime}
-                      className={`w-full py-5 font-label-caps text-label-caps uppercase tracking-widest transition-all shadow-lg active:scale-[0.98] ${
-                        selectedTime
-                          ? "bg-primary text-on-primary hover:bg-[#9a5625]"
-                          : "bg-stone-300 text-stone-500 cursor-not-allowed"
-                      }`}
-                    >
-                      {activeT.confirmBtn}
-                    </button>
-                  </>
-                )}
-
+                </div>
               </div>
             </div>
-
+          ))}
           </div>
-        </div>
-      </section>
+        </section>
 
       {/* Private Events Banquet section */}
       <section className="py-section-gap relative overflow-hidden min-h-[500px] flex items-center justify-center bg-zinc-950" id="events">
@@ -438,9 +355,18 @@ export default function Turismo({ t, lang }) {
             {activeT.eventsDesc}
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center pt-4">
-            <button className="bg-white text-primary px-12 py-5 font-label-caps text-label-caps uppercase tracking-widest hover:bg-secondary-fixed active:scale-95 transition-all shadow-lg">
+            <a
+              href={
+                lang === "es"
+                  ? "https://wa.me/52134881337135?text=Hola%2C%20me%20gustar%C3%ADa%20cotizar%20una%20cata%20privada%20o%20evento%20en%20Casa%20Loy."
+                  : "https://wa.me/52134881337135?text=Hello%2C%20I%20would%20like%20to%20get%20a%20quote%20for%20a%20private%20tasting%20or%20event%20at%20Casa%20Loy."
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white text-primary px-12 py-5 font-label-caps text-label-caps uppercase tracking-widest hover:bg-[#ffdbcc] active:scale-95 transition-all shadow-lg inline-block text-center cursor-pointer font-semibold"
+            >
               {activeT.eventsBtnQuote}
-            </button>
+            </a>
             <button className="border border-white text-white px-12 py-5 font-label-caps text-label-caps uppercase tracking-widest hover:bg-white/10 active:scale-95 transition-all flex items-center justify-center gap-2">
               <span className="material-symbols-outlined text-sm">download</span> {activeT.eventsBtnFolleto}
             </button>
