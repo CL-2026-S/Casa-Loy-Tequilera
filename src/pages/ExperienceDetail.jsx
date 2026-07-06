@@ -6,8 +6,14 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 const PAYPAL_CLIENT_ID = "ATvqpIUvCDHFIHEAzauNdAX4o2qPqT-971MgriMfcpZFNQV9_af-WWa0kHCZHwiGFGnnSe2bhK33JPsL";
 
 export default function ExperienceDetail({ lang, packageId, setPage }) {
+  const [showAdminButton, setShowAdminButton] = useState(false);
+
   useEffect(() => {
     window.scrollTo(0, 0);
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("admin") === "true") {
+      setShowAdminButton(true);
+    }
   }, [packageId]);
 
   // Dynamic 3-Month Calendar State
@@ -675,6 +681,18 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
                 </svg>
               </div>
 
+              {/* Staff Access Trigger Button (Only visible if ?admin=true is in URL) */}
+              {showAdminButton && (
+                <div className="pt-4">
+                  <button
+                    onClick={() => setIsAdminOpen(true)}
+                    className="flex items-center gap-2 border border-primary/30 text-primary/70 hover:text-primary hover:border-primary hover:bg-primary/5 px-6 py-3 font-label-caps text-[10px] uppercase tracking-widest transition-all cursor-pointer font-bold"
+                  >
+                    <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
+                    {lang === "es" ? "Acceso Staff: Configurar Cupos" : "Staff Access: Set Capacities"}
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Interactive Calendar System */}
