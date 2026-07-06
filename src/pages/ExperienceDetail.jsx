@@ -41,6 +41,9 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
   const [isPaying, setIsPaying] = useState(false);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [reservationCode, setReservationCode] = useState("");
+  const [clientName, setClientName] = useState("");
+  const [clientEmail, setClientEmail] = useState("");
+  const [clientPhone, setClientPhone] = useState("");
 
   // Staff Controls State
   const [isAdminOpen, setIsAdminOpen] = useState(false);
@@ -506,9 +509,9 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
     }, 1500);
   };
 
-  // QR Content string
-  const qrString = `Reserva: ${reservationCode}\nPaquete: ${activeData.title}\nFecha: ${formatReservationDate(selectedDateStr)}\nHora: ${selectedTime}\nPersonas: ${numGuests}\nTotal: $${numGuests * pricePerPerson} MXN\nEstado: PAGADO`;
-  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrString)}`;
+  // QR Code redirects to the validation endpoint with queries
+  const qrLink = `${window.location.origin}/?code=${reservationCode}&package=${encodeURIComponent(activeData.title)}&date=${selectedDateStr}&time=${encodeURIComponent(selectedTime)}&guests=${numGuests}`;
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(qrLink)}`;
 
   return (
     <div className="bg-background text-on-surface">
@@ -706,7 +709,46 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
                       {activeT.qrInstruction}
                     </p>
 
-                    <div className="flex flex-col sm:flex-row gap-4 w-full pt-4">
+                    <div className="w-full space-y-4 pt-4 border-t border-outline-variant/10 text-left">
+                      <label className="block text-[10px] font-semibold uppercase tracking-wider text-primary">
+                        {lang === "es" ? "Recibir Ticket de Acceso" : "Receive Access Ticket"}
+                      </label>
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {/* WhatsApp share */}
+                        <a
+                          href={`https://wa.me/?text=${encodeURIComponent(
+                            lang === "es"
+                              ? `¡Hola! Aquí tienes tu ticket de acceso para Casa Loy Tequilera.\n\nCódigo: ${reservationCode}\nExperiencia: ${activeData.title}\nFecha: ${formatReservationDate(selectedDateStr)}\nHora: ${selectedTime}\nVisitantes: ${numGuests}\n\nPuedes validar tu entrada escaneando tu QR o visitando el enlace oficial: ${qrLink}`
+                              : `Hi! Here is your access ticket for Casa Loy Tequilera.\n\nCode: ${reservationCode}\nExperience: ${activeData.title}\nDate: ${formatReservationDate(selectedDateStr)}\nTime: ${selectedTime}\nGuests: ${numGuests}\n\nYou can validate your entrance by scanning your QR or visiting: ${qrLink}`
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center gap-2 border border-[#25D366] text-[#25D366] hover:bg-[#25D366]/5 py-2.5 font-sans font-bold text-xs transition-colors cursor-pointer text-center"
+                        >
+                          <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.805-9.805.001-2.621-1.013-5.086-2.86-6.936C16.37 1.947 13.907 1.01 11.996 1.01c-5.41 0-9.813 4.402-9.815 9.813-.001 1.638.455 3.236 1.32 4.654L2.46 19.95l4.187-1.096L6.647 19.16zM17.15 14.5c-.282-.141-1.664-.822-1.921-.916-.257-.094-.445-.141-.631.141-.188.281-.727.916-.891 1.101-.164.186-.328.21-.61.07-2.8-.14-4.88-1.22-6.52-3.08-.282-.482.282-.447.805-1.492.083-.164.041-.309-.021-.45-.062-.141-.563-1.36-.77-1.859-.203-.489-.407-.423-.563-.431-.145-.007-.312-.009-.48-.009-.168 0-.441.063-.672.312-.23.25-1.012.988-1.012 2.41 0 1.42 1.031 2.793 1.17 2.98.14.188 2.03 3.102 4.921 4.35.688.297 1.224.474 1.644.607.69.219 1.319.188 1.816.114.553-.082 1.664-.68 1.898-1.336.234-.656.234-1.219.164-1.336-.07-.117-.258-.188-.54-.328z"/>
+                          </svg>
+                          <span>WhatsApp</span>
+                        </a>
+
+                        {/* Email simulation */}
+                        <button
+                          onClick={() => {
+                            alert(lang === "es" 
+                              ? `¡Ticket enviado con éxito a ${clientEmail || "tu correo"}!` 
+                              : `Ticket sent successfully to ${clientEmail || "your email"}!`
+                            );
+                          }}
+                          className="flex items-center justify-center gap-2 border border-primary text-primary hover:bg-primary/5 py-2.5 font-sans font-bold text-xs transition-colors cursor-pointer text-center"
+                        >
+                          <span className="material-symbols-outlined text-sm">mail</span>
+                          <span>{lang === "es" ? "Enviar por Correo" : "Send to Email"}</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-4 w-full pt-4 border-t border-outline-variant/10">
                       <button
                         onClick={() => window.print()}
                         className="flex-1 border border-primary text-primary py-3 font-label-caps text-xs uppercase tracking-widest hover:bg-primary/5 transition-colors font-semibold"
@@ -727,115 +769,211 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
                     </div>
                   </div>
                 ) : paymentStep ? (
-                  /* Step 2: Payment Gateway Form (PayPal & Mercado Pago Selector) */
-                  <div className="space-y-4 my-auto">
-                    <div className="border-b border-outline-variant/30 pb-3">
-                      <h4 className="font-headline-md text-xl md:text-2xl font-bold">{activeT.payTitle}</h4>
-                      <p className="text-[10px] text-on-surface-variant/75 mt-0.5">
-                        {lang === "es" ? "Tu conexión está encriptada y es segura" : "Your connection is encrypted and secure"}
-                      </p>
+                  /* Step 2: Shopify-like Checkout Page */
+                  <div className="space-y-6 text-left">
+                    <div className="border-b border-outline-variant/30 pb-3 flex justify-between items-center">
+                      <div>
+                        <h4 className="font-headline-md text-lg md:text-xl font-bold">{lang === "es" ? "Pago y Facturación" : "Checkout"}</h4>
+                        <p className="text-[10px] text-on-surface-variant/75 mt-0.5">
+                          {lang === "es" ? "Completa la información para finalizar tu reserva" : "Complete information to finalize booking"}
+                        </p>
+                      </div>
+                      <span className="text-[10px] text-primary bg-primary/5 px-2.5 py-1 border border-primary/20 uppercase font-semibold tracking-wider">
+                        {lang === "es" ? "Conexión Segura" : "Secure Connection"}
+                      </span>
                     </div>
 
-                    {/* Order summary */}
-                    <div className="bg-[#fcf9f3] p-4 space-y-2 border border-outline-variant/20">
-                      <h5 className="font-navigation text-[10px] uppercase tracking-wider text-primary font-bold">
-                        {activeT.paySummary}
-                      </h5>
-                      <div className="flex justify-between text-xs font-sans font-light border-b border-outline-variant/15 pb-1.5">
-                        <span>{activeData.title}</span>
-                        <span>{activeData.price}</span>
-                      </div>
-                      <div className="flex justify-between text-xs font-sans font-light border-b border-outline-variant/15 pb-1.5">
-                        <span>{lang === "es" ? "Fecha y hora" : "Date & time"}</span>
-                        <span className="font-medium text-stone-700">{formatReservationDate(selectedDateStr)} a las {selectedTime}</span>
-                      </div>
-                      <div className="flex justify-between text-xs font-sans font-light border-b border-outline-variant/15 pb-1.5">
-                        <span>{lang === "es" ? "Visitantes" : "Guests"}</span>
-                        <span>{numGuests}</span>
-                      </div>
-                      <div className="flex justify-between text-sm font-serif font-bold pt-1 text-on-surface">
-                        <span>{activeT.payTotal}</span>
-                        <span className="text-primary">${numGuests * pricePerPerson} MXN</span>
-                      </div>
-                    </div>
-
-                    {/* Direct Payment Buttons Stack */}
-                    <div className="space-y-3 pt-2">
-                      <label className="block text-[10px] font-semibold font-navigation uppercase tracking-wider text-primary">
-                        {lang === "es" ? "Selecciona tu método de pago para finalizar" : "Select your payment method to finalize"}
-                      </label>
-                      
-                      <div className="space-y-3">
-                        {/* PayPal Real Checkout Button */}
-                        <div className="w-full">
-                          <PayPalButtons
-                            forceReRender={[numGuests, pricePerPerson, selectedDateStr, selectedTime]}
-                            style={{ layout: "vertical", color: "gold", shape: "rect", label: "paypal", height: 40 }}
-                            createOrder={(data, actions) => {
-                              return actions.order.create({
-                                purchase_units: [
-                                  {
-                                    amount: {
-                                      value: (numGuests * pricePerPerson).toString(),
-                                      currency_code: "MXN"
-                                    },
-                                    description: `${activeData.title} - ${numGuests} ${numGuests === 1 ? "persona" : "personas"}`
-                                  }
-                                ]
-                              });
-                            }}
-                            onApprove={(data, actions) => {
-                              return actions.order.capture().then((details) => {
-                                const code = `CL-${packageId.toUpperCase()}-${selectedDateStr.replace(/-/g, '')}${Math.floor(1000 + Math.random() * 9000)}`;
-                                setReservationCode(code);
-                                setBookingConfirmed(true);
-                                setPaymentStep(false);
-                                
-                                setBookingsCapacity((prev) => ({
-                                  ...prev,
-                                  [selectedDateStr]: {
-                                    ...(prev[selectedDateStr] || {}),
-                                    [selectedTime]: (prev[selectedDateStr]?.[selectedTime] || 0) + numGuests,
-                                  },
-                                }));
-                              });
-                            }}
-                            onError={(err) => {
-                              console.error("PayPal Error:", err);
-                              alert(lang === "es" ? "Error procesando el pago con PayPal." : "Error processing payment with PayPal.");
-                            }}
-                          />
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                      {/* Left Column: Client Info & Payment Stack */}
+                      <div className="lg:col-span-7 space-y-6">
+                        {/* Contact Information Form */}
+                        <div className="space-y-4">
+                          <h5 className="font-navigation text-xs uppercase tracking-wider text-primary font-bold">
+                            {lang === "es" ? "1. Datos de Contacto" : "1. Contact Information"}
+                          </h5>
+                          
+                          <div className="space-y-3">
+                            <div>
+                              <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">
+                                {lang === "es" ? "Nombre Completo" : "Full Name"} *
+                              </label>
+                              <input
+                                type="text"
+                                required
+                                value={clientName}
+                                onChange={(e) => setClientName(e.target.value)}
+                                className="w-full bg-stone-50/50 border border-outline-variant p-3 font-sans text-xs focus:outline-none focus:border-primary text-on-surface focus:bg-white"
+                                placeholder={lang === "es" ? "Ej. Juan Pérez" : "e.g. John Doe"}
+                              />
+                            </div>
+                            
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                              <div>
+                                <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">
+                                  {lang === "es" ? "Correo Electrónico" : "Email Address"} *
+                                </label>
+                                <input
+                                  type="email"
+                                  required
+                                  value={clientEmail}
+                                  onChange={(e) => setClientEmail(e.target.value)}
+                                  className="w-full bg-stone-50/50 border border-outline-variant p-3 font-sans text-xs focus:outline-none focus:border-primary text-on-surface focus:bg-white"
+                                  placeholder="correo@ejemplo.com"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">
+                                  {lang === "es" ? "Teléfono / WhatsApp" : "Phone / WhatsApp"} *
+                                </label>
+                                <input
+                                  type="tel"
+                                  required
+                                  value={clientPhone}
+                                  onChange={(e) => setClientPhone(e.target.value)}
+                                  className="w-full bg-stone-50/50 border border-outline-variant p-3 font-sans text-xs focus:outline-none focus:border-primary text-on-surface focus:bg-white"
+                                  placeholder="+52 1 33..."
+                                />
+                              </div>
+                            </div>
+                          </div>
                         </div>
 
-                        {/* Mercado Pago Checkout Button */}
+                        {/* Payment section */}
+                        <div className="space-y-4 pt-4 border-t border-outline-variant/20">
+                          <h5 className="font-navigation text-xs uppercase tracking-wider text-primary font-bold">
+                            {lang === "es" ? "2. Método de Pago" : "2. Payment Method"}
+                          </h5>
+                          
+                          <div className="space-y-3">
+                            {(!clientName || !clientEmail || !clientPhone) ? (
+                              <div className="bg-stone-50 border border-dashed border-stone-200 p-4 text-center text-xs text-stone-400">
+                                {lang === "es"
+                                  ? "Por favor, completa tus datos de contacto para habilitar los métodos de pago."
+                                  : "Please complete your contact details to enable payment methods."}
+                              </div>
+                            ) : (
+                              <div className="space-y-3">
+                                {/* PayPal Real Checkout Button */}
+                                <div className="w-full">
+                                  <PayPalButtons
+                                    forceReRender={[numGuests, pricePerPerson, selectedDateStr, selectedTime, clientName, clientEmail, clientPhone]}
+                                    style={{ layout: "vertical", color: "gold", shape: "rect", label: "paypal", height: 40 }}
+                                    createOrder={(data, actions) => {
+                                      return actions.order.create({
+                                        purchase_units: [
+                                          {
+                                            amount: {
+                                              value: (numGuests * pricePerPerson).toString(),
+                                              currency_code: "MXN"
+                                            },
+                                            description: `${activeData.title} - ${numGuests} ${numGuests === 1 ? "persona" : "personas"}`
+                                          }
+                                        ]
+                                      });
+                                    }}
+                                    onApprove={(data, actions) => {
+                                      return actions.order.capture().then((details) => {
+                                        const code = `CL-${packageId.toUpperCase()}-${selectedDateStr.replace(/-/g, '')}${Math.floor(1000 + Math.random() * 9000)}`;
+                                        setReservationCode(code);
+                                        setBookingConfirmed(true);
+                                        setPaymentStep(false);
+                                        
+                                        setBookingsCapacity((prev) => ({
+                                          ...prev,
+                                          [selectedDateStr]: {
+                                            ...(prev[selectedDateStr] || {}),
+                                            [selectedTime]: (prev[selectedDateStr]?.[selectedTime] || 0) + numGuests,
+                                          },
+                                        }));
+                                      });
+                                    }}
+                                    onError={(err) => {
+                                      console.error("PayPal Error:", err);
+                                      alert(lang === "es" ? "Error procesando el pago con PayPal." : "Error processing payment with PayPal.");
+                                    }}
+                                  />
+                                </div>
+
+                                {/* Mercado Pago Checkout Button */}
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedPaymentMethod("mercadopago");
+                                    handleSimulatePayment();
+                                  }}
+                                  disabled={isPaying}
+                                  className="w-full bg-[#009EE3] hover:bg-[#0087c2] active:scale-[0.98] text-white py-2.5 font-sans font-bold text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                                >
+                                  {isPaying && selectedPaymentMethod === "mercadopago" ? (
+                                    <span className="animate-pulse">{activeT.payProcessing}</span>
+                                  ) : (
+                                    <>
+                                      <span>Pagar con</span>
+                                      <span className="font-extrabold italic lowercase">mercado pago</span>
+                                    </>
+                                  )}
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Back navigation */}
                         <button
-                          type="button"
-                          onClick={() => {
-                            setSelectedPaymentMethod("mercadopago");
-                            handleSimulatePayment();
-                          }}
+                          onClick={() => setPaymentStep(false)}
                           disabled={isPaying}
-                          className="w-full bg-[#009EE3] hover:bg-[#0087c2] active:scale-[0.98] text-white py-2.5 font-sans font-bold text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                          className="w-full py-2.5 border border-outline-variant text-on-surface-variant hover:bg-stone-50 font-label-caps text-[10px] uppercase tracking-widest font-semibold text-center cursor-pointer mt-2"
                         >
-                          {isPaying && selectedPaymentMethod === "mercadopago" ? (
-                            <span className="animate-pulse">{activeT.payProcessing}</span>
-                          ) : (
-                            <>
-                              <span>Pagar con</span>
-                              <span className="font-extrabold italic lowercase">mercado pago</span>
-                            </>
-                          )}
+                          {lang === "es" ? "Atrás" : "Back"}
                         </button>
                       </div>
 
-                      {/* Back Button */}
-                      <button
-                        onClick={() => setPaymentStep(false)}
-                        disabled={isPaying}
-                        className="w-full py-2.5 border border-outline-variant text-on-surface-variant hover:bg-stone-50 font-label-caps text-[10px] uppercase tracking-widest font-semibold text-center cursor-pointer mt-1"
-                      >
-                        {lang === "es" ? "Atrás" : "Back"}
-                      </button>
+                      {/* Right Column: Order Summary (Shopify Card style) */}
+                      <div className="lg:col-span-5 bg-stone-50/70 border border-outline-variant/20 p-5 space-y-4">
+                        <h5 className="font-navigation text-xs uppercase tracking-wider text-primary font-bold border-b border-outline-variant/20 pb-2">
+                          {activeT.paySummary}
+                        </h5>
+                        
+                        {/* Package Thumbnail & Name */}
+                        <div className="flex gap-4 items-center">
+                          <div className="w-16 h-16 bg-stone-100 overflow-hidden border border-stone-200 flex-shrink-0">
+                            <img
+                              alt={activeData.title}
+                              className="w-full h-full object-cover"
+                              src={activeData.heroImg}
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h6 className="font-sans text-xs font-bold truncate text-stone-800">{activeData.title}</h6>
+                            <span className="text-[10px] text-stone-500 font-light block mt-0.5">
+                              {numGuests} {numGuests === 1 ? (lang === "es" ? "visitante" : "guest") : (lang === "es" ? "visitantes" : "guests")}
+                            </span>
+                          </div>
+                          <span className="font-sans text-xs font-semibold text-stone-700">{activeData.price}</span>
+                        </div>
+
+                        {/* Details Table */}
+                        <div className="space-y-2 pt-2 border-t border-outline-variant/15 text-[11px] font-sans font-light">
+                          <div className="flex justify-between text-stone-600">
+                            <span>{lang === "es" ? "Fecha" : "Date"}</span>
+                            <span className="font-medium text-stone-700">{formatShowDate ? formatShowDate(selectedDateStr) : formatReservationDate(selectedDateStr)}</span>
+                          </div>
+                          <div className="flex justify-between text-stone-600">
+                            <span>{lang === "es" ? "Horario" : "Time"}</span>
+                            <span className="font-medium text-stone-700">{selectedTime}</span>
+                          </div>
+                          <div className="flex justify-between text-stone-600">
+                            <span>IVA (16%)</span>
+                            <span className="font-medium text-stone-700">{lang === "es" ? "Incluido" : "Included"}</span>
+                          </div>
+                        </div>
+
+                        {/* Grand Total */}
+                        <div className="flex justify-between text-base font-serif font-bold pt-3 border-t border-outline-variant/20 text-on-surface">
+                          <span>{activeT.payTotal}</span>
+                          <span className="text-primary text-base">${numGuests * pricePerPerson} MXN</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ) : (

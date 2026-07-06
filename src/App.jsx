@@ -26,6 +26,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import CookiePolicy from "./pages/CookiePolicy";
 import TermsConditions from "./pages/TermsConditions";
 import TeaserPage from "./pages/TeaserPage";
+import ValidateTicket from "./pages/ValidateTicket";
 
 export default function App() {
   const [hasBypass, setHasBypass] = useState(() => {
@@ -72,6 +73,14 @@ export default function App() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    
+    // Check if code query param is present (QR scan validation link)
+    const code = params.get("code");
+    if (code) {
+      setPage("validate-ticket");
+      return;
+    }
+
     if (params.get("preview") === "true" || params.get("test") === "true" || params.get("bypass") === "true") {
       localStorage.setItem("casa_loy_preview_bypass", "true");
       setHasBypass(true);
@@ -159,6 +168,8 @@ export default function App() {
         return <CookiePolicy t={t} lang={lang} />;
       case "terms":
         return <TermsConditions t={t} lang={lang} />;
+      case "validate-ticket":
+        return <ValidateTicket lang={lang} setPage={setPage} />;
       default:
         return <Home t={t} setPage={setPage} lang={lang} />;
     }
