@@ -246,8 +246,8 @@ export default function Footer({ lang = "es", setPage }) {
             <div>
               <div className="flex flex-col items-center gap-2 mb-3">
                 <img
-                  src="/agave-icon.png"
-                  alt="Agave Casa Loy"
+                  src="/favicon.svg"
+                  alt="Casa Loy Tequilera"
                   className="w-10 h-10 object-contain mx-auto"
                 />
                 <h4 className="font-serif text-[20px] font-bold text-[#2F403E] leading-tight tracking-wide">
