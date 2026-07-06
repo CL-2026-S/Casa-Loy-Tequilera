@@ -5,7 +5,17 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 // Para pruebas de desarrollo o sandbox, puedes usar "test".
 const PAYPAL_CLIENT_ID = "ATvqpIUvCDHFIHEAzauNdAX4o2qPqT-971MgriMfcpZFNQV9_af-WWa0kHCZHwiGFGnnSe2bhK33JPsL";
 
-export default function ExperienceDetail({ lang, packageId, setPage }) {
+export default function ExperienceDetail({ 
+  lang, 
+  packageId, 
+  setPage,
+  maxCapacityLimit,
+  setMaxCapacityLimit,
+  blockedDates,
+  setBlockedDates,
+  bookingsCapacity,
+  setBookingsCapacity
+}) {
   const [showAdminButton, setShowAdminButton] = useState(false);
 
   useEffect(() => {
@@ -53,31 +63,6 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
 
   // Staff Controls State
   const [isAdminOpen, setIsAdminOpen] = useState(false);
-  const [maxCapacityLimit, setMaxCapacityLimit] = useState(20);
-  const [blockedDates, setBlockedDates] = useState([]);
-  const [bookingsCapacity, setBookingsCapacity] = useState(() => {
-    // Generate deterministic mock occupancy for future slots to feel realistic
-    const initial = {};
-    let temp = new Date(today);
-    for (let i = 0; i < 30; i++) {
-      if (temp.getDay() !== 1) {
-        const y = temp.getFullYear();
-        const m = temp.getMonth();
-        const d = temp.getDate();
-        const dateStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-        
-        // Generate mock occupancy
-        const seed1 = ((d * 3) % 10) + 3; // 3 to 12 spots
-        const seed2 = ((d * 7) % 8) + 5; // 5 to 12 spots
-        initial[dateStr] = {
-          "10:00 AM": seed1,
-          "11:00 AM": seed2,
-        };
-      }
-      temp.setDate(temp.getDate() + 1);
-    }
-    return initial;
-  });
 
   const pricePerPerson = packageId === "oro" ? 550 : 750;
   const occupiedSpots = selectedTime ? (bookingsCapacity[selectedDateStr]?.[selectedTime] || 0) : 0;
@@ -493,11 +478,37 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
     }
   };
 
+  const saveBookingToLog = (code) => {
+    try {
+      const existing = localStorage.getItem("casa_loy_bookings_log");
+      const list = existing ? JSON.parse(existing) : [];
+      const newBooking = {
+        code,
+        name: clientName || "Cliente Simulado",
+        email: clientEmail || "correo@ejemplo.com",
+        phone: clientPhone || "+52 1 33...",
+        packageName: activeData.title,
+        date: selectedDateStr,
+        time: selectedTime,
+        guests: numGuests,
+        amount: numGuests * pricePerPerson,
+        method: selectedPaymentMethod === "paypal" ? "PayPal" : "Mercado Pago",
+        timestamp: new Date().toLocaleString()
+      };
+      list.unshift(newBooking);
+      localStorage.setItem("casa_loy_bookings_log", JSON.stringify(list));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleSimulatePayment = () => {
     if (!selectedPaymentMethod) return;
     setIsPaying(true);
 
     setTimeout(() => {
+      const code = `CL-${packageId.toUpperCase()}-${selectedDateStr.replace(/-/g, '')}${Math.floor(1000 + Math.random() * 9000)}`;
+      
       // Deduct spots in client state
       setBookingsCapacity((prev) => ({
         ...prev,
@@ -506,8 +517,8 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
           [selectedTime]: occupiedSpots + numGuests,
         },
       }));
-      // Generate unique random reservation code
-      const code = `CL-${packageId.toUpperCase()}-${selectedDateStr.replace(/-/g, '')}${Math.floor(1000 + Math.random() * 9000)}`;
+      
+      saveBookingToLog(code);
       setReservationCode(code);
       setIsPaying(false);
       setBookingConfirmed(true);
@@ -892,9 +903,6 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
                                     onApprove={(data, actions) => {
                                       return actions.order.capture().then((details) => {
                                         const code = `CL-${packageId.toUpperCase()}-${selectedDateStr.replace(/-/g, '')}${Math.floor(1000 + Math.random() * 9000)}`;
-                                        setReservationCode(code);
-                                        setBookingConfirmed(true);
-                                        setPaymentStep(false);
                                         
                                         setBookingsCapacity((prev) => ({
                                           ...prev,
@@ -903,6 +911,11 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
                                             [selectedTime]: (prev[selectedDateStr]?.[selectedTime] || 0) + numGuests,
                                           },
                                         }));
+                                        
+                                        saveBookingToLog(code);
+                                        setReservationCode(code);
+                                        setBookingConfirmed(true);
+                                        setPaymentStep(false);
                                       });
                                     }}
                                     onError={(err) => {

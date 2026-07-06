@@ -27,6 +27,7 @@ import CookiePolicy from "./pages/CookiePolicy";
 import TermsConditions from "./pages/TermsConditions";
 import TeaserPage from "./pages/TeaserPage";
 import ValidateTicket from "./pages/ValidateTicket";
+import AdminPanel from "./pages/AdminPanel";
 
 export default function App() {
   const [hasBypass, setHasBypass] = useState(() => {
@@ -41,10 +42,39 @@ export default function App() {
     if (path === "/privacy-policy" || path === "/privacy-policy/") {
       return "privacy";
     }
+    if (path === "/panel" || path === "/panel/") {
+      return "panel";
+    }
     return "home";
   }); // Navigation routing state
 
   const [selectedTour, setSelectedTour] = useState("oro");
+
+  // Global Tourism Scheduling States (Shared between clients and CMS panel)
+  const [maxCapacityLimit, setMaxCapacityLimit] = useState(20);
+  const [blockedDates, setBlockedDates] = useState([]);
+  const [bookingsCapacity, setBookingsCapacity] = useState(() => {
+    const initial = {};
+    const today = new Date();
+    let temp = new Date(today);
+    for (let i = 0; i < 45; i++) {
+      if (temp.getDay() !== 1) {
+        const y = temp.getFullYear();
+        const m = temp.getMonth();
+        const d = temp.getDate();
+        const dateStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        
+        const seed1 = ((d * 3) % 10) + 3;
+        const seed2 = ((d * 7) % 8) + 5;
+        initial[dateStr] = {
+          "10:00 AM": seed1,
+          "11:00 AM": seed2,
+        };
+      }
+      temp.setDate(temp.getDate() + 1);
+    }
+    return initial;
+  });
 
   const [ageVerified, setAgeVerified] = useState(() => {
     // Check if session verified in localStorage (expires in 30 days)
@@ -145,11 +175,50 @@ export default function App() {
       case "turismo":
         return <Turismo lang={lang} setPage={setPage} selectedTour={selectedTour} setSelectedTour={setSelectedTour} />;
       case "experience-oro":
-        return <ExperienceDetail lang={lang} packageId="oro" setPage={setPage} setSelectedTour={setSelectedTour} />;
+        return (
+          <ExperienceDetail
+            lang={lang}
+            packageId="oro"
+            setPage={setPage}
+            setSelectedTour={setSelectedTour}
+            maxCapacityLimit={maxCapacityLimit}
+            setMaxCapacityLimit={setMaxCapacityLimit}
+            blockedDates={blockedDates}
+            setBlockedDates={setBlockedDates}
+            bookingsCapacity={bookingsCapacity}
+            setBookingsCapacity={setBookingsCapacity}
+          />
+        );
       case "experience-platino":
-        return <ExperienceDetail lang={lang} packageId="platino" setPage={setPage} setSelectedTour={setSelectedTour} />;
+        return (
+          <ExperienceDetail
+            lang={lang}
+            packageId="platino"
+            setPage={setPage}
+            setSelectedTour={setSelectedTour}
+            maxCapacityLimit={maxCapacityLimit}
+            setMaxCapacityLimit={setMaxCapacityLimit}
+            blockedDates={blockedDates}
+            setBlockedDates={setBlockedDates}
+            bookingsCapacity={bookingsCapacity}
+            setBookingsCapacity={setBookingsCapacity}
+          />
+        );
       case "experience-diamante":
-        return <ExperienceDetail lang={lang} packageId="diamante" setPage={setPage} setSelectedTour={setSelectedTour} />;
+        return (
+          <ExperienceDetail
+            lang={lang}
+            packageId="diamante"
+            setPage={setPage}
+            setSelectedTour={setSelectedTour}
+            maxCapacityLimit={maxCapacityLimit}
+            setMaxCapacityLimit={setMaxCapacityLimit}
+            blockedDates={blockedDates}
+            setBlockedDates={setBlockedDates}
+            bookingsCapacity={bookingsCapacity}
+            setBookingsCapacity={setBookingsCapacity}
+          />
+        );
       case "nativo":
         return <Nativo1937 t={t} lang={lang} />;
       case "where-to-buy":
@@ -170,6 +239,19 @@ export default function App() {
         return <TermsConditions t={t} lang={lang} />;
       case "validate-ticket":
         return <ValidateTicket lang={lang} setPage={setPage} />;
+      case "panel":
+        return (
+          <AdminPanel
+            lang={lang}
+            setPage={setPage}
+            maxCapacityLimit={maxCapacityLimit}
+            setMaxCapacityLimit={setMaxCapacityLimit}
+            blockedDates={blockedDates}
+            setBlockedDates={setBlockedDates}
+            bookingsCapacity={bookingsCapacity}
+            setBookingsCapacity={setBookingsCapacity}
+          />
+        );
       default:
         return <Home t={t} setPage={setPage} lang={lang} />;
     }
