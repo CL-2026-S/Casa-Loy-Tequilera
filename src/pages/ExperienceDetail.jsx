@@ -676,7 +676,7 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
 
             {/* Interactive Calendar System */}
             <div className="lg:col-span-7">
-              <div className="bg-white border border-outline-variant p-4 sm:p-8 md:p-12 shadow-xl relative min-h-[520px] flex flex-col justify-between">
+              <div className="bg-white border border-outline-variant p-4 sm:p-6 md:p-8 shadow-xl relative flex flex-col justify-between">
                 
                 {/* Step 1: Booking Success Screen with QR Access Code */}
                 {bookingConfirmed ? (
@@ -728,73 +728,46 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
                   </div>
                 ) : paymentStep ? (
                   /* Step 2: Payment Gateway Form (PayPal & Mercado Pago Selector) */
-                  <div className="space-y-6 my-auto">
-                    <div className="border-b border-outline-variant/30 pb-4">
-                      <h4 className="font-headline-md text-2xl font-bold">{activeT.payTitle}</h4>
-                      <p className="text-xs text-on-surface-variant/75 mt-1">
+                  <div className="space-y-4 my-auto">
+                    <div className="border-b border-outline-variant/30 pb-3">
+                      <h4 className="font-headline-md text-xl md:text-2xl font-bold">{activeT.payTitle}</h4>
+                      <p className="text-[10px] text-on-surface-variant/75 mt-0.5">
                         {lang === "es" ? "Tu conexión está encriptada y es segura" : "Your connection is encrypted and secure"}
                       </p>
                     </div>
 
                     {/* Order summary */}
-                    <div className="bg-[#fcf9f3] p-6 space-y-4">
-                      <h5 className="font-navigation text-xs uppercase tracking-wider text-primary font-bold">
+                    <div className="bg-[#fcf9f3] p-4 space-y-2 border border-outline-variant/20">
+                      <h5 className="font-navigation text-[10px] uppercase tracking-wider text-primary font-bold">
                         {activeT.paySummary}
                       </h5>
-                      <div className="flex justify-between text-sm font-sans font-light border-b border-outline-variant/20 pb-2">
+                      <div className="flex justify-between text-xs font-sans font-light border-b border-outline-variant/15 pb-1.5">
                         <span>{activeData.title}</span>
                         <span>{activeData.price}</span>
                       </div>
-                      <div className="flex justify-between text-sm font-sans font-light border-b border-outline-variant/20 pb-2">
+                      <div className="flex justify-between text-xs font-sans font-light border-b border-outline-variant/15 pb-1.5">
                         <span>{lang === "es" ? "Fecha y hora" : "Date & time"}</span>
-                        <span className="font-medium">{formatReservationDate(selectedDateStr)} a las {selectedTime}</span>
+                        <span className="font-medium text-stone-700">{formatReservationDate(selectedDateStr)} a las {selectedTime}</span>
                       </div>
-                      <div className="flex justify-between text-sm font-sans font-light border-b border-outline-variant/20 pb-2">
+                      <div className="flex justify-between text-xs font-sans font-light border-b border-outline-variant/15 pb-1.5">
                         <span>{lang === "es" ? "Visitantes" : "Guests"}</span>
                         <span>{numGuests}</span>
                       </div>
-                      <div className="flex justify-between text-base font-serif font-bold pt-2 text-on-surface">
+                      <div className="flex justify-between text-sm font-serif font-bold pt-1 text-on-surface">
                         <span>{activeT.payTotal}</span>
-                        <span className="text-primary text-lg">${numGuests * pricePerPerson} MXN</span>
+                        <span className="text-primary">${numGuests * pricePerPerson} MXN</span>
                       </div>
                     </div>
 
-                    {/* Payment methods list */}
-                    <div className="space-y-3">
-                      <label className="block text-xs font-semibold font-navigation uppercase tracking-wider text-primary">
-                        {activeT.payMethodLabel}
+                    {/* Direct Payment Buttons Stack */}
+                    <div className="space-y-3 pt-2">
+                      <label className="block text-[10px] font-semibold font-navigation uppercase tracking-wider text-primary">
+                        {lang === "es" ? "Selecciona tu método de pago para finalizar" : "Select your payment method to finalize"}
                       </label>
                       
-                      <div className="flex flex-col sm:flex-row gap-4">
-                        <button
-                          type="button"
-                          onClick={() => setSelectedPaymentMethod("paypal")}
-                          className={`flex-1 flex items-center justify-center py-4 border rounded-none transition-all ${
-                            selectedPaymentMethod === "paypal"
-                              ? "border-primary bg-primary/5 shadow-sm"
-                              : "border-outline-variant hover:bg-stone-50"
-                          }`}
-                        >
-                          <span className="font-bold italic text-base text-[#003087] select-none">PayPal</span>
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setSelectedPaymentMethod("mercadopago")}
-                          className={`flex-1 flex items-center justify-center py-4 border rounded-none transition-all ${
-                            selectedPaymentMethod === "mercadopago"
-                              ? "border-primary bg-primary/5 shadow-sm"
-                              : "border-outline-variant hover:bg-stone-50"
-                          }`}
-                        >
-                          <span className="font-extrabold text-base text-[#009EE3] select-none">mercado pago</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col gap-4 pt-6">
-                      {selectedPaymentMethod === "paypal" ? (
-                        <div className="w-full max-w-[280px] mx-auto">
+                      <div className="space-y-3">
+                        {/* PayPal Real Checkout Button */}
+                        <div className="w-full">
                           <PayPalButtons
                             forceReRender={[numGuests, pricePerPerson, selectedDateStr, selectedTime]}
                             style={{ layout: "vertical", color: "gold", shape: "rect", label: "paypal", height: 40 }}
@@ -833,24 +806,33 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
                             }}
                           />
                         </div>
-                      ) : (
+
+                        {/* Mercado Pago Checkout Button */}
                         <button
-                          onClick={handleSimulatePayment}
-                          disabled={!selectedPaymentMethod || isPaying}
-                          className={`w-full py-4 font-label-caps text-xs uppercase tracking-widest font-semibold transition-all shadow-md ${
-                            selectedPaymentMethod && !isPaying
-                              ? "bg-primary text-white hover:bg-[#8c4723]"
-                              : "bg-stone-200 text-stone-500 cursor-not-allowed"
-                          }`}
+                          type="button"
+                          onClick={() => {
+                            setSelectedPaymentMethod("mercadopago");
+                            handleSimulatePayment();
+                          }}
+                          disabled={isPaying}
+                          className="w-full bg-[#009EE3] hover:bg-[#0087c2] active:scale-[0.98] text-white py-2.5 font-sans font-bold text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
                         >
-                          {isPaying ? activeT.payProcessing : activeT.payConfirm}
+                          {isPaying && selectedPaymentMethod === "mercadopago" ? (
+                            <span className="animate-pulse">{activeT.payProcessing}</span>
+                          ) : (
+                            <>
+                              <span>Pagar con</span>
+                              <span className="font-extrabold italic lowercase">mercado pago</span>
+                            </>
+                          )}
                         </button>
-                      )}
-                      
+                      </div>
+
+                      {/* Back Button */}
                       <button
                         onClick={() => setPaymentStep(false)}
                         disabled={isPaying}
-                        className="w-full py-3 border border-outline-variant text-on-surface hover:bg-stone-50 font-label-caps text-xs uppercase tracking-widest font-semibold text-center cursor-pointer"
+                        className="w-full py-2.5 border border-outline-variant text-on-surface-variant hover:bg-stone-50 font-label-caps text-[10px] uppercase tracking-widest font-semibold text-center cursor-pointer mt-1"
                       >
                         {lang === "es" ? "Atrás" : "Back"}
                       </button>
