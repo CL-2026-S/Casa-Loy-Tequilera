@@ -513,7 +513,7 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
   return (
     <div className="bg-background text-on-surface">
       {/* Visual Fullscreen Hero */}
-      <section className="relative h-screen w-full bg-zinc-950 overflow-hidden">
+      <section className="relative min-h-screen lg:h-screen w-full bg-zinc-950 flex items-center justify-center py-20 lg:py-0">
         <div className="absolute inset-0 z-0">
           <img
             alt={activeData.title}
@@ -523,7 +523,7 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
         </div>
         
-        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center h-full pt-16">
+        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center h-auto pt-16">
           <span className="font-navigation text-[clamp(11px,1vw,13px)] text-primary uppercase tracking-[0.4em] mb-4 block font-semibold">
             {lang === "es" ? "Experiencia Exclusiva" : "Exclusive Experience"}
           </span>
@@ -672,21 +672,11 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
                 </svg>
               </div>
 
-              {/* Staff Access Trigger Button */}
-              <div className="pt-4">
-                <button
-                  onClick={() => setIsAdminOpen(true)}
-                  className="flex items-center gap-2 border border-primary/30 text-primary/70 hover:text-primary hover:border-primary hover:bg-primary/5 px-6 py-3 font-label-caps text-[10px] uppercase tracking-widest transition-all cursor-pointer font-bold"
-                >
-                  <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
-                  {lang === "es" ? "Acceso Staff: Configurar Cupos" : "Staff Access: Set Capacities"}
-                </button>
-              </div>
             </div>
 
             {/* Interactive Calendar System */}
             <div className="lg:col-span-7">
-              <div className="bg-white border border-outline-variant p-8 md:p-12 shadow-xl relative min-h-[520px] flex flex-col justify-between">
+              <div className="bg-white border border-outline-variant p-4 sm:p-8 md:p-12 shadow-xl relative min-h-[520px] flex flex-col justify-between">
                 
                 {/* Step 1: Booking Success Screen with QR Access Code */}
                 {bookingConfirmed ? (
@@ -890,14 +880,14 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
                     </div>
 
                     {/* Calendar grid representation */}
-                    <div className="grid grid-cols-7 gap-2 mb-8 text-center select-none font-navigation text-xs text-on-surface-variant/70 font-semibold border-b border-outline-variant/20 pb-2">
+                    <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-6 sm:mb-8 text-center select-none font-navigation text-xs text-on-surface-variant/70 font-semibold border-b border-outline-variant/20 pb-2">
                       {activeT.daysOfWeek.map(d => <div key={d}>{d}</div>)}
                     </div>
                     
-                    <div className="grid grid-cols-7 gap-2 mb-8 text-center font-navigation text-sm font-medium">
+                    <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-6 sm:mb-8 text-center font-navigation text-xs sm:text-sm font-medium">
                       {/* Blank placeholders */}
                       {placeholders.map((day, idx) => (
-                        <div key={`place-${idx}`} className="h-12 flex items-center justify-center text-on-surface/20 cursor-not-allowed select-none">
+                        <div key={`place-${idx}`} className="h-10 sm:h-12 flex items-center justify-center text-on-surface/20 cursor-not-allowed select-none">
                           {day}
                         </div>
                       ))}
@@ -919,7 +909,7 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
                               setSelectedTime("");
                               setNumGuests(1);
                             }}
-                            className={`h-12 flex flex-col items-center justify-center cursor-pointer transition-all border border-transparent rounded-none ${
+                            className={`h-10 sm:h-12 flex flex-col items-center justify-center cursor-pointer transition-all border border-transparent rounded-none ${
                               isDisabled
                                 ? "text-on-surface/20 bg-stone-50/50 cursor-not-allowed"
                                 : isSelected
@@ -927,12 +917,12 @@ export default function ExperienceDetail({ lang, packageId, setPage }) {
                                 : "hover:bg-primary/5 text-on-surface"
                             }`}
                           >
-                            <span className="text-sm">{day}</span>
+                            <span className="text-xs sm:text-sm">{day}</span>
                             {isMonday && (
-                              <span className="text-[7px] text-stone-400 leading-none lowercase">cerrado</span>
+                              <span className="text-[6px] sm:text-[7px] text-stone-400 leading-none lowercase">cerrado</span>
                             )}
                             {isBlocked && (
-                              <span className="text-[7px] text-red-500 leading-none lowercase">bloqueado</span>
+                              <span className="text-[6px] sm:text-[7px] text-red-500 leading-none lowercase">bloqueado</span>
                             )}
                           </button>
                         );
