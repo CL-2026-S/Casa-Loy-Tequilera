@@ -26,23 +26,97 @@ export default function ExperienceDetail({
     }
   }, [packageId]);
 
+  // Get current date/time in Guadalajara timezone
+  const getCurrentGuadalajaraTime = () => {
+    try {
+      const formatter = new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/Mexico_City",
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        hour12: false,
+      });
+      const parts = formatter.formatToParts(new Date());
+      const dateParts = {};
+      parts.forEach(part => {
+        dateParts[part.type] = part.value;
+      });
+      return new Date(
+        parseInt(dateParts.year),
+        parseInt(dateParts.month) - 1,
+        parseInt(dateParts.day),
+        parseInt(dateParts.hour),
+        parseInt(dateParts.minute),
+        parseInt(dateParts.second)
+      );
+    } catch (e) {
+      console.error("Timezone formatting error, using local time:", e);
+      return new Date();
+    }
+  };
+
   // Dynamic 3-Month Calendar State
-  const today = new Date();
+  const today = getCurrentGuadalajaraTime();
   const [currentDate, setCurrentDate] = useState(new Date(today.getFullYear(), today.getMonth(), 1));
   
+  const isSlotBlocked = (dateStr, timeStr) => {
+    if (!dateStr || !timeStr) return true;
+    
+    const dateParts = dateStr.split('-');
+    if (dateParts.length !== 3) return true;
+    const year = parseInt(dateParts[0], 10);
+    const month = parseInt(dateParts[1], 10) - 1; // 0-based
+    const day = parseInt(dateParts[2], 10);
+    
+    let hour = 0;
+    let minute = 0;
+    const timeUpper = timeStr.toUpperCase();
+    const isPM = timeUpper.includes("PM");
+    const isAM = timeUpper.includes("AM");
+    
+    const cleanTime = timeUpper.replace("AM", "").replace("PM", "").trim();
+    const timeParts = cleanTime.split(':');
+    if (timeParts.length >= 1) {
+      hour = parseInt(timeParts[0], 10);
+      if (isPM && hour < 12) hour += 12;
+      if (isAM && hour === 12) hour = 0;
+    }
+    if (timeParts.length >= 2) {
+      minute = parseInt(timeParts[1], 10);
+    }
+    
+    const slotDate = new Date(year, month, day, hour, minute, 0);
+    const diffMs = slotDate.getTime() - today.getTime();
+    const threeHoursMs = 3 * 60 * 60 * 1000;
+    
+    return diffMs < threeHoursMs;
+  };
+
+  const areAllSlotsBlockedForDate = (dateStr) => {
+    const slots = ["10:00 AM", "11:00 AM"];
+    return slots.every(time => isSlotBlocked(dateStr, time));
+  };
+
   // Find tomorrow or next available date for initial selected date
   const getInitialDateStr = () => {
     let temp = new Date(today);
-    // Add 1 day to ensure they don't book past times today
-    temp.setDate(temp.getDate() + 1);
-    for (let i = 0; i < 7; i++) {
-      if (temp.getDay() !== 1) { // not Monday
-        const y = temp.getFullYear();
-        const m = temp.getMonth();
-        const d = temp.getDate();
-        const mm = String(m + 1).padStart(2, '0');
-        const dd = String(d).padStart(2, '0');
-        return `${y}-${mm}-${dd}`;
+    for (let i = 0; i < 15; i++) {
+      const y = temp.getFullYear();
+      const m = temp.getMonth();
+      const d = temp.getDate();
+      const mm = String(m + 1).padStart(2, '0');
+      const dd = String(d).padStart(2, '0');
+      const dateStr = `${y}-${mm}-${dd}`;
+      
+      const isBlocked = blockedDates.includes(dateStr);
+      const isMonday = temp.getDay() === 1;
+      const allSlotsBlocked = areAllSlotsBlockedForDate(dateStr);
+      
+      if (!isBlocked && !isMonday && !allSlotsBlocked) {
+        return dateStr;
       }
       temp.setDate(temp.getDate() + 1);
     }
@@ -63,6 +137,28 @@ export default function ExperienceDetail({
 
   // Staff Controls State
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+
+  useEffect(() => {
+    if (!selectedDateStr) return;
+    const isBlocked = blockedDates.includes(selectedDateStr);
+    const dateParts = selectedDateStr.split('-');
+    let isMonday = false;
+    let allSlotsBlocked = false;
+    if (dateParts.length === 3) {
+      const y = parseInt(dateParts[0], 10);
+      const m = parseInt(dateParts[1], 10) - 1;
+      const d = parseInt(dateParts[2], 10);
+      isMonday = new Date(y, m, d).getDay() === 1;
+      allSlotsBlocked = areAllSlotsBlockedForDate(selectedDateStr);
+    }
+    
+    if (isBlocked || isMonday || allSlotsBlocked) {
+      const initial = getInitialDateStr();
+      if (initial && initial !== selectedDateStr) {
+        setSelectedDateStr(initial);
+      }
+    }
+  }, [blockedDates, bookingsCapacity, maxCapacityLimit]);
 
   const pricePerPerson = packageId === "oro" ? 1 : 750;
   const occupiedSpots = selectedTime ? (bookingsCapacity[selectedDateStr]?.[selectedTime] || 0) : 0;
@@ -766,7 +862,7 @@ export default function ExperienceDetail({
 
             {/* Interactive Calendar System */}
             <div className={paymentStep || bookingConfirmed ? "lg:col-span-12" : "lg:col-span-7"}>
-              <div className="bg-white border border-outline-variant p-4 sm:p-6 md:p-8 shadow-xl relative flex flex-col justify-between">
+              <div className="bg-white border border-outline-variant p-3.5 sm:p-5 shadow-xl relative flex flex-col justify-between">
                 
                 {/* Step 1: Booking Success Screen with QR Access Code */}
                 {bookingConfirmed ? (
@@ -984,6 +1080,13 @@ export default function ExperienceDetail({
                                     forceReRender={[numGuests, pricePerPerson, selectedDateStr, selectedTime, clientName, clientEmail, clientPhone]}
                                     style={{ layout: "vertical", color: "gold", shape: "rect", label: "paypal", height: 40 }}
                                     createOrder={async (data, actions) => {
+                                      if (isSlotBlocked(selectedDateStr, selectedTime)) {
+                                        alert(lang === "es"
+                                          ? "¡Lo sentimos! Este horario ya no está disponible para reservar."
+                                          : "Sorry! This slot is no longer available for booking."
+                                        );
+                                        return Promise.reject(new Error("BLOCKED_SLOT"));
+                                      }
                                       try {
                                         const checkRes = await fetch('/api/tourism');
                                         const contentType = checkRes.headers.get("content-type");
@@ -1142,170 +1245,184 @@ export default function ExperienceDetail({
                   </div>
                 ) : (
                   /* Step 3: Date & Hour Selection calendar */
-                  <>
-                    <div className="flex justify-between items-center mb-8 select-none border-b border-outline-variant/20 pb-4">
-                      <span className="font-headline-md text-xl font-bold">{currentMonthName}</span>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={handlePrevMonth}
-                          className="p-2 hover:bg-stone-100 rounded-full transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
-                          disabled={currentDate.getMonth() === today.getMonth() && currentDate.getFullYear() === today.getFullYear()}
-                        >
-                          ◀
-                        </button>
-                        <button
-                          onClick={handleNextMonth}
-                          className="p-2 hover:bg-stone-100 rounded-full transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
-                          disabled={currentDate.getMonth() === (today.getMonth() + 3) % 12 && currentDate.getFullYear() === today.getFullYear() + Math.floor((today.getMonth() + 3) / 12)}
-                        >
-                          ▶
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Calendar grid representation */}
-                    <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-6 sm:mb-8 text-center select-none font-navigation text-xs text-on-surface-variant/70 font-semibold border-b border-outline-variant/20 pb-2">
-                      {activeT.daysOfWeek.map(d => <div key={d}>{d}</div>)}
-                    </div>
-                    
-                    <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-6 sm:mb-8 text-center font-navigation text-xs sm:text-sm font-medium">
-                      {/* Blank placeholders */}
-                      {placeholders.map((day, idx) => (
-                        <div key={`place-${idx}`} className="h-10 sm:h-12 flex items-center justify-center text-on-surface/20 cursor-not-allowed select-none">
-                          {day}
-                        </div>
-                      ))}
-                      
-                      {days.map((day) => {
-                        const dateStr = getFormattedDateString(currentDate.getFullYear(), currentDate.getMonth(), day);
-                        const isBlocked = blockedDates.includes(dateStr);
-                        const isPast = isDateInPast(currentDate.getFullYear(), currentDate.getMonth(), day);
-                        const isMonday = isDateMonday(currentDate.getFullYear(), currentDate.getMonth(), day);
-                        const isDisabled = isBlocked || isPast || isMonday;
-                        const isSelected = selectedDateStr === dateStr;
-                        
-                        return (
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
+                    {/* Left Column: Calendar Grid */}
+                    <div className="md:col-span-7">
+                      <div className="flex justify-between items-center mb-4 select-none border-b border-outline-variant/20 pb-2">
+                        <span className="font-headline-md text-base sm:text-lg font-bold">{currentMonthName}</span>
+                        <div className="flex gap-1">
                           <button
-                            key={day}
-                            disabled={isDisabled}
-                            onClick={() => {
-                              setSelectedDateStr(dateStr);
-                              setSelectedTime("");
-                              setNumGuests(1);
-                            }}
-                            className={`h-10 sm:h-12 flex flex-col items-center justify-center cursor-pointer transition-all border border-transparent rounded-none ${
-                              isDisabled
-                                ? "text-on-surface/20 bg-stone-50/50 cursor-not-allowed"
-                                : isSelected
-                                ? "bg-primary text-white scale-105 shadow-md font-semibold"
-                                : "hover:bg-primary/5 text-on-surface"
-                            }`}
+                            onClick={handlePrevMonth}
+                            className="p-1.5 hover:bg-stone-100 rounded-full transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed text-xs"
+                            disabled={currentDate.getMonth() === today.getMonth() && currentDate.getFullYear() === today.getFullYear()}
                           >
-                            <span className="text-xs sm:text-sm">{day}</span>
-                            {isMonday && (
-                              <span className="text-[6px] sm:text-[7px] text-stone-400 leading-none lowercase">cerrado</span>
-                            )}
-                            {isBlocked && (
-                              <span className="text-[6px] sm:text-[7px] text-red-500 leading-none lowercase">bloqueado</span>
-                            )}
+                            ◀
                           </button>
-                        );
-                      })}
-                    </div>
+                          <button
+                            onClick={handleNextMonth}
+                            className="p-1.5 hover:bg-stone-100 rounded-full transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed text-xs"
+                            disabled={currentDate.getMonth() === (today.getMonth() + 3) % 12 && currentDate.getFullYear() === today.getFullYear() + Math.floor((today.getMonth() + 3) / 12)}
+                          >
+                            ▶
+                          </button>
+                        </div>
+                      </div>
 
-                    {/* Time slots selector with occupancy info */}
-                    <div className="mb-6">
-                      <label className="block text-xs font-semibold font-navigation uppercase tracking-widest text-primary mb-2">
-                        {activeT.scheduleLabel}
-                      </label>
-                      <div className="flex gap-4">
-                        {["10:00 AM", "11:00 AM"].map((time) => {
-                          const occupied = bookingsCapacity[selectedDateStr]?.[time] || 0;
-                          const remaining = maxCapacityLimit - occupied;
-                          const isFull = remaining <= 0;
+                      {/* Calendar days of week */}
+                      <div className="grid grid-cols-7 gap-1 mb-2 text-center select-none font-navigation text-[10px] text-on-surface-variant/70 font-semibold border-b border-outline-variant/20 pb-1">
+                        {activeT.daysOfWeek.map(d => <div key={d}>{d}</div>)}
+                      </div>
+                      
+                      {/* Calendar days grid */}
+                      <div className="grid grid-cols-7 gap-1 text-center font-navigation text-xs font-medium">
+                        {/* Blank placeholders */}
+                        {placeholders.map((day, idx) => (
+                          <div key={`place-${idx}`} className="h-7 sm:h-8 flex items-center justify-center text-on-surface/20 cursor-not-allowed select-none text-[11px]">
+                            {day}
+                          </div>
+                        ))}
+                        
+                        {days.map((day) => {
+                          const dateStr = getFormattedDateString(currentDate.getFullYear(), currentDate.getMonth(), day);
+                          const isBlocked = blockedDates.includes(dateStr);
+                          const isPast = isDateInPast(currentDate.getFullYear(), currentDate.getMonth(), day);
+                          const isMonday = isDateMonday(currentDate.getFullYear(), currentDate.getMonth(), day);
+                          const allSlotsBlocked = areAllSlotsBlockedForDate(dateStr);
+                          const isDisabled = isBlocked || isPast || isMonday || allSlotsBlocked;
+                          const isSelected = selectedDateStr === dateStr;
+                          
                           return (
                             <button
-                              key={time}
-                              disabled={isFull}
+                              key={day}
+                              disabled={isDisabled}
                               onClick={() => {
-                                setSelectedTime(time);
-                                if (numGuests > remaining) {
-                                  setNumGuests(remaining > 0 ? 1 : 0);
-                                }
+                                setSelectedDateStr(dateStr);
+                                setSelectedTime("");
+                                setNumGuests(1);
                               }}
-                              className={`flex-1 py-4 border font-label-caps text-xs text-center uppercase tracking-widest transition-all ${
-                                isFull
-                                  ? "border-stone-200 bg-stone-100 text-stone-400 cursor-not-allowed"
-                                  : selectedTime === time
-                                  ? "border-primary bg-primary text-white shadow-md font-semibold"
-                                  : "border-outline text-on-surface hover:bg-[#fcf9f3]"
+                              className={`h-7 sm:h-8 flex flex-col items-center justify-center cursor-pointer transition-all border border-transparent rounded-none ${
+                                isDisabled
+                                  ? "text-on-surface/20 bg-stone-50/50 cursor-not-allowed"
+                                  : isSelected
+                                  ? "bg-primary text-white scale-105 shadow-md font-semibold"
+                                  : "hover:bg-primary/5 text-on-surface"
                               }`}
                             >
-                              <div>{time}</div>
-                              <div className="text-[9px] lowercase font-sans opacity-85 mt-1">
-                                {isFull ? activeT.soldOut : activeT.remainingSpots.replace("{spots}", remaining).replace("{max}", maxCapacityLimit)}
-                              </div>
+                              <span className="text-[11px] sm:text-xs">{day}</span>
+                              {isMonday && (
+                                <span className="text-[5px] sm:text-[6px] text-stone-400 leading-none lowercase">cerrado</span>
+                              )}
+                              {isBlocked && (
+                                <span className="text-[5px] sm:text-[6px] text-red-500 leading-none lowercase">bloq</span>
+                              )}
                             </button>
                           );
                         })}
                       </div>
                     </div>
 
-                    {/* Guests count selector */}
-                    <div className="mb-6">
-                      <label className="block text-xs font-semibold font-navigation uppercase tracking-widest text-primary mb-2">
-                        {activeT.guestsLabel}
-                      </label>
-                      <select
-                        value={numGuests}
-                        onChange={(e) => setNumGuests(parseInt(e.target.value))}
-                        disabled={!selectedTime || remainingSpots <= 0}
-                        className="w-full bg-white border border-outline-variant p-4 font-sans text-sm focus:outline-none focus:border-primary disabled:opacity-50 text-on-surface"
-                      >
-                        {!selectedTime ? (
-                          <option value="1">1 {lang === "es" ? "Persona" : "Person"}</option>
-                        ) : remainingSpots > 0 ? (
-                          Array.from({ length: Math.min(10, remainingSpots) }, (_, i) => i + 1).map(
-                            (val) => (
-                              <option key={val} value={val}>
-                                {val} {val === 1 ? (lang === "es" ? "Persona" : "Person") : (lang === "es" ? "Personas" : "People")}
-                              </option>
-                            )
-                          )
-                        ) : (
-                          <option value="0">0</option>
-                        )}
-                      </select>
-                    </div>
-
-                    {selectedTime && (
-                      <div className="mb-6 text-sm font-sans font-light">
-                        {remainingSpots > 0 ? (
-                          <p className="text-on-surface-variant border-t border-outline-variant/10 pt-2 text-xs">
-                            {lang === "es"
-                              ? `Has seleccionado ${numGuests} ${numGuests === 1 ? "lugar" : "lugares"} para la fecha ${formatReservationDate(selectedDateStr)} a las ${selectedTime}.`
-                              : `You selected ${numGuests} ${numGuests === 1 ? "spot" : "spots"} for ${formatReservationDate(selectedDateStr)} at ${selectedTime}.`}
-                          </p>
-                        ) : (
-                          <p className="text-error font-semibold uppercase tracking-wider border-t border-outline-variant/10 pt-2">
-                            {activeT.soldOut}
-                          </p>
-                        )}
+                    {/* Right Column: Time slots, Guests, Confirm Button */}
+                    <div className="md:col-span-5 flex flex-col justify-between border-t md:border-t-0 md:border-l border-outline-variant/20 pt-4 md:pt-0 md:pl-6 space-y-4">
+                      {/* Time slots selector with occupancy info */}
+                      <div>
+                        <label className="block text-[10px] font-semibold font-navigation uppercase tracking-widest text-primary mb-2">
+                          {activeT.scheduleLabel}
+                        </label>
+                        <div className="flex flex-col gap-2">
+                          {["10:00 AM", "11:00 AM"].map((time) => {
+                            const occupied = bookingsCapacity[selectedDateStr]?.[time] || 0;
+                            const remaining = maxCapacityLimit - occupied;
+                            const isFull = remaining <= 0;
+                            const isBlocked = isSlotBlocked(selectedDateStr, time);
+                            const isDisabled = isFull || isBlocked;
+                            return (
+                              <button
+                                key={time}
+                                disabled={isDisabled}
+                                onClick={() => {
+                                  setSelectedTime(time);
+                                  if (numGuests > remaining) {
+                                    setNumGuests(remaining > 0 ? 1 : 0);
+                                  }
+                                }}
+                                className={`w-full py-2 px-3 border font-label-caps text-[10px] text-center uppercase tracking-wider transition-all flex justify-between items-center ${
+                                  isDisabled
+                                    ? "border-stone-200 bg-stone-100 text-stone-400 cursor-not-allowed"
+                                    : selectedTime === time
+                                    ? "border-primary bg-primary text-white shadow-sm font-semibold"
+                                    : "border-outline text-on-surface hover:bg-[#fcf9f3]"
+                                }`}
+                              >
+                                <div className="font-bold">{time}</div>
+                                <div className="text-[9px] lowercase font-sans opacity-85">
+                                  {isFull 
+                                    ? activeT.soldOut 
+                                    : isBlocked 
+                                      ? (lang === "es" ? "no disponible" : "not available") 
+                                      : activeT.remainingSpots.replace("{spots}", remaining).replace("{max}", maxCapacityLimit)}
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
-                    )}
 
-                    <button
-                      onClick={handleProceedToPayment}
-                      disabled={!selectedTime || remainingSpots <= 0 || numGuests > remainingSpots}
-                      className={`w-full py-5 font-label-caps text-label-caps uppercase tracking-widest transition-all shadow-lg active:scale-[0.98] ${
-                        selectedTime && remainingSpots >= numGuests
-                          ? "bg-primary text-on-primary hover:bg-[#9a5625]"
-                          : "bg-stone-300 text-stone-500 cursor-not-allowed"
-                      }`}
-                    >
-                      {activeT.confirmBtn}
-                    </button>
-                  </>
+                      {/* Guests count selector */}
+                      <div>
+                        <label className="block text-[10px] font-semibold font-navigation uppercase tracking-widest text-primary mb-2">
+                          {activeT.guestsLabel}
+                        </label>
+                        <select
+                          value={numGuests}
+                          onChange={(e) => setNumGuests(parseInt(e.target.value))}
+                          disabled={!selectedTime || remainingSpots <= 0}
+                          className="w-full bg-white border border-outline-variant p-2 font-sans text-xs focus:outline-none focus:border-primary disabled:opacity-50 text-on-surface"
+                        >
+                          {!selectedTime ? (
+                            <option value="1">1 {lang === "es" ? "Persona" : "Person"}</option>
+                          ) : remainingSpots > 0 ? (
+                            Array.from({ length: Math.min(10, remainingSpots) }, (_, i) => i + 1).map(
+                              (val) => (
+                                <option key={val} value={val}>
+                                  {val} {val === 1 ? (lang === "es" ? "Persona" : "Person") : (lang === "es" ? "Personas" : "People")}
+                                </option>
+                              )
+                            )
+                          ) : (
+                            <option value="0">0</option>
+                          )}
+                        </select>
+                      </div>
+
+                      {selectedTime && (
+                        <div className="text-[11px] font-sans font-light">
+                          {remainingSpots > 0 ? (
+                            <p className="text-on-surface-variant border-t border-outline-variant/10 pt-1 text-[10px]">
+                              {lang === "es"
+                                ? `Selección: ${numGuests} ${numGuests === 1 ? "lugar" : "lugares"} el ${formatReservationDate(selectedDateStr)} a las ${selectedTime}.`
+                                : `Selection: ${numGuests} ${numGuests === 1 ? "spot" : "spots"} on ${formatReservationDate(selectedDateStr)} at ${selectedTime}.`}
+                            </p>
+                          ) : (
+                            <p className="text-error font-semibold uppercase tracking-wider border-t border-outline-variant/10 pt-1 text-[10px]">
+                              {activeT.soldOut}
+                            </p>
+                          )}
+                        </div>
+                      )}
+
+                      <button
+                        onClick={handleProceedToPayment}
+                        disabled={!selectedTime || remainingSpots <= 0 || numGuests > remainingSpots || isSlotBlocked(selectedDateStr, selectedTime)}
+                        className={`w-full py-3.5 font-label-caps text-[10px] uppercase tracking-widest transition-all shadow-md active:scale-[0.98] ${
+                          selectedTime && remainingSpots >= numGuests && !isSlotBlocked(selectedDateStr, selectedTime)
+                            ? "bg-primary text-on-primary hover:bg-[#9a5625]"
+                            : "bg-stone-300 text-stone-500 cursor-not-allowed"
+                        }`}
+                      >
+                        {activeT.confirmBtn}
+                      </button>
+                    </div>
+                  </div>
                 )}
 
               </div>

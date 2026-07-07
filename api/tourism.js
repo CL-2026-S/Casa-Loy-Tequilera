@@ -1,6 +1,72 @@
 import { supabase } from './_utils/clients.js';
 import { sendBookingEmail } from './_utils/emails.js';
 
+const getCurrentGuadalajaraTime = () => {
+  try {
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Mexico_City',
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      hour12: false
+    });
+    const parts = formatter.formatToParts(new Date());
+    const dateParts = {};
+    parts.forEach(part => {
+      dateParts[part.type] = part.value;
+    });
+    return new Date(
+      parseInt(dateParts.year),
+      parseInt(dateParts.month) - 1,
+      parseInt(dateParts.day),
+      parseInt(dateParts.hour),
+      parseInt(dateParts.minute),
+      parseInt(dateParts.second)
+    );
+  } catch (e) {
+    console.error("Timezone formatting error in backend, using local time:", e);
+    return new Date();
+  }
+};
+
+const isSlotBlocked = (dateStr, timeStr) => {
+  if (!dateStr || !timeStr) return true;
+  
+  const dateParts = dateStr.split('-');
+  if (dateParts.length !== 3) return true;
+  const year = parseInt(dateParts[0], 10);
+  const month = parseInt(dateParts[1], 10) - 1;
+  const day = parseInt(dateParts[2], 10);
+  
+  let hour = 0;
+  let minute = 0;
+  const timeUpper = timeStr.toUpperCase();
+  const isPM = timeUpper.includes("PM");
+  const isAM = timeUpper.includes("AM");
+  
+  const cleanTime = timeUpper.replace("AM", "").replace("PM", "").trim();
+  const timeParts = cleanTime.split(':');
+  if (timeParts.length >= 1) {
+    hour = parseInt(timeParts[0], 10);
+    if (isPM && hour < 12) hour += 12;
+    if (isAM && hour === 12) hour = 0;
+  }
+  if (timeParts.length >= 2) {
+    minute = parseInt(timeParts[1], 10);
+  }
+  
+  const slotDate = new Date(year, month, day, hour, minute, 0);
+  const nowGdl = getCurrentGuadalajaraTime();
+  
+  const diffMs = slotDate.getTime() - nowGdl.getTime();
+  const threeHoursMs = 3 * 60 * 60 * 1000;
+  
+  return diffMs < threeHoursMs;
+};
+
 export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -116,6 +182,14 @@ export default async function handler(req, res) {
 
         if (!code || !customer_name || !customer_email || !date_str || !time_str || !guests) {
           return res.status(400).json({ error: 'Missing required booking fields.' });
+        }
+
+        // Validate Guadalajara time & 3-hour cutoff rule
+        if (isSlotBlocked(date_str, time_str)) {
+          return res.status(409).json({
+            error: 'SOLD_OUT',
+            message: 'Este horario ya no está disponible por políticas de anticipación (mínimo 3 horas de antelación).'
+          });
         }
 
         // --- PREVENT OVERSELLING / DOUBLE BOOKING CHECK ---
