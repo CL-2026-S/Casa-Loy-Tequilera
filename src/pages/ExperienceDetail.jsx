@@ -137,6 +137,7 @@ export default function ExperienceDetail({
 
   // Staff Controls State
   const [isAdminOpen, setIsAdminOpen] = useState(false);
+  const [selectedGalleryIdx, setSelectedGalleryIdx] = useState(null);
 
   useEffect(() => {
     if (!selectedDateStr) return;
@@ -159,6 +160,24 @@ export default function ExperienceDetail({
       }
     }
   }, [blockedDates, bookingsCapacity, maxCapacityLimit]);
+
+  // Handle keyboard navigation for Lightbox modal
+  useEffect(() => {
+    if (selectedGalleryIdx === null) return;
+    
+    const handleKeyDown = (e) => {
+      if (e.key === "ArrowRight") {
+        setSelectedGalleryIdx((prev) => (prev + 1) % activeData.features.length);
+      } else if (e.key === "ArrowLeft") {
+        setSelectedGalleryIdx((prev) => (prev - 1 + activeData.features.length) % activeData.features.length);
+      } else if (e.key === "Escape") {
+        setSelectedGalleryIdx(null);
+      }
+    };
+    
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedGalleryIdx, activeData.features.length]);
 
   const pricePerPerson = packageId === "oro" ? 1 : 750;
   const occupiedSpots = selectedTime ? (bookingsCapacity[selectedDateStr]?.[selectedTime] || 0) : 0;
@@ -684,49 +703,31 @@ export default function ExperienceDetail({
 
   return (
     <div className="bg-background text-on-surface">
-      {/* Visual Fullscreen Hero */}
-      <section className="relative min-h-screen lg:h-screen w-full bg-zinc-950 flex items-center justify-center py-20 lg:py-0">
-        <div className="absolute inset-0 z-0">
-          <img
-            alt={activeData.title}
-            className="w-full h-full object-cover brightness-[0.70]"
-            src={activeData.heroImg}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
-        </div>
-        
-        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center h-auto pt-16">
-          <span className="font-navigation text-[clamp(11px,1vw,13px)] text-primary uppercase tracking-[0.4em] mb-4 block font-semibold">
-            {lang === "es" ? "Experiencia Exclusiva" : "Exclusive Experience"}
-          </span>
-          <h1 className="font-serif text-[clamp(32px,5.5vw,72px)] leading-[1.1] tracking-tight font-light text-white uppercase max-w-4xl mx-auto mb-6 drop-shadow-md">
-            {activeData.title}
-          </h1>
-          <p className="font-sans text-[clamp(14px,1.2vw,18px)] text-white/90 max-w-2xl mx-auto mb-10 font-light leading-relaxed">
-            {activeData.desc}
-          </p>
-          <div className="flex flex-col items-center gap-4 mb-10">
-            <span className="font-serif text-3xl md:text-5xl text-white font-medium drop-shadow-sm">
-              {activeData.price}
-            </span>
-            <span className="font-navigation text-xs uppercase tracking-widest text-primary font-semibold">
-              {lang === "es" ? "Por Persona" : "Per Person"}
-            </span>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-6 items-center justify-center w-full max-w-md sm:max-w-none">
-            <button
-              onClick={handleScrollToBooking}
-              className="bg-primary hover:bg-[#8C4723] text-white font-navigation text-[11px] uppercase tracking-[0.25em] font-semibold py-4 px-10 transition-all duration-300 min-w-[200px] text-center hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 shadow-md cursor-pointer"
-            >
-              {lang === "es" ? "Reservar Ahora" : "Book Now"}
-            </button>
-            <button
-              onClick={() => setPage("turismo")}
-              className="border border-white/40 hover:border-white hover:bg-white/10 text-white font-navigation text-[11px] uppercase tracking-[0.25em] font-bold py-4 px-10 transition-all duration-300 min-w-[200px] text-center cursor-pointer"
-            >
-              {lang === "es" ? "Volver a Experiencias" : "Back to Experiences"}
-            </button>
-          </div>
+      {/* Clean Premium Header Section */}
+      <section className="pt-32 pb-12 px-6 max-w-5xl mx-auto text-center">
+        <span className="font-navigation text-xs text-primary uppercase tracking-[0.4em] mb-4 block font-semibold">
+          {lang === "es" ? "Experiencia Exclusiva" : "Exclusive Experience"}
+        </span>
+        <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl leading-[1.1] tracking-tight font-medium text-on-background uppercase mb-6">
+          {activeData.title}
+        </h1>
+        <div className="w-16 h-[2px] bg-primary mx-auto mb-8"></div>
+        <p className="font-sans text-sm sm:text-base text-on-surface-variant max-w-2xl mx-auto mb-8 font-light leading-relaxed">
+          {activeData.desc}
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+          <button
+            onClick={handleScrollToBooking}
+            className="bg-primary hover:bg-[#8C4723] text-white font-navigation text-[11px] uppercase tracking-[0.25em] font-semibold py-3 px-8 transition-all duration-300 min-w-[180px] text-center hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 shadow-sm cursor-pointer"
+          >
+            {lang === "es" ? "Reservar Ahora" : "Book Now"}
+          </button>
+          <button
+            onClick={() => setPage("turismo")}
+            className="border border-outline/30 hover:border-primary text-on-surface hover:bg-primary/5 font-navigation text-[11px] uppercase tracking-[0.25em] font-semibold py-3 px-8 transition-all duration-300 min-w-[180px] text-center cursor-pointer"
+          >
+            {lang === "es" ? "Volver a Experiencias" : "Back to Experiences"}
+          </button>
         </div>
       </section>
 
@@ -757,8 +758,8 @@ export default function ExperienceDetail({
         </div>
       </section>
 
-      {/* Alternating Itinerary sections */}
-      <section className="py-24 px-6 md:px-12 max-w-6xl mx-auto space-y-24">
+      {/* Visual Bento Grid Gallery Itinerary */}
+      <section className="py-24 px-6 md:px-12 max-w-6xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <span className="font-label-caps text-label-caps text-primary uppercase tracking-widest block mb-4">
             {lang === "es" ? "El Itinerario" : "The Itinerary"}
@@ -766,42 +767,47 @@ export default function ExperienceDetail({
           <h2 className="font-headline-lg text-3xl md:text-5xl leading-tight font-medium">
             {lang === "es" ? "Cada momento diseñado para deleitar" : "Every moment tailored to delight"}
           </h2>
+          <p className="text-[10px] text-on-surface-variant/80 font-light mt-2 font-navigation uppercase tracking-widest">
+            {lang === "es" ? "Haz clic en cualquier momento para ver más detalles" : "Click on any moment to view more details"}
+          </p>
         </div>
 
-        {activeData.features.map((feat, idx) => {
-          const isEven = idx % 2 === 0;
-          return (
-            <div
-              key={idx}
-              className={`flex flex-col ${
-                isEven ? "lg:flex-row" : "lg:flex-row-reverse"
-              } gap-12 items-center text-left`}
-            >
-              {/* Image box */}
-              <div className="w-full lg:w-1/2 group overflow-hidden shadow-xl aspect-[4/3] bg-zinc-100">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {activeData.features.map((feat, idx) => {
+            const isBentoWide = idx === 0 || idx === 5;
+            const colClass = isBentoWide ? "lg:col-span-2" : "lg:col-span-1";
+            return (
+              <div
+                key={idx}
+                onClick={() => setSelectedGalleryIdx(idx)}
+                className={`${colClass} relative group overflow-hidden aspect-[4/3] sm:aspect-video lg:aspect-auto lg:h-[350px] bg-zinc-950 shadow-md cursor-pointer transition-organic border border-outline-variant/10`}
+              >
                 <img
                   alt={feat.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   src={feat.img}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 brightness-[0.7] group-hover:brightness-[0.45]"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent transition-opacity duration-300"></div>
+                
+                {/* Text and interaction details */}
+                <div className="absolute inset-0 p-6 flex flex-col justify-end text-left z-10">
+                  <span className="font-serif text-primary text-xl font-semibold mb-1 opacity-90">
+                    0{idx + 1}.
+                  </span>
+                  <h3 className="font-headline-md text-xl md:text-2xl font-bold text-white mb-2 leading-tight drop-shadow-sm group-hover:text-primary transition-colors duration-300">
+                    {feat.title}
+                  </h3>
+                  
+                  {/* Subtle info pill */}
+                  <div className="text-[10px] text-white/60 font-navigation uppercase tracking-widest flex items-center gap-1.5 opacity-90 group-hover:opacity-100 mt-1 transition-opacity">
+                    <span className="material-symbols-outlined text-[12px]">visibility</span>
+                    {lang === "es" ? "Ver Detalles" : "View Details"}
+                  </div>
+                </div>
               </div>
-
-              {/* Text box */}
-              <div className="w-full lg:w-1/2 space-y-6 lg:px-8">
-                <span className="font-serif text-primary text-2xl font-semibold opacity-75">
-                  0{idx + 1}.
-                </span>
-                <h3 className="font-headline-md text-2xl md:text-3xl font-bold text-on-surface">
-                  {feat.title}
-                </h3>
-                <div className="w-12 h-[2px] bg-primary"></div>
-                <p className="font-body-lg text-on-surface-variant font-light leading-relaxed">
-                  {feat.desc}
-                </p>
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </section>
 
       {/* Relocated Booking Calendar System */}
@@ -1584,6 +1590,86 @@ export default function ExperienceDetail({
               >
                 Cerrar y Aplicar
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Lightbox Modal */}
+      {selectedGalleryIdx !== null && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 transition-all duration-300"
+          onClick={() => setSelectedGalleryIdx(null)}
+        >
+          <div 
+            className="relative bg-zinc-950 border border-white/10 w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col md:flex-row text-white shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setSelectedGalleryIdx(null)}
+              className="absolute top-4 right-4 z-50 w-8 h-8 rounded-full bg-black/60 text-white hover:bg-white hover:text-black flex items-center justify-center transition-all cursor-pointer font-bold text-sm"
+              aria-label="Cerrar"
+            >
+              ✕
+            </button>
+
+            {/* Left Column: Image with navigation */}
+            <div className="relative md:w-3/5 aspect-video md:aspect-auto md:min-h-[450px] bg-black flex items-center justify-center group">
+              <img
+                alt={activeData.features[selectedGalleryIdx].title}
+                src={activeData.features[selectedGalleryIdx].img}
+                className="w-full h-full object-cover"
+              />
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedGalleryIdx((prev) => (prev - 1 + activeData.features.length) % activeData.features.length);
+                }}
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white/80 hover:text-white hover:bg-black/80 flex items-center justify-center transition-all cursor-pointer font-bold text-sm"
+              >
+                ◀
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedGalleryIdx((prev) => (prev + 1) % activeData.features.length);
+                }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white/80 hover:text-white hover:bg-black/80 flex items-center justify-center transition-all cursor-pointer font-bold text-sm"
+              >
+                ▶
+              </button>
+            </div>
+
+            {/* Right Column: Details */}
+            <div className="md:w-2/5 p-6 md:p-8 flex flex-col justify-between text-left">
+              <div className="space-y-4">
+                <span className="font-serif text-primary text-xl font-semibold opacity-90 block">
+                  0{selectedGalleryIdx + 1} / 0{activeData.features.length}
+                </span>
+                <h3 className="font-headline-md text-2xl font-bold text-white tracking-tight leading-tight">
+                  {activeData.features[selectedGalleryIdx].title}
+                </h3>
+                <div className="w-12 h-[2px] bg-primary"></div>
+                <p className="font-sans text-xs md:text-sm text-stone-300 font-light leading-relaxed">
+                  {activeData.features[selectedGalleryIdx].desc}
+                </p>
+              </div>
+
+              {/* Slider Dots */}
+              <div className="flex gap-1.5 pt-6 mt-auto border-t border-white/10">
+                {activeData.features.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedGalleryIdx(i)}
+                    className={`h-1 flex-1 transition-all ${
+                      selectedGalleryIdx === i ? "bg-primary" : "bg-white/25 hover:bg-white/50"
+                    }`}
+                    aria-label={`Slide ${i + 1}`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
