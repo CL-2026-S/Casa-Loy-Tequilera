@@ -713,57 +713,59 @@ export default function ExperienceDetail({
         <div className="px-6 md:px-12 max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             
-            <div className="lg:col-span-5 space-y-8">
-              <span className="font-label-caps text-label-caps text-primary uppercase tracking-widest block">
-                {lang === "es" ? "Agenda tu visita" : "Book your visit"}
-              </span>
-              <h2 className="font-headline-lg text-4xl md:text-5xl font-medium leading-tight">{activeT.planTitle}</h2>
-              <p className="font-body-md text-on-surface-variant font-light leading-relaxed">
-                {activeT.planDesc}
-              </p>
-              
-              <div className="flex items-center gap-8 py-8 border-y border-outline-variant/30">
-                <div className="flex flex-col">
-                  <span className="font-label-caps text-label-caps text-primary text-[10px] uppercase">
-                    {activeT.scheduleLabel}
-                  </span>
-                  <span className="font-headline-md text-xl font-bold">10:00 AM & 11:00 AM</span>
+            {!(paymentStep || bookingConfirmed) && (
+              <div className="lg:col-span-5 space-y-8">
+                <span className="font-label-caps text-label-caps text-primary uppercase tracking-widest block">
+                  {lang === "es" ? "Agenda tu visita" : "Book your visit"}
+                </span>
+                <h2 className="font-headline-lg text-4xl md:text-5xl font-medium leading-tight">{activeT.planTitle}</h2>
+                <p className="font-body-md text-on-surface-variant font-light leading-relaxed">
+                  {activeT.planDesc}
+                </p>
+                
+                <div className="flex items-center gap-8 py-8 border-y border-outline-variant/30">
+                  <div className="flex flex-col">
+                    <span className="font-label-caps text-label-caps text-primary text-[10px] uppercase">
+                      {activeT.scheduleLabel}
+                    </span>
+                    <span className="font-headline-md text-xl font-bold">10:00 AM & 11:00 AM</span>
+                  </div>
+                  <div className="w-px h-12 bg-outline-variant/30"></div>
+                  <div className="flex flex-col">
+                    <span className="font-label-caps text-label-caps text-primary text-[10px] uppercase">
+                      {activeT.daysLabel}
+                    </span>
+                    <span className="font-headline-md text-xl font-bold">{activeT.daysValue}</span>
+                  </div>
                 </div>
-                <div className="w-px h-12 bg-outline-variant/30"></div>
-                <div className="flex flex-col">
-                  <span className="font-label-caps text-label-caps text-primary text-[10px] uppercase">
-                    {activeT.daysLabel}
-                  </span>
-                  <span className="font-headline-md text-xl font-bold">{activeT.daysValue}</span>
-                </div>
-              </div>
 
-              <div className="flex items-center gap-6 opacity-60 select-none">
-                <span className="font-label-caps text-[10px]">{activeT.paymentLabel}</span>
-                <svg className="h-5" viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ maxHeight: "20px" }}>
-                  <text x="0" y="24" fontFamily="sans-serif" fontWeight="900" fontStyle="italic" fontSize="24" fill="#003087">PayPal</text>
-                </svg>
-                <svg className="h-5" viewBox="0 0 150 32" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ maxHeight: "20px" }}>
-                  <text x="0" y="24" fontFamily="sans-serif" fontWeight="bold" fontSize="20" fill="#009EE3">mercado pago</text>
-                </svg>
-              </div>
-
-              {/* Staff Access Trigger Button (Only visible if ?admin=true is in URL) */}
-              {showAdminButton && (
-                <div className="pt-4">
-                  <button
-                    onClick={() => setIsAdminOpen(true)}
-                    className="flex items-center gap-2 border border-primary/30 text-primary/70 hover:text-primary hover:border-primary hover:bg-primary/5 px-6 py-3 font-label-caps text-[10px] uppercase tracking-widest transition-all cursor-pointer font-bold"
-                  >
-                    <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
-                    {lang === "es" ? "Acceso Staff: Configurar Cupos" : "Staff Access: Set Capacities"}
-                  </button>
+                <div className="flex items-center gap-6 opacity-60 select-none">
+                  <span className="font-label-caps text-[10px]">{activeT.paymentLabel}</span>
+                  <svg className="h-5" viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ maxHeight: "20px" }}>
+                    <text x="0" y="24" fontFamily="sans-serif" fontWeight="900" fontStyle="italic" fontSize="24" fill="#003087">PayPal</text>
+                  </svg>
+                  <svg className="h-5" viewBox="0 0 150 32" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ maxHeight: "20px" }}>
+                    <text x="0" y="24" fontFamily="sans-serif" fontWeight="bold" fontSize="20" fill="#009EE3">mercado pago</text>
+                  </svg>
                 </div>
-              )}
-            </div>
+
+                {/* Staff Access Trigger Button (Only visible if ?admin=true is in URL) */}
+                {showAdminButton && (
+                  <div className="pt-4">
+                    <button
+                      onClick={() => setIsAdminOpen(true)}
+                      className="flex items-center gap-2 border border-primary/30 text-primary/70 hover:text-primary hover:border-primary hover:bg-primary/5 px-6 py-3 font-label-caps text-[10px] uppercase tracking-widest transition-all cursor-pointer font-bold"
+                    >
+                      <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
+                      {lang === "es" ? "Acceso Staff: Configurar Cupos" : "Staff Access: Set Capacities"}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Interactive Calendar System */}
-            <div className="lg:col-span-7">
+            <div className={paymentStep || bookingConfirmed ? "lg:col-span-12" : "lg:col-span-7"}>
               <div className="bg-white border border-outline-variant p-4 sm:p-6 md:p-8 shadow-xl relative flex flex-col justify-between">
                 
                 {/* Step 1: Booking Success Screen with QR Access Code */}
@@ -1068,7 +1070,7 @@ export default function ExperienceDetail({
                             />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h6 className="font-sans text-xs font-bold truncate text-stone-800">{activeData.title}</h6>
+                            <h6 className="font-sans text-sm font-bold text-stone-800 leading-snug">{activeData.title}</h6>
                             <span className="text-[10px] text-stone-500 font-light block mt-0.5">
                               {numGuests} {numGuests === 1 ? (lang === "es" ? "visitante" : "guest") : (lang === "es" ? "visitantes" : "guests")}
                             </span>
