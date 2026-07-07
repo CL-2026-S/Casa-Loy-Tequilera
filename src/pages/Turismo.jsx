@@ -291,7 +291,7 @@ export default function Turismo({ lang, setPage }) {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent"></div>
 
-              <div className="absolute bottom-0 left-0 p-8 w-full transition-all duration-500 transform translate-y-[295px] group-hover:translate-y-0">
+              <div className="absolute bottom-0 left-0 p-6 sm:p-8 w-full transition-all duration-500 transform translate-y-0 lg:translate-y-[295px] lg:group-hover:translate-y-0">
                 <div className="flex justify-between items-end mb-6">
                   <div>
                     <h3 className="font-headline-md text-white text-xl md:text-2xl font-semibold leading-tight">
@@ -302,7 +302,7 @@ export default function Turismo({ lang, setPage }) {
                     </p>
                   </div>
                 </div>
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 space-y-6">
+                <div className="opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500 lg:delay-100 space-y-4 lg:space-y-6">
                   <ul className="text-white/80 space-y-2 font-body-md text-xs font-light">
                     {exp.bullets.map((bullet, idx) => (
                       <li key={idx} className="flex items-start gap-1.5 leading-relaxed">
