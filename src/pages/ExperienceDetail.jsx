@@ -1005,7 +1005,7 @@ export default function ExperienceDetail({
                                           },
                                         }));
                                         
-                                        saveBookingToLog(code);
+                                        saveBookingToLog(code, "paypal");
                                         setReservationCode(code);
                                         setBookingConfirmed(true);
                                         setPaymentStep(false);
@@ -1080,7 +1080,7 @@ export default function ExperienceDetail({
                         <div className="space-y-2 pt-2 border-t border-outline-variant/15 text-[11px] font-sans font-light">
                           <div className="flex justify-between text-stone-600">
                             <span>{lang === "es" ? "Fecha" : "Date"}</span>
-                            <span className="font-medium text-stone-700">{formatShowDate ? formatShowDate(selectedDateStr) : formatReservationDate(selectedDateStr)}</span>
+                            <span className="font-medium text-stone-700">{formatReservationDate(selectedDateStr)}</span>
                           </div>
                           <div className="flex justify-between text-stone-600">
                             <span>{lang === "es" ? "Horario" : "Time"}</span>
