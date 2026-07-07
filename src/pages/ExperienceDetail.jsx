@@ -5,6 +5,275 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 // Para pruebas de desarrollo o sandbox, puedes usar "test".
 const PAYPAL_CLIENT_ID = "ATvqpIUvCDHFIHEAzauNdAX4o2qPqT-971MgriMfcpZFNQV9_af-WWa0kHCZHwiGFGnnSe2bhK33JPsL";
 
+const packagesData = {
+  oro: {
+    es: {
+      title: "Experiencia Casa Loy Oro",
+      price: "$1.00",
+      duration: "2.5 Horas",
+      capacity: "Máximo 20 personas",
+      desc: "Un viaje de origen a través de nuestro campo de agaves y procesos de destilación artesanal, culminando con una cata privada y nuestro prestigioso obsequio.",
+      heroImg: "/Exp_test_1.jpeg",
+      features: [
+        {
+          title: "Recorrido campo de agaves",
+          desc: "Camina entre agaves azules en las tierras altas de Ayotlán, Jalisco, y descubre el arte milenario del cultivo y la jima.",
+          img: "/Exp_test_1.jpeg"
+        },
+        {
+          title: "Murales e Historia",
+          desc: "Recorre el legacy familiar a través de las expresiones artísticas y los murales históricos que relatan nuestro origen.",
+          img: "/Exp_test_2.jpeg"
+        },
+        {
+          title: "Recorrido por la fábrica",
+          desc: "Conoce de primera mano la destilación artesanal, desde la cocción de las piñas en hornos tradicionales de piedra hasta los alambiques de cobre.",
+          img: "/Exp_test_3.jpeg"
+        },
+        {
+          title: "Cata en cava subterránea",
+          desc: "Una experiencia mística bajo tierra, degustando nuestras expresiones de tequila en una cava privada iluminada por velas.",
+          img: "/Exp_test_4.jpeg"
+        },
+        {
+          title: "Mixología de autor",
+          desc: "Degusta cócteles exclusivos elaborados por nuestros bartenders con ingredientes locales y el toque característico de Casa Loy.",
+          img: "/Exp_test_5.jpeg"
+        },
+        {
+          title: "Botella de TADDEL 200 ML",
+          desc: "Lleva a casa una muestra de nuestra pasión: una botella de tequila TADDEL de 200 ml, lista para compartir o resguardar.",
+          img: "/Exp_test_6.jpeg"
+        }
+      ]
+    },
+    en: {
+      title: "Casa Loy Gold Experience",
+      price: "$1.00",
+      duration: "2.5 Hours",
+      capacity: "Max 20 people",
+      desc: "A journey of origin through our agave fields and artisanal distillation processes, culminating with a private tasting and our prestigious gift.",
+      heroImg: "/Exp_test_1.jpeg",
+      features: [
+        {
+          title: "Agave Field Tour",
+          desc: "Walk among blue agaves in the highlands of Ayotlán, Jalisco, and discover the ancient art of cultivation and harvesting.",
+          img: "/Exp_test_1.jpeg"
+        },
+        {
+          title: "Murals & History",
+          desc: "Explore our family heritage through artistic expressions and historic murals that tell our origin story.",
+          img: "/Exp_test_2.jpeg"
+        },
+        {
+          title: "Factory Tour",
+          desc: "Witness artisanal distillation firsthand, from cooking agave pinas in traditional stone ovens to copper stills.",
+          img: "/Exp_test_3.jpeg"
+        },
+        {
+          title: "Underground Cellar Tasting",
+          desc: "A mystical experience underground, tasting our select tequila expressions in a candlelit private cellar.",
+          img: "/Exp_test_4.jpeg"
+        },
+        {
+          title: "Signature Mixology",
+          desc: "Savor exclusive cocktails crafted by our mixologists with local ingredients and the distinctive Casa Loy touch.",
+          img: "/Exp_test_5.jpeg"
+        },
+        {
+          title: "TADDEL 200 ML Bottle",
+          desc: "Take home a piece of our passion: a boutique 200 ml bottle of TADDEL tequila, ready to share or collect.",
+          img: "/Exp_test_6.jpeg"
+        }
+      ]
+    }
+  },
+  platino: {
+    es: {
+      title: "Experiencia Casa Loy Platino",
+      price: "$750.00",
+      duration: "4.0 Horas",
+      capacity: "Máximo 20 personas",
+      desc: "La experiencia insignia que fusiona el arte del tequila premium con la alta gastronomía de nuestro restaurante 1937 Nativo.",
+      heroImg: "/Exp_test_7.jpeg",
+      features: [
+        {
+          title: "Recorrido campo de agaves",
+          desc: "Descubre la majestuosidad del campo de agave azul y aprende sobre el suelo y el clima que otorgan un perfil único a nuestros destilados.",
+          img: "/Exp_test_7.jpeg"
+        },
+        {
+          title: "Murales e Historia",
+          desc: "Un recorrido guiado por nuestra historia familiar que honra las tradiciones locales y la perseverancia de la tierra.",
+          img: "/Exp_test_9.jpeg"
+        },
+        {
+          title: "Recorrido por la fábrica",
+          desc: "Explora todo el proceso, desde el jimado tradicional hasta la molienda con tahona y la fermentación controlada.",
+          img: "/Exp_test_10.jpeg"
+        },
+        {
+          title: "Cata en cava subterránea",
+          desc: "Cata guiada de nuestras mejores barricas en un entorno lleno de historia, misticismo y silencio.",
+          img: "/Exp_test_11.jpeg"
+        },
+        {
+          title: "Mixología de autor",
+          desc: "Cócteles contemporáneos diseñados para maridar con la atmósfera y los paisajes de la hacienda.",
+          img: "/Exp_test_12.jpeg"
+        },
+        {
+          title: "Comida de 3 tiempos",
+          desc: "Una experiencia culinaria completa en 1937 Nativo: Entrada de la casa, Plato a escoger entre 3 opciones de autor y un Postre artesanal.",
+          img: "/Exp_test_13.jpeg"
+        },
+        {
+          title: "Bebida (2 por persona)",
+          desc: "Acompaña tu comida con 2 bebidas selectas por persona para complementar la propuesta gastronómica del chef.",
+          img: "/Exp_test_14.jpeg"
+        }
+      ]
+    },
+    en: {
+      title: "Casa Loy Platinum Experience",
+      price: "$750.00",
+      duration: "4.0 Hours",
+      capacity: "Max 20 people",
+      desc: "Our flagship experience fusing premium tequila craftsmanship with fine dining at our 1937 Nativo restaurant.",
+      heroImg: "/Exp_test_7.jpeg",
+      features: [
+        {
+          title: "Agave Field Tour",
+          desc: "Discover the majesty of the blue agave fields and learn how the soil and climate shape our distillates' profile.",
+          img: "/Exp_test_7.jpeg"
+        },
+        {
+          title: "Murals & History",
+          desc: "A guided journey through our family history honoring local traditions and the perseverance of the land.",
+          img: "/Exp_test_9.jpeg"
+        },
+        {
+          title: "Factory Tour",
+          desc: "Explore the entire process from traditional harvesting to tahona stone milling and controlled fermentation.",
+          img: "/Exp_test_10.jpeg"
+        },
+        {
+          title: "Underground Cellar Tasting",
+          desc: "A guided tasting of our finest barrels in a setting rich with history, mysticism, and quiet aging.",
+          img: "/Exp_test_11.jpeg"
+        },
+        {
+          title: "Signature Mixology",
+          desc: "Contemporary cocktails designed to pair perfectly with the estate's atmosphere and views.",
+          img: "/Exp_test_12.jpeg"
+        },
+        {
+          title: "3-Course Fine Dining",
+          desc: "A complete dining experience at 1937 Nativo: House appetizer, selection of 3 main courses, and an artisanal dessert.",
+          img: "/Exp_test_13.jpeg"
+        },
+        {
+          title: "Drinks (2 per person)",
+          desc: "Accompany your meal with 2 select drinks per person to complement the chef's culinary design.",
+          img: "/Exp_test_14.jpeg"
+        }
+      ]
+    }
+  },
+  diamante: {
+    es: {
+      title: "Experiencia Casa Loy Diamante",
+      price: "$750.00",
+      duration: "4.0 Horas",
+      capacity: "Máximo 20 personas",
+      desc: "Una experiencia culinaria y de tequila de primer nivel que ofrece acceso a colecciones privadas y el menú especial de 1937 Nativo.",
+      heroImg: "/Exp_test_15.jpeg",
+      features: [
+        {
+          title: "Recorrido campo de agaves",
+          desc: "Camina por los predios más antiguos de la hacienda y jima una piña de agave con tus propias manos guiado por un jimador maestro.",
+          img: "/Exp_test_15.jpeg"
+        },
+        {
+          title: "Murales e Historia",
+          desc: "Una retrospectiva artística e histórica de Casa Loy y el desarrollo de Ayotlán como referente tequilero.",
+          img: "/Exp_test_16.jpeg"
+        },
+        {
+          title: "Recorrido por la fábrica",
+          desc: "Aprende el minucioso proceso técnico de destilación y fermentación en tanques de acero y madera tradicional.",
+          img: "/Exp_test_17.jpeg"
+        },
+        {
+          title: "Cata en cava subterránea",
+          desc: "Degustación exclusiva de tequilas añejos y extra añejos directamente de barricas seleccionadas.",
+          img: "/Exp_test_18.jpeg"
+        },
+        {
+          title: "Mixología de autor",
+          desc: "Aprende y diseña tu propio cóctel con base en tequila asistido por nuestro mixólogo principal.",
+          img: "/Exp_test_19.jpeg"
+        },
+        {
+          title: "Comida de 3 tiempos",
+          desc: "Comida gourmet de 3 tiempos en la terraza de 1937 Nativo: entrada selecta, plato a escoger (3 opciones de autor) y postre especial.",
+          img: "/Exp_test_13.jpeg"
+        },
+        {
+          title: "Bebida (2 por persona)",
+          desc: "Disfruta de dos copas de vino nacional, tequila premium o mixología fina para complementar tu experiencia.",
+          img: "/Exp_test_14.jpeg"
+        }
+      ]
+    },
+    en: {
+      title: "Casa Loy Diamond Experience",
+      price: "$750.00",
+      duration: "4.0 Hours",
+      capacity: "Max 20 people",
+      desc: "A premier tequila and dining experience offering access to private reserves and the special signature menu at 1937 Nativo.",
+      heroImg: "/Exp_test_15.jpeg",
+      features: [
+        {
+          title: "Agave Field Tour",
+          desc: "Walk through the estate's oldest agave fields and harvest a pina yourself guided by a master jimador.",
+          img: "/Exp_test_15.jpeg"
+        },
+        {
+          title: "Murals & History",
+          desc: "An artistic and historical retrospective of Casa Loy and Ayotlan's emergence as a premier tequila region.",
+          img: "/Exp_test_16.jpeg"
+        },
+        {
+          title: "Factory Tour",
+          desc: "Learn the meticulous technical distillation process and fermentation in traditional steel and wood tanks.",
+          img: "/Exp_test_17.jpeg"
+        },
+        {
+          title: "Underground Cellar Tasting",
+          desc: "An exclusive tasting of aged and extra-aged tequilas straight from selected barrels in the private reserve.",
+          img: "/Exp_test_18.jpeg"
+        },
+        {
+          title: "Signature Mixology",
+          desc: "Learn and craft your own tequila-based cocktail guided by our master mixologist.",
+          img: "/Exp_test_19.jpeg"
+        },
+        {
+          title: "3-Course Fine Dining",
+          desc: "Gourmet 3-course meal on the terrace of 1937 Nativo: choice of appetizer, selection of 3 main courses, and a special dessert.",
+          img: "/Exp_test_13.jpeg"
+        },
+        {
+          title: "Drinks (2 per person)",
+          desc: "Enjoy two glasses of boutique local wine, premium tequila, or fine mixology to complete your experience.",
+          img: "/Exp_test_14.jpeg"
+        }
+      ]
+    }
+  }
+};
+
 export default function ExperienceDetail({ 
   lang, 
   packageId, 
@@ -16,6 +285,9 @@ export default function ExperienceDetail({
   bookingsCapacity,
   setBookingsCapacity
 }) {
+  const currentPackage = packagesData[packageId] || packagesData.oro;
+  const activeData = currentPackage[lang] || currentPackage.es;
+
   const [showAdminButton, setShowAdminButton] = useState(false);
 
   useEffect(() => {
@@ -306,279 +578,6 @@ export default function ExperienceDetail({
   };
 
   const activeT = localT[lang] || localT.es;
-
-  // Data for the three packages
-  const packagesData = {
-    oro: {
-      es: {
-        title: "Experiencia Casa Loy Oro",
-        price: "$1.00",
-        duration: "2.5 Horas",
-        capacity: "Máximo 20 personas",
-        desc: "Un viaje de origen a través de nuestro campo de agaves y procesos de destilación artesanal, culminando con una cata privada y nuestro prestigioso obsequio.",
-        heroImg: "/Exp_test_1.jpeg",
-        features: [
-          {
-            title: "Recorrido campo de agaves",
-            desc: "Camina entre agaves azules en las tierras altas de Ayotlán, Jalisco, y descubre el arte milenario del cultivo y la jima.",
-            img: "/Exp_test_1.jpeg"
-          },
-          {
-            title: "Murales e Historia",
-            desc: "Recorre el legado familiar a través de las expresiones artísticas y los murales históricos que relatan nuestro origen.",
-            img: "/Exp_test_2.jpeg"
-          },
-          {
-            title: "Recorrido por la fábrica",
-            desc: "Conoce de primera mano la destilación artesanal, desde la cocción de las piñas en hornos tradicionales de piedra hasta los alambiques de cobre.",
-            img: "/Exp_test_3.jpeg"
-          },
-          {
-            title: "Cata en cava subterránea",
-            desc: "Una experiencia mística bajo tierra, degustando nuestras expresiones de tequila en una cava privada iluminada por velas.",
-            img: "/Exp_test_4.jpeg"
-          },
-          {
-            title: "Mixología de autor",
-            desc: "Degusta cócteles exclusivos elaborados por nuestros bartenders con ingredientes locales y el toque característico de Casa Loy.",
-            img: "/Exp_test_5.jpeg"
-          },
-          {
-            title: "Botella de TADDEL 200 ML",
-            desc: "Lleva a casa una muestra de nuestra pasión: una botella de tequila TADDEL de 200 ml, lista para compartir o resguardar.",
-            img: "/Exp_test_6.jpeg"
-          }
-        ]
-      },
-      en: {
-        title: "Casa Loy Gold Experience",
-        price: "$1.00",
-        duration: "2.5 Hours",
-        capacity: "Max 20 people",
-        desc: "A journey of origin through our agave fields and artisanal distillation processes, culminating with a private tasting and our prestigious gift.",
-        heroImg: "/Exp_test_1.jpeg",
-        features: [
-          {
-            title: "Agave Field Tour",
-            desc: "Walk among blue agaves in the highlands of Ayotlán, Jalisco, and discover the ancient art of cultivation and harvesting.",
-            img: "/Exp_test_1.jpeg"
-          },
-          {
-            title: "Murals & History",
-            desc: "Explore our family heritage through artistic expressions and historic murals that tell our origin story.",
-            img: "/Exp_test_2.jpeg"
-          },
-          {
-            title: "Factory Tour",
-            desc: "Witness artisanal distillation firsthand, from cooking agave pinas in traditional stone ovens to copper stills.",
-            img: "/Exp_test_3.jpeg"
-          },
-          {
-            title: "Underground Cellar Tasting",
-            desc: "A mystical experience underground, tasting our select tequila expressions in a candlelit private cellar.",
-            img: "/Exp_test_4.jpeg"
-          },
-          {
-            title: "Signature Mixology",
-            desc: "Savor exclusive cocktails crafted by our mixologists with local ingredients and the distinctive Casa Loy touch.",
-            img: "/Exp_test_5.jpeg"
-          },
-          {
-            title: "TADDEL 200 ML Bottle",
-            desc: "Take home a piece of our passion: a boutique 200 ml bottle of TADDEL tequila, ready to share or collect.",
-            img: "/Exp_test_6.jpeg"
-          }
-        ]
-      }
-    },
-    platino: {
-      es: {
-        title: "Experiencia Casa Loy Platino",
-        price: "$750.00",
-        duration: "4.0 Horas",
-        capacity: "Máximo 20 personas",
-        desc: "La experiencia insignia que fusiona el arte del tequila premium con la alta gastronomía de nuestro restaurante 1937 Nativo.",
-        heroImg: "/Exp_test_7.jpeg",
-        features: [
-          {
-            title: "Recorrido campo de agaves",
-            desc: "Descubre la majestuosidad del campo de agave azul y aprende sobre el suelo y el clima que otorgan un perfil único a nuestros destilados.",
-            img: "/Exp_test_7.jpeg"
-          },
-          {
-            title: "Murales e Historia",
-            desc: "Un recorrido guiado por nuestra historia familiar que honra las tradiciones locales y la perseverancia de la tierra.",
-            img: "/Exp_test_9.jpeg"
-          },
-          {
-            title: "Recorrido por la fábrica",
-            desc: "Explora todo el proceso, desde el jimado tradicional hasta la molienda con tahona y la fermentación controlada.",
-            img: "/Exp_test_10.jpeg"
-          },
-          {
-            title: "Cata en cava subterránea",
-            desc: "Cata guiada de nuestras mejores barricas en un entorno lleno de historia, misticismo y silencio.",
-            img: "/Exp_test_11.jpeg"
-          },
-          {
-            title: "Mixología de autor",
-            desc: "Cócteles contemporáneos diseñados para maridar con la atmósfera y los paisajes de la hacienda.",
-            img: "/Exp_test_12.jpeg"
-          },
-          {
-            title: "Comida de 3 tiempos",
-            desc: "Una experiencia culinaria completa en 1937 Nativo: Entrada de la casa, Plato a escoger entre 3 opciones de autor y un Postre artesanal.",
-            img: "/Exp_test_13.jpeg"
-          },
-          {
-            title: "Bebida (2 por persona)",
-            desc: "Acompaña tu comida con 2 bebidas selectas por persona para complementar la propuesta gastronómica del chef.",
-            img: "/Exp_test_14.jpeg"
-          }
-        ]
-      },
-      en: {
-        title: "Casa Loy Platinum Experience",
-        price: "$750.00",
-        duration: "4.0 Hours",
-        capacity: "Max 20 people",
-        desc: "Our flagship experience fusing premium tequila craftsmanship with fine dining at our 1937 Nativo restaurant.",
-        heroImg: "/Exp_test_7.jpeg",
-        features: [
-          {
-            title: "Agave Field Tour",
-            desc: "Discover the majesty of the blue agave fields and learn how the soil and climate shape our distillates' profile.",
-            img: "/Exp_test_7.jpeg"
-          },
-          {
-            title: "Murals & History",
-            desc: "A guided journey through our family history honoring local traditions and the perseverance of the land.",
-            img: "/Exp_test_9.jpeg"
-          },
-          {
-            title: "Factory Tour",
-            desc: "Explore the entire process from traditional harvesting to tahona stone milling and controlled fermentation.",
-            img: "/Exp_test_10.jpeg"
-          },
-          {
-            title: "Underground Cellar Tasting",
-            desc: "A guided tasting of our finest barrels in a setting rich with history, mysticism, and quiet aging.",
-            img: "/Exp_test_11.jpeg"
-          },
-          {
-            title: "Signature Mixology",
-            desc: "Contemporary cocktails designed to pair perfectly with the estate's atmosphere and views.",
-            img: "/Exp_test_12.jpeg"
-          },
-          {
-            title: "3-Course Fine Dining",
-            desc: "A complete dining experience at 1937 Nativo: House appetizer, selection of 3 main courses, and an artisanal dessert.",
-            img: "/Exp_test_13.jpeg"
-          },
-          {
-            title: "Drinks (2 per person)",
-            desc: "Accompany your meal with 2 select drinks per person to complement the chef's culinary design.",
-            img: "/Exp_test_14.jpeg"
-          }
-        ]
-      }
-    },
-    diamante: {
-      es: {
-        title: "Experiencia Casa Loy Diamante",
-        price: "$750.00",
-        duration: "4.0 Horas",
-        capacity: "Máximo 20 personas",
-        desc: "Una experiencia culinaria y de tequila de primer nivel que ofrece acceso a colecciones privadas y el menú especial de 1937 Nativo.",
-        heroImg: "/Exp_test_15.jpeg",
-        features: [
-          {
-            title: "Recorrido campo de agaves",
-            desc: "Camina por los predios más antiguos de la hacienda y jima una piña de agave con tus propias manos guiado por un jimador maestro.",
-            img: "/Exp_test_15.jpeg"
-          },
-          {
-            title: "Murales e Historia",
-            desc: "Una retrospectiva artística e histórica de Casa Loy y el desarrollo de Ayotlán como referente tequilero.",
-            img: "/Exp_test_16.jpeg"
-          },
-          {
-            title: "Recorrido por la fábrica",
-            desc: "Aprende el minucioso proceso técnico de destilación y fermentación en tanques de acero y madera tradicional.",
-            img: "/Exp_test_17.jpeg"
-          },
-          {
-            title: "Cata en cava subterránea",
-            desc: "Degustación exclusiva de tequilas añejos y extra añejos directamente de barricas seleccionadas.",
-            img: "/Exp_test_18.jpeg"
-          },
-          {
-            title: "Mixología de autor",
-            desc: "Aprende y diseña tu propio cóctel con base en tequila asistido por nuestro mixólogo principal.",
-            img: "/Exp_test_19.jpeg"
-          },
-          {
-            title: "Comida de 3 tiempos",
-            desc: "Comida gourmet de 3 tiempos en la terraza de 1937 Nativo: entrada selecta, plato a escoger (3 opciones de autor) y postre especial.",
-            img: "/Exp_test_13.jpeg"
-          },
-          {
-            title: "Bebida (2 por persona)",
-            desc: "Disfruta de dos copas de vino nacional, tequila premium o mixología fina para complementar tu experiencia.",
-            img: "/Exp_test_14.jpeg"
-          }
-        ]
-      },
-      en: {
-        title: "Casa Loy Diamond Experience",
-        price: "$750.00",
-        duration: "4.0 Hours",
-        capacity: "Max 20 people",
-        desc: "A premier tequila and dining experience offering access to private reserves and the special signature menu at 1937 Nativo.",
-        heroImg: "/Exp_test_15.jpeg",
-        features: [
-          {
-            title: "Agave Field Tour",
-            desc: "Walk through the estate's oldest agave fields and harvest a pina yourself guided by a master jimador.",
-            img: "/Exp_test_15.jpeg"
-          },
-          {
-            title: "Murals & History",
-            desc: "An artistic and historical retrospective of Casa Loy and Ayotlan's emergence as a premier tequila region.",
-            img: "/Exp_test_16.jpeg"
-          },
-          {
-            title: "Factory Tour",
-            desc: "Learn the meticulous technical distillation process and fermentation in traditional steel and wood tanks.",
-            img: "/Exp_test_17.jpeg"
-          },
-          {
-            title: "Underground Cellar Tasting",
-            desc: "An exclusive tasting of aged and extra-aged tequilas straight from selected barrels in the private reserve.",
-            img: "/Exp_test_18.jpeg"
-          },
-          {
-            title: "Signature Mixology",
-            desc: "Learn and craft your own tequila-based cocktail guided by our master mixologist.",
-            img: "/Exp_test_19.jpeg"
-          },
-          {
-            title: "3-Course Fine Dining",
-            desc: "Gourmet 3-course meal on the terrace of 1937 Nativo: choice of appetizer, selection of 3 main courses, and a special dessert.",
-            img: "/Exp_test_13.jpeg"
-          },
-          {
-            title: "Drinks (2 per person)",
-            desc: "Enjoy two glasses of boutique local wine, premium tequila, or fine mixology to complete your experience.",
-            img: "/Exp_test_14.jpeg"
-          }
-        ]
-      }
-    }
-  };
-
-  const currentPackage = packagesData[packageId] || packagesData.oro;
-  const activeData = currentPackage[lang] || currentPackage.es;
 
   const handleScrollToBooking = () => {
     const element = document.getElementById("booking");
