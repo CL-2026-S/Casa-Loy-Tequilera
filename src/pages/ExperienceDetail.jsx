@@ -409,7 +409,7 @@ export default function ExperienceDetail({
 
   // Staff Controls State
   const [isAdminOpen, setIsAdminOpen] = useState(false);
-  const [selectedGalleryIdx, setSelectedGalleryIdx] = useState(null);
+  const [activeStepIdx, setActiveStepIdx] = useState(0);
 
   useEffect(() => {
     if (!selectedDateStr) return;
@@ -432,24 +432,6 @@ export default function ExperienceDetail({
       }
     }
   }, [blockedDates, bookingsCapacity, maxCapacityLimit]);
-
-  // Handle keyboard navigation for Lightbox modal
-  useEffect(() => {
-    if (selectedGalleryIdx === null) return;
-    
-    const handleKeyDown = (e) => {
-      if (e.key === "ArrowRight") {
-        setSelectedGalleryIdx((prev) => (prev + 1) % activeData.features.length);
-      } else if (e.key === "ArrowLeft") {
-        setSelectedGalleryIdx((prev) => (prev - 1 + activeData.features.length) % activeData.features.length);
-      } else if (e.key === "Escape") {
-        setSelectedGalleryIdx(null);
-      }
-    };
-    
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedGalleryIdx, activeData.features.length]);
 
   const pricePerPerson = packageId === "oro" ? 1 : 750;
   const occupiedSpots = selectedTime ? (bookingsCapacity[selectedDateStr]?.[selectedTime] || 0) : 0;
@@ -757,50 +739,115 @@ export default function ExperienceDetail({
         </div>
       </section>
 
-      {/* Visual Bento Grid Gallery Itinerary */}
-      <section className="py-24 px-6 md:px-12 max-w-6xl mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="font-label-caps text-label-caps text-primary uppercase tracking-widest block mb-4">
+      {/* Luxury Editorial Showcase Itinerary */}
+      <section className="py-24 px-6 md:px-12 max-w-6xl mx-auto border-t border-outline-variant/10">
+        <div className="text-center max-w-2xl mx-auto mb-20">
+          <span className="font-navigation text-[10px] text-primary uppercase tracking-[0.3em] block mb-3 font-semibold">
             {lang === "es" ? "El Itinerario" : "The Itinerary"}
           </span>
-          <h2 className="font-headline-lg text-3xl md:text-5xl leading-tight font-medium">
-            {lang === "es" ? "Cada momento diseñado para deleitar" : "Every moment tailored to delight"}
+          <h2 className="font-serif text-3xl md:text-4xl leading-tight font-medium uppercase text-on-background">
+            {lang === "es" ? "Momentos de la Experiencia" : "Moments of the Experience"}
           </h2>
-          <p className="text-[10px] text-on-surface-variant/80 font-light mt-2 font-navigation uppercase tracking-widest">
-            {lang === "es" ? "Haz clic en cualquier momento para ver más detalles" : "Click on any moment to view more details"}
-          </p>
+          <div className="w-12 h-[1px] bg-primary/60 mx-auto mt-4"></div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Desktop Layout: Split list and image viewer */}
+        <div className="hidden lg:grid grid-cols-12 gap-16 items-start">
+          {/* Left Column: Interactive vertical list of steps */}
+          <div className="col-span-5 space-y-1">
+            {activeData.features.map((feat, idx) => {
+              const isActive = activeStepIdx === idx;
+              return (
+                <div
+                  key={idx}
+                  onMouseEnter={() => setActiveStepIdx(idx)}
+                  onClick={() => setActiveStepIdx(idx)}
+                  className={`py-6 border-b border-outline-variant/20 text-left transition-all duration-300 cursor-pointer ${
+                    isActive ? "pl-2" : "opacity-50 hover:opacity-80"
+                  }`}
+                >
+                  <div className="flex items-center gap-4">
+                    <span className={`font-serif text-sm transition-colors ${isActive ? "text-primary font-semibold" : "text-on-surface-variant"}`}>
+                      0{idx + 1}.
+                    </span>
+                    <h3 className={`font-sans text-xs uppercase tracking-widest font-semibold transition-colors ${isActive ? "text-primary" : "text-on-surface"}`}>
+                      {feat.title}
+                    </h3>
+                  </div>
+                  
+                  {/* Smooth height transition for description */}
+                  <div className={`overflow-hidden transition-all duration-300 ${isActive ? "max-h-40 mt-4 opacity-100" : "max-h-0 opacity-0"}`}>
+                    <p className="font-sans text-[13px] text-on-surface-variant font-light leading-relaxed pr-4">
+                      {feat.desc}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Right Column: Premium Image frame with fade transition */}
+          <div className="col-span-7 relative aspect-[16/10] bg-stone-50 border border-outline-variant/20 shadow-sm overflow-hidden group">
+            {activeData.features.map((feat, idx) => {
+              const isActive = activeStepIdx === idx;
+              return (
+                <div
+                  key={idx}
+                  className={`absolute inset-0 transition-all duration-700 ease-in-out ${
+                    isActive ? "opacity-100 scale-100 z-10" : "opacity-0 scale-[1.03] z-0"
+                  }`}
+                >
+                  <img
+                    alt={feat.title}
+                    src={feat.img}
+                    className="w-full h-full object-cover brightness-[0.95]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Mobile Layout: Elegant Accordion with integrated images */}
+        <div className="lg:hidden space-y-4">
           {activeData.features.map((feat, idx) => {
-            const isBentoWide = idx === 0 || idx === 5;
-            const colClass = isBentoWide ? "lg:col-span-2" : "lg:col-span-1";
+            const isActive = activeStepIdx === idx;
             return (
               <div
                 key={idx}
-                onClick={() => setSelectedGalleryIdx(idx)}
-                className={`${colClass} relative group overflow-hidden aspect-[4/3] sm:aspect-video lg:aspect-auto lg:h-[350px] bg-zinc-950 shadow-md cursor-pointer transition-organic border border-outline-variant/10`}
+                className="border-b border-outline-variant/30 pb-4 text-left"
               >
-                <img
-                  alt={feat.title}
-                  src={feat.img}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 brightness-[0.7] group-hover:brightness-[0.45]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent transition-opacity duration-300"></div>
-                
-                {/* Text and interaction details */}
-                <div className="absolute inset-0 p-6 flex flex-col justify-end text-left z-10">
-                  <span className="font-serif text-primary text-xl font-semibold mb-1 opacity-90">
-                    0{idx + 1}.
+                <button
+                  onClick={() => setActiveStepIdx(isActive ? -1 : idx)}
+                  className="w-full py-4 flex items-center justify-between text-left focus:outline-none"
+                >
+                  <div className="flex items-center gap-4">
+                    <span className={`font-serif text-sm ${isActive ? "text-primary font-semibold" : "text-on-surface-variant"}`}>
+                      0{idx + 1}.
+                    </span>
+                    <h3 className={`font-sans text-xs uppercase tracking-widest font-semibold ${isActive ? "text-primary" : "text-on-surface"}`}>
+                      {feat.title}
+                    </h3>
+                  </div>
+                  <span className={`material-symbols-outlined text-sm text-primary transition-transform duration-300 ${isActive ? "rotate-180" : ""}`}>
+                    expand_more
                   </span>
-                  <h3 className="font-headline-md text-xl md:text-2xl font-bold text-white mb-2 leading-tight drop-shadow-sm group-hover:text-primary transition-colors duration-300">
-                    {feat.title}
-                  </h3>
-                  
-                  {/* Subtle info pill */}
-                  <div className="text-[10px] text-white/60 font-navigation uppercase tracking-widest flex items-center gap-1.5 opacity-90 group-hover:opacity-100 mt-1 transition-opacity">
-                    <span className="material-symbols-outlined text-[12px]">visibility</span>
-                    {lang === "es" ? "Ver Detalles" : "View Details"}
+                </button>
+
+                {/* Animated expandable container */}
+                <div className={`overflow-hidden transition-all duration-300 ${isActive ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}>
+                  <div className="space-y-4 pt-2">
+                    <p className="font-sans text-xs sm:text-sm text-on-surface-variant font-light leading-relaxed">
+                      {feat.desc}
+                    </p>
+                    <div className="w-full aspect-video overflow-hidden border border-outline-variant/20 shadow-sm">
+                      <img
+                        alt={feat.title}
+                        src={feat.img}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1589,86 +1636,6 @@ export default function ExperienceDetail({
               >
                 Cerrar y Aplicar
               </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Lightbox Modal */}
-      {selectedGalleryIdx !== null && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 transition-all duration-300"
-          onClick={() => setSelectedGalleryIdx(null)}
-        >
-          <div 
-            className="relative bg-zinc-950 border border-white/10 w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col md:flex-row text-white shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close Button */}
-            <button
-              onClick={() => setSelectedGalleryIdx(null)}
-              className="absolute top-4 right-4 z-50 w-8 h-8 rounded-full bg-black/60 text-white hover:bg-white hover:text-black flex items-center justify-center transition-all cursor-pointer font-bold text-sm"
-              aria-label="Cerrar"
-            >
-              ✕
-            </button>
-
-            {/* Left Column: Image with navigation */}
-            <div className="relative md:w-3/5 aspect-video md:aspect-auto md:min-h-[450px] bg-black flex items-center justify-center group">
-              <img
-                alt={activeData.features[selectedGalleryIdx].title}
-                src={activeData.features[selectedGalleryIdx].img}
-                className="w-full h-full object-cover"
-              />
-
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedGalleryIdx((prev) => (prev - 1 + activeData.features.length) % activeData.features.length);
-                }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white/80 hover:text-white hover:bg-black/80 flex items-center justify-center transition-all cursor-pointer font-bold text-sm"
-              >
-                ◀
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setSelectedGalleryIdx((prev) => (prev + 1) % activeData.features.length);
-                }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white/80 hover:text-white hover:bg-black/80 flex items-center justify-center transition-all cursor-pointer font-bold text-sm"
-              >
-                ▶
-              </button>
-            </div>
-
-            {/* Right Column: Details */}
-            <div className="md:w-2/5 p-6 md:p-8 flex flex-col justify-between text-left">
-              <div className="space-y-4">
-                <span className="font-serif text-primary text-xl font-semibold opacity-90 block">
-                  0{selectedGalleryIdx + 1} / 0{activeData.features.length}
-                </span>
-                <h3 className="font-headline-md text-2xl font-bold text-white tracking-tight leading-tight">
-                  {activeData.features[selectedGalleryIdx].title}
-                </h3>
-                <div className="w-12 h-[2px] bg-primary"></div>
-                <p className="font-sans text-xs md:text-sm text-stone-300 font-light leading-relaxed">
-                  {activeData.features[selectedGalleryIdx].desc}
-                </p>
-              </div>
-
-              {/* Slider Dots */}
-              <div className="flex gap-1.5 pt-6 mt-auto border-t border-white/10">
-                {activeData.features.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setSelectedGalleryIdx(i)}
-                    className={`h-1 flex-1 transition-all ${
-                      selectedGalleryIdx === i ? "bg-primary" : "bg-white/25 hover:bg-white/50"
-                    }`}
-                    aria-label={`Slide ${i + 1}`}
-                  />
-                ))}
-              </div>
             </div>
           </div>
         </div>
