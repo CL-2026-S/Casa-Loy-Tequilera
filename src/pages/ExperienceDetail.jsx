@@ -478,7 +478,8 @@ export default function ExperienceDetail({
     }
   };
 
-  const saveBookingToLog = async (code) => {
+  const saveBookingToLog = async (code, method) => {
+    const paymentMethodName = method === "paypal" ? "PayPal" : "Mercado Pago";
     const bookingPayload = {
       action: 'create_booking',
       code,
@@ -490,7 +491,7 @@ export default function ExperienceDetail({
       time_str: selectedTime,
       guests: numGuests,
       total_paid: numGuests * pricePerPerson,
-      payment_method: selectedPaymentMethod === "paypal" ? "PayPal" : "Mercado Pago"
+      payment_method: paymentMethodName
     };
 
     try {
@@ -500,12 +501,17 @@ export default function ExperienceDetail({
         body: JSON.stringify(bookingPayload)
       });
       
+      const contentType = res.headers.get("content-type");
       if (!res.ok) {
-        const errData = await res.json();
-        if (errData.error === 'SOLD_OUT') {
-          throw new Error('SOLD_OUT');
+        if (contentType && contentType.includes("application/json")) {
+          const errData = await res.json();
+          if (errData.error === 'SOLD_OUT') {
+            throw new Error('SOLD_OUT');
+          }
+          throw new Error(errData.error || 'API_ERROR');
+        } else {
+          throw new Error('SERVER_ERROR');
         }
-        throw new Error(errData.error || 'API_ERROR');
       }
     } catch (e) {
       console.error("Supabase backup error:", e);
@@ -527,7 +533,7 @@ export default function ExperienceDetail({
           time: selectedTime,
           guests: numGuests,
           amount: numGuests * pricePerPerson,
-          method: selectedPaymentMethod === "paypal" ? "PayPal" : "Mercado Pago",
+          method: paymentMethodName,
           timestamp: new Date().toLocaleString()
         };
         list.unshift(newBooking);
@@ -538,15 +544,16 @@ export default function ExperienceDetail({
     }
   };
 
-  const handleSimulatePayment = () => {
-    if (!selectedPaymentMethod) return;
+  const handleSimulatePayment = (method) => {
+    const activeMethod = method || selectedPaymentMethod;
+    if (!activeMethod) return;
     setIsPaying(true);
 
     setTimeout(async () => {
       const code = `CL-${packageId.toUpperCase()}-${selectedDateStr.replace(/-/g, '')}${Math.floor(1000 + Math.random() * 9000)}`;
       
       try {
-        await saveBookingToLog(code);
+        await saveBookingToLog(code, activeMethod);
         
         // Deduct spots in client state
         setBookingsCapacity((prev) => ({
@@ -939,7 +946,8 @@ export default function ExperienceDetail({
                                     createOrder={async (data, actions) => {
                                       try {
                                         const checkRes = await fetch('/api/tourism');
-                                        if (checkRes.ok) {
+                                        const contentType = checkRes.headers.get("content-type");
+                                        if (checkRes.ok && contentType && contentType.includes("application/json")) {
                                           const checkData = await checkRes.json();
                                           const currentOccupied = checkData.bookingsCapacity?.[selectedDateStr]?.[selectedTime] || 0;
                                           const currentLimit = checkData.maxCapacityLimit || 20;
@@ -950,9 +958,27 @@ export default function ExperienceDetail({
                                             );
                                             return Promise.reject(new Error("SOLD_OUT"));
                                           }
+                                        } else {
+                                          console.warn("Tourism API check skipped (Not JSON). Checking local state.");
+                                          const localOccupied = bookingsCapacity[selectedDateStr]?.[selectedTime] || 0;
+                                          if (localOccupied + numGuests > maxCapacityLimit) {
+                                            alert(lang === "es"
+                                              ? "¡Lo sentimos! Este horario se ha quedado sin cupos disponibles. Selecciona otra fecha u hora."
+                                              : "Sorry! This slot has run out of available spots. Please choose another date or time."
+                                            );
+                                            return Promise.reject(new Error("SOLD_OUT"));
+                                          }
                                         }
                                       } catch (e) {
-                                        return Promise.reject(e);
+                                        console.warn("Real-time check failed, checking locally:", e);
+                                        const localOccupied = bookingsCapacity[selectedDateStr]?.[selectedTime] || 0;
+                                        if (localOccupied + numGuests > maxCapacityLimit) {
+                                          alert(lang === "es"
+                                            ? "¡Lo sentimos! Este horario se ha quedado sin cupos disponibles. Selecciona otra fecha u hora."
+                                            : "Sorry! This slot has run out of available spots. Please choose another date or time."
+                                          );
+                                          return Promise.reject(new Error("SOLD_OUT"));
+                                        }
                                       }
 
                                       return actions.order.create({
@@ -997,7 +1023,7 @@ export default function ExperienceDetail({
                                   type="button"
                                   onClick={() => {
                                     setSelectedPaymentMethod("mercadopago");
-                                    handleSimulatePayment();
+                                    handleSimulatePayment("mercadopago");
                                   }}
                                   disabled={isPaying}
                                   className="w-full bg-[#009EE3] hover:bg-[#0087c2] active:scale-[0.98] text-white py-2.5 font-sans font-bold text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
