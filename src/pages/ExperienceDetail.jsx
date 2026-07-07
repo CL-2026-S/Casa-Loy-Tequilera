@@ -777,13 +777,33 @@ export default function ExperienceDetail({
                     <h4 className="font-headline-md text-3xl font-bold">{activeT.successTitle}</h4>
                     
                     {/* Access QR Code Display */}
-                    <div className="p-4 bg-[#fcf9f3] border border-outline-variant/35 rounded-none shadow-sm flex flex-col items-center gap-4 max-w-sm">
+                    <div id="printable-ticket" className="p-6 bg-white border border-outline-variant/35 rounded-none shadow-sm flex flex-col items-center gap-4 max-w-sm mx-auto">
+                      <div className="print-only-block text-center mb-4">
+                        <img 
+                          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsI1CK1zDTaSkEhtFNd7gFs0Br7ZXW2rKE6mtXNlOgTpveNdFqRSK2aREIwDEFz2pNbAMxdM8OBUebW2gToScRYF1Q-TmhbHUos5e3w1fOey3coasOccOtVC4bzvDGydMpNF2wf6Q6Mt3FsJZRCihsNaG2kM2hluZ5hkMnIRqzGfCNnIgQCUk8l3pxlAgWZcH9ZqrbWcx3BD1-oHbu3TuTW9SKgwmqAzXcaSv6qTNhx6pJvTmykqnAVLEaPpvw8UHbNpl7z0SLcNA7" 
+                          alt="Casa Loy" 
+                          className="h-10 mx-auto mb-2" 
+                        />
+                        <h2 className="font-serif text-base font-bold tracking-wide text-stone-800">
+                          BOLETO A TOUR - CASA LOY TEQUILERA
+                        </h2>
+                      </div>
+                      
                       <img
                         alt="Reservation QR Access Code"
                         className="w-44 h-44 border-4 border-white shadow-md"
                         src={qrCodeUrl}
                       />
                       <span className="font-mono text-sm font-semibold text-primary">{reservationCode}</span>
+
+                      <div className="print-only-block w-full text-left font-sans text-xs border-t border-stone-200 pt-4 mt-2 space-y-2 text-stone-700">
+                        <p><strong>Cliente:</strong> {clientName}</p>
+                        <p><strong>Experiencia:</strong> {activeData.title}</p>
+                        <p><strong>Fecha:</strong> {formatReservationDate(selectedDateStr)}</p>
+                        <p><strong>Hora:</strong> {selectedTime}</p>
+                        <p><strong>Visitantes:</strong> {numGuests}</p>
+                        <p><strong>Total pagado:</strong> ${numGuests * pricePerPerson} MXN</p>
+                      </div>
                     </div>
 
                     <p className="font-body-md text-on-surface-variant max-w-md mx-auto text-sm font-light leading-relaxed">
@@ -806,8 +826,8 @@ export default function ExperienceDetail({
                         <a
                           href={`https://wa.me/?text=${encodeURIComponent(
                             lang === "es"
-                              ? `¡Hola! Aquí tienes tu ticket de acceso para Casa Loy Tequilera.\n\nCódigo: ${reservationCode}\nExperiencia: ${activeData.title}\nFecha: ${formatReservationDate(selectedDateStr)}\nHora: ${selectedTime}\nVisitantes: ${numGuests}\n\nPuedes validar tu entrada escaneando tu QR o visitando el enlace oficial: ${qrLink}`
-                              : `Hi! Here is your access ticket for Casa Loy Tequilera.\n\nCode: ${reservationCode}\nExperience: ${activeData.title}\nDate: ${formatReservationDate(selectedDateStr)}\nTime: ${selectedTime}\nGuests: ${numGuests}\n\nYou can validate your entrance by scanning your QR or visiting: ${qrLink}`
+                              ? `¡Hola! Aquí tienes tu boleto de acceso para Casa Loy Tequilera.\n\n*Código:* ${reservationCode}\n*Experiencia:* ${activeData.title}\n*Fecha:* ${formatReservationDate(selectedDateStr)}\n*Hora:* ${selectedTime}\n*Visitantes:* ${numGuests}\n\n*Imagen del Código QR:* ${qrCodeUrl}`
+                              : `Hi! Here is your access ticket for Casa Loy Tequilera.\n\n*Code:* ${reservationCode}\n*Experience:* ${activeData.title}\n*Date:* ${formatReservationDate(selectedDateStr)}\n*Time:* ${selectedTime}\n*Guests:* ${numGuests}\n\n*QR Code Image:* ${qrCodeUrl}`
                           )}`}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -819,13 +839,31 @@ export default function ExperienceDetail({
                           <span>WhatsApp</span>
                         </a>
 
-                        {/* Email simulation */}
+                        {/* Email trigger */}
                         <button
-                          onClick={() => {
-                            alert(lang === "es" 
-                              ? `¡Ticket enviado con éxito a ${clientEmail || "tu correo"}!` 
-                              : `Ticket sent successfully to ${clientEmail || "your email"}!`
-                            );
+                          onClick={async () => {
+                            try {
+                              const res = await fetch("/api/tourism", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({
+                                  action: "resend_email",
+                                  code: reservationCode,
+                                  email: clientEmail
+                                })
+                              });
+                              if (res.ok) {
+                                alert(lang === "es" 
+                                  ? `¡Ticket de acceso enviado con éxito a ${clientEmail}!` 
+                                  : `Access ticket successfully sent to ${clientEmail}!`
+                                );
+                              } else {
+                                alert(lang === "es" ? "Error al enviar el correo." : "Error sending email.");
+                              }
+                            } catch (e) {
+                              console.error(e);
+                              alert(lang === "es" ? "Error de conexión." : "Connection error.");
+                            }
                           }}
                           className="flex items-center justify-center gap-2 border border-primary text-primary hover:bg-primary/5 py-2.5 font-sans font-bold text-xs transition-colors cursor-pointer text-center"
                         >

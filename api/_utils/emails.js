@@ -325,3 +325,193 @@ export async function sendMonthlyNewsletter(subscribers, articles, siteUrl) {
 
   return { success: true, results };
 }
+
+/**
+ * Sends a confirmation email for a booking, containing the QR ticket.
+ * @param {string} email 
+ * @param {object} bookingDetails 
+ */
+export async function sendBookingEmail(email, bookingDetails) {
+  if (!resend) {
+    console.warn("Resend client not configured. Skipping booking email.");
+    return { success: false, error: "Resend not initialized" };
+  }
+
+  const { code, customer_name, tour_id, date_str, time_str, guests, total_paid } = bookingDetails;
+  
+  const tourName = tour_id === 'diamante' ? 'Experiencia Casa Loy Diamante' : tour_id === 'platino' ? 'Experiencia Casa Loy Platino' : 'Experiencia Casa Loy Oro';
+  const qrLink = `https://casaloy.com/?code=${code}&package=${encodeURIComponent(tourName)}&date=${date_str}&time=${encodeURIComponent(time_str)}&guests=${guests}`;
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(qrLink)}`;
+
+  const html = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Tu Boleto de Acceso - Casa Loy</title>
+      <style>
+        body {
+          margin: 0;
+          padding: 0;
+          background-color: #fcf9f3;
+          font-family: 'Montserrat', sans-serif;
+          color: #1c1c18;
+          -webkit-font-smoothing: antialiased;
+        }
+        .wrapper {
+          width: 100%;
+          table-layout: fixed;
+          background-color: #fcf9f3;
+          padding: 40px 0;
+        }
+        .card {
+          width: 100%;
+          max-width: 500px;
+          margin: 0 auto;
+          background-color: #ffffff;
+          border: 1px solid #e5e2dc;
+          padding: 40px;
+          box-sizing: border-box;
+          text-align: center;
+        }
+        .logo {
+          max-height: 48px;
+          width: auto;
+          margin-bottom: 30px;
+        }
+        .title {
+          font-family: 'Georgia', serif;
+          font-size: 22px;
+          color: #7d3f0f;
+          margin-top: 0;
+          margin-bottom: 10px;
+          font-weight: normal;
+          letter-spacing: 0.02em;
+        }
+        .subtitle {
+          font-size: 14px;
+          color: #53443a;
+          margin-bottom: 30px;
+          line-height: 1.5;
+        }
+        .qr-container {
+          background-color: #fcf9f3;
+          border: 1px dashed #d9c2b6;
+          padding: 24px;
+          margin-bottom: 30px;
+          display: inline-block;
+        }
+        .qr-img {
+          width: 180px;
+          height: 180px;
+          border: 4px solid #ffffff;
+        }
+        .code-text {
+          display: block;
+          font-family: monospace;
+          font-size: 16px;
+          font-weight: bold;
+          color: #7d3f0f;
+          margin-top: 12px;
+          letter-spacing: 0.05em;
+        }
+        .details-table {
+          width: 100%;
+          border-top: 1px solid #f0eee8;
+          margin-top: 20px;
+          padding-top: 20px;
+          font-size: 13px;
+          text-align: left;
+        }
+        .details-row {
+          padding: 8px 0;
+        }
+        .details-label {
+          color: #867369;
+          font-weight: bold;
+        }
+        .details-value {
+          color: #1c1c18;
+          text-align: right;
+        }
+        .footer {
+          margin-top: 40px;
+          border-top: 1px solid #f0eee8;
+          padding-top: 24px;
+          font-size: 11px;
+          color: #867369;
+          line-height: 1.6;
+        }
+      </style>
+    </head>
+    <body>
+      <table class="wrapper" width="100%">
+        <tr>
+          <td>
+            <div class="card">
+              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsI1CK1zDTaSkEhtFNd7gFs0Br7ZXW2rKE6mtXNlOgTpveNdFqRSK2aREIwDEFz2pNbAMxdM8OBUebW2gToScRYF1Q-TmhbHUos5e3w1fOey3coasOccOtVC4bzvDGydMpNF2wf6Q6Mt3FsJZRCihsNaG2kM2hluZ5hkMnIRqzGfCNnIgQCUk8l3pxlAgWZcH9ZqrbWcx3BD1-oHbu3TuTW9SKgwmqAzXcaSv6qTNhx6pJvTmykqnAVLEaPpvw8UHbNpl7z0SLcNA7" alt="Casa Loy Tequilera" class="logo">
+              <h1 class="title">¡Tu Reserva está Confirmada!</h1>
+              <p class="subtitle">Hola <strong>${customer_name}</strong>, gracias por tu compra. Presenta el siguiente boleto digital en la entrada el día de tu visita.</p>
+              
+              <div class="qr-container">
+                <img src="${qrCodeUrl}" alt="Código QR de Acceso" class="qr-img">
+                <span class="code-text">${code}</span>
+              </div>
+              
+              <table class="details-table" width="100%">
+                <tr>
+                  <td class="details-row details-label">Experiencia:</td>
+                  <td class="details-row details-value"><strong>${tourName}</strong></td>
+                </tr>
+                <tr>
+                  <td class="details-row details-label">Fecha:</td>
+                  <td class="details-row details-value">${date_str}</td>
+                </tr>
+                <tr>
+                  <td class="details-row details-label">Horario:</td>
+                  <td class="details-row details-value">${time_str}</td>
+                </tr>
+                <tr>
+                  <td class="details-row details-label">Visitantes:</td>
+                  <td class="details-row details-value">${guests}</td>
+                </tr>
+                <tr>
+                  <td class="details-row details-label">Total pagado:</td>
+                  <td class="details-row details-value"><strong>$${total_paid} MXN</strong></td>
+                </tr>
+              </table>
+              
+              <div class="footer">
+                <p>Ubicación: Carretera Ayotlán–Atotonilco km 6.5, Las Villas, Jalisco.</p>
+                <p>Si tienes alguna duda o necesitas reagendar, contáctanos a través de WhatsApp o respondiendo a este correo.</p>
+                <p>&copy; 2026 Casa Loy Tequilera. Todos los derechos reservados.</p>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </body>
+    </html>
+  `;
+
+  try {
+    const fromEmail = getFromEmail();
+    const { data, error } = await resend.emails.send({
+      from: fromEmail,
+      to: [email],
+      subject: `Tu boleto de acceso - Casa Loy (${code})`,
+      html: html,
+    });
+
+    if (error) {
+      console.error("Resend API error sending booking email:", error);
+      return { success: false, error };
+    }
+    return { success: true, messageId: data.id };
+  } catch (err) {
+    console.error("Exception sending booking email:", err);
+    return { success: false, error: err.message };
+  }
+}
+

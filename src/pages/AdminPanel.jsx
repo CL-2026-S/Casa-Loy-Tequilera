@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Html5QrcodeScanner } from "html5-qrcode";
 
 export default function AdminPanel({
   lang,
@@ -34,6 +35,22 @@ export default function AdminPanel({
   const [scanValidatedTime, setScanValidatedTime] = useState("");
   const [validationSuccessMsg, setValidationSuccessMsg] = useState("");
 
+  // QR Camera Scanner States
+  const [scannerActive, setScannerActive] = useState(false);
+
+  // Manual Reservation Capture Form States
+  const [showManualForm, setShowManualForm] = useState(false);
+  const [manualName, setManualName] = useState("");
+  const [manualEmail, setManualEmail] = useState("");
+  const [manualPhone, setManualPhone] = useState("");
+  const [manualTour, setManualTour] = useState("oro");
+  const [manualDate, setManualDate] = useState("");
+  const [manualTime, setManualTime] = useState("10:00 AM");
+  const [manualGuests, setManualGuests] = useState(1);
+  const [manualAmount, setManualAmount] = useState(1);
+  const [manualMethod, setManualMethod] = useState("Efectivo");
+  const [isSubmittingManual, setIsSubmittingManual] = useState(false);
+
   // Bulk Edit States
   const [bulkStartDate, setBulkStartDate] = useState("");
   const [bulkEndDate, setBulkEndDate] = useState("");
@@ -54,6 +71,11 @@ export default function AdminPanel({
     window.scrollTo(0, 0);
     loadData();
   }, []);
+
+  useEffect(() => {
+    const pricePerPerson = manualTour === "oro" ? 1 : 750;
+    setManualAmount(manualGuests * pricePerPerson);
+  }, [manualGuests, manualTour]);
 
   const loadData = async () => {
     try {
@@ -245,14 +267,10 @@ export default function AdminPanel({
     }
   };
 
-  // Search Ticket manually or scanned
-  const handleSearchTicket = () => {
-    setSearchStatus("");
-    setSearchedTicket(null);
-    setValidationSuccessMsg("");
-    if (!ticketSearchCode) return;
-
-    const ticket = bookingsLog.find((b) => b.code.trim().toUpperCase() === ticketSearchCode.trim().toUpperCase());
+  // Search Ticket helper
+  const triggerSearchByCode = (code) => {
+    const cleanCode = code.trim().toUpperCase();
+    const ticket = bookingsLog.find((b) => b.code.trim().toUpperCase() === cleanCode);
 
     if (ticket) {
       setSearchedTicket(ticket);
@@ -263,19 +281,17 @@ export default function AdminPanel({
         setSearchStatus("found_valid");
       }
     } else {
-      if (ticketSearchCode.toUpperCase().startsWith("CL-")) {
-        // Fallback simulated card if not found in table yet
+      if (cleanCode.startsWith("CL-")) {
         const simTicket = {
-          code: ticketSearchCode.toUpperCase(),
+          code: cleanCode,
           name: "Cliente Externo",
-          packageName: ticketSearchCode.includes("DIAMANTE") ? "Experiencia Casa Loy Diamante" : ticketSearchCode.includes("PLATINO") ? "Experiencia Casa Loy Platino" : "Experiencia Casa Loy Oro",
+          packageName: cleanCode.includes("DIAMANTE") ? "Experiencia Casa Loy Diamante" : cleanCode.includes("PLATINO") ? "Experiencia Casa Loy Platino" : "Experiencia Casa Loy Oro",
           date: new Date().toISOString().split("T")[0],
           time: "10:00 AM",
           guests: 2
         };
         setSearchedTicket(simTicket);
-        // check used status in localstorage
-        const used = localStorage.getItem(`used_ticket_${ticketSearchCode.toUpperCase()}`);
+        const used = localStorage.getItem(`used_ticket_${cleanCode}`);
         if (used) {
           setSearchStatus("found_used");
           setScanValidatedTime(used);
@@ -287,6 +303,61 @@ export default function AdminPanel({
       }
     }
   };
+
+  // Search Ticket manually or scanned
+  const handleSearchTicket = () => {
+    setSearchStatus("");
+    setSearchedTicket(null);
+    setValidationSuccessMsg("");
+    if (!ticketSearchCode) return;
+    triggerSearchByCode(ticketSearchCode);
+  };
+
+  // Camera scanner hook
+  useEffect(() => {
+    let html5QrcodeScanner = null;
+    if (scannerActive) {
+      const timer = setTimeout(() => {
+        try {
+          html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader",
+            { fps: 10, qrbox: { width: 250, height: 250 } },
+            /* verbose= */ false
+          );
+          html5QrcodeScanner.render(
+            (decodedText) => {
+              let ticketCode = decodedText;
+              if (decodedText.includes("code=")) {
+                try {
+                  const urlParams = new URLSearchParams(decodedText.split("?")[1]);
+                  ticketCode = urlParams.get("code") || decodedText;
+                } catch (e) {
+                  console.error("Could not parse scanned URL params", e);
+                }
+              }
+              const cleanCode = ticketCode.trim().toUpperCase();
+              setTicketSearchCode(cleanCode);
+              setScannerActive(false);
+              triggerSearchByCode(cleanCode);
+            },
+            () => {
+              // Ignore scan failures (normal operation)
+            }
+          );
+        } catch (e) {
+          console.error("Error creating scanner:", e);
+        }
+      }, 300);
+
+      return () => clearTimeout(timer);
+    }
+
+    return () => {
+      if (html5QrcodeScanner) {
+        html5QrcodeScanner.clear().catch(err => console.error("Failed to clear scanner", err));
+      }
+    };
+  }, [scannerActive]);
 
   const handleMarkTicketAsUsed = async () => {
     if (!searchedTicket) return;
@@ -318,6 +389,65 @@ export default function AdminPanel({
       }
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const handleManualBookingSubmit = async (e) => {
+    e.preventDefault();
+    if (!manualName || !manualEmail || !manualDate || !manualTime || !manualGuests) {
+      alert(lang === "es" ? "Por favor completa los campos requeridos." : "Please fill in all required fields.");
+      return;
+    }
+    
+    setIsSubmittingManual(true);
+    const randomCode = `CL-MAN-${manualTour.toUpperCase()}-${manualDate.replace(/-/g, '')}${Math.floor(1000 + Math.random() * 9000)}`;
+    
+    const payload = {
+      action: 'create_booking',
+      code: randomCode,
+      customer_name: manualName,
+      customer_email: manualEmail,
+      customer_phone: manualPhone || '',
+      tour_id: manualTour,
+      date_str: manualDate,
+      time_str: manualTime,
+      guests: parseInt(manualGuests),
+      total_paid: parseFloat(manualAmount),
+      payment_method: manualMethod
+    };
+
+    try {
+      const res = await fetch("/api/tourism", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      
+      if (res.ok) {
+        alert(lang === "es" 
+          ? `¡Reserva manual registrada con éxito! Boleto enviado por correo.\nCódigo: ${randomCode}` 
+          : `Manual booking registered! Ticket sent by email.\nCode: ${randomCode}`
+        );
+        // Reset states
+        setManualName("");
+        setManualEmail("");
+        setManualPhone("");
+        setManualGuests(1);
+        setManualDate("");
+        setManualMethod("Efectivo");
+        setShowManualForm(false);
+        // Refresh log
+        await loadData();
+        if (refreshData) await refreshData();
+      } else {
+        const err = await res.json();
+        alert(`Error: ${err.error || 'SERVER_ERROR'}`);
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error de conexión al registrar reserva.");
+    } finally {
+      setIsSubmittingManual(false);
     }
   };
 
@@ -693,6 +823,32 @@ export default function AdminPanel({
                   </button>
                 </div>
 
+                <div className="pt-2">
+                  {!scannerActive ? (
+                    <button
+                      onClick={() => {
+                        setSearchStatus("");
+                        setSearchedTicket(null);
+                        setScannerActive(true);
+                      }}
+                      className="w-full flex items-center justify-center gap-2 border border-primary text-primary hover:bg-primary/5 py-3 font-semibold uppercase text-xs tracking-wider cursor-pointer font-sans"
+                    >
+                      <span className="material-symbols-outlined text-sm">photo_camera</span>
+                      Escanear QR con Cámara (Celular/Tablet)
+                    </button>
+                  ) : (
+                    <div className="space-y-4">
+                      <button
+                        onClick={() => setScannerActive(false)}
+                        className="w-full bg-stone-500 hover:bg-stone-600 text-white py-2 font-semibold uppercase text-xs tracking-wider cursor-pointer"
+                      >
+                        Cancelar Escaneo
+                      </button>
+                      <div id="reader" className="w-full max-w-sm mx-auto overflow-hidden border border-stone-200"></div>
+                    </div>
+                  )}
+                </div>
+
                 {validationSuccessMsg && (
                   <div className="bg-emerald-500 text-white p-3 text-xs font-bold text-center animate-pulse">
                     ✅ {validationSuccessMsg}
@@ -784,19 +940,159 @@ export default function AdminPanel({
 
             {/* TAB C: Bookings log from Supabase */}
             {activeTab === "log" && (
-              <div className="space-y-4 text-left">
+              <div className="space-y-6 text-left">
                 <div className="flex justify-between items-center border-b border-stone-100 pb-3">
                   <h5 className="font-navigation text-sm uppercase tracking-wider text-primary font-bold">
                     Historial de Reservaciones en Supabase
                   </h5>
-                  <button
-                    onClick={loadData}
-                    className="text-xs text-stone-600 hover:text-stone-800 font-semibold cursor-pointer border border-stone-200 px-3 py-1 flex items-center gap-1.5"
-                  >
-                    <span className="material-symbols-outlined text-xs">refresh</span>
-                    Actualizar
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setShowManualForm(!showManualForm)}
+                      className="text-xs bg-primary hover:bg-[#8c4723] text-white font-semibold uppercase tracking-wider px-4 py-2 flex items-center gap-1.5 cursor-pointer font-sans"
+                    >
+                      <span className="material-symbols-outlined text-xs">add</span>
+                      {showManualForm ? "Cancelar Registro" : "Registrar Reserva Manual"}
+                    </button>
+                    <button
+                      onClick={loadData}
+                      className="text-xs text-stone-600 hover:text-stone-800 font-semibold cursor-pointer border border-stone-200 px-3 py-1 flex items-center gap-1.5"
+                    >
+                      <span className="material-symbols-outlined text-xs">refresh</span>
+                      Actualizar
+                    </button>
+                  </div>
                 </div>
+
+                {/* Collapsible Manual Booking Form */}
+                {showManualForm && (
+                  <form onSubmit={handleManualBookingSubmit} className="bg-stone-50 border border-outline-variant/35 p-6 space-y-4 max-w-xl mx-auto font-sans">
+                    <h6 className="font-serif text-sm font-bold text-stone-800 border-b border-stone-200 pb-2 uppercase tracking-wide">
+                      Formulario de Captura de Reservación (Staff)
+                    </h6>
+                    
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">Nombre Completo *</label>
+                        <input
+                          type="text"
+                          required
+                          value={manualName}
+                          onChange={(e) => setManualName(e.target.value)}
+                          placeholder="Ej. Pedro Picapiedra"
+                          className="w-full bg-white border border-outline-variant p-2.5 text-xs focus:outline-none focus:border-primary text-on-surface"
+                        />
+                      </div>
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">Correo Electrónico *</label>
+                          <input
+                            type="email"
+                            required
+                            value={manualEmail}
+                            onChange={(e) => setManualEmail(e.target.value)}
+                            placeholder="pedro@ejemplo.com"
+                            className="w-full bg-white border border-outline-variant p-2.5 text-xs focus:outline-none text-on-surface"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">Teléfono / WhatsApp</label>
+                          <input
+                            type="tel"
+                            value={manualPhone}
+                            onChange={(e) => setManualPhone(e.target.value)}
+                            placeholder="3312345678"
+                            className="w-full bg-white border border-outline-variant p-2.5 text-xs focus:outline-none text-on-surface"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                          <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">Experiencia *</label>
+                          <select
+                            value={manualTour}
+                            onChange={(e) => setManualTour(e.target.value)}
+                            className="w-full bg-white border border-outline-variant p-2.5 text-xs focus:outline-none text-on-surface"
+                          >
+                            <option value="oro">Casa Loy Oro ($1.00)</option>
+                            <option value="platino">Casa Loy Platino ($750.00)</option>
+                            <option value="diamante">Casa Loy Diamante ($750.00)</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">Fecha de Visita *</label>
+                          <input
+                            type="date"
+                            required
+                            value={manualDate}
+                            onChange={(e) => setManualDate(e.target.value)}
+                            className="w-full bg-white border border-outline-variant p-2 text-xs focus:outline-none text-on-surface"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">Horario *</label>
+                          <select
+                            value={manualTime}
+                            onChange={(e) => setManualTime(e.target.value)}
+                            className="w-full bg-white border border-outline-variant p-2.5 text-xs focus:outline-none text-on-surface"
+                          >
+                            <option value="10:00 AM">10:00 AM</option>
+                            <option value="11:00 AM">11:00 AM</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                          <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">Visitantes (Lugares) *</label>
+                          <input
+                            type="number"
+                            min="1"
+                            max="20"
+                            required
+                            value={manualGuests}
+                            onChange={(e) => setManualGuests(parseInt(e.target.value) || 1)}
+                            className="w-full bg-white border border-outline-variant p-2 text-xs focus:outline-none text-center text-on-surface"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">Total Cobrado (MXN) *</label>
+                          <input
+                            type="number"
+                            min="0"
+                            required
+                            value={manualAmount}
+                            onChange={(e) => setManualAmount(parseFloat(e.target.value) || 0)}
+                            className="w-full bg-white border border-outline-variant p-2 text-xs focus:outline-none text-center text-on-surface"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">Método de Pago *</label>
+                          <select
+                            value={manualMethod}
+                            onChange={(e) => setManualMethod(e.target.value)}
+                            className="w-full bg-white border border-outline-variant p-2.5 text-xs focus:outline-none text-on-surface"
+                          >
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Tarjeta">Tarjeta</option>
+                            <option value="Transferencia">Transferencia</option>
+                            <option value="Cortesía">Cortesía</option>
+                            <option value="Otro">Otro</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={isSubmittingManual}
+                      className="w-full bg-primary hover:bg-[#8c4723] text-white py-3 text-xs font-semibold uppercase tracking-widest cursor-pointer shadow-md"
+                    >
+                      {isSubmittingManual ? "Registrando..." : "Confirmar y Descontar Cupos"}
+                    </button>
+                  </form>
+                )}
 
                 <div className="overflow-x-auto">
                   <table className="w-full text-left font-sans text-xs border-collapse">

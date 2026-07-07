@@ -1,4 +1,5 @@
 import { supabase } from './_utils/clients.js';
+import { sendBookingEmail } from './_utils/emails.js';
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -180,6 +181,21 @@ export default async function handler(req, res) {
           });
         if (upsErr) throw upsErr;
 
+        // 5. Send automated confirmation email using Resend
+        try {
+          await sendBookingEmail(customer_email, {
+            code,
+            customer_name,
+            tour_id,
+            date_str,
+            time_str,
+            guests: requestedGuests,
+            total_paid
+          });
+        } catch (mailErr) {
+          console.error("Resend automatic welcome mail failed:", mailErr);
+        }
+
         return res.status(200).json({ success: true, code });
       }
 
@@ -287,6 +303,41 @@ export default async function handler(req, res) {
           .from('slot_occupancy_overrides')
           .upsert(slotOverrides);
         if (bulkErr) throw bulkErr;
+
+        return res.status(200).json({ success: true });
+      }
+
+      // Action 8: Resend Booking Confirmation Email
+      if (action === 'resend_email') {
+        const { code, email } = req.body;
+        if (!code || !email) {
+          return res.status(400).json({ error: 'Code and email are required.' });
+        }
+
+        const { data: ticket, error: tErr } = await supabase
+          .from('reservations')
+          .select('*')
+          .eq('code', code.trim().toUpperCase())
+          .maybeSingle();
+
+        if (tErr) throw tErr;
+        if (!ticket) {
+          return res.status(404).json({ error: 'TICKET_NOT_FOUND', message: 'Reserva no encontrada.' });
+        }
+
+        const emailRes = await sendBookingEmail(email, {
+          code: ticket.code,
+          customer_name: ticket.customer_name,
+          tour_id: ticket.tour_id,
+          date_str: ticket.date_str,
+          time_str: ticket.time_str,
+          guests: ticket.guests,
+          total_paid: ticket.total_paid
+        });
+
+        if (!emailRes.success) {
+          return res.status(500).json({ error: 'EMAIL_SEND_FAILED', message: emailRes.error });
+        }
 
         return res.status(200).json({ success: true });
       }

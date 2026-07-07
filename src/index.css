@@ -148,3 +148,39 @@
   background-image: none;
   box-shadow: 0 1px 0 rgba(28, 28, 24, 0);
 }
+
+/* Print styles to print ONLY the ticket receipt */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-ticket, #printable-ticket * {
+    visibility: visible;
+  }
+  #printable-ticket {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 30px !important;
+    border: 1px solid #d9c2b6 !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    color: #1c1c18 !important;
+  }
+  .print-hidden {
+    display: none !important;
+  }
+}
+
+.print-only-block {
+  display: none;
+}
+
+@media print {
+  .print-only-block {
+    display: block !important;
+  }
+}
