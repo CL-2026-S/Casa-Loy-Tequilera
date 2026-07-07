@@ -216,7 +216,7 @@ export default function Turismo({ lang, setPage }) {
       </section>
 
       {/* Packages Showcase */}
-      <section className="py-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto overflow-hidden" id="packages">
+      <section className="py-section-gap px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center mb-24 text-left">
           <div className="lg:col-span-6">
             <span className="font-label-caps text-label-caps text-primary uppercase tracking-widest block mb-4">
@@ -233,7 +233,7 @@ export default function Turismo({ lang, setPage }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 text-left">
+        <div id="packages" className="grid grid-cols-1 lg:grid-cols-3 gap-8 text-left">
           {[
             {
               id: "oro",
@@ -312,6 +312,12 @@ export default function Turismo({ lang, setPage }) {
                   </ul>
                   <div className="flex flex-col gap-3">
                     <button
+                      onClick={() => setPage(`experience-${exp.id}`)}
+                      className="w-full bg-white text-primary py-3.5 font-label-caps text-xs text-center uppercase tracking-widest hover:bg-[#8C4723] hover:text-white transition-all block shadow-md font-semibold cursor-pointer"
+                    >
+                      {lang === "es" ? "Ver Detalles" : "View Details"}
+                    </button>
+                    <button
                       onClick={() => {
                         setPage(`experience-${exp.id}`);
                         setTimeout(() => {
@@ -321,15 +327,9 @@ export default function Turismo({ lang, setPage }) {
                           }
                         }, 200);
                       }}
-                      className="w-full bg-white text-primary py-3.5 font-label-caps text-xs text-center uppercase tracking-widest hover:bg-secondary-fixed hover:text-white transition-all block shadow-md font-semibold cursor-pointer"
-                    >
-                      {exp.btnText}
-                    </button>
-                    <button
-                      onClick={() => setPage(`experience-${exp.id}`)}
                       className="w-full border border-white/50 text-white hover:border-white hover:bg-white/10 py-3.5 font-label-caps text-xs text-center uppercase tracking-widest transition-all block font-bold cursor-pointer"
                     >
-                      {lang === "es" ? "Ver Detalles" : "View Details"}
+                      {exp.btnText}
                     </button>
                   </div>
                 </div>
@@ -358,8 +358,8 @@ export default function Turismo({ lang, setPage }) {
             <a
               href={
                 lang === "es"
-                  ? "https://wa.me/52134881337135?text=Hola%2C%20me%20gustar%C3%ADa%20cotizar%20una%20cata%20privada%20o%20evento%20en%20Casa%20Loy."
-                  : "https://wa.me/52134881337135?text=Hello%2C%20I%20would%20like%20to%20get%20a%20quote%20for%20a%20private%20tasting%20or%20event%20at%20Casa%20Loy."
+                  ? "https://wa.me/523481337135?text=Hola%2C%20me%20gustar%C3%ADa%20cotizar%20una%20cata%20privada%20o%20evento%20en%20Casa%20Loy."
+                  : "https://wa.me/523481337135?text=Hello%2C%20I%20would%20like%20to%20get%20a%20quote%20for%20a%20private%20tasting%20or%20event%20at%20Casa%20Loy."
               }
               target="_blank"
               rel="noopener noreferrer"
