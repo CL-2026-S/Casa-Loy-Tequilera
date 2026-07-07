@@ -183,10 +183,10 @@ const packagesData = {
   diamante: {
     es: {
       title: "Experiencia Casa Loy Diamante",
-      price: "$750.00",
+      price: "$1,500.00",
       duration: "4.0 Horas",
       capacity: "Máximo 20 personas",
-      desc: "Una experiencia culinaria y de tequila de primer nivel que ofrece acceso a colecciones privadas y el menú especial de 1937 Nativo.",
+      desc: "Una experiencia gastronómica y de tequila de primer nivel que ofrece acceso a colecciones privadas, mixología de autor, cata subterránea y el menú de lujo de 1937 Nativo.",
       heroImg: "/Exp_test_15.jpeg",
       features: [
         {
@@ -195,12 +195,12 @@ const packagesData = {
           img: "/Exp_test_15.jpeg"
         },
         {
-          title: "Murales e Historia",
+          title: "Murales y Historia",
           desc: "Una retrospectiva artística e histórica de Casa Loy y el desarrollo de Ayotlán como referente tequilero.",
           img: "/Exp_test_16.jpeg"
         },
         {
-          title: "Recorrido por la fábrica",
+          title: "Recorrido por la destilería",
           desc: "Aprende el minucioso proceso técnico de destilación y fermentación en tanques de acero y madera tradicional.",
           img: "/Exp_test_17.jpeg"
         },
@@ -210,28 +210,28 @@ const packagesData = {
           img: "/Exp_test_18.jpeg"
         },
         {
-          title: "Mixología de autor",
+          title: "Clase de Mixología de autor",
           desc: "Aprende y diseña tu propio cóctel con base en tequila asistido por nuestro mixólogo principal.",
           img: "/Exp_test_19.jpeg"
         },
         {
-          title: "Comida de 3 tiempos",
-          desc: "Comida gourmet de 3 tiempos en la terraza de 1937 Nativo: entrada selecta, plato a escoger (3 opciones de autor) y postre especial.",
+          title: "Experiencia Luxury Gastronómica en 1937 Nativo",
+          desc: "Comida gourmet maridaje de primer nivel en la terraza de 1937 Nativo con platillos exclusivos de autor.",
           img: "/Exp_test_13.jpeg"
         },
         {
-          title: "Bebida (2 por persona)",
-          desc: "Disfruta de dos copas de vino nacional, tequila premium o mixología fina para complementar tu experiencia.",
+          title: "Kit de Souvenirs",
+          desc: "Llévate un recuerdo exclusivo de Casa Loy que incluye copas grabadas, una botella miniatura y obsequios de la hacienda.",
           img: "/Exp_test_14.jpeg"
         }
       ]
     },
     en: {
       title: "Casa Loy Diamond Experience",
-      price: "$750.00",
+      price: "$1,500.00",
       duration: "4.0 Hours",
       capacity: "Max 20 people",
-      desc: "A premier tequila and dining experience offering access to private reserves and the special signature menu at 1937 Nativo.",
+      desc: "A premier tequila and dining experience offering access to private reserves, signature mixology class, cellar tasting, and the special signature menu at 1937 Nativo.",
       heroImg: "/Exp_test_15.jpeg",
       features: [
         {
@@ -245,7 +245,7 @@ const packagesData = {
           img: "/Exp_test_16.jpeg"
         },
         {
-          title: "Factory Tour",
+          title: "Distillery Tour",
           desc: "Learn the meticulous technical distillation process and fermentation in traditional steel and wood tanks.",
           img: "/Exp_test_17.jpeg"
         },
@@ -255,18 +255,18 @@ const packagesData = {
           img: "/Exp_test_18.jpeg"
         },
         {
-          title: "Signature Mixology",
+          title: "Signature Mixology Class",
           desc: "Learn and craft your own tequila-based cocktail guided by our master mixologist.",
           img: "/Exp_test_19.jpeg"
         },
         {
-          title: "3-Course Fine Dining",
-          desc: "Gourmet 3-course meal on the terrace of 1937 Nativo: choice of appetizer, selection of 3 main courses, and a special dessert.",
+          title: "Luxury Gastronomic Experience at 1937 Nativo",
+          desc: "A world-class gourmet pairing lunch on the terrace of 1937 Nativo with exclusive signature dishes.",
           img: "/Exp_test_13.jpeg"
         },
         {
-          title: "Drinks (2 per person)",
-          desc: "Enjoy two glasses of boutique local wine, premium tequila, or fine mixology to complete your experience.",
+          title: "Souvenir Kit",
+          desc: "Take home an exclusive Casa Loy souvenir pack including engraved glasses, a mini bottle, and estate gifts.",
           img: "/Exp_test_14.jpeg"
         }
       ]

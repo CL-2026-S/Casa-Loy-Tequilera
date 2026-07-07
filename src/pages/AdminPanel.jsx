@@ -1017,7 +1017,7 @@ export default function AdminPanel({
                           >
                             <option value="oro">Casa Loy Oro ($1.00)</option>
                             <option value="platino">Casa Loy Platino ($750.00)</option>
-                            <option value="diamante">Casa Loy Diamante ($750.00)</option>
+                            <option value="diamante">Casa Loy Diamante ($1,500.00)</option>
                           </select>
                         </div>
                         <div>
