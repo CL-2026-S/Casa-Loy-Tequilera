@@ -64,7 +64,7 @@ export default function ExperienceDetail({
   // Staff Controls State
   const [isAdminOpen, setIsAdminOpen] = useState(false);
 
-  const pricePerPerson = packageId === "oro" ? 550 : 750;
+  const pricePerPerson = packageId === "oro" ? 1 : 750;
   const occupiedSpots = selectedTime ? (bookingsCapacity[selectedDateStr]?.[selectedTime] || 0) : 0;
   const remainingSpots = maxCapacityLimit - occupiedSpots;
 
@@ -197,7 +197,7 @@ export default function ExperienceDetail({
     oro: {
       es: {
         title: "Experiencia Casa Loy Oro",
-        price: "$550.00",
+        price: "$1.00",
         duration: "2.5 Horas",
         capacity: "Máximo 20 personas",
         desc: "Un viaje de origen a través de nuestro campo de agaves y procesos de destilación artesanal, culminando con una cata privada y nuestro prestigioso obsequio.",
@@ -237,7 +237,7 @@ export default function ExperienceDetail({
       },
       en: {
         title: "Casa Loy Gold Experience",
-        price: "$550.00",
+        price: "$1.00",
         duration: "2.5 Hours",
         capacity: "Max 20 people",
         desc: "A journey of origin through our agave fields and artisanal distillation processes, culminating with a private tasting and our prestigious gift.",
