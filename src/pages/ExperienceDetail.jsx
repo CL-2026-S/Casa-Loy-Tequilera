@@ -1213,25 +1213,7 @@ export default function ExperienceDetail({
                                   />
                                 </div>
 
-                                {/* Mercado Pago Checkout Button */}
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setSelectedPaymentMethod("mercadopago");
-                                    handleSimulatePayment("mercadopago");
-                                  }}
-                                  disabled={isPaying}
-                                  className="w-full bg-[#009EE3] hover:bg-[#0087c2] active:scale-[0.98] text-white py-2.5 font-sans font-bold text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
-                                >
-                                  {isPaying && selectedPaymentMethod === "mercadopago" ? (
-                                    <span className="animate-pulse">{activeT.payProcessing}</span>
-                                  ) : (
-                                    <>
-                                      <span>Pagar con</span>
-                                      <span className="font-extrabold italic lowercase">mercado pago</span>
-                                    </>
-                                  )}
-                                </button>
+
                               </div>
                             )}
                           </div>

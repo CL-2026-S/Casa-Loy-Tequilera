@@ -358,8 +358,8 @@ export default function Turismo({ lang, setPage }) {
             <a
               href={
                 lang === "es"
-                  ? "https://wa.me/523481337135?text=Hola%2C%20me%20gustar%C3%ADa%20cotizar%20una%20cata%20privada%20o%20evento%20en%20Casa%20Loy."
-                  : "https://wa.me/523481337135?text=Hello%2C%20I%20would%20like%20to%20get%20a%20quote%20for%20a%20private%20tasting%20or%20event%20at%20Casa%20Loy."
+                  ? "https://wa.me/5213481337135?text=Hola%2C%20me%20gustar%C3%ADa%20cotizar%20una%20cata%20privada%20o%20evento%20en%20Casa%20Loy."
+                  : "https://wa.me/5213481337135?text=Hello%2C%20I%20would%20like%20to%20get%20a%20quote%20for%20a%20private%20tasting%20or%20event%20at%20Casa%20Loy."
               }
               target="_blank"
               rel="noopener noreferrer"
