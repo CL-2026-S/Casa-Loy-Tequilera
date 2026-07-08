@@ -52,43 +52,53 @@ export default function Maquilas({ lang = "es" }) {
   
   // Cal.com Integration
   useEffect(() => {
-    // Initialize the Cal command queue so the loaded script doesn't crash
-    window.Cal = window.Cal || function () {
-      (window.Cal.q = window.Cal.q || []).push(arguments);
-    };
-    window.Cal.q = window.Cal.q || [];
-
-    const initCal = () => {
-      window.Cal("init", { origin: "https://cal.com" });
-      window.Cal("inline", {
-        elementOrSelector: "#cal-inline",
-        calLink: "internacionalmarketers",
-        config: { 
-          layout: "month_view",
-          theme: "light"
+    // Official Cal.com Embed Loader Snippet
+    (function (C, A, L) {
+      let p = function (a, ar) { a.q.push(ar); };
+      let d = C.document;
+      C.Cal = C.Cal || function () {
+        let cal = C.Cal;
+        let ar = arguments;
+        if (!cal.loaded) {
+          cal.ns = {};
+          cal.q = cal.q || [];
+          d.head.appendChild(d.createElement("script")).src = A;
+          cal.loaded = true;
         }
-      });
-      window.Cal("ui", {
-        styles: {
-          branding: {
-            brandColor: "#8C4723"
-          }
-        },
-        hideEventTypeDetails: false,
-        layout: "month_view"
-      });
-    };
+        if (ar[0] === L) {
+          const api = function () { p(api, arguments); };
+          const namespace = ar[1];
+          api.q = api.q || [];
+          if (typeof namespace === "string") {
+            cal.ns[namespace] = cal.ns[namespace] || api;
+            p(cal.ns[namespace], ar);
+            p(cal, ["initNamespace", namespace]);
+          } else p(cal, ar);
+          return;
+        }
+        p(cal, ar);
+      };
+    })(window, "https://app.cal.com/embed/embed.js", "init");
 
-    if (document.getElementById("cal-embed-script")) {
-      initCal();
-    } else {
-      const s = document.createElement("script");
-      s.id = "cal-embed-script";
-      s.async = true;
-      s.src = "https://app.cal.com/embed/embed.js";
-      s.onload = initCal;
-      document.body.appendChild(s);
-    }
+    // Initialize and configure the widget
+    window.Cal("init", { origin: "https://cal.com" });
+    window.Cal("inline", {
+      elementOrSelector: "#cal-inline",
+      calLink: "internacionalmarketers",
+      config: { 
+        layout: "month_view",
+        theme: "light"
+      }
+    });
+    window.Cal("ui", {
+      styles: {
+        branding: {
+          brandColor: "#8C4723"
+        }
+      },
+      hideEventTypeDetails: false,
+      layout: "month_view"
+    });
   }, []);
 
   const content = {
