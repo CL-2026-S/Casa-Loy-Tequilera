@@ -843,51 +843,14 @@ export default function Maquilas({ lang = "es" }) {
 
       {/* Contact & Dynamic Scheduler */}
       <section className="py-section-gap px-margin-desktop max-w-container-max mx-auto text-left" id="contact">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+        <div className="flex flex-col gap-16 items-center">
           
-          <div className="space-y-12">
-            <h2 className="font-headline-lg text-4xl md:text-6xl leading-tight">
-              {currentT.contactTitle}
-            </h2>
-            
-            <div className="bg-[#EDE7DE]/40 p-8 md:p-10 border border-outline-variant flex flex-col md:flex-row items-center gap-8 shadow-sm">
-              <div className="w-24 h-24 flex-shrink-0 bg-stone-300 border border-outline-variant overflow-hidden">
-                <img
-                  alt="Fernanda Quintana"
-                  className="w-full h-full object-cover"
-                  src="/Ejecutiva.jpeg"
-                />
-              </div>
-              <div className="space-y-2">
-                <h3 className="font-headline-md text-xl font-bold">Fernanda Quintana</h3>
-                <p className="font-body-md text-primary text-xs uppercase font-semibold">
-                  {currentT.pmRole}
-                </p>
-                <div className="flex flex-col gap-1 text-sm font-navigation text-on-surface-variant font-normal">
-                  <a className="hover:text-primary transition-colors" href="mailto:fquintana@casaloy.com">
-                    fquintana@casaloy.com
-                  </a>
-                  <div className="mt-3 space-y-2 text-sm">
-                    <a 
-                      href="tel:+5213332557018" 
-                      className="flex items-center gap-2 hover:text-primary transition-colors group w-fit"
-                    >
-                      <MexicoFlag />
-                      <span className="text-[#1c1c18]/70 group-hover:text-primary transition-colors">+52 1 33 3255 7018</span>
-                    </a>
-                    <a 
-                      href="tel:+523332557018" 
-                      className="flex items-center gap-2 hover:text-primary transition-colors group w-fit"
-                    >
-                      <USFlag />
-                      <span className="text-[#1c1c18]/70 group-hover:text-primary transition-colors">011 52 33 3255 7018</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-6">
+          {/* Fernanda Profile Card */}
+          <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div className="lg:col-span-7 space-y-6">
+              <h2 className="font-headline-lg text-4xl md:text-5xl leading-tight">
+                {currentT.contactTitle}
+              </h2>
               <p className="font-body-lg italic leading-relaxed text-on-surface-variant font-light">
                 {currentT.pmQuote}
               </p>
@@ -898,12 +861,49 @@ export default function Maquilas({ lang = "es" }) {
                 </span>
               </div>
             </div>
+            
+            <div className="lg:col-span-5 bg-[#EDE7DE]/40 p-6 md:p-8 border border-outline-variant flex flex-col sm:flex-row items-center gap-6 shadow-sm">
+              <div className="w-20 h-20 flex-shrink-0 bg-stone-300 border border-outline-variant overflow-hidden">
+                <img
+                  alt="Fernanda Quintana"
+                  className="w-full h-full object-cover"
+                  src="/Ejecutiva.jpeg"
+                />
+              </div>
+              <div className="space-y-1.5 min-w-0">
+                <h3 className="font-headline-md text-lg font-bold">Fernanda Quintana</h3>
+                <p className="font-body-md text-primary text-[10px] uppercase font-semibold tracking-wider">
+                  {currentT.pmRole}
+                </p>
+                <div className="flex flex-col gap-0.5 text-xs font-navigation text-on-surface-variant font-normal">
+                  <a className="hover:text-primary transition-colors" href="mailto:fquintana@casaloy.com">
+                    fquintana@casaloy.com
+                  </a>
+                  <div className="mt-2 space-y-1">
+                    <a 
+                      href="tel:+5213332557018" 
+                      className="flex items-center gap-1.5 hover:text-primary transition-colors group w-fit text-[11px]"
+                    >
+                      <MexicoFlag />
+                      <span className="text-[#1c1c18]/70 group-hover:text-primary transition-colors">+52 1 33 3255 7018</span>
+                    </a>
+                    <a 
+                      href="tel:+523332557018" 
+                      className="flex items-center gap-1.5 hover:text-primary transition-colors group w-fit text-[11px]"
+                    >
+                      <USFlag />
+                      <span className="text-[#1c1c18]/70 group-hover:text-primary transition-colors">011 52 33 3255 7018</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Scheduler Container */}
-          <div className="w-full">
-            <div className="bg-white border border-outline-variant p-6 md:p-8 shadow-2xl relative min-h-[650px] flex flex-col justify-start">
-              <div className="mb-6 border-b border-outline-variant/30 pb-4">
+          <div className="w-full max-w-5xl">
+            <div className="bg-white border border-outline-variant p-4 md:p-8 shadow-2xl relative min-h-[700px] flex flex-col justify-start">
+              <div className="mb-6 border-b border-outline-variant/30 pb-4 text-center md:text-left">
                 <h4 className="font-headline-md text-2xl mb-2">{currentT.schedulerTitle}</h4>
                 <p className="font-body-md text-on-surface-variant/80 font-light">
                   {currentT.schedulerDesc}
@@ -913,7 +913,7 @@ export default function Maquilas({ lang = "es" }) {
               {/* Cal.com Embed Container */}
               <div 
                 id="cal-inline" 
-                style={{ width: "100%", height: "100%", minHeight: "550px", overflow: "scroll" }}
+                style={{ width: "100%", height: "100%", minHeight: "750px" }}
               />
             </div>
           </div>
