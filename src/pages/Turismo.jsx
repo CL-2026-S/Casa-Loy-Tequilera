@@ -15,7 +15,7 @@ export default function Turismo({ lang, setPage }) {
       expDesc: "Cada tour está diseñado para ofrecer una visión íntima de nuestro proceso artesanal, desde el campo hasta la cava subterránea.",
       
       tourOroTitle: "Experiencia Casa Loy Oro",
-      tourOroPrice: "MXN 1.00 / Persona",
+      tourOroPrice: "MXN 550.00 / Persona",
       tourOroBullet1: "✓ Recorrido campo de agaves",
       tourOroBullet2: "✓ Murales e Historia",
       tourOroBullet3: "✓ Recorrido por la fábrica",
@@ -66,8 +66,8 @@ export default function Turismo({ lang, setPage }) {
       eventsBtnFolleto: "Descargar Folleto",
 
       guestsLabel: "Número de Personas",
-      remainingSpots: "Lugares disponibles: {spots} de 20",
-      soldOut: "Horario Agotado (Límite 20 cupos)",
+      remainingSpots: "Lugares disponibles: {spots} de 50",
+      soldOut: "Horario Agotado (Límite 50 cupos)",
       selectTourLabel: "Experiencia seleccionada",
     },
     en: {
@@ -82,7 +82,7 @@ export default function Turismo({ lang, setPage }) {
       expDesc: "Each tour is designed to offer an intimate view of our process, from the field to the underground cellar.",
       
       tourOroTitle: "Casa Loy Gold Experience",
-      tourOroPrice: "MXN 1.00 / Person",
+      tourOroPrice: "MXN 550.00 / Person",
       tourOroBullet1: "✓ Agave fields tour",
       tourOroBullet2: "✓ Murals & History",
       tourOroBullet3: "✓ Tour of the factory",
@@ -133,8 +133,8 @@ export default function Turismo({ lang, setPage }) {
       eventsBtnFolleto: "Download Brochure",
 
       guestsLabel: "Number of Guests",
-      remainingSpots: "Available spots: {spots} of 20",
-      soldOut: "Time Slot Sold Out (Limit 20 spots)",
+      remainingSpots: "Available spots: {spots} of 50",
+      soldOut: "Time Slot Sold Out (Limit 50 spots)",
       selectTourLabel: "Selected Experience",
     }
   };

@@ -9,9 +9,9 @@ const packagesData = {
   oro: {
     es: {
       title: "Experiencia Casa Loy Oro",
-      price: "$1.00",
+      price: "$550.00",
       duration: "2.5 Horas",
-      capacity: "Máximo 20 personas",
+      capacity: "Máximo 50 personas",
       desc: "Un viaje de origen a través de nuestro campo de agaves y procesos de destilación artesanal, culminando con una cata privada y nuestro prestigioso obsequio.",
       heroImg: "/Exp_test_1.jpeg",
       features: [
@@ -26,32 +26,32 @@ const packagesData = {
           img: "/Exp_test_2.jpeg"
         },
         {
-          title: "Recorrido por la fábrica",
-          desc: "Conoce de primera mano la destilación artesanal, desde la cocción de las piñas en hornos tradicionales de piedra hasta los alambiques de cobre.",
+          title: "Recorrido por la destilería",
+          desc: "Conoce de primera mano la destilería y descubre el proceso detrás de nuestras expresiones de tequila.",
           img: "/Exp_test_3.jpeg"
         },
         {
           title: "Cata en cava subterránea",
-          desc: "Una experiencia mística bajo tierra, degustando nuestras expresiones de tequila en una cava privada iluminada por velas.",
+          desc: "Experiencia sensorial: activa tus 5 sentidos y degusta nuestras expresiones de tequila en nuestra cava subterránea.",
           img: "/Exp_test_4.jpeg"
         },
         {
           title: "Mixología de autor",
-          desc: "Degusta cócteles exclusivos elaborados por nuestros bartenders con ingredientes locales y el toque característico de Casa Loy.",
+          desc: "Degusta cocteles de autor elaborados por nuestro mixólogo con ingredientes locales y el toque característico de nuestras expresiones de tequila.",
           img: "/Exp_test_5.jpeg"
         },
         {
           title: "Botella de TADDEL 200 ML",
           desc: "Lleva a casa una muestra de nuestra pasión: una botella de tequila TADDEL de 200 ml, lista para compartir o resguardar.",
-          img: "/Exp_test_6.jpeg"
+          img: "/taddel_200ml_bottle.png"
         }
       ]
     },
     en: {
       title: "Casa Loy Gold Experience",
-      price: "$1.00",
+      price: "$550.00",
       duration: "2.5 Hours",
-      capacity: "Max 20 people",
+      capacity: "Max 50 people",
       desc: "A journey of origin through our agave fields and artisanal distillation processes, culminating with a private tasting and our prestigious gift.",
       heroImg: "/Exp_test_1.jpeg",
       features: [
@@ -66,24 +66,24 @@ const packagesData = {
           img: "/Exp_test_2.jpeg"
         },
         {
-          title: "Factory Tour",
-          desc: "Witness artisanal distillation firsthand, from cooking agave pinas in traditional stone ovens to copper stills.",
+          title: "Distillery Tour",
+          desc: "Witness firsthand our distillery and discover the process behind our tequila expressions.",
           img: "/Exp_test_3.jpeg"
         },
         {
           title: "Underground Cellar Tasting",
-          desc: "A mystical experience underground, tasting our select tequila expressions in a candlelit private cellar.",
+          desc: "Sensory experience: activate your 5 senses and taste our tequila expressions in our underground cellar.",
           img: "/Exp_test_4.jpeg"
         },
         {
           title: "Signature Mixology",
-          desc: "Savor exclusive cocktails crafted by our mixologists with local ingredients and the distinctive Casa Loy touch.",
+          desc: "Savor signature cocktails crafted by our mixologist with local ingredients and the characteristic touch of our tequila expressions.",
           img: "/Exp_test_5.jpeg"
         },
         {
           title: "TADDEL 200 ML Bottle",
           desc: "Take home a piece of our passion: a boutique 200 ml bottle of TADDEL tequila, ready to share or collect.",
-          img: "/Exp_test_6.jpeg"
+          img: "/taddel_200ml_bottle.png"
         }
       ]
     }
@@ -93,7 +93,7 @@ const packagesData = {
       title: "Experiencia Casa Loy Platino",
       price: "$750.00",
       duration: "4.0 Horas",
-      capacity: "Máximo 20 personas",
+      capacity: "Máximo 50 personas",
       desc: "La experiencia insignia que fusiona el arte del tequila premium con la alta gastronomía de nuestro restaurante 1937 Nativo.",
       heroImg: "/Exp_test_7.jpeg",
       features: [
@@ -109,27 +109,27 @@ const packagesData = {
         },
         {
           title: "Recorrido por la fábrica",
-          desc: "Explora todo el proceso, desde el jimado tradicional hasta la molienda con tahona y la fermentación controlada.",
+          desc: "Desde la siembra hasta la elaboración de nuestras expresiones de tequila.",
           img: "/Exp_test_10.jpeg"
         },
         {
           title: "Cata en cava subterránea",
-          desc: "Cata guiada de nuestras mejores barricas en un entorno lleno de historia, misticismo y silencio.",
+          desc: "Cata sensorial de nuestras expresiones, llenas de notas, aromas y matices que reflejan nuestra tradición tequilera.",
           img: "/Exp_test_11.jpeg"
         },
         {
           title: "Mixología de autor",
-          desc: "Cócteles contemporáneos diseñados para maridar con la atmósfera y los paisajes de la hacienda.",
+          desc: "Cocteles de autor diseñados para maridar con gastronomía contemporánea.",
           img: "/Exp_test_12.jpeg"
         },
         {
           title: "Comida de 3 tiempos",
-          desc: "Una experiencia culinaria completa en 1937 Nativo: Entrada de la casa, Plato a escoger entre 3 opciones de autor y un Postre artesanal.",
+          desc: "Una experiencia culinaria completa en 1937 Nativo: Entrada de la casa, Plato a escoger entre 3 opciones de autor y un delicioso postre.",
           img: "/Exp_test_13.jpeg"
         },
         {
           title: "Bebida (2 por persona)",
-          desc: "Acompaña tu comida con 2 bebidas selectas por persona para complementar la propuesta gastronómica del chef.",
+          desc: "Acompaña tu comida con 2 bebidas selectas por persona para complementar la propuesta gastronomómica del chef.",
           img: "/Exp_test_14.jpeg"
         }
       ]
@@ -138,7 +138,7 @@ const packagesData = {
       title: "Casa Loy Platinum Experience",
       price: "$750.00",
       duration: "4.0 Hours",
-      capacity: "Max 20 people",
+      capacity: "Max 50 people",
       desc: "Our flagship experience fusing premium tequila craftsmanship with fine dining at our 1937 Nativo restaurant.",
       heroImg: "/Exp_test_7.jpeg",
       features: [
@@ -154,22 +154,22 @@ const packagesData = {
         },
         {
           title: "Factory Tour",
-          desc: "Explore the entire process from traditional harvesting to tahona stone milling and controlled fermentation.",
+          desc: "From planting to the crafting of our tequila expressions.",
           img: "/Exp_test_10.jpeg"
         },
         {
           title: "Underground Cellar Tasting",
-          desc: "A guided tasting of our finest barrels in a setting rich with history, mysticism, and quiet aging.",
+          desc: "Sensory tasting of our expressions, full of notes, aromas, and nuances that reflect our tequila tradition.",
           img: "/Exp_test_11.jpeg"
         },
         {
           title: "Signature Mixology",
-          desc: "Contemporary cocktails designed to pair perfectly with the estate's atmosphere and views.",
+          desc: "Signature cocktails designed to pair with contemporary gastronomy.",
           img: "/Exp_test_12.jpeg"
         },
         {
           title: "3-Course Fine Dining",
-          desc: "A complete dining experience at 1937 Nativo: House appetizer, selection of 3 main courses, and an artisanal dessert.",
+          desc: "A complete dining experience at 1937 Nativo: House appetizer, selection of 3 main courses, and a delicious dessert.",
           img: "/Exp_test_13.jpeg"
         },
         {
@@ -185,13 +185,13 @@ const packagesData = {
       title: "Experiencia Casa Loy Diamante",
       price: "$1,500.00",
       duration: "4.0 Horas",
-      capacity: "Máximo 20 personas",
+      capacity: "Máximo 50 personas",
       desc: "Una experiencia gastronómica y de tequila de primer nivel que ofrece acceso a colecciones privadas, mixología de autor, cata subterránea y el menú de lujo de 1937 Nativo.",
       heroImg: "/Exp_test_15.jpeg",
       features: [
         {
           title: "Recorrido campo de agaves",
-          desc: "Camina por los predios más antiguos de la hacienda y jima una piña de agave con tus propias manos guiado por un jimador maestro.",
+          desc: "Camina por los campos de la destilería guiado por nuestros expertos.",
           img: "/Exp_test_15.jpeg"
         },
         {
@@ -201,12 +201,12 @@ const packagesData = {
         },
         {
           title: "Recorrido por la destilería",
-          desc: "Aprende el minucioso proceso técnico de destilación y fermentación en tanques de acero y madera tradicional.",
+          desc: "Aprende el minucioso proceso de destilación para lograr nuestras expresiones de tequila.",
           img: "/Exp_test_17.jpeg"
         },
         {
           title: "Cata en cava subterránea",
-          desc: "Degustación exclusiva de tequilas añejos y extra añejos directamente de barricas seleccionadas.",
+          desc: "Cata sensorial: degusta nuestras expresiones de tequila y descubre sus aromas, notas y personalidad.",
           img: "/Exp_test_18.jpeg"
         },
         {
@@ -221,7 +221,7 @@ const packagesData = {
         },
         {
           title: "Kit de Souvenirs",
-          desc: "Llévate un recuerdo exclusivo de Casa Loy que incluye copas grabadas, una botella miniatura y obsequios de la hacienda.",
+          desc: "Llévate un recuerdo exclusivo de tu paso por Casa Loy Tequilera.",
           img: "/Exp_test_14.jpeg"
         }
       ]
@@ -230,13 +230,13 @@ const packagesData = {
       title: "Casa Loy Diamond Experience",
       price: "$1,500.00",
       duration: "4.0 Hours",
-      capacity: "Max 20 people",
+      capacity: "Max 50 people",
       desc: "A premier tequila and dining experience offering access to private reserves, signature mixology class, cellar tasting, and the special signature menu at 1937 Nativo.",
       heroImg: "/Exp_test_15.jpeg",
       features: [
         {
           title: "Agave Field Tour",
-          desc: "Walk through the estate's oldest agave fields and harvest a pina yourself guided by a master jimador.",
+          desc: "Walk through the distillery's fields guided by our experts.",
           img: "/Exp_test_15.jpeg"
         },
         {
@@ -246,12 +246,12 @@ const packagesData = {
         },
         {
           title: "Distillery Tour",
-          desc: "Learn the meticulous technical distillation process and fermentation in traditional steel and wood tanks.",
+          desc: "Learn the meticulous distillation process to achieve our tequila expressions.",
           img: "/Exp_test_17.jpeg"
         },
         {
           title: "Underground Cellar Tasting",
-          desc: "An exclusive tasting of aged and extra-aged tequilas straight from selected barrels in the private reserve.",
+          desc: "Sensory tasting: taste our tequila expressions and discover their aromas, notes, and personality.",
           img: "/Exp_test_18.jpeg"
         },
         {
@@ -266,7 +266,7 @@ const packagesData = {
         },
         {
           title: "Souvenir Kit",
-          desc: "Take home an exclusive Casa Loy souvenir pack including engraved glasses, a mini bottle, and estate gifts.",
+          desc: "Take home an exclusive souvenir of your visit to Casa Loy Tequilera.",
           img: "/Exp_test_14.jpeg"
         }
       ]
@@ -397,7 +397,13 @@ export default function ExperienceDetail({
 
   const [selectedDateStr, setSelectedDateStr] = useState(getInitialDateStr);
   const [selectedTime, setSelectedTime] = useState("");
-  const [numGuests, setNumGuests] = useState(1);
+  const [numAdults, setNumAdults] = useState(1);
+  const [numTeens, setNumTeens] = useState(0);
+  const [numChildren, setNumChildren] = useState(0);
+  const [isGroupQuote, setIsGroupQuote] = useState(false);
+
+  const numGuests = isGroupQuote ? 51 : (numAdults + numTeens + numChildren);
+
   const [paymentStep, setPaymentStep] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const [isPaying, setIsPaying] = useState(false);
@@ -433,7 +439,11 @@ export default function ExperienceDetail({
     }
   }, [blockedDates, bookingsCapacity, maxCapacityLimit]);
 
-  const pricePerPerson = packageId === "oro" ? 1 : 750;
+  const isPlatinoOrDiamante = packageId === "platino" || packageId === "diamante";
+  const adultPrice = packageId === "oro" ? 550 : packageId === "platino" ? 750 : 1500;
+  const teenPrice = 250;
+  const totalPrice = isGroupQuote ? 0 : ((numAdults * adultPrice) + (isPlatinoOrDiamante ? numTeens * teenPrice : 0));
+  const pricePerPerson = isGroupQuote ? 0 : (numGuests > 0 ? Math.round(totalPrice / numGuests) : adultPrice);
   const occupiedSpots = selectedTime ? (bookingsCapacity[selectedDateStr]?.[selectedTime] || 0) : 0;
   const remainingSpots = maxCapacityLimit - occupiedSpots;
 
@@ -586,7 +596,7 @@ export default function ExperienceDetail({
       date_str: selectedDateStr,
       time_str: selectedTime,
       guests: numGuests,
-      total_paid: numGuests * pricePerPerson,
+      total_paid: totalPrice,
       payment_method: paymentMethodName
     };
 
@@ -628,7 +638,7 @@ export default function ExperienceDetail({
           date: selectedDateStr,
           time: selectedTime,
           guests: numGuests,
-          amount: numGuests * pricePerPerson,
+          amount: totalPrice,
           method: paymentMethodName,
           timestamp: new Date().toLocaleString()
         };
@@ -949,8 +959,8 @@ export default function ExperienceDetail({
                         <p><strong>Experiencia:</strong> {activeData.title}</p>
                         <p><strong>Fecha:</strong> {formatReservationDate(selectedDateStr)}</p>
                         <p><strong>Hora:</strong> {selectedTime}</p>
-                        <p><strong>Visitantes:</strong> {numGuests}</p>
-                        <p><strong>Total pagado:</strong> ${numGuests * pricePerPerson} MXN</p>
+                        <p><strong>{lang === "es" ? "Visitantes" : "Guests"}:</strong> {numAdults} {lang === "es" ? "Adulto(s)" : "Adult(s)"}{numTeens > 0 ? `, ${numTeens} ${lang === "es" ? "Jóven(es)" : "Youth(s)"}` : ''}{numChildren > 0 ? `, ${numChildren} ${lang === "es" ? "Niño(s)" : "Child(ren)"}` : ''}</p>
+                        <p><strong>{lang === "es" ? "Total pagado" : "Total paid"}:</strong> ${totalPrice} MXN</p>
                       </div>
                     </div>
 
@@ -1129,7 +1139,7 @@ export default function ExperienceDetail({
                                 {/* PayPal Real Checkout Button */}
                                 <div className="w-full">
                                   <PayPalButtons
-                                    forceReRender={[numGuests, pricePerPerson, selectedDateStr, selectedTime, clientName, clientEmail, clientPhone]}
+                                    forceReRender={[numGuests, totalPrice, selectedDateStr, selectedTime, clientName, clientEmail, clientPhone]}
                                     style={{ layout: "vertical", color: "gold", shape: "rect", label: "paypal", height: 40 }}
                                     createOrder={async (data, actions) => {
                                       if (isSlotBlocked(selectedDateStr, selectedTime)) {
@@ -1145,7 +1155,7 @@ export default function ExperienceDetail({
                                         if (checkRes.ok && contentType && contentType.includes("application/json")) {
                                           const checkData = await checkRes.json();
                                           const currentOccupied = checkData.bookingsCapacity?.[selectedDateStr]?.[selectedTime] || 0;
-                                          const currentLimit = checkData.maxCapacityLimit || 20;
+                                          const currentLimit = checkData.maxCapacityLimit || 50;
                                           if (currentOccupied + numGuests > currentLimit) {
                                             alert(lang === "es"
                                               ? "¡Lo sentimos! Este horario se ha quedado sin cupos disponibles. Selecciona otra fecha u hora."
@@ -1180,10 +1190,10 @@ export default function ExperienceDetail({
                                         purchase_units: [
                                           {
                                             amount: {
-                                              value: (numGuests * pricePerPerson).toString(),
+                                              value: totalPrice.toString(),
                                               currency_code: "MXN"
                                             },
-                                            description: `${activeData.title} - ${numGuests} ${numGuests === 1 ? "persona" : "personas"}`
+                                            description: `${activeData.title} - ${numAdults} Ad, ${numTeens} Jv, ${numChildren} Nñ`
                                           }
                                         ]
                                       });
@@ -1246,8 +1256,10 @@ export default function ExperienceDetail({
                           </div>
                           <div className="flex-1 min-w-0">
                             <h6 className="font-sans text-sm font-bold text-stone-800 leading-snug">{activeData.title}</h6>
-                            <span className="text-[10px] text-stone-500 font-light block mt-0.5">
-                              {numGuests} {numGuests === 1 ? (lang === "es" ? "visitante" : "guest") : (lang === "es" ? "visitantes" : "guests")}
+                            <span className="text-[10px] text-stone-500 font-light block mt-0.5 leading-tight">
+                              {numAdults} {numAdults === 1 ? (lang === "es" ? "adulto" : "adult") : (lang === "es" ? "adultos" : "adults")}
+                              {numTeens > 0 && `, ${numTeens} ${numTeens === 1 ? (lang === "es" ? "joven" : "youth") : (lang === "es" ? "jóvenes" : "youths")}`}
+                              {numChildren > 0 && `, ${numChildren} ${numChildren === 1 ? (lang === "es" ? "niño" : "child") : (lang === "es" ? "niños" : "children")}`}
                             </span>
                           </div>
                           <span className="font-sans text-xs font-semibold text-stone-700">{activeData.price}</span>
@@ -1272,7 +1284,7 @@ export default function ExperienceDetail({
                         {/* Grand Total */}
                         <div className="flex justify-between text-base font-serif font-bold pt-3 border-t border-outline-variant/20 text-on-surface">
                           <span>{activeT.payTotal}</span>
-                          <span className="text-primary text-base">${numGuests * pricePerPerson} MXN</span>
+                          <span className="text-primary text-base">${totalPrice} MXN</span>
                         </div>
                       </div>
                     </div>
@@ -1402,33 +1414,184 @@ export default function ExperienceDetail({
                       </div>
 
                       {/* Guests count selector */}
-                      <div>
-                        <label className="block text-[10px] font-semibold font-navigation uppercase tracking-widest text-primary mb-2">
+                      <div className="space-y-4 border-t border-outline-variant/20 pt-4">
+                        <label className="block text-[10px] font-semibold font-navigation uppercase tracking-widest text-primary">
                           {activeT.guestsLabel}
                         </label>
-                        <select
-                          value={numGuests}
-                          onChange={(e) => setNumGuests(parseInt(e.target.value))}
-                          disabled={!selectedTime || remainingSpots <= 0}
-                          className="w-full bg-white border border-outline-variant p-2 font-sans text-xs focus:outline-none focus:border-primary disabled:opacity-50 text-on-surface"
-                        >
-                          {!selectedTime ? (
-                            <option value="1">1 {lang === "es" ? "Persona" : "Person"}</option>
-                          ) : remainingSpots > 0 ? (
-                            Array.from({ length: Math.min(10, remainingSpots) }, (_, i) => i + 1).map(
-                              (val) => (
-                                <option key={val} value={val}>
-                                  {val} {val === 1 ? (lang === "es" ? "Persona" : "Person") : (lang === "es" ? "Personas" : "People")}
-                                </option>
-                              )
-                            )
-                          ) : (
-                            <option value="0">0</option>
-                          )}
-                        </select>
+                        
+                        {!isGroupQuote ? (
+                          <div className="space-y-3 bg-stone-50/50 p-3 border border-outline-variant/30">
+                            {/* Adults */}
+                            <div className="flex justify-between items-center">
+                              <div>
+                                <span className="font-sans text-xs font-semibold text-stone-800">
+                                  {lang === "es" ? "Adultos" : "Adults"}
+                                </span>
+                                <span className="text-[10px] text-stone-500 font-light block">
+                                  {lang === "es" ? `Desde 18 años (${activeData.price} MXN)` : `Ages 18+ (${activeData.price} MXN)`}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setNumAdults(Math.max(1, numAdults - 1));
+                                  }}
+                                  className="w-7 h-7 flex items-center justify-center border border-outline-variant bg-white hover:bg-stone-100 text-stone-700 cursor-pointer disabled:opacity-30"
+                                  disabled={numAdults <= 1 || !selectedTime}
+                                >
+                                  -
+                                </button>
+                                <span className="font-serif text-sm font-bold w-6 text-center">{numAdults}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setNumAdults(numAdults + 1);
+                                  }}
+                                  className="w-7 h-7 flex items-center justify-center border border-outline-variant bg-white hover:bg-stone-100 text-stone-700 cursor-pointer disabled:opacity-30"
+                                  disabled={!selectedTime || (numGuests >= remainingSpots && numGuests < 50)}
+                                >
+                                  +
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Teens 10-17 (Only Platino/Diamante) */}
+                            {isPlatinoOrDiamante && (
+                              <div className="flex justify-between items-center border-t border-outline-variant/10 pt-3">
+                                <div>
+                                  <span className="font-sans text-xs font-semibold text-stone-800">
+                                    {lang === "es" ? "Jóvenes (10 a 17 años)" : "Youth (Ages 10-17)"}
+                                  </span>
+                                  <span className="text-[10px] text-stone-500 font-light block leading-tight">
+                                    {lang === "es" ? "Tarifa $250.00 MXN - No incluye comida" : "Price $250.00 MXN - Meal not included"}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setNumTeens(Math.max(0, numTeens - 1));
+                                    }}
+                                    className="w-7 h-7 flex items-center justify-center border border-outline-variant bg-white hover:bg-stone-100 text-stone-700 cursor-pointer disabled:opacity-30"
+                                    disabled={numTeens <= 0 || !selectedTime}
+                                  >
+                                    -
+                                  </button>
+                                  <span className="font-serif text-sm font-bold w-6 text-center">{numTeens}</span>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setNumTeens(numTeens + 1);
+                                    }}
+                                    className="w-7 h-7 flex items-center justify-center border border-outline-variant bg-white hover:bg-stone-100 text-stone-700 cursor-pointer disabled:opacity-30"
+                                    disabled={!selectedTime || (numGuests >= remainingSpots && numGuests < 50)}
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Children under 10 */}
+                            <div className="flex justify-between items-center border-t border-outline-variant/10 pt-3">
+                              <div>
+                                <span className="font-sans text-xs font-semibold text-stone-800">
+                                  {lang === "es" ? "Niños (Menores de 10 años)" : "Children (Under 10)"}
+                                </span>
+                                <span className="text-[10px] text-stone-500 font-light block leading-tight">
+                                  {lang === "es" ? "Gratis - Zonas especiales, no todo el recorrido" : "Free - Special zones only, not full tour"}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setNumChildren(Math.max(0, numChildren - 1));
+                                  }}
+                                  className="w-7 h-7 flex items-center justify-center border border-outline-variant bg-white hover:bg-stone-100 text-stone-700 cursor-pointer disabled:opacity-30"
+                                  disabled={numChildren <= 0 || !selectedTime}
+                                >
+                                  -
+                                </button>
+                                <span className="font-serif text-sm font-bold w-6 text-center">{numChildren}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setNumChildren(numChildren + 1);
+                                  }}
+                                  className="w-7 h-7 flex items-center justify-center border border-outline-variant bg-white hover:bg-stone-100 text-stone-700 cursor-pointer disabled:opacity-30"
+                                  disabled={!selectedTime || (numGuests >= remainingSpots && numGuests < 50)}
+                                >
+                                  +
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="bg-primary/5 border border-primary/20 p-4 text-xs font-sans text-stone-700 space-y-2">
+                            <p className="font-bold text-primary uppercase tracking-wider text-[10px]">
+                              {lang === "es" ? "👥 Cotización Especial de Grupo" : "👥 Special Group Quote"}
+                            </p>
+                            <p className="leading-relaxed">
+                              {lang === "es"
+                                ? "Para visitas de más de 50 personas o eventos especiales, ofrecemos cotizaciones personalizadas y atención directa por WhatsApp."
+                                : "For visits of more than 50 people or special events, we offer personalized quotes and direct assistance via WhatsApp."}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Special Group Booking Options / Events */}
+                        <div className="pt-1">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (isGroupQuote) {
+                                setIsGroupQuote(false);
+                                setNumAdults(1);
+                                setNumTeens(0);
+                                setNumChildren(0);
+                              } else {
+                                setIsGroupQuote(true);
+                              }
+                            }}
+                            className={`w-full py-2 px-3 border text-[10px] text-center font-navigation uppercase tracking-wider transition-all cursor-pointer ${
+                              isGroupQuote
+                                ? "border-primary bg-primary text-white font-bold"
+                                : "border-outline text-on-surface hover:bg-[#fcf9f3]"
+                            }`}
+                          >
+                            {isGroupQuote 
+                              ? (lang === "es" ? "◀ Volver a Selección de Personas" : "◀ Back to Guest Selection")
+                              : (lang === "es" ? "👥 ¿Grupo de +50 personas? Cotiza aquí" : "👥 Group of +50 people? Get quote here")}
+                          </button>
+                        </div>
                       </div>
 
-                      {selectedTime && (
+                      {/* Warnings / Safety notes about minors in distillery */}
+                      {(numChildren > 0 || numTeens > 0) && (
+                        <div className="bg-stone-50 border-l-2 border-primary/40 p-3 text-[10.5px] font-sans text-on-surface-variant font-light space-y-1 select-none">
+                          <p className="font-bold text-primary uppercase tracking-wider text-[9px] mb-0.5">
+                            {lang === "es" ? "⚠️ Aviso Importante de Seguridad" : "⚠️ Important Safety Notice"}
+                          </p>
+                          {numChildren > 0 && (
+                            <p>
+                              • {lang === "es" 
+                                ? "Al ser una destilería en operaciones, los menores de 10 años tienen permitido el acceso únicamente a áreas seguras/especiales y no a todo el recorrido del proceso productivo."
+                                : "As an operating distillery, children under 10 are allowed access only to designated safe areas and not the full production process tour."}
+                            </p>
+                          )}
+                          {numTeens > 0 && (
+                            <p>
+                              • {lang === "es"
+                                ? "Los jóvenes de 10 a 17 años deben estar acompañados por un adulto en todo momento y no se les permite degustar bebidas alcohólicas (la mixología se sirve sin alcohol)."
+                                : "Youth aged 10 to 17 must be accompanied by an adult at all times and are not permitted to taste alcoholic beverages (mixology will be served alcohol-free)."}
+                            </p>
+                          )}
+                        </div>
+                      )}
+
+                      {selectedTime && !isGroupQuote && (
                         <div className="text-[11px] font-sans font-light">
                           {remainingSpots > 0 ? (
                             <p className="text-on-surface-variant border-t border-outline-variant/10 pt-1 text-[10px]">
@@ -1444,17 +1607,35 @@ export default function ExperienceDetail({
                         </div>
                       )}
 
-                      <button
-                        onClick={handleProceedToPayment}
-                        disabled={!selectedTime || remainingSpots <= 0 || numGuests > remainingSpots || isSlotBlocked(selectedDateStr, selectedTime)}
-                        className={`w-full py-3.5 font-label-caps text-[10px] uppercase tracking-widest transition-all shadow-md active:scale-[0.98] ${
-                          selectedTime && remainingSpots >= numGuests && !isSlotBlocked(selectedDateStr, selectedTime)
-                            ? "bg-primary text-on-primary hover:bg-[#9a5625]"
-                            : "bg-stone-300 text-stone-500 cursor-not-allowed"
-                        }`}
-                      >
-                        {activeT.confirmBtn}
-                      </button>
+                      {isGroupQuote ? (
+                        <a
+                          href={`https://wa.me/5213481337135?text=${encodeURIComponent(
+                            lang === "es"
+                              ? `Hola, me gustaría cotizar una visita para un grupo de más de 50 personas para la ${activeData.title}.`
+                              : `Hello, I would like to get a quote for a group of more than 50 people for the ${activeData.title}.`
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full py-3.5 bg-[#25D366] hover:bg-[#20ba5a] text-white font-label-caps text-[11px] uppercase tracking-widest transition-all shadow-md flex items-center justify-center gap-2 font-bold cursor-pointer text-center"
+                        >
+                          <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.805-9.805.001-2.621-1.013-5.086-2.86-6.936C16.37 1.947 13.907 1.01 11.996 1.01c-5.41 0-9.813 4.402-9.815 9.813-.001 1.638.455 3.236 1.32 4.654L2.46 19.95l4.187-1.096L6.647 19.16zM17.15 14.5c-.282-.141-1.664-.822-1.921-.916-.257-.094-.445-.141-.631.141-.188.281-.727.916-.891 1.101-.164.186-.328.21-.61.07-2.8-.14-4.88-1.22-6.52-3.08-.282-.482.282-.447.805-1.492.083-.164.041-.309-.021-.45-.062-.141-.563-1.36-.77-1.859-.203-.489-.407-.423-.563-.431-.145-.007-.312-.009-.48-.009-.168 0-.441.063-.672.312-.23.25-1.012.988-1.012 2.41 0 1.42 1.031 2.793 1.17 2.98.14.188 2.03 3.102 4.921 4.35.688.297 1.224.474 1.644.607.69.219 1.319.188 1.816.114.553-.082 1.664-.68 1.898-1.336.234-.656.234-1.219.164-1.336-.07-.117-.258-.188-.54-.328z"/>
+                          </svg>
+                          <span>{lang === "es" ? "Cotizar por WhatsApp" : "Get Quote via WhatsApp"}</span>
+                        </a>
+                      ) : (
+                        <button
+                          onClick={handleProceedToPayment}
+                          disabled={!selectedTime || remainingSpots <= 0 || numGuests > remainingSpots || isSlotBlocked(selectedDateStr, selectedTime)}
+                          className={`w-full py-3.5 font-label-caps text-[10px] uppercase tracking-widest transition-all shadow-md active:scale-[0.98] ${
+                            selectedTime && remainingSpots >= numGuests && !isSlotBlocked(selectedDateStr, selectedTime)
+                              ? "bg-primary text-on-primary hover:bg-[#9a5625]"
+                              : "bg-stone-300 text-stone-500 cursor-not-allowed"
+                          }`}
+                        >
+                          {activeT.confirmBtn}
+                        </button>
+                      )}
                     </div>
                   </div>
                 )}

@@ -609,7 +609,7 @@ export default function AdminPanel({
                         min="1"
                         max="100"
                         value={maxCapacityLimit}
-                        onChange={(e) => setMaxCapacityLimit(parseInt(e.target.value) || 20)}
+                        onChange={(e) => setMaxCapacityLimit(parseInt(e.target.value) || 50)}
                         className="bg-white border border-outline-variant p-2 w-24 text-center text-sm font-bold focus:outline-none"
                       />
                       <button
@@ -1015,7 +1015,7 @@ export default function AdminPanel({
                             onChange={(e) => setManualTour(e.target.value)}
                             className="w-full bg-white border border-outline-variant p-2.5 text-xs focus:outline-none text-on-surface"
                           >
-                            <option value="oro">Casa Loy Oro ($1.00)</option>
+                            <option value="oro">Casa Loy Oro ($550.00)</option>
                             <option value="platino">Casa Loy Platino ($750.00)</option>
                             <option value="diamante">Casa Loy Diamante ($1,500.00)</option>
                           </select>

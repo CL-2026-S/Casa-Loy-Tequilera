@@ -465,7 +465,7 @@ const timelineEn = [
     year: "2024",
     title: "History Crosses Borders",
     desc: "Casa Loy Tequilera reaches the United States and Guatemala. What was born from the land and family begins to travel further, carrying the flavor, character, and history of Casa Loy.",
-    img: "/Empleado Casa Loy Tequilera in campos of Ayotlán.webp",
+    img: "/Empleado Casa Loy Tequilera en campos de Ayotlán.webp",
   },
   {
     year: "2025",
@@ -485,9 +485,9 @@ const timelineEn = [
     year: "2026",
     title: "Piedra y Agave",
     desc: "Casa Loy Piedra and Agave is born, the first expression crafted with tahona. A tequila uniting land, legacy, stone, and patience; a creation that is not only tasted, but also narrated, remembered, and shared.",
-    img: "/Banner Casa Loy Piedra and Agave-escritorio.webp",
-    imgMobile: "/Banner Casa Loy Piedra and Agave-movil.webp",
-    imgRetina: "/Banner Casa Loy Piedra and Agave-retina.webp",
+    img: "/Banner Casa Loy Piedra y Agave-escritorio.webp",
+    imgMobile: "/Banner Casa Loy Piedra y Agave-movil.webp",
+    imgRetina: "/Banner Casa Loy Piedra y Agave-retina.webp",
   },
   {
     year: "2026",

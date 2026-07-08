@@ -230,9 +230,9 @@ export default function HomeEditorialV2({ lang = "es", setPage, setLang }) {
     {
       id: "maquila",
       overtitle: currentLang === "es" ? "LEGADO & CREACIÓN" : "LEGACY & CREATION",
-      titleEs: 'TU MARCA DE TEQUILA <br /><span class="text-primary italic font-normal">EMPIEZA EN EL ORIGEN</span>',
-      titleEn: 'YOUR TEQUILA BRAND <br /><span class="text-primary italic font-normal">BEGINS AT THE ORIGIN</span>',
-      descEs: "Desarrollamos marcas premium con la experiencia, tradición y visión de una casa tequilera mexicana.",
+      titleEs: 'TU MARCA DE TEQUILA <br /><span class="text-white italic font-normal">EMPIEZA EN EL ORIGEN</span>',
+      titleEn: 'YOUR TEQUILA BRAND <br /><span class="text-white italic font-normal">BEGINS AT THE ORIGIN</span>',
+      descEs: "Desarrollamos marcas premium con la experiencia, tradición and visión de una casa tequilera mexicana.",
       descEn: "We develop premium brands with the experience, tradition, and vision of a Mexican tequila house.",
       btn1Es: "DESARROLLAR MI MARCA",
       btn1En: "DEVELOP MY BRAND",
@@ -251,8 +251,8 @@ export default function HomeEditorialV2({ lang = "es", setPage, setLang }) {
     {
       id: "tours",
       overtitle: currentLang === "es" ? "EXPERIENCIAS CASA LOY" : "CASA LOY EXPERIENCES",
-      titleEs: 'VIVE EL <br /><span class="text-primary italic font-normal">ORIGEN DEL TEQUILA</span>',
-      titleEn: 'LIVE THE <span class="text-primary italic font-normal">ORIGIN OF TEQUILA</span>',
+      titleEs: 'VIVE EL <br /><span class="text-white italic font-normal">ORIGEN DEL TEQUILA</span>',
+      titleEn: 'LIVE THE <span class="text-white italic font-normal">ORIGIN OF TEQUILA</span>',
       descEs: "Recorre nuestra historia, descubre el proceso de destilación and vive una experiencia auténtica entre agaves, tradición y tequila.",
       descEn: "Walk through our history, discover the distillation process, and live an authentic experience among agaves, tradition, and tequila.",
       btn1Es: "RESERVAR EXPERIENCIA",
@@ -271,8 +271,8 @@ export default function HomeEditorialV2({ lang = "es", setPage, setLang }) {
     {
       id: "restaurante",
       overtitle: currentLang === "es" ? "GASTRONOMÍA & ORIGEN" : "GASTRONOMY & ORIGIN",
-      titleEs: 'UNA EXPERIENCIA <br /><span class="text-primary italic font-normal">QUE SE SABOREA</span>',
-      titleEn: 'AN EXPERIENCE <br /><span class="text-primary italic font-normal">TO BE SAVORED</span>',
+      titleEs: 'UNA EXPERIENCIA <br /><span class="text-white italic font-normal">QUE SE SABOREA</span>',
+      titleEn: 'AN EXPERIENCE <br /><span class="text-white italic font-normal">TO BE SAVORED</span>',
       descEs: "Cocina mexicana contemporánea, mixología de autor y el espíritu de Casa Loy en cada detalle.",
       descEn: "Contemporary Mexican cuisine, signature mixology, and the spirit of Casa Loy in every detail.",
       btn1Es: "RESERVAR MESA",
@@ -292,8 +292,8 @@ export default function HomeEditorialV2({ lang = "es", setPage, setLang }) {
     {
       id: "piedra",
       overtitle: currentLang === "es" ? "LA EVOLUCIÓN" : "THE EVOLUTION",
-      titleEs: 'PIEDRA Y AGAVE REPOSADO <br /><span class="text-primary italic font-normal">AHORA ES PARTE</span> DE CASA LOY',
-      titleEn: 'PIEDRA Y AGAVE REPOSADO <br /><span class="text-primary italic font-normal">IS NOW PART</span> OF CASA LOY',
+      titleEs: 'PIEDRA Y AGAVE REPOSADO <br /><span class="text-white italic font-normal">AHORA ES PARTE</span> DE CASA LOY',
+      titleEn: 'PIEDRA Y AGAVE REPOSADO <br /><span class="text-white italic font-normal">IS NOW PART</span> OF CASA LOY',
       descEs: "Una etiqueta que honra el origen del tequila mexicano con una nueva imagen dentro de la familia Casa Loy Tequila.",
       descEn: "A label honoring the origin of Mexican tequila with a new image inside the Casa Loy Tequila family.",
       btn1Es: "DESCUBRIR LA NUEVA ETIQUETA",
@@ -483,7 +483,7 @@ export default function HomeEditorialV2({ lang = "es", setPage, setLang }) {
                 }`}
               >
                 {/* Overtitle */}
-                <span className="font-navigation text-[clamp(11px,1vw,13px)] text-primary uppercase tracking-[0.4em] mb-4 block font-semibold">
+                <span className="font-navigation text-[clamp(11px,1vw,13px)] text-white uppercase tracking-[0.4em] mb-4 block font-semibold">
                   {slide.overtitle}
                 </span>
 

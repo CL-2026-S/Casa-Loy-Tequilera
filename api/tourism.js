@@ -96,7 +96,7 @@ export default async function handler(req, res) {
         .select('*');
       if (sErr) throw sErr;
 
-      const maxCapacity = parseInt(settings?.find(s => s.key === 'max_capacity_limit')?.value || '20');
+      const maxCapacity = parseInt(settings?.find(s => s.key === 'max_capacity_limit')?.value || '50');
 
       // 2. Fetch blocked dates
       const { data: blocked, error: bErr } = await supabase
@@ -199,7 +199,7 @@ export default async function handler(req, res) {
           .select('value')
           .eq('key', 'max_capacity_limit')
           .maybeSingle();
-        const maxCapacity = parseInt(limitData?.value || '20');
+        const maxCapacity = parseInt(limitData?.value || '50');
 
         // 2. Fetch current occupancy for this slot
         const { data: overrideData } = await supabase

@@ -228,15 +228,28 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
 
       {/* SINGLE UNIFIED FULL-SCREEN BACKGROUND VIDEO */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-        {!videoError ? (
+        <picture>
+          <source media="(max-width: 768px)" srcSet="/verificador-movil.webp" />
+          <source 
+            media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
+            srcSet="/Verificador-retina.webp" 
+          />
+          <img
+            alt="Campos de Agave"
+            src="/Verificador-escritorio.webp"
+            className="absolute inset-0 w-full h-full object-cover z-0"
+          />
+        </picture>
+        
+        {!videoError && (
           <video
             autoPlay
             loop
             muted
             playsInline
             preload="auto"
-            className="w-full h-full object-cover"
-            poster="/Verificador-escritorio.webp"
+            src="/recorrido-campos-casa-loy.mp4"
+            className="absolute inset-0 w-full h-full object-cover z-10"
             onError={() => setVideoError(true)}
           >
             <source
@@ -244,19 +257,6 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
               type="video/mp4"
             />
           </video>
-        ) : (
-          <picture>
-            <source media="(max-width: 768px)" srcSet="/verificador-movil.webp" />
-            <source 
-              media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
-              srcSet="/Verificador-retina.webp" 
-            />
-            <img
-              alt="Campos de Agave"
-              src="/Verificador-escritorio.webp"
-              className="w-full h-full object-cover"
-            />
-          </picture>
         )}
         
         {/* Cinematic dark overlay with NO backdrop blur so the video is fully visible and sharp */}

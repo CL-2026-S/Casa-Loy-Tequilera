@@ -51,7 +51,7 @@ export default function App() {
   const [selectedTour, setSelectedTour] = useState("oro");
 
   // Global Tourism Scheduling States (Shared between clients and CMS panel)
-  const [maxCapacityLimit, setMaxCapacityLimit] = useState(20);
+  const [maxCapacityLimit, setMaxCapacityLimit] = useState(50);
   const [blockedDates, setBlockedDates] = useState([]);
   const [bookingsCapacity, setBookingsCapacity] = useState(() => {
     const initial = {};
