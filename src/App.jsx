@@ -30,9 +30,7 @@ import ValidateTicket from "./pages/ValidateTicket";
 import AdminPanel from "./pages/AdminPanel";
 
 export default function App() {
-  const [hasBypass, setHasBypass] = useState(() => {
-    return localStorage.getItem("casa_loy_preview_bypass") === "true";
-  });
+  const [hasBypass, setHasBypass] = useState(true); // Teaser retirado - sitio activo
   const [lang, setLang] = useState("es"); // Default language set to Spanish (ES)
   const [page, setPage] = useState(() => {
     const path = window.location.pathname;
@@ -166,18 +164,6 @@ export default function App() {
     }
   }, [page, hasBypass]);
 
-  if (!hasBypass) {
-    return (
-      <TeaserPage
-        lang={lang}
-        setLang={setLang}
-        onUnlock={() => {
-          localStorage.setItem("casa_loy_preview_bypass", "true");
-          setHasBypass(true);
-        }}
-      />
-    );
-  }
 
   const renderPage = () => {
     switch (page) {
