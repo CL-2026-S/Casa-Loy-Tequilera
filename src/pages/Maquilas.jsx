@@ -87,7 +87,9 @@ export default function Maquilas({ lang = "es" }) {
       calLink: "internacionalmarketers",
       config: { 
         layout: "month_view",
-        theme: "light"
+        theme: "light",
+        timeZone: "America/Mexico_City",
+        timezone: "America/Mexico_City"
       }
     });
     window.Cal("ui", {
