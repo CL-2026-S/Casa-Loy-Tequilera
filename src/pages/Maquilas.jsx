@@ -52,33 +52,38 @@ export default function Maquilas({ lang = "es" }) {
   
   // Cal.com Integration
   useEffect(() => {
+    // Initialize the Cal command queue so the loaded script doesn't crash
+    window.Cal = window.Cal || function () {
+      (window.Cal.q = window.Cal.q || []).push(arguments);
+    };
+    window.Cal.q = window.Cal.q || [];
+
     const initCal = () => {
-      if (window.Cal) {
-        window.Cal("init", { origin: "https://cal.com" });
-        window.Cal("inline", {
-          elementOrSelector: "#cal-inline",
-          calLink: "internacionalmarketers",
-          config: { 
-            layout: "month_view",
-            theme: "light"
+      window.Cal("init", { origin: "https://cal.com" });
+      window.Cal("inline", {
+        elementOrSelector: "#cal-inline",
+        calLink: "internacionalmarketers",
+        config: { 
+          layout: "month_view",
+          theme: "light"
+        }
+      });
+      window.Cal("ui", {
+        styles: {
+          branding: {
+            brandColor: "#8C4723"
           }
-        });
-        window.Cal("ui", {
-          styles: {
-            branding: {
-              brandColor: "#8C4723"
-            }
-          },
-          hideEventTypeDetails: false,
-          layout: "month_view"
-        });
-      }
+        },
+        hideEventTypeDetails: false,
+        layout: "month_view"
+      });
     };
 
-    if (window.Cal) {
+    if (document.getElementById("cal-embed-script")) {
       initCal();
     } else {
       const s = document.createElement("script");
+      s.id = "cal-embed-script";
       s.async = true;
       s.src = "https://app.cal.com/embed/embed.js";
       s.onload = initCal;
