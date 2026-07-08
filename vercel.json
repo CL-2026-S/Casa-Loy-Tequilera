@@ -10,11 +10,6 @@
       "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
-  ],
-  "errors": [
-    {
-      "statusCode": 404,
-      "destination": "/404.html"
-    }
   ]
 }
+
