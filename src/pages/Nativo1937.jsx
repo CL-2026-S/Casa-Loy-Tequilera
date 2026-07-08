@@ -37,6 +37,8 @@ export default function Nativo1937({ lang = "es", t }) {
       chefRole: "Chef Ejecutivo & Visionario Culinario",
       chefDesc1: "Con una trayectoria forjada en la excelencia, el Chef Sergio Pérez Domínguez lidera la propuesta gastronómica de Restaurante 1937 Nativo. Su cocina es un tributo a la biodiversidad de Ayotlán, donde cada ingrediente narra una historia de trazabilidad y respeto por el origen.",
       chefDesc2: "Bajo su visión, la tradición se transforma en vanguardia sensorial, creando maridajes perfectos que elevan la experiencia de Casa Loy a un estándar internacional.",
+      chefConceptTitle: "Brasería Mexicana Contemporánea",
+      chefConceptDesc: "Cortes premium, mariscos a las brasas y cocina inspirada en la cultura del agave.",
       visitTitle: "Visítanos",
       hoursLabel: "Horarios",
       hoursVal: "Martes a Domingo:<br />12:00 – 20:00 hrs.",
@@ -138,6 +140,8 @@ export default function Nativo1937({ lang = "es", t }) {
       chefRole: "Executive Chef & Culinary Visionary",
       chefDesc1: "With a career forged in excellence, Chef Sergio Pérez Domínguez leads the culinary vision at Restaurante 1937 Nativo. His cuisine is a tribute to the biodiversity of Ayotlán, where each ingredient tells a story of traceability and respect for its origin.",
       chefDesc2: "Under his vision, tradition transforms into sensory vanguard, creating perfect pairings that elevate the Casa Loy experience to an international standard.",
+      chefConceptTitle: "Contemporary Mexican Brasserie",
+      chefConceptDesc: "Premium cuts, wood-fired seafood, and cuisine inspired by the agave culture.",
       visitTitle: "Visit Us",
       hoursLabel: "Opening Hours",
       hoursVal: "Tuesday to Sunday:<br />12:00 PM – 8:00 PM",
@@ -538,6 +542,15 @@ export default function Nativo1937({ lang = "es", t }) {
               <p className="font-body-lg text-body-lg text-on-surface-variant font-light leading-relaxed">
                 {currentT.chefDesc2}
               </p>
+              {/* Concept tag */}
+              <div className="border-l-2 border-primary/40 pl-5 pt-1 space-y-1">
+                <p className="font-serif italic text-[18px] md:text-[20px] text-primary/80 font-medium leading-snug">
+                  {currentT.chefConceptTitle}
+                </p>
+                <p className="font-sans text-[12px] text-on-surface-variant/70 font-light tracking-wide leading-relaxed">
+                  {currentT.chefConceptDesc}
+                </p>
+              </div>
             </div>
 
           </div>
