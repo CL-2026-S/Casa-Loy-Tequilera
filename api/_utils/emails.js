@@ -202,7 +202,13 @@ export async function sendMonthlyNewsletter(subscribers, articles, siteUrl) {
 
   // Get current Month/Year in Spanish
   const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-  const currentDate = new Date();
+  const currentDate = (() => {
+    try {
+      return new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Mexico_City' }));
+    } catch (e) {
+      return new Date();
+    }
+  })();
   const monthName = months[currentDate.getMonth()];
   const yearName = currentDate.getFullYear();
   const subject = `Novedades y Experiencias Casa Loy - ${monthName} ${yearName}`;
@@ -511,6 +517,124 @@ export async function sendBookingEmail(email, bookingDetails) {
     return { success: true, messageId: data.id };
   } catch (err) {
     console.error("Exception sending booking email:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+export async function sendMaquilaLeadEmail(leadDetails) {
+  if (!resend) {
+    console.warn("Resend client not configured. Skipping maquila lead email.");
+    return { success: false, error: "Resend not initialized" };
+  }
+
+  const { name, company, email, lada, phone, solution, objective, stage } = leadDetails;
+
+  // 1. Email for the administrator
+  const adminHtml = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #fcf9f3; color: #1c1c18; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e2dc; padding: 40px; }
+        h2 { font-family: Georgia, serif; font-size: 22px; color: #8C4723; font-weight: normal; margin-top: 0; }
+        .lead-info { width: 100%; border-collapse: collapse; margin: 24px 0; }
+        .lead-info th { text-align: left; padding: 12px 8px; border-bottom: 1px solid #e5e2dc; color: #8C4723; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; width: 35%; }
+        .lead-info td { padding: 12px 8px; border-bottom: 1px solid #e5e2dc; font-size: 14px; color: #1c1c18; }
+        .footer { font-size: 11px; color: #8a8a82; margin-top: 30px; border-top: 1px solid #e5e2dc; padding-top: 20px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h2>Nuevo Lead - Diagnóstico de Maquila</h2>
+        <p>Se ha recibido un nuevo lead calificado a través del Quiz de 3 Preguntas en el sitio web de Casa Loy Tequilera:</p>
+        
+        <table class="lead-info">
+          <tr><th>Nombre</th><td>${name}</td></tr>
+          <tr><th>Empresa</th><td>${company}</td></tr>
+          <tr><th>Correo</th><td>${email}</td></tr>
+          <tr><th>Teléfono</th><td>+${lada} ${phone}</td></tr>
+          <tr><th>Proyecto</th><td>${solution}</td></tr>
+          <tr><th>Objetivo</th><td>${objective}</td></tr>
+          <tr><th>Etapa</th><td>${stage}</td></tr>
+        </table>
+        
+        <div class="footer">
+          <p>Este correo fue generado automáticamente por la plataforma web de Casa Loy Tequilera.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  // 2. Email for the customer/client
+  const clientHtml = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #fcf9f3; color: #1c1c18; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e2dc; padding: 40px; }
+        h2 { font-family: Georgia, serif; font-size: 24px; color: #8C4723; font-weight: normal; margin-top: 0; text-align: center; }
+        p { font-size: 15px; line-height: 1.6; color: #3e3e38; }
+        .details-box { background-color: #fcf9f3; border: 1px solid #e5e2dc; padding: 20px; margin: 24px 0; }
+        .details-title { font-weight: bold; color: #8C4723; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; }
+        .footer { font-size: 12px; color: #8a8a82; margin-top: 30px; text-align: center; border-top: 1px solid #e5e2dc; padding-top: 20px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h2>¡Gracias por realizar nuestro diagnóstico, ${name}!</h2>
+        <p>Hemos recibido tus respuestas sobre el proyecto para <strong>${company}</strong>.</p>
+        
+        <p>Un miembro de nuestro equipo de desarrollo de marcas revisará tus especificaciones para <strong>${solution}</strong> y se pondrá en contacto contigo a la brevedad al teléfono <strong>+${lada} ${phone}</strong> o por este medio para platicar sobre la viabilidad operativa y los siguientes pasos.</p>
+        
+        <div class="details-box">
+          <div class="details-title">Resumen de tu diagnóstico:</div>
+          <p style="margin: 4px 0; font-size: 13px;"><strong>Solución:</strong> ${solution}</p>
+          <p style="margin: 4px 0; font-size: 13px;"><strong>Objetivo principal:</strong> ${objective}</p>
+          <p style="margin: 4px 0; font-size: 13px;"><strong>Etapa actual:</strong> ${stage}</p>
+        </div>
+
+        <p>Si deseas agendar directamente una llamada técnica, puedes hacerlo en nuestra sección de contacto en el sitio web.</p>
+        
+        <div class="footer">
+          <p>&copy; 2026 Casa Loy Tequilera. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    const fromEmail = getFromEmail();
+    const adminEmail = process.env.MAQUILA_LEADS_EMAIL || 'contacto@casaloy.com';
+
+    // Send to admin
+    await resend.emails.send({
+      from: fromEmail,
+      to: adminEmail,
+      subject: `Nuevo Diagnóstico de Maquila - ${company}`,
+      html: adminHtml,
+    });
+
+    // Send to client/lead
+    const { data: clientRes, error: clientErr } = await resend.emails.send({
+      from: fromEmail,
+      to: email,
+      subject: `Recibimos tu propuesta de marca - Casa Loy`,
+      html: clientHtml,
+    });
+
+    if (clientErr) {
+      console.error("Resend error sending confirmation to client:", clientErr);
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error("Exception in sendMaquilaLeadEmail:", err);
     return { success: false, error: err.message };
   }
 }

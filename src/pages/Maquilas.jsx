@@ -347,14 +347,48 @@ export default function Maquilas({ lang = "es" }) {
     setQuizStep(next);
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate API call for premium feel
-    setTimeout(() => {
+
+    try {
+      const response = await fetch("/api/maquila", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: contactForm.name,
+          company: contactForm.company,
+          email: contactForm.email,
+          lada: contactForm.lada,
+          phone: contactForm.phone,
+          solution: quizAnswers.solution,
+          objective: quizAnswers.objective,
+          stage: quizAnswers.stage,
+        }),
+      });
+
+      if (response.ok) {
+        setQuizStep(5);
+      } else {
+        const errorData = await response.json();
+        alert(
+          lang === "es"
+            ? `Error al enviar el formulario: ${errorData.error || "Error del servidor"}`
+            : `Error submitting form: ${errorData.error || "Server error"}`
+        );
+      }
+    } catch (error) {
+      console.error("Error submitting quiz form:", error);
+      alert(
+        lang === "es"
+          ? "Ocurrió un problema de conexión al enviar tus respuestas. Por favor, intenta de nuevo."
+          : "A connection problem occurred while sending your answers. Please try again."
+      );
+    } finally {
       setIsSubmitting(false);
-      setQuizStep(5);
-    }, 1000);
+    }
   };
 
   const handleResetQuiz = () => {

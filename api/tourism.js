@@ -139,8 +139,8 @@ export default async function handler(req, res) {
         guests: r.guests,
         amount: r.total_paid,
         method: r.payment_method,
-        timestamp: r.created_at ? new Date(r.created_at).toLocaleString() : '',
-        used_at: r.used_at ? new Date(r.used_at).toLocaleString() : null
+        timestamp: r.created_at ? new Date(r.created_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) : '',
+        used_at: r.used_at ? new Date(r.used_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) : null
       })) || [];
 
       return res.status(200).json({
@@ -363,7 +363,7 @@ export default async function handler(req, res) {
           return res.status(404).json({ error: 'TICKET_NOT_FOUND', message: 'Ticket no encontrado.' });
         }
 
-        return res.status(200).json({ success: true, used_at: new Date(nowStr).toLocaleString() });
+        return res.status(200).json({ success: true, used_at: new Date(nowStr).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) });
       }
 
       // Action 7: Bulk set capacities / occupancy
