@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const MexicoFlag = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20" className="w-5 h-3.5 shadow-sm border border-black/10 flex-shrink-0 inline-block align-middle">
@@ -50,10 +50,41 @@ export default function Maquilas({ lang = "es" }) {
   const [contactForm, setContactForm] = useState({ name: "", company: "", lada: "", phone: "", email: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Booking State
-  const [selectedDate, setSelectedDate] = useState(lang === "es" ? "Lun, 24 Oct" : "Mon, Oct 24");
-  const [selectedTime, setSelectedTime] = useState("");
-  const [bookingCompleted, setBookingCompleted] = useState(false);
+  // Cal.com Integration
+  useEffect(() => {
+    const initCal = () => {
+      if (window.Cal) {
+        window.Cal("init", { origin: "https://cal.com" });
+        window.Cal("inline", {
+          elementOrSelector: "#cal-inline",
+          calLink: "internacionalmarketers",
+          config: { 
+            layout: "month_view",
+            theme: "light"
+          }
+        });
+        window.Cal("ui", {
+          styles: {
+            branding: {
+              brandColor: "#8C4723"
+            }
+          },
+          hideEventTypeDetails: false,
+          layout: "month_view"
+        });
+      }
+    };
+
+    if (window.Cal) {
+      initCal();
+    } else {
+      const s = document.createElement("script");
+      s.async = true;
+      s.src = "https://app.cal.com/embed/embed.js";
+      s.onload = initCal;
+      document.body.appendChild(s);
+    }
+  }, []);
 
   const content = {
     es: {
@@ -315,11 +346,7 @@ export default function Maquilas({ lang = "es" }) {
     setQuizStep(1);
   };
 
-  const handleBook = () => {
-    if (selectedTime) {
-      setBookingCompleted(true);
-    }
-  };
+
 
   return (
     <div className="bg-[#fcf9f3] text-[#1c1c18]">
@@ -857,82 +884,20 @@ export default function Maquilas({ lang = "es" }) {
           </div>
 
           {/* Scheduler Container */}
-          <div>
-            <div className="bg-white border border-outline-variant p-8 md:p-12 shadow-2xl relative">
-              <div className="mb-10 border-b border-outline-variant/30 pb-6">
+          <div className="w-full">
+            <div className="bg-white border border-outline-variant p-6 md:p-8 shadow-2xl relative min-h-[650px] flex flex-col justify-start">
+              <div className="mb-6 border-b border-outline-variant/30 pb-4">
                 <h4 className="font-headline-md text-2xl mb-2">{currentT.schedulerTitle}</h4>
                 <p className="font-body-md text-on-surface-variant/80 font-light">
                   {currentT.schedulerDesc}
                 </p>
               </div>
 
-              {bookingCompleted ? (
-                <div className="py-12 text-center space-y-6 animate-pulse">
-                  <span className="material-symbols-outlined text-6xl text-primary">event_available</span>
-                  <h4 className="font-headline-md text-2xl">{currentT.schedulerSuccessTitle}</h4>
-                  <p className="font-body-md text-on-surface-variant font-light max-w-xs mx-auto" dangerouslySetInnerHTML={{
-                    __html: currentT.schedulerSuccessDesc.replace("{date}", selectedDate).replace("{time}", selectedTime)
-                  }} />
-                  <button
-                    onClick={() => {
-                      setBookingCompleted(false);
-                      setSelectedTime("");
-                    }}
-                    className="text-primary font-label-caps border-b border-primary pb-1 font-semibold"
-                  >
-                    {currentT.rescheduleBtn}
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <div className="grid grid-cols-3 gap-3 mb-10">
-                    {currentT.dateOptions.map((date) => (
-                      <button
-                        key={date}
-                        onClick={() => setSelectedDate(date)}
-                        className={`p-4 border font-navigation text-xs text-center uppercase tracking-widest transition-all ${
-                          selectedDate === date
-                            ? "border-primary bg-primary text-white"
-                            : "border-outline-variant hover:border-primary hover:bg-[#fcf9f3]"
-                        }`}
-                      >
-                        {date}
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="space-y-4 mb-10">
-                    {currentT.timeOptions.map((time) => (
-                      <div
-                        key={time}
-                        onClick={() => setSelectedTime(time)}
-                        className={`flex justify-between items-center p-5 border transition-all cursor-pointer group ${
-                          selectedTime === time
-                            ? "border-primary bg-[#fcf9f3]/40"
-                            : "border-transparent bg-[#fcf9f3] hover:border-outline-variant hover:bg-white"
-                        }`}
-                      >
-                        <span className="font-navigation font-bold">{time}</span>
-                        <span className="material-symbols-outlined text-primary group-hover:translate-x-2 transition-transform">
-                          arrow_forward
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <button
-                    onClick={handleBook}
-                    disabled={!selectedTime}
-                    className={`w-full py-5 font-label-caps uppercase tracking-[0.2em] transition-all shadow-lg active:scale-[0.98] ${
-                      selectedTime
-                        ? "bg-primary text-white hover:bg-primary-container"
-                        : "bg-stone-300 text-stone-500 cursor-not-allowed"
-                    }`}
-                  >
-                    {currentT.scheduleBtn}
-                  </button>
-                </>
-              )}
+              {/* Cal.com Embed Container */}
+              <div 
+                id="cal-inline" 
+                style={{ width: "100%", height: "100%", minHeight: "550px", overflow: "scroll" }}
+              />
             </div>
           </div>
 
