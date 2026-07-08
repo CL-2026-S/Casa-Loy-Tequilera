@@ -902,7 +902,7 @@ export default function Maquilas({ lang = "es" }) {
 
           {/* Scheduler Container */}
           <div className="w-full max-w-5xl">
-            <div className="bg-white border border-outline-variant p-4 md:p-8 shadow-2xl relative min-h-[700px] flex flex-col justify-start">
+            <div className="bg-white border border-outline-variant p-4 md:p-8 shadow-2xl relative min-h-[850px] flex flex-col justify-start">
               <div className="mb-6 border-b border-outline-variant/30 pb-4 text-center md:text-left">
                 <h4 className="font-headline-md text-2xl mb-2">{currentT.schedulerTitle}</h4>
                 <p className="font-body-md text-on-surface-variant/80 font-light">
@@ -913,7 +913,7 @@ export default function Maquilas({ lang = "es" }) {
               {/* Cal.com Embed Container */}
               <div 
                 id="cal-inline" 
-                style={{ width: "100%", height: "100%", minHeight: "750px" }}
+                style={{ width: "100%", height: "100%", minHeight: "900px" }}
               />
             </div>
           </div>
