@@ -1,4 +1,169 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+
+const brands = [
+  {
+    id: "casa-loy",
+    logo: "/Logotipo Casa Loy Tequilera.png",
+    nameEs: "Casa Loy Tequilera",
+    nameEn: "Casa Loy Tequilera",
+    taglineEs: "Origen · Tradición · Jalisco",
+    taglineEn: "Origin · Tradition · Jalisco",
+    url: "https://casaloy.com",
+    logoClass: "h-24 sm:h-28 md:h-32",
+    bgAccent: "from-[#8C4723]/8 to-transparent",
+    borderAccent: "border-[#8C4723]/20 hover:border-[#8C4723]/50",
+    dotColor: "bg-[#8C4723]",
+  },
+  {
+    id: "taddel",
+    logo: "/TADDEL Tequila MX Logotipo.png",
+    nameEs: "TADDEL Tequila",
+    nameEn: "TADDEL Tequila",
+    taglineEs: "Diseño · Pureza · Vanguardia",
+    taglineEn: "Design · Purity · Vanguard",
+    url: "https://taddel.mx",
+    logoClass: "h-20 sm:h-24 md:h-28",
+    bgAccent: "from-[#1c1c18]/8 to-transparent",
+    borderAccent: "border-[#1c1c18]/20 hover:border-[#1c1c18]/50",
+    dotColor: "bg-[#1c1c18]",
+  },
+  {
+    id: "tierra-zafiro",
+    logo: "/Tierra Zafiro Tequila Logotipo.png",
+    nameEs: "Tierra Zafiro",
+    nameEn: "Tierra Zafiro",
+    taglineEs: "Misticismo · Agave · Cosmos",
+    taglineEn: "Mysticism · Agave · Cosmos",
+    url: "https://tierrazafiro.com",
+    logoClass: "h-24 sm:h-28 md:h-32",
+    bgAccent: "from-[#2d4a6e]/8 to-transparent",
+    borderAccent: "border-[#2d4a6e]/20 hover:border-[#2d4a6e]/50",
+    dotColor: "bg-[#2d4a6e]",
+  },
+];
+
+function BrandCard({ brand, lang, index }) {
+  const [hovered, setHovered] = useState(false);
+  const cardRef = useRef(null);
+
+  const label = lang === "es" ? brand.nameEs : brand.nameEn;
+  const tagline = lang === "es" ? brand.taglineEs : brand.taglineEn;
+  const visitLabel = lang === "es" ? "Visitar sitio" : "Visit site";
+
+  return (
+    <motion.a
+      ref={cardRef}
+      href={brand.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.8, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      className={`
+        group relative flex flex-col items-center justify-center
+        border ${brand.borderAccent}
+        bg-white/70 backdrop-blur-sm
+        p-12 sm:p-16 md:p-20
+        overflow-hidden cursor-pointer
+        transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
+        hover:shadow-[0_24px_64px_rgba(0,0,0,0.10)]
+        hover:-translate-y-1
+        select-none
+        rounded-[2px]
+      `}
+      aria-label={`${label} - ${visitLabel}`}
+    >
+      {/* Subtle gradient accent */}
+      <div
+        className={`absolute inset-0 bg-gradient-to-br ${brand.bgAccent} opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none`}
+      />
+
+      {/* Agave fiber texture overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.025] mix-blend-multiply bg-cover bg-center pointer-events-none"
+        style={{ backgroundImage: "url('/Fibras de Agave Cocido.webp')" }}
+      />
+
+      {/* Index number (top left) */}
+      <span
+        className="absolute top-5 left-6 font-serif italic text-[11px] text-[#1c1c18]/20 tracking-widest select-none"
+        style={{ fontFamily: "'EB Garamond', serif" }}
+      >
+        {String(index + 1).padStart(2, "0")}
+      </span>
+
+      {/* External link indicator (top right) */}
+      <motion.span
+        animate={{ opacity: hovered ? 1 : 0, x: hovered ? 0 : 4, y: hovered ? 0 : -4 }}
+        transition={{ duration: 0.3 }}
+        className="absolute top-5 right-5 material-symbols-outlined text-[16px] text-[#1c1c18]/40"
+      >
+        open_in_new
+      </motion.span>
+
+      {/* Logo */}
+      <div className="relative z-10 flex items-center justify-center w-full mb-8">
+        <motion.img
+          src={brand.logo}
+          alt={label}
+          animate={{ scale: hovered ? 1.04 : 1 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className={`${brand.logoClass} w-auto object-contain`}
+          draggable={false}
+        />
+      </div>
+
+      {/* Divider */}
+      <motion.div
+        animate={{ scaleX: hovered ? 1 : 0.3, opacity: hovered ? 1 : 0.3 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 w-12 h-[0.5px] bg-[#1c1c18]/25 mb-5 origin-left"
+      />
+
+      {/* Brand name */}
+      <p
+        className="relative z-10 text-[10px] tracking-[0.28em] font-bold text-[#1c1c18]/60 uppercase mb-2 text-center"
+        style={{ fontFamily: "'Montserrat', sans-serif" }}
+      >
+        {label}
+      </p>
+
+      {/* Tagline */}
+      <p
+        className="relative z-10 text-[9px] tracking-[0.18em] text-[#1c1c18]/35 uppercase text-center"
+        style={{ fontFamily: "'Montserrat', sans-serif" }}
+      >
+        {tagline}
+      </p>
+
+      {/* Visit CTA */}
+      <motion.div
+        animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 6 }}
+        transition={{ duration: 0.35 }}
+        className="relative z-10 mt-7 flex items-center gap-2"
+      >
+        <span
+          className="text-[9px] tracking-[0.25em] font-bold uppercase text-[#1c1c18]/55"
+          style={{ fontFamily: "'Montserrat', sans-serif" }}
+        >
+          {visitLabel}
+        </span>
+        <span className="material-symbols-outlined text-[12px] text-[#1c1c18]/40">
+          arrow_forward
+        </span>
+      </motion.div>
+
+      {/* Bottom accent dot */}
+      <div
+        className={`absolute bottom-5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full ${brand.dotColor} opacity-0 group-hover:opacity-40 transition-all duration-500`}
+      />
+    </motion.a>
+  );
+}
 
 export default function Brands({ t, lang }) {
   const [loaded, setLoaded] = useState(false);
@@ -7,221 +172,97 @@ export default function Brands({ t, lang }) {
     setLoaded(true);
   }, []);
 
-  const localT = {
-    es: {
-      overtitle: "EDITORIAL DE MARCAS",
-      title: "El Legado",
-      desc: "Una exploración sensorial a través de nuestras firmas más distinguidas. Pureza, paciencia y la maestría del tiempo traducidas en espíritu.",
-      
-      brand1Overtitle: "EDICIÓN LIMITADA",
-      brand1Title: "Reserva de la Casa Loy",
-      brand1Desc: "El pináculo de nuestra destilería. Un encuentro entre la nobleza del roble y la madurez del agave, custodiado bajo condiciones de quietud absoluta.",
-      brand1Action: "EXPLORAR CUVÉE",
-      
-      brand2Overtitle: "ORIGEN & TRADICIÓN",
-      brand2Title: "Casa Loy",
-      brand2Desc: "Nuestra firma fundacional. Un homenaje directo a la tierra de Jalisco, donde el agave azul es transformado siguiendo procesos ancestrales que respetan la integridad de la materia prima.",
-      brand2Action: "VER EL ORIGEN",
-      
-      brand3Overtitle: "VANGUARDIA",
-      brand3Title: "Taddel",
-      brand3Quote: '"La sofisticación no es añadir más, es quitar lo innecesario hasta encontrar la esencia."',
-      brand3Desc: "Taddel representa el nuevo lujo. Un destilado cristalino de perfil técnico impecable, diseñado para los paladares que buscan la pureza absoluta y el diseño sensorial contemporáneo.",
-      brand3Action: "DESCUBRIR DISEÑO",
-      
-      brand4Overtitle: "COSMOGONÍA",
-      brand4Title: "Tierra Zafiro",
-      brand4Desc: "Capturamos la energía de la noche y el misticismo del origen. Tierra Zafiro es un portal a lo ancestral, un destilado vibrante que honra los ciclos celestiales.",
-      brand4Action1: "EL RITUAL",
-      brand4Action2: "VER GALERÍA",
-    },
-    en: {
-      overtitle: "BRANDS EDITORIAL",
-      title: "The Legacy",
-      desc: "A sensory exploration through our most distinguished signatures. Purity, patience, and the mastery of time translated into spirit.",
-      
-      brand1Overtitle: "LIMITED EDITION",
-      brand1Title: "Reserva de la Casa Loy",
-      brand1Desc: "The pinnacle of our distillery. An encounter between the nobility of oak and the maturity of agave, guarded under conditions of absolute stillness.",
-      brand1Action: "EXPLORAR CUVÉE",
-      
-      brand2Overtitle: "ORIGIN & TRADITION",
-      brand2Title: "Casa Loy",
-      brand2Desc: "Our founding signature. A direct tribute to the land of Jalisco, where blue agave is transformed following ancestral processes that respect the raw material's integrity.",
-      brand2Action: "VIEW THE ORIGIN",
-      
-      brand3Overtitle: "VANGUARD",
-      brand3Title: "Taddel",
-      brand3Quote: '"Sophistication is not adding more, it is removing the unnecessary until finding the essence."',
-      brand3Desc: "Taddel represents new luxury. A crystalline spirit of impeccable technical profile, designed for palates seeking absolute purity and contemporary sensory design.",
-      brand3Action: "DISCOVER DESIGN",
-      
-      brand4Overtitle: "COSMOGONY",
-      brand4Title: "Tierra Zafiro",
-      brand4Desc: "We capture the energy of the night and the mysticism of the origin. Tierra Zafiro is a portal to the ancestral, a vibrant distillate honoring celestial cycles.",
-      brand4Action1: "THE RITUAL",
-      brand4Action2: "VIEW GALLERY",
-    }
-  };
-
-  const activeT = localT[lang] || localT["es"];
+  const heroTitle = lang === "es" ? "Nuestras Marcas" : "Our Brands";
+  const heroSub =
+    lang === "es"
+      ? "Portafolio de marcas destiladas con origen, carácter y distinción"
+      : "A portfolio of brands distilled with origin, character and distinction";
+  const portfolioLabel = lang === "es" ? "PORTAFOLIO" : "PORTFOLIO";
 
   return (
-    <div className="pt-20 bg-background text-on-surface">
-      {/* Hero Section */}
-      <section className="min-h-[75vh] flex flex-col items-center justify-center text-center px-margin-mobile md:px-0 relative">
-        <div className="max-w-5xl z-10 space-y-8">
-          <span className="text-primary font-label-caps text-label-caps tracking-[0.5em] mb-4 block animate-pulse">
-            {activeT.overtitle}
-          </span>
-          <h1 className="text-on-surface font-display-hero text-[56px] md:text-[100px] leading-none mb-6">
-            {activeT.title}
+    <div className="pt-20 bg-[#fcf9f3] text-[#1c1c18] min-h-screen">
+      {/* Hero */}
+      <section className="relative flex flex-col items-center justify-center text-center px-6 md:px-16 py-24 md:py-32 overflow-hidden">
+        {/* Background texture */}
+        <div
+          className="absolute inset-0 opacity-[0.03] mix-blend-multiply bg-cover bg-center pointer-events-none"
+          style={{ backgroundImage: "url('/Fibras de Agave Cocido.webp')" }}
+        />
+
+        {/* Decorative lines */}
+        <div className="absolute inset-y-0 left-8 md:left-16 w-[0.5px] bg-[#1c1c18]/8 pointer-events-none" />
+        <div className="absolute inset-y-0 right-8 md:right-16 w-[0.5px] bg-[#1c1c18]/8 pointer-events-none" />
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="relative z-10 max-w-3xl flex flex-col items-center gap-6"
+        >
+          {/* Overtitle */}
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-[0.5px] bg-[#8C4723]/40" />
+            <span
+              className="text-[9px] tracking-[0.35em] font-bold text-[#8C4723] uppercase"
+              style={{ fontFamily: "'Montserrat', sans-serif" }}
+            >
+              {portfolioLabel}
+            </span>
+            <div className="w-8 h-[0.5px] bg-[#8C4723]/40" />
+          </div>
+
+          {/* Title */}
+          <h1
+            className="text-[42px] sm:text-[60px] md:text-[80px] leading-none font-medium tracking-tight text-[#1c1c18]"
+            style={{ fontFamily: "'EB Garamond', serif" }}
+          >
+            {heroTitle}
           </h1>
-          <div className="w-16 h-[1px] bg-primary/30 mx-auto mb-6"></div>
-          <p className="text-on-surface-variant font-body-lg text-body-lg max-w-2xl mx-auto leading-relaxed italic opacity-70">
-            {activeT.desc}
+
+          {/* Subtitle */}
+          <p
+            className="text-[11px] sm:text-[12px] tracking-[0.18em] text-[#1c1c18]/50 uppercase max-w-md leading-relaxed"
+            style={{ fontFamily: "'Montserrat', sans-serif" }}
+          >
+            {heroSub}
           </p>
+        </motion.div>
+      </section>
+
+      {/* Thin separator */}
+      <div className="w-full h-[0.5px] bg-[#1c1c18]/8" />
+
+      {/* Brand Grid */}
+      <section className="px-6 md:px-16 py-20 md:py-28">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+          {brands.map((brand, i) => (
+            <BrandCard key={brand.id} brand={brand} lang={lang} index={i} />
+          ))}
         </div>
       </section>
 
-      {/* Block 1: Reserva de la Casa Loy */}
-      <section className="py-section-gap px-margin-mobile md:px-margin-desktop overflow-hidden border-t border-outline-variant/10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-7 select-none">
-            <div className="aspect-[16/10] bg-piedra-volcanica overflow-hidden shadow-2xl">
-              <img
-                alt="Reserva de la Casa Loy"
-                className="w-full h-full object-cover transition-transform duration-[2000ms] hover:scale-105"
-                src="/Cava Tequilera Casa Loy.webp"
-              />
-            </div>
-          </div>
-          <div className="lg:col-span-5 text-left space-y-8 pl-0 lg:pl-10">
-            <div className="flex items-center gap-4">
-              <span className="font-serif italic text-4xl opacity-20 select-none">01</span>
-              <span className="text-primary font-label-caps text-label-caps">{activeT.brand1Overtitle}</span>
-            </div>
-            <h2 className="text-on-surface font-display-hero text-4xl md:text-[56px] leading-tight font-medium">
-              {activeT.brand1Title}
-            </h2>
-            <p className="text-on-surface-variant font-body-md text-body-lg leading-loose opacity-80 max-w-md font-light">
-              {activeT.brand1Desc}
-            </p>
-            <div>
-              <a className="group inline-flex items-center gap-6 text-on-surface font-label-caps text-label-caps tracking-[0.25em] hover:text-primary transition-all" href="#">
-                {activeT.brand1Action}
-                <span className="w-12 h-[1px] bg-outline group-hover:bg-primary group-hover:w-20 transition-all duration-500"></span>
-              </a>
-            </div>
-          </div>
+      {/* Footer note */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1, delay: 0.4 }}
+        className="text-center pb-20 px-6"
+      >
+        <div className="flex items-center justify-center gap-4 mb-4">
+          <div className="w-16 h-[0.5px] bg-[#1c1c18]/15" />
+          <span className="text-[#8C4723] text-[8px]">◆</span>
+          <div className="w-16 h-[0.5px] bg-[#1c1c18]/15" />
         </div>
-      </section>
-
-      {/* Block 2: Casa Loy */}
-      <section className="py-section-gap px-margin-mobile md:px-margin-desktop bg-[#EDE7DE]/30 overflow-hidden">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          <div className="lg:col-span-5 text-left space-y-8 pr-0 lg:pr-10 order-2 lg:order-1">
-            <div className="flex items-center gap-4">
-              <span className="font-serif italic text-4xl opacity-20 select-none">02</span>
-              <span className="text-primary font-label-caps text-label-caps">{activeT.brand2Overtitle}</span>
-            </div>
-            <h2 className="text-on-surface font-display-hero text-4xl md:text-[56px] leading-tight font-medium">
-              {activeT.brand2Title}
-            </h2>
-            <p className="text-on-surface-variant font-body-md text-body-lg leading-loose opacity-80 max-w-md font-light">
-              {activeT.brand2Desc}
-            </p>
-            <button className="bg-on-surface text-white px-12 py-5 font-label-caps text-label-caps tracking-widest hover:bg-primary active:scale-95 transition-all shadow-xl hover:-translate-y-1 duration-300">
-              {activeT.brand2Action}
-            </button>
-          </div>
-          <div className="lg:col-span-7 order-1 lg:order-2">
-            <div className="aspect-[4/3] bg-piedra-volcanica overflow-hidden shadow-2xl">
-              <img
-                alt="Bodega Casa Loy"
-                className="w-full h-full object-cover transition-transform duration-[2000ms] hover:scale-105"
-                src="/Banner Casa Loy Tequila.webp"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Block 3: Taddel */}
-      <section className="py-section-gap px-margin-mobile md:px-margin-desktop overflow-hidden">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-            <div className="lg:col-span-7 relative bg-white p-6 md:p-12 shadow-sm border border-outline-variant/10">
-              <div className="absolute top-2 right-6 font-serif italic text-[120px] text-primary/5 select-none leading-none z-0">
-                03
-              </div>
-              <div className="aspect-square bg-lino-canvas overflow-hidden relative z-10">
-                <img
-                  alt="Taddel Design"
-                  className="w-full h-full object-cover transition-transform duration-[2000ms] hover:scale-105"
-                  src="/Banner TADDEL Tequila.webp"
-                />
-              </div>
-            </div>
-            <div className="lg:col-span-5 text-left space-y-8 pl-0 lg:pl-6">
-              <span className="text-primary font-label-caps text-label-caps block">{activeT.brand3Overtitle}</span>
-              <h2 className="text-on-surface font-display-hero text-4xl md:text-[56px] leading-tight italic font-light">
-                {activeT.brand3Title}
-              </h2>
-              <div className="border-l border-primary/30 pl-8 mb-6">
-                <p className="text-on-surface-variant font-body-lg text-body-lg italic opacity-70 leading-relaxed font-light">
-                  {activeT.brand3Quote}
-                </p>
-              </div>
-              <p className="text-on-surface-variant font-body-md leading-loose opacity-80 font-light">
-                {activeT.brand3Desc}
-              </p>
-              <div className="pt-2">
-                <a className="inline-flex items-center gap-4 border-b border-on-surface/30 pb-2 font-label-caps text-label-caps tracking-[0.3em] hover:text-primary hover:border-primary transition-all duration-300" href="#">
-                  {activeT.brand3Action}
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Block 4: Tierra Zafiro */}
-      <section className="py-section-gap px-margin-mobile md:px-margin-desktop bg-background text-center relative overflow-hidden">
-        {/* Giant Number Backdrop */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] select-none z-0">
-          <span className="font-serif italic text-[50vw] leading-none">04</span>
-        </div>
-        <div className="max-w-4xl mx-auto mb-16 relative z-10 space-y-6">
-          <span className="text-primary font-label-caps text-label-caps tracking-[0.2em] block">
-            {activeT.brand4Overtitle}
-          </span>
-          <h2 className="text-on-surface font-display-hero text-5xl md:text-[84px] leading-none">
-            {activeT.brand4Title}
-          </h2>
-          <div className="w-24 h-[1px] bg-primary/20 mx-auto"></div>
-          <p className="text-on-surface-variant font-body-lg text-body-lg max-w-2xl mx-auto leading-relaxed opacity-85 font-light">
-            {activeT.brand4Desc}
-          </p>
-        </div>
-        <div className="max-w-6xl mx-auto mb-20 relative z-10">
-          <div className="aspect-[21/9] bg-piedra-volcanica overflow-hidden shadow-2xl">
-            <img
-              alt="Tierra Zafiro Agave"
-              className="w-full h-full object-cover transition-transform duration-[3000ms] hover:scale-105"
-              src="/Banner Tierra Zafio Tequila.webp"
-            />
-          </div>
-        </div>
-        <div className="flex flex-col sm:flex-row justify-center gap-8 relative z-10">
-          <button className="border border-on-surface/40 px-16 py-5 font-label-caps text-label-caps tracking-[0.3em] hover:bg-on-surface hover:text-white active:scale-95 transition-all duration-500">
-            {activeT.brand4Action1}
-          </button>
-          <button className="bg-primary text-white px-16 py-5 font-label-caps text-label-caps tracking-[0.3em] hover:bg-secondary active:scale-95 transition-all shadow-xl hover:-translate-y-1 duration-300">
-            {activeT.brand4Action2}
-          </button>
-        </div>
-      </section>
+        <p
+          className="text-[9px] tracking-[0.2em] text-[#1c1c18]/30 uppercase"
+          style={{ fontFamily: "'Montserrat', sans-serif" }}
+        >
+          {lang === "es"
+            ? "Casa Loy Tequilera · Grupo Empresarial"
+            : "Casa Loy Tequilera · Business Group"}
+        </p>
+      </motion.div>
     </div>
   );
 }
