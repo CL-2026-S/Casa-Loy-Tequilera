@@ -226,21 +226,8 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
         }
       ` }} />
 
-      {/* SINGLE UNIFIED FULL-SCREEN BACKGROUND VIDEO */}
+      {/* FULL-SCREEN BACKGROUND VIDEO ONLY */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-        <picture>
-          <source media="(max-width: 768px)" srcSet="/verificador-movil.webp" />
-          <source 
-            media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
-            srcSet="/Verificador-retina.webp" 
-          />
-          <img
-            alt="Campos de Agave"
-            src="/Verificador-escritorio.webp"
-            className="absolute inset-0 w-full h-full object-cover z-0"
-          />
-        </picture>
-        
         {!videoError && (
           <video
             autoPlay
@@ -249,7 +236,7 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
             playsInline
             preload="auto"
             src="/recorrido-campos-casa-loy.mp4"
-            className="absolute inset-0 w-full h-full object-cover z-10"
+            className="absolute inset-0 w-full h-full object-cover z-0"
             onError={() => setVideoError(true)}
           >
             <source
