@@ -43,7 +43,7 @@ export default async function handler(req, res) {
   try {
     // Save reservation to Supabase
     const { data: newBooking, error: insertError } = await supabase
-      .from('nativo_reservations')
+      .from('reservas_nativo')
       .insert({
         code,
         customer_name,
