@@ -16,6 +16,7 @@ export default function Nativo1937({ lang = "es", t }) {
   });
   const [errors, setErrors] = useState({});
   const [bookingCode, setBookingCode] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const content = {
     es: {
@@ -286,33 +287,75 @@ export default function Nativo1937({ lang = "es", t }) {
     }
   };
 
-  const handleConfirmBooking = () => {
+  const handleConfirmBooking = async () => {
+    setIsSubmitting(true);
     const rand = Math.floor(10000 + Math.random() * 90000);
     const code = `NAT-${rand}`;
-    setBookingCode(code);
-    setBookingStep(3);
+    
+    try {
+      const response = await fetch("/api/nativo-booking", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          code,
+          customer_name: bookingData.name,
+          customer_phone: bookingData.phone,
+          guests: bookingData.guests,
+          date_str: bookingData.date,
+          time_str: bookingData.time,
+          reason: bookingData.reason,
+        }),
+      });
+
+      if (response.ok) {
+        setBookingCode(code);
+        setBookingStep(3);
+      } else {
+        const errorData = await response.json();
+        alert(
+          lang === "es"
+            ? `Error al registrar la reserva: ${errorData.message || errorData.error || "Error del servidor"}`
+            : `Error registering reservation: ${errorData.message || errorData.error || "Server error"}`
+        );
+      }
+    } catch (error) {
+      console.error("Error submitting nativo booking:", error);
+      alert(
+        lang === "es"
+          ? "Ocurrió un problema de conexión al registrar tu reserva. Por favor, intenta de nuevo."
+          : "A connection problem occurred while registering your reservation. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const getWhatsAppLink = () => {
-    const formattedPhone = "5213313334751";
+    let cleanPhone = bookingData.phone.replace(/\D/g, "");
+    if (cleanPhone.length === 10) {
+      cleanPhone = "52" + cleanPhone; // Add Mexico prefix
+    }
+    
     const text = lang === "es"
-      ? `Hola 1937 Nativo, me gustaría solicitar una reservación con los siguientes detalles:\n` +
+      ? `Hola, aquí tienes tu código de reservación de 1937 Nativo:\n` +
         `- Código de Reserva: ${bookingCode}\n` +
         `- Nombre: ${bookingData.name}\n` +
         `- Personas: ${bookingData.guests} pax\n` +
         `- Fecha: ${bookingData.date}\n` +
         `- Hora: ${bookingData.time} hrs\n` +
         `- Motivo: ${currentT.booking.reasons[bookingData.reason] || bookingData.reason}\n` +
-        `Espero su confirmación. ¡Muchas gracias!`
-      : `Hello 1937 Nativo, I would like to request a table reservation with the following details:\n` +
+        `¡Reserva registrada con éxito!`
+      : `Hello, here is your 1937 Nativo reservation code:\n` +
         `- Reservation Code: ${bookingCode}\n` +
         `- Name: ${bookingData.name}\n` +
         `- Guests: ${bookingData.guests} pax\n` +
         `- Date: ${bookingData.date}\n` +
         `- Time: ${bookingData.time}\n` +
         `- Reason: ${currentT.booking.reasons[bookingData.reason] || bookingData.reason}\n` +
-        `Looking forward to your confirmation. Thank you!`;
-    return `https://wa.me/${formattedPhone}?text=${encodeURIComponent(text)}`;
+        `Reservation successfully registered!`;
+    return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`;
   };
 
   return (
@@ -848,16 +891,28 @@ export default function Nativo1937({ lang = "es", t }) {
 
                 <div className="flex gap-4 pt-6 border-t border-primary/10">
                   <button
+                    disabled={isSubmitting}
                     onClick={() => setBookingStep(1)}
-                    className="flex-1 border border-primary/20 hover:bg-black/5 text-on-surface font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold py-3 transition-all cursor-pointer text-center bg-transparent"
+                    className="flex-1 border border-primary/20 hover:bg-black/5 text-on-surface font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold py-3 transition-all cursor-pointer text-center bg-transparent disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {currentT.booking.btnBack}
                   </button>
                   <button
+                    disabled={isSubmitting}
                     onClick={handleConfirmBooking}
-                    className="flex-1 bg-primary hover:bg-[#8C4723] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold py-3 transition-all cursor-pointer shadow hover:shadow-md text-center"
+                    className="flex-1 bg-primary hover:bg-[#8C4723] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold py-3 transition-all cursor-pointer shadow hover:shadow-md text-center disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
                   >
-                    {currentT.booking.btnConfirm}
+                    {isSubmitting ? (
+                      <>
+                        <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>{lang === "es" ? "Procesando..." : "Processing..."}</span>
+                      </>
+                    ) : (
+                      currentT.booking.btnConfirm
+                    )}
                   </button>
                 </div>
               </div>
