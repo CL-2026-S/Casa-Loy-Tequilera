@@ -220,12 +220,6 @@ export default function HomeEditorialV2({ lang = "es", setPage, setLang }) {
   const [activeSlide, setActiveSlide] = useState(0);
   const autoplayTimerRef = useRef(null);
 
-  const handleResetAge = () => {
-    localStorage.removeItem("casa_loy_age_verified");
-    sessionStorage.removeItem("casa_loy_age_verified_session");
-    window.location.reload();
-  };
-
   const slides = [
     {
       id: "maquila",
@@ -580,16 +574,6 @@ export default function HomeEditorialV2({ lang = "es", setPage, setLang }) {
           </svg>
         </div>
 
-        {/* Floating reset key for easy demonstration */}
-        <div className="absolute bottom-8 right-8 z-20 select-none">
-          <button
-            onClick={handleResetAge}
-            className="bg-white/10 text-white/60 hover:text-white hover:bg-white/20 px-3 py-1 text-[10px] font-label-caps tracking-widest border border-white/10 rounded-full cursor-pointer"
-            title="Reset verification state for testing"
-          >
-            RESET AGE GATE
-          </button>
-        </div>
       </section>
 
       {/* Hero ➜ Historia gap: 120px desktop, 80px tablet, 64px mobile */}

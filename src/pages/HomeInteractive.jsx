@@ -155,17 +155,6 @@ export default function HomeInteractive({ lang = "es", setPage }) {
             </div>
           </div>
         </div>
-
-        {/* Floating reset key for easy demonstration */}
-        <div className="absolute bottom-8 right-8 z-30 select-none">
-          <button
-            onClick={handleResetAge}
-            className="bg-white/10 text-white/60 hover:text-white hover:bg-white/20 px-3 py-1 text-[10px] font-label-caps tracking-widest border border-white/10 rounded-full"
-            title="Reset verification state for testing"
-          >
-            RESET AGE GATE
-          </button>
-        </div>
       </section>
 
       {/* Quiénes Somos / Deep Roots */}

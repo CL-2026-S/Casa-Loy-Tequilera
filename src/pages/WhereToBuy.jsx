@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const MexicoFlag = ({ active }) => (
   <svg
@@ -63,12 +63,27 @@ const USAFlag = ({ active }) => (
 
 export default function WhereToBuy({ lang }) {
   const [region, setRegion] = useState("mx"); // mx or usa
-  const [activeStore, setActiveStore] = useState({
-    name: "Sucursal Providencia",
-    retailer: "La Playa",
-    address: "Av. Providencia 2345, Guadalajara, Jalisco, MX",
-    phone: "+52 (33) 3641 4590",
-  });
+  const [stores, setStores] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedBrands, setSelectedBrands] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [activeStore, setActiveStore] = useState(null);
+
+  const brandOptions = [
+    { id: "casa-loy", name: "Casa Loy" },
+    { id: "taddel", name: "TADDEL" },
+    { id: "tierra-zafiro", name: "Tierra Zafiro" }
+  ];
+
+  const categoryOptions = [
+    "Blanco",
+    "Reposado",
+    "Añejo",
+    "Extra Añejo",
+    "Cristalino"
+  ];
 
   const localT = {
     es: {
@@ -76,51 +91,111 @@ export default function WhereToBuy({ lang }) {
       title: "Puntos de Venta",
       buyOnline: "Compra en Línea",
       physicalStores: "Tiendas Físicas",
-      searchPlaceholder: "Buscar por Código Postal",
+      searchPlaceholder: "Buscar por CP o Ciudad",
       viewOnMaps: "VER EN MAPS",
       selected: "SELECCIONADO",
       allianceOvertitle: "Alianzas Comerciales",
       allianceTitle: "Vende nuestros productos",
       allianceDesc: "Conviértete en embajador de la herencia y el sabor de Casa Loy. Ofrecemos programas exclusivos para distribuidores y establecimientos de lujo.",
       allianceBtn: "Formulario de Contacto",
+      filterBrands: "Filtrar por Marca",
+      filterCategories: "Filtrar por Categoría",
+      clearFilters: "Limpiar filtros"
     },
     en: {
       overtitle: "Where to Buy",
       title: "Points of Sale",
       buyOnline: "Buy Online",
       physicalStores: "Physical Stores",
-      searchPlaceholder: "Search by ZIP Code",
+      searchPlaceholder: "Search by ZIP or City",
       viewOnMaps: "VIEW ON MAPS",
       selected: "SELECTED",
       allianceOvertitle: "Commercial Alliances",
       allianceTitle: "Sell our products",
       allianceDesc: "Become an ambassador for the heritage and flavor of Casa Loy. We offer exclusive programs for distributors and luxury establishments.",
       allianceBtn: "Contact Form",
+      filterBrands: "Filter by Brand",
+      filterCategories: "Filter by Category",
+      clearFilters: "Clear filters"
     }
   };
 
   const activeT = localT[lang] || localT["es"];
 
-  const physicalStores = [
-    {
-      retailer: "La Playa",
-      name: "Sucursal Providencia",
-      address: "Av. Providencia 2345, Guadalajara, Jalisco, MX",
-      phone: "+52 (33) 3641 4590",
-    },
-    {
-      retailer: "Vinos America",
-      name: "Sucursal Landmark",
-      address: "Paseo de los Virreyes 45, Zapopan, Jalisco, MX",
-      phone: "+52 (33) 3648 1010",
-    },
-    {
-      retailer: "El Palacio de Hierro",
-      name: "Sucursal Polanco",
-      address: "Moliere 222, Polanco, CDMX, MX",
-      phone: "+52 (55) 5283 7200",
-    },
-  ];
+  useEffect(() => {
+    const fetchStores = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch("/api/points-of-sale");
+        if (!res.ok) throw new Error("Error loading stores");
+        const data = await res.json();
+        setStores(data);
+        
+        // Select the first store matching 'mx' region
+        const initialStore = data.find(s => s.region === "mx");
+        if (initialStore) {
+          setActiveStore(initialStore);
+        }
+      } catch (err) {
+        console.error("Error fetching points of sale:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStores();
+  }, []);
+
+  const handleRegionChange = (newRegion) => {
+    setRegion(newRegion);
+    setSearchQuery(""); // Clear search when switching regions
+    setSelectedBrands([]); // Clear filters when switching regions
+    setSelectedCategories([]);
+    const firstInRegion = stores.find(s => s.region === newRegion);
+    if (firstInRegion) {
+      setActiveStore(firstInRegion);
+    } else {
+      setActiveStore(null);
+    }
+  };
+
+  const handleBrandToggle = (brandId) => {
+    setSelectedBrands(prev => 
+      prev.includes(brandId) 
+        ? prev.filter(id => id !== brandId) 
+        : [...prev, brandId]
+    );
+  };
+
+  const handleCategoryToggle = (categoryName) => {
+    setSelectedCategories(prev => 
+      prev.includes(categoryName) 
+        ? prev.filter(cat => cat !== categoryName) 
+        : [...prev, categoryName]
+    );
+  };
+
+  const filteredStores = stores.filter((store) => {
+    const matchesRegion = store.region === region;
+    const matchesSearch = searchQuery
+      ? store.postal_code?.includes(searchQuery) ||
+        store.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        store.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        store.retailer.toLowerCase().includes(searchQuery.toLowerCase())
+      : true;
+
+    // Filter by selected brands (match if store has at least one of the selected brands, or if none selected)
+    const matchesBrands = selectedBrands.length > 0
+      ? store.brands && store.brands.some(b => selectedBrands.includes(b))
+      : true;
+
+    // Filter by selected categories (match if store has at least one of selected categories, or if none selected)
+    const matchesCategories = selectedCategories.length > 0
+      ? store.categories && store.categories.some(c => selectedCategories.includes(c))
+      : true;
+
+    return matchesRegion && matchesSearch && matchesBrands && matchesCategories;
+  });
 
   return (
     <div className="pt-16 bg-background text-on-surface text-left">
@@ -136,7 +211,7 @@ export default function WhereToBuy({ lang }) {
         {/* Region Toggle Tab */}
         <div className="flex justify-center items-center gap-8 w-fit mx-auto select-none pb-2">
           <button
-            onClick={() => setRegion("mx")}
+            onClick={() => handleRegionChange("mx")}
             className="flex flex-col items-center gap-2 group focus:outline-none transition-transform active:scale-95"
             aria-label="México"
           >
@@ -155,7 +230,7 @@ export default function WhereToBuy({ lang }) {
           <div className="h-10 w-[0.5px] bg-outline-variant/30 self-start mt-1"></div>
 
           <button
-            onClick={() => setRegion("usa")}
+            onClick={() => handleRegionChange("usa")}
             className="flex flex-col items-center gap-2 group focus:outline-none transition-transform active:scale-95"
             aria-label="USA"
           >
@@ -231,39 +306,153 @@ export default function WhereToBuy({ lang }) {
                 className="w-full bg-transparent border-b border-outline-variant/60 py-3 pr-12 focus:outline-none focus:border-primary transition-all duration-500 font-body-md placeholder:text-outline-variant/50"
                 placeholder={activeT.searchPlaceholder}
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
+              {searchQuery && (
+                <span 
+                  onClick={() => setSearchQuery("")}
+                  className="material-symbols-outlined absolute right-8 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors cursor-pointer text-[18px]"
+                >
+                  close
+                </span>
+              )}
               <span className="material-symbols-outlined absolute right-0 top-1/2 -translate-y-1/2 text-on-surface-variant group-hover:text-primary transition-colors cursor-pointer">
                 my_location
               </span>
             </div>
 
+            {/* Filter pills for Brands */}
+            <div className="mb-4">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/60">
+                  {activeT.filterBrands}
+                </span>
+                {(selectedBrands.length > 0 || selectedCategories.length > 0) && (
+                  <button 
+                    onClick={() => { setSelectedBrands([]); setSelectedCategories([]); }}
+                    className="text-[10px] uppercase font-bold tracking-wider text-primary hover:underline"
+                  >
+                    {activeT.clearFilters}
+                  </button>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {brandOptions.map(brand => {
+                  const isSelected = selectedBrands.includes(brand.id);
+                  return (
+                    <button
+                      key={brand.id}
+                      onClick={() => handleBrandToggle(brand.id)}
+                      className={`text-[9px] uppercase tracking-widest px-2.5 py-1 border transition-all duration-300 font-bold ${
+                        isSelected 
+                          ? "bg-primary border-primary text-white" 
+                          : "border-outline-variant/30 hover:border-primary/50 text-on-surface-variant/75"
+                      }`}
+                    >
+                      {brand.name}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Filter pills for Categories */}
+            <div className="mb-5">
+              <span className="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/60 mb-2 block">
+                {activeT.filterCategories}
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {categoryOptions.map(category => {
+                  const isSelected = selectedCategories.includes(category);
+                  return (
+                    <button
+                      key={category}
+                      onClick={() => handleCategoryToggle(category)}
+                      className={`text-[9px] px-2.5 py-1 border transition-all duration-300 ${
+                        isSelected 
+                          ? "bg-primary border-primary text-white font-bold" 
+                          : "border-outline-variant/20 hover:border-primary/30 text-on-surface-variant/65"
+                      }`}
+                    >
+                      {category}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             {/* Scroll list wrapper */}
             <div className="flex-1 overflow-y-auto pr-2 space-y-4">
-              {physicalStores.map((store) => (
-                <div
-                  key={store.name}
-                  onClick={() => setActiveStore(store)}
-                  className={`p-5 border-l-4 transition-all duration-300 cursor-pointer text-left shadow-sm ${
-                    activeStore.name === store.name
-                      ? "border-l-primary bg-white shadow-md"
-                      : "border-l-primary/10 bg-white/50 hover:border-l-primary/50 hover:bg-white"
-                  }`}
-                >
-                  <h4 className="font-label-caps text-primary text-[10px] tracking-widest font-bold mb-1">
-                    {store.retailer}
-                  </h4>
-                  <h3 className="font-headline-md text-[18px] font-semibold mb-1">{store.name}</h3>
-                  <p className="text-on-surface-variant/80 text-sm font-normal leading-snug mb-3">
-                    {store.address}
-                  </p>
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-outline font-light tracking-wide">{store.phone}</span>
-                    <button className="flex items-center gap-1.5 text-primary font-label-caps text-[10px] font-bold">
-                      {activeT.viewOnMaps} <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-                    </button>
-                  </div>
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-12 text-on-surface-variant/60">
+                  <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mb-3"></div>
+                  <span className="text-sm font-light">
+                    {lang === "es" ? "Cargando puntos de venta..." : "Loading points of sale..."}
+                  </span>
                 </div>
-              ))}
+              ) : error ? (
+                <div className="text-center py-12 text-secondary font-light text-sm">
+                  {lang === "es" ? "Error al cargar puntos de venta." : "Error loading points of sale."}
+                </div>
+              ) : filteredStores.length === 0 ? (
+                <div className="text-center py-12 text-on-surface-variant/60 font-light text-sm italic">
+                  {lang === "es" ? "No se encontraron sucursales." : "No stores found."}
+                </div>
+              ) : (
+                filteredStores.map((store) => (
+                  <div
+                    key={store.id || store.name}
+                    onClick={() => setActiveStore(store)}
+                    className={`p-5 border-l-4 transition-all duration-300 cursor-pointer text-left shadow-sm ${
+                      activeStore?.id === store.id || activeStore?.name === store.name
+                        ? "border-l-primary bg-white shadow-md"
+                        : "border-l-primary/10 bg-white/50 hover:border-l-primary/50 hover:bg-white"
+                    }`}
+                  >
+                    <h4 className="font-label-caps text-primary text-[10px] tracking-widest font-bold mb-1">
+                      {store.retailer}
+                    </h4>
+                    <h3 className="font-headline-md text-[18px] font-semibold mb-1">{store.name}</h3>
+                    <p className="text-on-surface-variant/80 text-sm font-normal leading-snug mb-2">
+                      {store.address}
+                    </p>
+
+                    {/* Brand and Category Tags */}
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {store.brands && store.brands.map(b => (
+                        <span key={b} className="text-[8px] uppercase tracking-wider bg-primary/15 text-primary px-1.5 py-0.5 font-bold">
+                          {brandOptions.find(o => o.id === b)?.name || b}
+                        </span>
+                      ))}
+                      {store.categories && store.categories.map(c => (
+                        <span key={c} className="text-[8px] uppercase tracking-wider bg-on-surface-variant/5 text-on-surface-variant/80 px-1.5 py-0.5 font-medium">
+                          {c}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-outline font-light tracking-wide">{store.phone}</span>
+                      {store.maps_url ? (
+                        <a 
+                          href={store.maps_url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="flex items-center gap-1.5 text-primary font-label-caps text-[10px] font-bold hover:underline"
+                        >
+                          {activeT.viewOnMaps} <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                        </a>
+                      ) : (
+                        <span className="text-outline-variant text-[10px] italic">
+                          {lang === "es" ? "Sin mapa disponible" : "No map link"}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 
@@ -277,20 +466,40 @@ export default function WhereToBuy({ lang }) {
             <div className="absolute inset-0 bg-gradient-to-b from-[#fcf9f3]/0 via-transparent to-[#fcf9f3] pointer-events-none z-0"></div>
             
             {/* Animated Pin Location Info Overlay */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-10 select-none">
-              <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center animate-pulse shadow-[0_0_30px_rgba(125,63,15,0.6)]">
-                <span className="material-symbols-outlined text-white">location_on</span>
+            {activeStore ? (
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-10 select-none">
+                <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center animate-pulse shadow-[0_0_30px_rgba(125,63,15,0.6)]">
+                  <span className="material-symbols-outlined text-white">location_on</span>
+                </div>
+                <div className="mt-4 p-4 bg-white/90 border border-outline-variant/30 shadow-2xl min-w-[220px] text-center font-sans">
+                  <p className="font-label-caps text-primary text-[9px] tracking-widest font-bold mb-1">
+                    {activeT.selected}
+                  </p>
+                  <p className="font-headline-md text-sm font-semibold text-on-surface">
+                    {activeStore.retailer}
+                  </p>
+                  <p className="text-sm text-on-surface-variant font-normal mb-1.5">{activeStore.name}</p>
+                  {activeStore.brands && activeStore.brands.length > 0 && (
+                    <div className="flex flex-wrap gap-1 justify-center">
+                      {activeStore.brands.map(b => (
+                        <span key={b} className="text-[7px] uppercase tracking-wider bg-primary/10 text-primary px-1 py-0.2 font-bold">
+                          {brandOptions.find(o => o.id === b)?.name || b}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="mt-4 p-4 bg-white/90 border border-outline-variant/30 shadow-2xl min-w-[220px] text-center font-sans">
-                <p className="font-label-caps text-primary text-[9px] tracking-widest font-bold mb-1">
-                  {activeT.selected}
-                </p>
-                <p className="font-headline-md text-sm font-semibold text-on-surface">
-                  {activeStore.retailer}
-                </p>
-                <p className="text-sm text-on-surface-variant font-normal">{activeStore.name}</p>
-              </div>
-            </div>
+            ) : (
+              !loading && (
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-10 select-none bg-white/90 border border-outline-variant/30 p-6 shadow-2xl">
+                  <span className="material-symbols-outlined text-primary text-3xl mb-2">location_off</span>
+                  <p className="text-xs text-on-surface-variant font-light uppercase tracking-widest">
+                    {lang === "es" ? "Selecciona una sucursal" : "Select a location"}
+                  </p>
+                </div>
+              )
+            )}
 
             {/* Map zoom floating tools */}
             <div className="absolute bottom-8 right-8 flex flex-col gap-2">
@@ -333,3 +542,4 @@ export default function WhereToBuy({ lang }) {
     </div>
   );
 }
+
