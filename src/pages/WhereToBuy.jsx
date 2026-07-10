@@ -85,6 +85,9 @@ export default function WhereToBuy({ lang }) {
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [activeStore, setActiveStore] = useState(null);
+  
+  // Dynamic collapsable filters visibility
+  const [showFilters, setShowFilters] = useState(false);
 
   // Geolocator and map states
   const [userLocation, setUserLocation] = useState(null);
@@ -224,6 +227,13 @@ export default function WhereToBuy({ lang }) {
       zoomControl: false,
     });
 
+    // Quiet luxury style minimalist light map tiles
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 20
+    }).addTo(map);
+
     mapRef.current = map;
     const markersLayer = L.layerGroup().addTo(map);
     markersLayerRef.current = markersLayer;
@@ -259,7 +269,7 @@ export default function WhereToBuy({ lang }) {
       if (mapRef.current && firstInRegion.latitude && firstInRegion.longitude) {
         mapRef.current.setView(
           [firstInRegion.latitude, firstInRegion.longitude],
-          12
+          11 // Zoom out slightly so space does not feel empty
         );
       }
     } else {
@@ -317,7 +327,7 @@ export default function WhereToBuy({ lang }) {
         setUserLocation({ latitude, longitude });
         setDistanceSorted(true);
         if (mapRef.current) {
-          mapRef.current.setView([latitude, longitude], 12);
+          mapRef.current.setView([latitude, longitude], 11); // Clean luxury zoom level
         }
       },
       (err) => {
@@ -416,20 +426,53 @@ export default function WhereToBuy({ lang }) {
     const bounds = L.latLngBounds();
     let hasCoords = false;
 
-    const primaryColor = "#7D3F0F";
-    const storeIcon = L.divIcon({
+    // Quiet luxury copper color for points of sale (PDV)
+    const copperColor = "#C58B58";
+    const pdvIcon = L.divIcon({
       className: "custom-leaflet-icon",
-      html: `<div style="background-color: ${primaryColor}; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3);"><span style="color: white; font-size: 14px;" class="material-symbols-outlined">location_on</span></div>`,
-      iconSize: [24, 24],
-      iconAnchor: [12, 24],
-      popupAnchor: [0, -24],
+      html: `
+        <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 32px; height: 36px;">
+          <div style="background-color: ${copperColor}; color: white; width: 28px; height: 28px; border-radius: 50%; border: 2px solid white; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(197,139,88,0.3);">
+            <span class="material-symbols-outlined" style="font-size: 14px; font-weight: bold;">storefront</span>
+          </div>
+          <div style="position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid ${copperColor}; z-index: -1;"></div>
+        </div>
+      `,
+      iconSize: [32, 36],
+      iconAnchor: [16, 34],
+      popupAnchor: [0, -34]
     });
 
+    // Elegant dark forest green/slate for centers of consumption (CDC) with a shot glass (caballito)
+    const cdcColor = "#2F403E";
+    const cdcIcon = L.divIcon({
+      className: "custom-leaflet-icon",
+      html: `
+        <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 32px; height: 36px;">
+          <div style="background-color: ${cdcColor}; color: white; width: 28px; height: 28px; border-radius: 50%; border: 2px solid white; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(47,64,62,0.3);">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="color: white;">
+              <path d="M6 2h12l-1.8 15H7.8L6 2zm2.2 2l1 9h5.6l1-9H8.2z"/>
+            </svg>
+          </div>
+          <div style="position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid ${cdcColor}; z-index: -1;"></div>
+        </div>
+      `,
+      iconSize: [32, 36],
+      iconAnchor: [16, 34],
+      popupAnchor: [0, -34]
+    });
+
+    // Minimal user radar blue dot
     const userIcon = L.divIcon({
       className: "custom-leaflet-user-icon",
-      html: `<div style="background-color: #3b82f6; width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3);"><span style="color: white; font-size: 14px;" class="material-symbols-outlined">person_pin_circle</span></div>`,
-      iconSize: [24, 24],
-      iconAnchor: [12, 24],
+      html: `
+        <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px;">
+          <div style="background-color: #3b82f6; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px rgba(59,130,246,0.6); position: relative; z-index: 2;"></div>
+          <div style="background-color: #3b82f6; width: 24px; height: 24px; border-radius: 50%; opacity: 0.3; position: absolute; animation: leaflet-pulsate 1.8s ease-out infinite; z-index: 1;"></div>
+        </div>
+      `,
+      iconSize: [32, 32],
+      iconAnchor: [16, 16]
     });
 
     // Plot stores
@@ -439,7 +482,7 @@ export default function WhereToBuy({ lang }) {
         bounds.extend([store.latitude, store.longitude]);
 
         const marker = L.marker([store.latitude, store.longitude], {
-          icon: storeIcon,
+          icon: store.cdc ? cdcIcon : pdvIcon,
         });
 
         // Compute distance label if user is geolocated
@@ -451,14 +494,14 @@ export default function WhereToBuy({ lang }) {
             store.latitude,
             store.longitude
           );
-          distHtml = `<p style="margin: 0; font-size: 11px; font-weight: bold; color: ${primaryColor};">${d.toFixed(
+          distHtml = `<p style="margin: 0; font-size: 11px; font-weight: bold; color: ${copperColor};">${d.toFixed(
             1
           )} km ${activeT.distanceLabel}</p>`;
         }
 
         const popupContent = `
           <div style="font-family: sans-serif; padding: 4px; text-align: left; min-width: 160px;">
-            <h4 style="margin: 0 0 2px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: ${primaryColor}; font-weight: bold;">${store.retailer}</h4>
+            <h4 style="margin: 0 0 2px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: ${store.cdc ? cdcColor : copperColor}; font-weight: bold;">${store.retailer}</h4>
             <h3 style="margin: 0 0 4px 0; font-size: 13px; font-weight: 600; color: #1f2937;">${store.name}</h3>
             <p style="margin: 0 0 6px 0; font-size: 11px; color: #4b5563; line-height: 1.3;">${store.address}</p>
             ${distHtml}
@@ -470,7 +513,7 @@ export default function WhereToBuy({ lang }) {
           setActiveStore(store);
           map.setView(
             [store.latitude, store.longitude],
-            Math.max(map.getZoom(), 12)
+            11 // Medium zoom level so map space never feels empty
           );
         });
 
@@ -499,19 +542,41 @@ export default function WhereToBuy({ lang }) {
     }
 
     if (hasCoords && storesFilteredByCriteria.length > 0) {
-      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 13 });
+      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 11 }); // Fit all results comfortably
     }
   }, [storesFilteredByCriteria, userLocation]);
 
   const handleStoreClick = (store) => {
     setActiveStore(store);
     if (mapRef.current && store.latitude && store.longitude) {
-      mapRef.current.setView([store.latitude, store.longitude], 14);
+      mapRef.current.setView([store.latitude, store.longitude], 11); // Zoom level 11 displays map details around store
     }
   };
 
+  const pulseStyle = `
+    @keyframes leaflet-pulsate {
+      0% { transform: scale(0.1); opacity: 0.0; }
+      50% { opacity: 0.4; }
+      100% { transform: scale(1.2); opacity: 0.0; }
+    }
+    .custom-leaflet-icon, .custom-leaflet-user-icon {
+      background: none !important;
+      border: none !important;
+    }
+    .leaflet-popup-content-wrapper {
+      border-radius: 0px !important;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
+    }
+    .leaflet-bar {
+      border: none !important;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05) !important;
+    }
+  `;
+
   return (
     <div className="pt-16 bg-background text-on-surface text-left">
+      <style>{pulseStyle}</style>
+
       {/* Hero Section */}
       <header className="max-w-container-max mx-auto px-margin-desktop text-center py-10 md:py-12 animate-fade-in">
         <span className="font-label-caps text-[10px] text-secondary mb-3 block uppercase tracking-[0.3em]">
@@ -634,38 +699,38 @@ export default function WhereToBuy({ lang }) {
               {activeT.physicalStores}
             </h2>
 
-            {/* Search filter bar */}
-            <div className="relative mb-3 group">
-              <input
-                className="w-full bg-transparent border-b border-outline-variant/60 py-3 pr-16 focus:outline-none focus:border-primary transition-all duration-500 font-body-md placeholder:text-outline-variant/50"
-                placeholder={activeT.searchPlaceholder}
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              {searchQuery && (
-                <span
-                  onClick={() => setSearchQuery("")}
-                  className="material-symbols-outlined absolute right-10 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors cursor-pointer text-[18px]"
-                >
-                  close
-                </span>
-              )}
-              <span
+            {/* Combined Geolocator Search Input (Quiet Luxury style) */}
+            <div className="flex gap-2 mb-3">
+              <button
                 onClick={handleGeolocate}
-                title={
-                  lang === "es"
-                    ? "Buscar tiendas cercanas"
-                    : "Find nearby stores"
-                }
-                className="material-symbols-outlined absolute right-0 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors cursor-pointer text-[20px]"
+                className="flex-1 flex items-center justify-center gap-2 bg-[#C58B58] text-white hover:bg-[#A66C3E] font-label-caps text-[9px] tracking-widest font-bold py-3.5 px-4 shadow-sm transition-all active:scale-98 duration-300 cursor-pointer"
+                title={lang === "es" ? "Buscar tiendas cercanas" : "Find nearby stores"}
               >
-                my_location
-              </span>
+                <span className="material-symbols-outlined text-[15px] animate-pulse">my_location</span>
+                <span>{lang === "es" ? "CERCA DE MÍ" : "NEAR ME"}</span>
+              </button>
+              
+              <div className="relative w-44">
+                <input
+                  className="w-full h-full bg-white border border-outline-variant/30 px-3 py-3 focus:outline-none focus:border-primary transition-all duration-300 font-body-md placeholder:text-outline-variant/50 text-xs"
+                  placeholder={lang === "es" ? "O busca CP/Ciudad" : "Or ZIP/City..."}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                {searchQuery && (
+                  <span
+                    onClick={() => setSearchQuery("")}
+                    className="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors cursor-pointer text-[14px]"
+                  >
+                    close
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* Toggle Map Viewport Filtering */}
-            <div className="flex items-center gap-2 mb-4 select-none">
+            <div className="flex items-center gap-2 mb-3 select-none">
               <input
                 type="checkbox"
                 id="filter-by-map-checkbox"
@@ -675,102 +740,131 @@ export default function WhereToBuy({ lang }) {
               />
               <label
                 htmlFor="filter-by-map-checkbox"
-                className="text-[10px] uppercase font-bold tracking-wider text-on-surface-variant/70 cursor-pointer"
+                className="text-[9px] uppercase font-bold tracking-wider text-on-surface-variant/60 cursor-pointer"
               >
                 {activeT.filterByMapLabel}
               </label>
             </div>
 
-            {/* Filter pills for Establishment Types */}
-            <div className="mb-4">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/60">
-                  {activeT.filterTypes}
-                </span>
-                {(selectedTypes.length > 0 ||
-                  selectedBrands.length > 0 ||
-                  selectedCategories.length > 0) && (
-                  <button
-                    onClick={() => {
-                      setSelectedTypes([]);
-                      setSelectedBrands([]);
-                      setSelectedCategories([]);
-                    }}
-                    className="text-[10px] uppercase font-bold tracking-wider text-primary hover:underline"
-                  >
-                    {activeT.clearFilters}
-                  </button>
+            {/* Collapsable Dynamic Filter Trigger */}
+            <button 
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center justify-between w-full py-2.5 px-4 bg-white border border-outline-variant/20 hover:border-primary/50 transition-all duration-300 font-label-caps text-[9px] tracking-widest font-bold text-on-surface-variant select-none cursor-pointer mb-3 shadow-sm"
+            >
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[15px]">tune</span>
+                <span>{lang === "es" ? "FILTROS" : "FILTERS"}</span>
+                {(selectedTypes.length > 0 || selectedBrands.length > 0 || selectedCategories.length > 0) && (
+                  <span className="bg-primary text-white text-[8px] px-1.5 py-0.2 rounded-full font-bold ml-1">
+                    {selectedTypes.length + selectedBrands.length + selectedCategories.length}
+                  </span>
                 )}
               </div>
-              <div className="flex flex-wrap gap-1.5">
-                {typeOptions.map((type) => {
-                  const isSelected = selectedTypes.includes(type.id);
-                  return (
-                    <button
-                      key={type.id}
-                      onClick={() => handleTypeToggle(type.id)}
-                      className={`text-[9px] uppercase tracking-widest px-2.5 py-1 border transition-all duration-300 font-bold ${
-                        isSelected
-                          ? "bg-primary border-primary text-white"
-                          : "border-outline-variant/30 hover:border-primary/50 text-on-surface-variant/75"
-                      }`}
-                    >
-                      {type.name}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Filter pills for Brands */}
-            <div className="mb-4">
-              <span className="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/60 mb-2 block">
-                {activeT.filterBrands}
+              <span 
+                className="material-symbols-outlined text-[15px] transition-transform duration-300"
+                style={{ transform: showFilters ? 'rotate(180deg)' : 'none' }}
+              >
+                keyboard_arrow_down
               </span>
-              <div className="flex flex-wrap gap-1.5">
-                {brandOptions.map((brand) => {
-                  const isSelected = selectedBrands.includes(brand.id);
-                  return (
-                    <button
-                      key={brand.id}
-                      onClick={() => handleBrandToggle(brand.id)}
-                      className={`text-[9px] uppercase tracking-widest px-2.5 py-1 border transition-all duration-300 font-bold ${
-                        isSelected
-                          ? "bg-primary border-primary text-white"
-                          : "border-outline-variant/30 hover:border-primary/50 text-on-surface-variant/75"
-                      }`}
-                    >
-                      {brand.name}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+            </button>
 
-            {/* Filter pills for Categories */}
-            <div className="mb-5">
-              <span className="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/60 mb-2 block">
-                {activeT.filterCategories}
-              </span>
-              <div className="flex flex-wrap gap-1.5">
-                {availableCategories.map((category) => {
-                  const isSelected = selectedCategories.includes(category);
-                  return (
-                    <button
-                      key={category}
-                      onClick={() => handleCategoryToggle(category)}
-                      className={`text-[9px] px-2.5 py-1 border transition-all duration-300 ${
-                        isSelected
-                          ? "bg-primary border-primary text-white font-bold"
-                          : "border-outline-variant/20 hover:border-primary/30 text-on-surface-variant/65"
-                      }`}
-                    >
-                      {category}
-                    </button>
-                  );
-                })}
+            {/* Dynamic Filter Panel (slide-open content) */}
+            {showFilters && (
+              <div className="bg-white/40 border border-outline-variant/15 p-4 mb-4 space-y-4 animate-fade-in shadow-sm">
+                
+                {/* Filter pills for Establishment Types */}
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-[9px] uppercase font-bold tracking-widest text-on-surface-variant/50">
+                      {activeT.filterTypes}
+                    </span>
+                    {(selectedTypes.length > 0 ||
+                      selectedBrands.length > 0 ||
+                      selectedCategories.length > 0) && (
+                      <button
+                        onClick={() => {
+                          setSelectedTypes([]);
+                          setSelectedBrands([]);
+                          setSelectedCategories([]);
+                        }}
+                        className="text-[9px] uppercase font-bold tracking-wider text-primary hover:underline"
+                      >
+                        {activeT.clearFilters}
+                      </button>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {typeOptions.map((type) => {
+                      const isSelected = selectedTypes.includes(type.id);
+                      return (
+                        <button
+                          key={type.id}
+                          onClick={() => handleTypeToggle(type.id)}
+                          className={`text-[9px] uppercase tracking-widest px-2.5 py-1 border transition-all duration-300 font-bold ${
+                            isSelected
+                              ? "bg-primary border-primary text-white"
+                              : "border-outline-variant/30 hover:border-primary/50 text-on-surface-variant/75 bg-white"
+                          }`}
+                        >
+                          {type.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Filter pills for Brands */}
+                <div>
+                  <span className="text-[9px] uppercase font-bold tracking-widest text-on-surface-variant/50 mb-2 block">
+                    {activeT.filterBrands}
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {brandOptions.map((brand) => {
+                      const isSelected = selectedBrands.includes(brand.id);
+                      return (
+                        <button
+                          key={brand.id}
+                          onClick={() => handleBrandToggle(brand.id)}
+                          className={`text-[9px] uppercase tracking-widest px-2.5 py-1 border transition-all duration-300 font-bold ${
+                            isSelected
+                              ? "bg-primary border-primary text-white"
+                              : "border-outline-variant/30 hover:border-primary/50 text-on-surface-variant/75 bg-white"
+                          }`}
+                        >
+                          {brand.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Filter pills for Categories */}
+                <div>
+                  <span className="text-[9px] uppercase font-bold tracking-widest text-on-surface-variant/50 mb-2 block">
+                    {activeT.filterCategories}
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {availableCategories.map((category) => {
+                      const isSelected = selectedCategories.includes(category);
+                      return (
+                        <button
+                          key={category}
+                          onClick={() => handleCategoryToggle(category)}
+                          className={`text-[9px] px-2.5 py-1 border transition-all duration-300 ${
+                            isSelected
+                              ? "bg-primary border-primary text-white font-bold"
+                              : "border-outline-variant/20 hover:border-primary/30 text-on-surface-variant/65 bg-white"
+                          }`}
+                        >
+                          {category}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
               </div>
-            </div>
+            )}
 
             {/* Scroll list wrapper */}
             <div className="flex-1 overflow-y-auto pr-2 space-y-4">
@@ -802,7 +896,7 @@ export default function WhereToBuy({ lang }) {
                         {store.retailer}
                       </h4>
                       {store.distance !== undefined && (
-                        <span className="text-[8px] bg-primary/15 text-primary px-1.5 py-0.5 font-bold uppercase tracking-wider">
+                        <span className="text-[8px] bg-[#C58B58]/15 text-[#C58B58] px-1.5 py-0.5 font-bold uppercase tracking-wider">
                           {store.distance.toFixed(1)} km
                         </span>
                       )}
@@ -817,12 +911,12 @@ export default function WhereToBuy({ lang }) {
                     {/* Establishment Type, Brand and Category Tags */}
                     <div className="flex flex-wrap gap-1 mb-3">
                       {store.pdv && (
-                        <span className="text-[8px] uppercase tracking-wider bg-outline-variant/15 text-on-surface-variant/80 px-1.5 py-0.5 font-bold">
+                        <span className="text-[8px] uppercase tracking-wider bg-outline-variant/10 text-on-surface-variant/70 px-1.5 py-0.5 font-bold">
                           {lang === "es" ? "Punto de Venta" : "Retail Store"}
                         </span>
                       )}
                       {store.cdc && (
-                        <span className="text-[8px] uppercase tracking-wider bg-outline-variant/15 text-on-surface-variant/80 px-1.5 py-0.5 font-bold">
+                        <span className="text-[8px] uppercase tracking-wider bg-outline-variant/10 text-on-surface-variant/70 px-1.5 py-0.5 font-bold">
                           {lang === "es" ? "Centro de Consumo" : "Restaurant/Bar"}
                         </span>
                       )}
@@ -880,30 +974,30 @@ export default function WhereToBuy({ lang }) {
             {/* Map container */}
             <div ref={mapContainerRef} className="w-full h-full z-0" />
 
-            {/* Overlay Info Card (React overlay on map) */}
+            {/* Overlay Info Card (React overlay on map) - Elegant minimalist luxury style */}
             {activeStore && (
-              <div className="absolute bottom-6 left-6 right-6 lg:right-auto z-[1000] p-5 bg-white/95 backdrop-blur-md border border-outline-variant/30 shadow-2xl min-w-[280px] lg:max-w-md text-left font-sans transition-all duration-300">
-                <p className="font-label-caps text-primary text-[9px] tracking-widest font-bold mb-1">
+              <div className="absolute bottom-6 left-6 right-6 lg:right-auto z-[1000] p-6 bg-white/90 backdrop-blur-md border border-outline-variant/10 shadow-xl min-w-[280px] lg:max-w-md text-left font-sans transition-all duration-300">
+                <p className="font-label-caps text-primary text-[8px] tracking-[0.2em] font-bold mb-1.5">
                   {activeT.selected}
                 </p>
-                <p className="font-headline-md text-sm font-semibold text-on-surface">
+                <p className="font-display-hero text-[15px] font-semibold text-on-surface mb-0.5">
                   {activeStore.retailer}
                 </p>
-                <p className="text-sm text-on-surface-variant font-normal mb-1">
+                <p className="text-[12px] text-on-surface-variant font-light mb-1">
                   {activeStore.name}
                 </p>
-                <p className="text-xs text-on-surface-variant/85 font-normal mb-3 leading-snug">
+                <p className="text-[11px] text-on-surface-variant/80 font-light mb-4 leading-relaxed max-w-[320px]">
                   {activeStore.address}
                 </p>
 
-                <div className="flex flex-wrap gap-1 mb-3">
+                <div className="flex flex-wrap gap-1 mb-4">
                   {activeStore.pdv && (
-                    <span className="text-[8px] uppercase tracking-wider bg-outline-variant/15 text-on-surface-variant/80 px-1.5 py-0.5 font-bold">
+                    <span className="text-[8px] uppercase tracking-wider bg-outline-variant/10 text-on-surface-variant/70 px-1.5 py-0.5 font-bold">
                       {lang === "es" ? "Punto de Venta" : "Retail Store"}
                     </span>
                   )}
                   {activeStore.cdc && (
-                    <span className="text-[8px] uppercase tracking-wider bg-outline-variant/15 text-on-surface-variant/80 px-1.5 py-0.5 font-bold">
+                    <span className="text-[8px] uppercase tracking-wider bg-outline-variant/10 text-on-surface-variant/70 px-1.5 py-0.5 font-bold">
                       {lang === "es" ? "Centro de Consumo" : "Restaurant/Bar"}
                     </span>
                   )}
@@ -920,15 +1014,15 @@ export default function WhereToBuy({ lang }) {
                     activeStore.categories.map((c) => (
                       <span
                         key={c}
-                        className="text-[8px] uppercase tracking-wider bg-on-surface-variant/5 text-on-surface-variant/80 px-1.5 py-0.5 font-medium"
+                        className="text-[8px] uppercase tracking-wider bg-on-surface-variant/5 text-on-surface-variant/70 px-1.5 py-0.5 font-medium"
                       >
                         {c}
                       </span>
                     ))}
                 </div>
 
-                <div className="flex justify-between items-center text-xs">
-                  <span className="text-outline font-light tracking-wide">
+                <div className="flex justify-between items-center text-[10px] pt-3 border-t border-outline-variant/10">
+                  <span className="text-outline font-light tracking-wide uppercase text-[8px]">
                     {activeStore.fase}
                   </span>
                   {activeStore.maps_url && (
@@ -936,10 +1030,10 @@ export default function WhereToBuy({ lang }) {
                       href={activeStore.maps_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-primary font-label-caps text-[9px] font-bold hover:underline"
+                      className="flex items-center gap-1 text-primary font-label-caps font-bold hover:underline"
                     >
                       {activeT.viewOnMaps}{" "}
-                      <span className="material-symbols-outlined text-[12px]">
+                      <span className="material-symbols-outlined text-[10px]">
                         arrow_forward
                       </span>
                     </a>
@@ -962,13 +1056,13 @@ export default function WhereToBuy({ lang }) {
             <div className="absolute bottom-8 right-8 flex flex-col gap-2 z-[1000]">
               <button
                 onClick={handleZoomIn}
-                className="w-10 h-10 bg-white/90 backdrop-blur-xl border border-outline-variant/30 flex items-center justify-center hover:bg-primary hover:text-white transition-all shadow-md active:scale-95 text-on-surface cursor-pointer"
+                className="w-10 h-10 bg-white/90 backdrop-blur-xl border border-outline-variant/30 flex items-center justify-center hover:bg-[#C58B58] hover:text-white transition-all shadow-md active:scale-95 text-on-surface cursor-pointer"
               >
                 <span className="material-symbols-outlined font-bold">add</span>
               </button>
               <button
                 onClick={handleZoomOut}
-                className="w-10 h-10 bg-white/90 backdrop-blur-xl border border-outline-variant/30 flex items-center justify-center hover:bg-primary hover:text-white transition-all shadow-md active:scale-95 text-on-surface cursor-pointer"
+                className="w-10 h-10 bg-white/90 backdrop-blur-xl border border-outline-variant/30 flex items-center justify-center hover:bg-[#C58B58] hover:text-white transition-all shadow-md active:scale-95 text-on-surface cursor-pointer"
               >
                 <span className="material-symbols-outlined font-bold">
                   remove
