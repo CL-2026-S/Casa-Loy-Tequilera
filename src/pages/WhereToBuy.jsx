@@ -81,6 +81,7 @@ export default function WhereToBuy({ lang }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTypes, setSelectedTypes] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [activeStore, setActiveStore] = useState(null);
@@ -95,6 +96,11 @@ export default function WhereToBuy({ lang }) {
   const mapRef = useRef(null);
   const markersLayerRef = useRef(null);
   const userMarkerRef = useRef(null);
+
+  const typeOptions = [
+    { id: "pdv", name: lang === "es" ? "Punto de Venta" : "Retail Store" },
+    { id: "cdc", name: lang === "es" ? "Centro de Consumo" : "Restaurant / Bar" },
+  ];
 
   const brandOptions = [
     { id: "casa-loy", name: "Casa Loy" },
@@ -147,6 +153,7 @@ export default function WhereToBuy({ lang }) {
       allianceDesc:
         "Conviértete en embajador de la herencia y el sabor de Casa Loy. Ofrecemos programas exclusivos para distribuidores y establecimientos de lujo.",
       allianceBtn: "Formulario de Contacto",
+      filterTypes: "Tipo de Establecimiento",
       filterBrands: "Filtrar por Marca",
       filterCategories: "Filtrar por Categoría",
       clearFilters: "Limpiar filtros",
@@ -169,6 +176,7 @@ export default function WhereToBuy({ lang }) {
       allianceDesc:
         "Become an ambassador for the heritage and flavor of Casa Loy. We offer exclusive programs for distributors and luxury establishments.",
       allianceBtn: "Contact Form",
+      filterTypes: "Establishment Type",
       filterBrands: "Filter by Brand",
       filterCategories: "Filter by Category",
       clearFilters: "Clear filters",
@@ -242,6 +250,7 @@ export default function WhereToBuy({ lang }) {
   const handleRegionChange = (newRegion) => {
     setRegion(newRegion);
     setSearchQuery("");
+    setSelectedTypes([]);
     setSelectedBrands([]);
     setSelectedCategories([]);
     const firstInRegion = stores.find((s) => s.region === newRegion);
@@ -256,6 +265,14 @@ export default function WhereToBuy({ lang }) {
     } else {
       setActiveStore(null);
     }
+  };
+
+  const handleTypeToggle = (typeId) => {
+    setSelectedTypes((prev) =>
+      prev.includes(typeId)
+        ? prev.filter((id) => id !== typeId)
+        : [...prev, typeId]
+    );
   };
 
   const handleBrandToggle = (brandId) => {
@@ -329,6 +346,13 @@ export default function WhereToBuy({ lang }) {
   // Filter criteria before viewport mapping
   const storesFilteredByCriteria = stores.filter((store) => {
     const matchesRegion = store.region === region;
+
+    const matchesTypes =
+      selectedTypes.length > 0
+        ? (selectedTypes.includes("pdv") && store.pdv) ||
+          (selectedTypes.includes("cdc") && store.cdc)
+        : true;
+
     const matchesSearch = searchQuery
       ? store.postal_code?.includes(searchQuery) ||
         store.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -347,7 +371,7 @@ export default function WhereToBuy({ lang }) {
           store.categories.some((c) => selectedCategories.includes(c))
         : true;
 
-    return matchesRegion && matchesSearch && matchesBrands && matchesCategories;
+    return matchesRegion && matchesTypes && matchesSearch && matchesBrands && matchesCategories;
   });
 
   // Inject straight-line distances in km
@@ -657,16 +681,18 @@ export default function WhereToBuy({ lang }) {
               </label>
             </div>
 
-            {/* Filter pills for Brands */}
+            {/* Filter pills for Establishment Types */}
             <div className="mb-4">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/60">
-                  {activeT.filterBrands}
+                  {activeT.filterTypes}
                 </span>
-                {(selectedBrands.length > 0 ||
+                {(selectedTypes.length > 0 ||
+                  selectedBrands.length > 0 ||
                   selectedCategories.length > 0) && (
                   <button
                     onClick={() => {
+                      setSelectedTypes([]);
                       setSelectedBrands([]);
                       setSelectedCategories([]);
                     }}
@@ -676,6 +702,31 @@ export default function WhereToBuy({ lang }) {
                   </button>
                 )}
               </div>
+              <div className="flex flex-wrap gap-1.5">
+                {typeOptions.map((type) => {
+                  const isSelected = selectedTypes.includes(type.id);
+                  return (
+                    <button
+                      key={type.id}
+                      onClick={() => handleTypeToggle(type.id)}
+                      className={`text-[9px] uppercase tracking-widest px-2.5 py-1 border transition-all duration-300 font-bold ${
+                        isSelected
+                          ? "bg-primary border-primary text-white"
+                          : "border-outline-variant/30 hover:border-primary/50 text-on-surface-variant/75"
+                      }`}
+                    >
+                      {type.name}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Filter pills for Brands */}
+            <div className="mb-4">
+              <span className="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant/60 mb-2 block">
+                {activeT.filterBrands}
+              </span>
               <div className="flex flex-wrap gap-1.5">
                 {brandOptions.map((brand) => {
                   const isSelected = selectedBrands.includes(brand.id);
@@ -763,8 +814,18 @@ export default function WhereToBuy({ lang }) {
                       {store.address}
                     </p>
 
-                    {/* Brand and Category Tags */}
+                    {/* Establishment Type, Brand and Category Tags */}
                     <div className="flex flex-wrap gap-1 mb-3">
+                      {store.pdv && (
+                        <span className="text-[8px] uppercase tracking-wider bg-outline-variant/15 text-on-surface-variant/80 px-1.5 py-0.5 font-bold">
+                          {lang === "es" ? "Punto de Venta" : "Retail Store"}
+                        </span>
+                      )}
+                      {store.cdc && (
+                        <span className="text-[8px] uppercase tracking-wider bg-outline-variant/15 text-on-surface-variant/80 px-1.5 py-0.5 font-bold">
+                          {lang === "es" ? "Centro de Consumo" : "Restaurant/Bar"}
+                        </span>
+                      )}
                       {store.brands &&
                         store.brands.map((b) => (
                           <span
@@ -836,6 +897,16 @@ export default function WhereToBuy({ lang }) {
                 </p>
 
                 <div className="flex flex-wrap gap-1 mb-3">
+                  {activeStore.pdv && (
+                    <span className="text-[8px] uppercase tracking-wider bg-outline-variant/15 text-on-surface-variant/80 px-1.5 py-0.5 font-bold">
+                      {lang === "es" ? "Punto de Venta" : "Retail Store"}
+                    </span>
+                  )}
+                  {activeStore.cdc && (
+                    <span className="text-[8px] uppercase tracking-wider bg-outline-variant/15 text-on-surface-variant/80 px-1.5 py-0.5 font-bold">
+                      {lang === "es" ? "Centro de Consumo" : "Restaurant/Bar"}
+                    </span>
+                  )}
                   {activeStore.brands &&
                     activeStore.brands.map((b) => (
                       <span
