@@ -95,6 +95,56 @@ export default function WhereToBuy({ lang }) {
   const [filterByMap, setFilterByMap] = useState(true);
   const [mapBounds, setMapBounds] = useState(null);
 
+  // Alliances Form states
+  const [isAlliancesFormOpen, setIsAlliancesFormOpen] = useState(false);
+  const [alliancesForm, setAlliancesForm] = useState({
+    name: "",
+    company: "",
+    email: "",
+    lada: "52",
+    phone: "",
+    market: "",
+    message: ""
+  });
+  const [alliancesStatus, setAlliancesStatus] = useState("idle"); // idle | loading | success | error
+  const [alliancesError, setAlliancesError] = useState("");
+
+  const handleAlliancesSubmit = async (e) => {
+    e.preventDefault();
+    const { name, company, email, lada, phone, market } = alliancesForm;
+
+    if (!name || !company || !email || !lada || !phone || !market) {
+      setAlliancesError(lang === "es" ? "Por favor completa todos los campos obligatorios." : "Please fill out all required fields.");
+      return;
+    }
+
+    setAlliancesStatus("loading");
+    setAlliancesError("");
+
+    try {
+      const response = await fetch("/api/alliances", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(alliancesForm),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setAlliancesStatus("success");
+      } else {
+        setAlliancesStatus("error");
+        setAlliancesError(data.error || (lang === "es" ? "Hubo un error del servidor. Inténtalo más tarde." : "Server error. Please try again later."));
+      }
+    } catch (err) {
+      console.error("Error submitting alliances form:", err);
+      setAlliancesStatus("error");
+      setAlliancesError(lang === "es" ? "Error de conexión. Verifica tu internet." : "Connection error. Please check your internet.");
+    }
+  };
+
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const markersLayerRef = useRef(null);
@@ -165,6 +215,33 @@ export default function WhereToBuy({ lang }) {
       selectedMarker: "Seleccionado",
       noMapAvailable: "Sin mapa disponible",
       noStoresFound: "No se encontraron sucursales.",
+      alliancesForm: {
+        title: "Propuesta de Alianza Comercial",
+        desc: "Completa el formulario para que nuestro equipo comercial se ponga en contacto contigo y evaluemos la distribución en tu establecimiento o zona.",
+        name: "Nombre Completo",
+        company: "Empresa o Establecimiento",
+        email: "Correo Electrónico",
+        lada: "Lada",
+        phone: "Teléfono",
+        market: "Mercado / País de Interés",
+        marketSelect: "Selecciona el mercado...",
+        marketMX: "México",
+        marketUSA: "Estados Unidos (USA)",
+        marketHK: "Hong Kong",
+        marketCO: "Colombia",
+        marketGT: "Guatemala",
+        marketOther: "Otro / Internacional",
+        message: "Mensaje / Descripción del Negocio",
+        submit: "ENVIAR SOLICITUD",
+        submitting: "ENVIANDO...",
+        success: "¡Solicitud Recibida!",
+        successDesc: "Muchas gracias por tu interés en Casa Loy. Nuestro equipo comercial revisará tus datos y se comunicará contigo a la brevedad.",
+        close: "Cerrar",
+        required: "Este campo es requerido.",
+        errorTitle: "Hubo un problema al enviar tu solicitud.",
+        disclaimer: "Al enviar este formulario aceptas el tratamiento de tus datos conforme a nuestro ",
+        privacyLink: "Aviso de Privacidad",
+      }
     },
     en: {
       overtitle: "Where to Buy",
@@ -188,6 +265,33 @@ export default function WhereToBuy({ lang }) {
       selectedMarker: "Selected",
       noMapAvailable: "No map link",
       noStoresFound: "No stores found.",
+      alliancesForm: {
+        title: "Commercial Alliance Proposal",
+        desc: "Complete the form for our commercial team to get in touch and evaluate distribution in your establishment or area.",
+        name: "Full Name",
+        company: "Company or Establishment",
+        email: "Email Address",
+        lada: "Area Code",
+        phone: "Phone Number",
+        market: "Target Market / Country",
+        marketSelect: "Select target market...",
+        marketMX: "Mexico",
+        marketUSA: "United States (USA)",
+        marketHK: "Hong Kong",
+        marketCO: "Colombia",
+        marketGT: "Guatemala",
+        marketOther: "Other / International",
+        message: "Message / Business Description",
+        submit: "SEND REQUEST",
+        submitting: "SENDING...",
+        success: "Request Received!",
+        successDesc: "Thank you for your interest in Casa Loy. Our sales team will review your information and get back to you shortly.",
+        close: "Close",
+        required: "This field is required.",
+        errorTitle: "There was a problem sending your request.",
+        disclaimer: "By submitting this form you agree to the processing of your data according to our ",
+        privacyLink: "Privacy Policy",
+      }
     },
   };
 
@@ -1078,6 +1182,11 @@ export default function WhereToBuy({ lang }) {
             <div className="flex-shrink-0">
               <button 
                 type="button"
+                onClick={() => {
+                  setIsAlliancesFormOpen(true);
+                  setAlliancesStatus("idle");
+                  setAlliancesError("");
+                }}
                 className="bg-primary text-white font-navigation text-[11px] px-8 py-4 uppercase tracking-widest hover:bg-secondary transition-all shadow-lg hover:shadow-primary/20 active:scale-95 duration-200 cursor-pointer"
               >
                 {activeT.allianceBtn}
@@ -1086,6 +1195,225 @@ export default function WhereToBuy({ lang }) {
           </div>
         </div>
       </section>
+
+      {/* Alliances Form Modal */}
+      {isAlliancesFormOpen && (
+        <div className="fixed inset-0 z-[1100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in transition-opacity duration-300">
+          <div 
+            className="absolute inset-0 cursor-default" 
+            onClick={() => {
+              setIsAlliancesFormOpen(false);
+              setAlliancesStatus("idle");
+              setAlliancesError("");
+            }} 
+          />
+          
+          <div className="relative w-full max-w-2xl bg-[#FCF9F3] text-[#1C1C18] border border-[#8C4723]/15 shadow-2xl p-6 md:p-10 overflow-y-auto max-h-[90vh] rounded-none z-10 flex flex-col justify-between">
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={() => {
+                setIsAlliancesFormOpen(false);
+                setAlliancesStatus("idle");
+                setAlliancesError("");
+              }}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-[#1C1C18]/40 hover:text-[#8C4723] transition-colors duration-300 hover:rotate-90 select-none cursor-pointer focus:outline-none"
+              aria-label={activeT.alliancesForm.close}
+            >
+              <span className="material-symbols-outlined font-light text-xl">close</span>
+            </button>
+
+            {alliancesStatus !== "success" ? (
+              <form onSubmit={handleAlliancesSubmit} className="space-y-6 pt-2 text-left">
+                <div className="space-y-2">
+                  <span className="font-label-caps text-primary tracking-[0.25em] uppercase text-[10px] block font-bold">
+                    {activeT.allianceOvertitle}
+                  </span>
+                  <h3 className="font-serif text-[24px] md:text-[28px] font-bold text-[#2F403E] leading-tight tracking-wide">
+                    {activeT.alliancesForm.title}
+                  </h3>
+                  <p className="font-navigation text-[12.5px] text-[#53443a] leading-relaxed font-normal">
+                    {activeT.alliancesForm.desc}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Name */}
+                  <div className="space-y-1">
+                    <label className="block font-navigation text-[10px] uppercase tracking-wider text-[#53443a] font-bold">
+                      {activeT.alliancesForm.name} *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={alliancesForm.name}
+                      onChange={(e) => setAlliancesForm({ ...alliancesForm, name: e.target.value })}
+                      className="w-full bg-white border border-[#1A1615]/15 focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-navigation text-[13px] text-[#1C1C18] focus:outline-none px-3.5 py-2.5 transition-all duration-300 rounded-none"
+                    />
+                  </div>
+
+                  {/* Company */}
+                  <div className="space-y-1">
+                    <label className="block font-navigation text-[10px] uppercase tracking-wider text-[#53443a] font-bold">
+                      {activeT.alliancesForm.company} *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={alliancesForm.company}
+                      onChange={(e) => setAlliancesForm({ ...alliancesForm, company: e.target.value })}
+                      className="w-full bg-white border border-[#1A1615]/15 focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-navigation text-[13px] text-[#1C1C18] focus:outline-none px-3.5 py-2.5 transition-all duration-300 rounded-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Email */}
+                  <div className="space-y-1">
+                    <label className="block font-navigation text-[10px] uppercase tracking-wider text-[#53443a] font-bold">
+                      {activeT.alliancesForm.email} *
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={alliancesForm.email}
+                      onChange={(e) => setAlliancesForm({ ...alliancesForm, email: e.target.value })}
+                      className="w-full bg-white border border-[#1A1615]/15 focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-navigation text-[13px] text-[#1C1C18] focus:outline-none px-3.5 py-2.5 transition-all duration-300 rounded-none"
+                    />
+                  </div>
+
+                  {/* Phone */}
+                  <div className="space-y-1">
+                    <label className="block font-navigation text-[10px] uppercase tracking-wider text-[#53443a] font-bold">
+                      {activeT.alliancesForm.phone} *
+                    </label>
+                    <div className="flex gap-2">
+                      <div className="relative w-20">
+                        <span className="absolute left-2.5 top-1/2 -translate-y-1/2 font-navigation text-[13px] text-[#1c1c18]/50">+</span>
+                        <input
+                          type="text"
+                          required
+                          value={alliancesForm.lada}
+                          onChange={(e) => setAlliancesForm({ ...alliancesForm, lada: e.target.value.replace(/[^0-9]/g, "") })}
+                          className="w-full bg-white border border-[#1A1615]/15 focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-navigation text-[13px] text-[#1C1C18] focus:outline-none pl-5 pr-2 py-2.5 transition-all duration-300 rounded-none text-center"
+                          placeholder="52"
+                        />
+                      </div>
+                      <input
+                        type="tel"
+                        required
+                        value={alliancesForm.phone}
+                        onChange={(e) => setAlliancesForm({ ...alliancesForm, phone: e.target.value.replace(/[^0-9]/g, "") })}
+                        className="flex-1 bg-white border border-[#1A1615]/15 focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-navigation text-[13px] text-[#1C1C18] focus:outline-none px-3.5 py-2.5 transition-all duration-300 rounded-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1">
+                  {/* Market (Country Select) */}
+                  <div className="space-y-1">
+                    <label className="block font-navigation text-[10px] uppercase tracking-wider text-[#53443a] font-bold">
+                      {activeT.alliancesForm.market} *
+                    </label>
+                    <select
+                      required
+                      value={alliancesForm.market}
+                      onChange={(e) => setAlliancesForm({ ...alliancesForm, market: e.target.value })}
+                      className="w-full bg-white border border-[#1A1615]/15 focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-navigation text-[13px] text-[#1C1C18] focus:outline-none px-3.5 py-2.5 transition-all duration-300 rounded-none cursor-pointer"
+                    >
+                      <option value="" disabled>{activeT.alliancesForm.marketSelect}</option>
+                      <option value="mx">{activeT.alliancesForm.marketMX}</option>
+                      <option value="usa">{activeT.alliancesForm.marketUSA}</option>
+                      <option value="hk">{activeT.alliancesForm.marketHK}</option>
+                      <option value="co">{activeT.alliancesForm.marketCO}</option>
+                      <option value="gt">{activeT.alliancesForm.marketGT}</option>
+                      <option value="other">{activeT.alliancesForm.marketOther}</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Message */}
+                <div className="space-y-1">
+                  <label className="block font-navigation text-[10px] uppercase tracking-wider text-[#53443a] font-bold">
+                    {activeT.alliancesForm.message}
+                  </label>
+                  <textarea
+                    rows="3"
+                    value={alliancesForm.message}
+                    onChange={(e) => setAlliancesForm({ ...alliancesForm, message: e.target.value })}
+                    className="w-full bg-white border border-[#1A1615]/15 focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-navigation text-[13px] text-[#1C1C18] focus:outline-none px-3.5 py-2.5 transition-all duration-300 rounded-none resize-none"
+                  />
+                </div>
+
+                {alliancesError && (
+                  <p className="text-[12px] font-navigation text-red-700 font-medium bg-red-50 p-3 border border-red-200">
+                    {alliancesError}
+                  </p>
+                )}
+
+                {/* Submit Action */}
+                <button
+                  type="submit"
+                  disabled={alliancesStatus === "loading"}
+                  className="w-full bg-primary hover:bg-[#8C4723] text-white disabled:bg-primary/60 font-navigation text-[11px] font-bold uppercase tracking-[0.2em] py-4 transition-all duration-300 focus:outline-none cursor-pointer active:scale-[0.99]"
+                >
+                  {alliancesStatus === "loading" ? activeT.alliancesForm.submitting : activeT.alliancesForm.submit}
+                </button>
+
+                {/* Privacy Disclaimer */}
+                <p className="text-[10px] font-navigation text-[#1C1C18]/50 leading-relaxed font-normal text-center">
+                  {activeT.alliancesForm.disclaimer}
+                  <a
+                    href="#privacy"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsAlliancesFormOpen(false);
+                      window.location.hash = "privacy";
+                    }}
+                    className="text-primary hover:text-[#2F403E] transition-colors duration-300 underline underline-offset-2 font-semibold"
+                  >
+                    {activeT.alliancesForm.privacyLink}
+                  </a>
+                  .
+                </p>
+              </form>
+            ) : (
+              /* Success State */
+              <div className="py-12 text-center space-y-5 animate-[fade-in-slide_0.5s_ease-out_forwards]">
+                <div className="w-14 h-14 bg-[#2F403E]/10 rounded-full flex items-center justify-center mx-auto text-[#2F403E] mb-2">
+                  <span className="material-symbols-outlined text-3xl font-light">done</span>
+                </div>
+                <h3 className="font-serif text-[28px] font-bold text-[#2F403E] tracking-wide">
+                  {activeT.alliancesForm.success}
+                </h3>
+                <p className="font-navigation text-[14px] text-[#53443a] leading-relaxed max-w-md mx-auto">
+                  {activeT.alliancesForm.successDesc}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsAlliancesFormOpen(false);
+                    setAlliancesStatus("idle");
+                    setAlliancesForm({
+                      name: "",
+                      company: "",
+                      email: "",
+                      lada: "52",
+                      phone: "",
+                      market: "",
+                      message: ""
+                    });
+                  }}
+                  className="bg-primary hover:bg-[#8C4723] text-white font-navigation text-[11px] px-8 py-3.5 uppercase tracking-widest transition-all duration-300 cursor-pointer"
+                >
+                  {activeT.alliancesForm.close}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

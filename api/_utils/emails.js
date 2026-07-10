@@ -639,3 +639,132 @@ export async function sendMaquilaLeadEmail(leadDetails) {
   }
 }
 
+export async function sendAlliancesLeadEmail(leadDetails) {
+  if (!resend) {
+    console.warn("Resend client not configured. Skipping alliances lead email.");
+    return { success: false, error: "Resend not initialized" };
+  }
+
+  const { name, company, email, lada, phone, market, message } = leadDetails;
+
+  // Market label mapping
+  const marketLabels = {
+    mx: 'México',
+    usa: 'Estados Unidos (USA)',
+    hk: 'Hong Kong',
+    co: 'Colombia',
+    gt: 'Guatemala',
+    other: 'Otro / Internacional'
+  };
+  const marketName = marketLabels[market?.toLowerCase()] || market || 'No especificado';
+
+  // 1. Email for the administrator
+  const adminHtml = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #fcf9f3; color: #1c1c18; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e2dc; padding: 40px; }
+        h2 { font-family: Georgia, serif; font-size: 22px; color: #8C4723; font-weight: normal; margin-top: 0; }
+        .lead-info { width: 100%; border-collapse: collapse; margin: 24px 0; }
+        .lead-info th { text-align: left; padding: 12px 8px; border-bottom: 1px solid #e5e2dc; color: #8C4723; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; width: 35%; }
+        .lead-info td { padding: 12px 8px; border-bottom: 1px solid #e5e2dc; font-size: 14px; color: #1c1c18; }
+        .footer { font-size: 11px; color: #8a8a82; margin-top: 30px; border-top: 1px solid #e5e2dc; padding-top: 20px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h2>Nueva Solicitud - Alianza Comercial / Distribución</h2>
+        <p>Se ha recibido una propuesta de alianza comercial a través del formulario "Vende nuestros productos":</p>
+        
+        <table class="lead-info">
+          <tr><th>Nombre</th><td>${name}</td></tr>
+          <tr><th>Empresa / Establecimiento</th><td>${company}</td></tr>
+          <tr><th>Correo</th><td>${email}</td></tr>
+          <tr><th>Teléfono</th><td>+${lada} ${phone}</td></tr>
+          <tr><th>Mercado de Interés</th><td><strong>${marketName}</strong></td></tr>
+          <tr><th>Mensaje</th><td>${message ? message.replace(/\n/g, '<br />') : 'Sin mensaje adicional'}</td></tr>
+        </table>
+        
+        <div class="footer">
+          <p>Este correo fue generado automáticamente por la plataforma web de Casa Loy Tequilera.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  // 2. Email for the customer/client
+  const clientHtml = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #fcf9f3; color: #1c1c18; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e2dc; padding: 40px; }
+        h2 { font-family: Georgia, serif; font-size: 24px; color: #8C4723; font-weight: normal; margin-top: 0; text-align: center; }
+        p { font-size: 15px; line-height: 1.6; color: #3e3e38; }
+        .details-box { background-color: #fcf9f3; border: 1px solid #e5e2dc; padding: 20px; margin: 24px 0; }
+        .details-title { font-weight: bold; color: #8C4723; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; }
+        .footer { font-size: 12px; color: #8a8a82; margin-top: 30px; text-align: center; border-top: 1px solid #e5e2dc; padding-top: 20px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h2>¡Gracias por tu interés en Casa Loy, ${name}!</h2>
+        <p>Hemos recibido tu solicitud para comercializar nuestros productos en nombre de <strong>${company}</strong> para el mercado de <strong>${marketName}</strong>.</p>
+        
+        <p>Un miembro de nuestro equipo comercial revisará la información de tu establecimiento y se pondrá en contacto contigo a la brevedad al teléfono <strong>+${lada} ${phone}</strong> o por este medio para conversar sobre las oportunidades de distribución, catálogos de precios y requisitos de comercialización.</p>
+        
+        <div class="details-box">
+          <div class="details-title">Resumen de tu solicitud:</div>
+          <p style="margin: 4px 0; font-size: 13px;"><strong>Empresa:</strong> ${company}</p>
+          <p style="margin: 4px 0; font-size: 13px;"><strong>Mercado de Interés:</strong> ${marketName}</p>
+          <p style="margin: 4px 0; font-size: 13px;"><strong>Correo de contacto:</strong> ${email}</p>
+        </div>
+
+        <p>Agradecemos tu interés en llevar la herencia y excelencia de Casa Loy a tu mercado.</p>
+        
+        <div class="footer">
+          <p>&copy; 2026 Casa Loy Tequilera. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    const fromEmail = getFromEmail();
+    const adminEmail = process.env.ALLIANCES_LEADS_EMAIL || 'contacto@casaloy.com';
+
+    // Send to admin
+    await resend.emails.send({
+      from: fromEmail,
+      to: adminEmail,
+      subject: `Nueva Propuesta de Distribución (${marketName}) - ${company}`,
+      html: adminHtml,
+    });
+
+    // Send to client/lead
+    const { data: clientRes, error: clientErr } = await resend.emails.send({
+      from: fromEmail,
+      to: email,
+      subject: `Recibimos tu solicitud de distribución - Casa Loy`,
+      html: clientHtml,
+    });
+
+    if (clientErr) {
+      console.error("Resend error sending alliances confirmation to client:", clientErr);
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error("Exception in sendAlliancesLeadEmail:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+
