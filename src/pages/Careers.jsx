@@ -107,15 +107,9 @@ export default function Careers({ lang = "es", setPage, setSelectedJobId }) {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/45"></div>
         <div className="relative z-10 text-center px-gutter max-w-4xl">
-          <span className="font-label-caps text-white mb-6 block tracking-[0.4em] opacity-80 text-xs">
-            {t.category}
-          </span>
-          <h1 className="font-serif text-4xl md:text-7xl lg:text-[84px] text-white mb-8 tracking-tight font-medium leading-none">
+          <h1 className="font-serif text-4xl md:text-7xl lg:text-[84px] text-white mb-12 tracking-tight font-medium leading-none">
             {t.heroTitle}
           </h1>
-          <p className="font-body-lg text-white/90 max-w-2xl mx-auto mb-10 leading-relaxed font-light">
-            {t.heroDesc}
-          </p>
           <a
             className="inline-flex items-center text-white font-label-caps border-b border-white/50 pb-2 hover:border-white transition-all text-xs tracking-widest font-bold"
             href="#vacantes"
