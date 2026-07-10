@@ -589,8 +589,9 @@ export default function WhereToBuy({ lang }) {
         {/* Region Toggle Tab */}
         <div className="flex justify-center items-center gap-8 w-fit mx-auto select-none pb-2">
           <button
+            type="button"
             onClick={() => handleRegionChange("mx")}
-            className="flex flex-col items-center gap-2 group focus:outline-none transition-transform active:scale-95"
+            className="flex flex-col items-center gap-2 group focus:outline-none transition-transform active:scale-95 cursor-pointer"
             aria-label="México"
           >
             <MexicoFlag active={region === "mx"} />
@@ -608,8 +609,9 @@ export default function WhereToBuy({ lang }) {
           <div className="h-10 w-[0.5px] bg-outline-variant/30 self-start mt-1"></div>
 
           <button
+            type="button"
             onClick={() => handleRegionChange("usa")}
-            className="flex flex-col items-center gap-2 group focus:outline-none transition-transform active:scale-95"
+            className="flex flex-col items-center gap-2 group focus:outline-none transition-transform active:scale-95 cursor-pointer"
             aria-label="USA"
           >
             <USAFlag active={region === "usa"} />
@@ -702,6 +704,7 @@ export default function WhereToBuy({ lang }) {
             {/* Combined Geolocator Search Input */}
             <div className="flex gap-2 mb-3">
               <button
+                type="button"
                 onClick={handleGeolocate}
                 className="flex-1 flex items-center justify-center gap-2 bg-[#C58B58] text-white hover:bg-[#A66C3E] font-label-caps text-[9px] tracking-widest font-bold py-3.5 px-4 shadow-sm transition-all active:scale-98 duration-300 cursor-pointer"
                 title={lang === "es" ? "Buscar tiendas cercanas" : "Find nearby stores"}
@@ -748,6 +751,7 @@ export default function WhereToBuy({ lang }) {
 
             {/* Collapsable Dynamic Filter Trigger */}
             <button 
+              type="button"
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center justify-between w-full py-2.5 px-4 bg-white border border-outline-variant/20 hover:border-primary/50 transition-all duration-300 font-label-caps text-[9px] tracking-widest font-bold text-on-surface-variant select-none cursor-pointer mb-3 shadow-sm"
             >
@@ -782,12 +786,13 @@ export default function WhereToBuy({ lang }) {
                       selectedBrands.length > 0 ||
                       selectedCategories.length > 0) && (
                       <button
+                        type="button"
                         onClick={() => {
                           setSelectedTypes([]);
                           setSelectedBrands([]);
                           setSelectedCategories([]);
                         }}
-                        className="text-[9px] uppercase font-bold tracking-wider text-primary hover:underline"
+                        className="text-[9px] uppercase font-bold tracking-wider text-primary hover:underline cursor-pointer"
                       >
                         {activeT.clearFilters}
                       </button>
@@ -799,8 +804,9 @@ export default function WhereToBuy({ lang }) {
                       return (
                         <button
                           key={type.id}
+                          type="button"
                           onClick={() => handleTypeToggle(type.id)}
-                          className={`text-[9px] uppercase tracking-widest px-2.5 py-1 border transition-all duration-300 font-bold ${
+                          className={`text-[9px] uppercase tracking-widest px-2.5 py-1 border transition-all duration-300 font-bold cursor-pointer ${
                             isSelected
                               ? "bg-primary border-primary text-white"
                               : "border-outline-variant/30 hover:border-primary/50 text-on-surface-variant/75 bg-white"
@@ -824,8 +830,9 @@ export default function WhereToBuy({ lang }) {
                       return (
                         <button
                           key={brand.id}
+                          type="button"
                           onClick={() => handleBrandToggle(brand.id)}
-                          className={`text-[9px] uppercase tracking-widest px-2.5 py-1 border transition-all duration-300 font-bold ${
+                          className={`text-[9px] uppercase tracking-widest px-2.5 py-1 border transition-all duration-300 font-bold cursor-pointer ${
                             isSelected
                               ? "bg-primary border-primary text-white"
                               : "border-outline-variant/30 hover:border-primary/50 text-on-surface-variant/75 bg-white"
@@ -849,8 +856,9 @@ export default function WhereToBuy({ lang }) {
                       return (
                         <button
                           key={category}
+                          type="button"
                           onClick={() => handleCategoryToggle(category)}
-                          className={`text-[9px] px-2.5 py-1 border transition-all duration-300 ${
+                          className={`text-[9px] px-2.5 py-1 border transition-all duration-300 cursor-pointer ${
                             isSelected
                               ? "bg-primary border-primary text-white font-bold"
                               : "border-outline-variant/20 hover:border-primary/30 text-on-surface-variant/65 bg-white"
@@ -881,7 +889,7 @@ export default function WhereToBuy({ lang }) {
                 </div>
               ) : (
                 finalSidebarStores.map((store) => {
-                  const isSelected = activeStore?.id === store.id || activeStore?.name === store.name;
+                  const isSelected = activeStore && activeStore.id === store.id;
                   
                   if (!isSelected) {
                     // Collapsed minimalist list row
@@ -900,6 +908,7 @@ export default function WhereToBuy({ lang }) {
                           </span>
                         </div>
                         <button
+                          type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleStoreClick(store);
@@ -1003,12 +1012,14 @@ export default function WhereToBuy({ lang }) {
             {/* Custom map zoom controls */}
             <div className="absolute bottom-8 right-8 flex flex-col gap-2 z-[1000]">
               <button
+                type="button"
                 onClick={handleZoomIn}
                 className="w-10 h-10 bg-white/90 backdrop-blur-xl border border-outline-variant/30 flex items-center justify-center hover:bg-[#C58B58] hover:text-white transition-all shadow-md active:scale-95 text-on-surface cursor-pointer"
               >
                 <span className="material-symbols-outlined font-bold">add</span>
               </button>
               <button
+                type="button"
                 onClick={handleZoomOut}
                 className="w-10 h-10 bg-white/90 backdrop-blur-xl border border-outline-variant/30 flex items-center justify-center hover:bg-[#C58B58] hover:text-white transition-all shadow-md active:scale-95 text-on-surface cursor-pointer"
               >
@@ -1044,7 +1055,10 @@ export default function WhereToBuy({ lang }) {
               </p>
             </div>
             <div className="flex-shrink-0">
-              <button className="bg-primary text-white font-navigation text-[11px] px-8 py-4 uppercase tracking-widest hover:bg-secondary transition-all shadow-lg hover:shadow-primary/20 active:scale-95 duration-200">
+              <button 
+                type="button"
+                className="bg-primary text-white font-navigation text-[11px] px-8 py-4 uppercase tracking-widest hover:bg-secondary transition-all shadow-lg hover:shadow-primary/20 active:scale-95 duration-200 cursor-pointer"
+              >
                 {activeT.allianceBtn}
               </button>
             </div>
