@@ -3,8 +3,9 @@ import { jobsData } from "../data/jobs";
 
 export default function CareerDetail({ lang = "es", setPage, jobId }) {
   const [cvFile, setCvFile] = useState(null);
-  const [formData, setFormData] = useState({ name: "", email: "", linkedin: "" });
+  const [formData, setFormData] = useState({ name: "", phone: "", email: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -16,15 +17,39 @@ export default function CareerDetail({ lang = "es", setPage, jobId }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.name && formData.email) {
-      setSubmitted(true);
-      setTimeout(() => {
-        setSubmitted(false);
-        setFormData({ name: "", email: "", linkedin: "" });
+    if (!formData.name || !formData.phone || !formData.email || !cvFile) {
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const response = await fetch("/api/careers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          cv_name: cvFile.name,
+          job_id: job.id,
+        }),
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+        setFormData({ name: "", phone: "", email: "" });
         setCvFile(null);
-      }, 5000);
+        setTimeout(() => setSubmitted(false), 5000);
+      } else {
+        console.error("Submission failed");
+      }
+    } catch (err) {
+      console.error("Error submitting job application:", err);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -39,15 +64,15 @@ export default function CareerDetail({ lang = "es", setPage, jobId }) {
       formSectionTitle: "Únase al Linaje",
       formSectionDesc: "Envíe sus credenciales para evaluación privada por parte de nuestro consejo de administración.",
       formName: "Nombre completo",
+      formPhone: "Teléfono de contacto",
       formEmail: "Correo electrónico",
-      formLinkedin: "Perfil de LinkedIn (URL)",
       formFileLabel: "Curriculum Vitae / Portafolio",
       formFileSub: "Suelte su archivo o explore",
       formFileFormat: "PDF, DOCX (MAX 10MB)",
       formFileSelected: "Archivo seleccionado: ",
       formSubmitBtn: "ENVIAR APLICACIÓN",
       formSuccess: "¡Aplicación enviada con éxito! Nuestro comité evaluará su perfil y se pondrá en contacto en absoluta confidencialidad.",
-      disclaimerText: "En Casa Loy los únicos medios oficiales que utilizamos para publicar vacantes son OCC, Indeed, Computrabajo, Facebook y LinkedIn. Cualquier vacante publicada fuera de estos medios no corresponde a nuestra empresa y carece de validez oficial."
+      disclaimerText: "En Casa Loy los únicos medios oficiales que utilizamos para publicar vacantes son Indeed y LinkedIn. Cualquier vacante publicada fuera de estos medios no corresponde a nuestra empresa y carece de validez oficial."
     },
     en: {
       breadcrumbCareers: "Careers",
@@ -56,15 +81,15 @@ export default function CareerDetail({ lang = "es", setPage, jobId }) {
       formSectionTitle: "Join the Lineage",
       formSectionDesc: "Submit your credentials for private evaluation by our executive board.",
       formName: "Full Name",
+      formPhone: "Contact phone",
       formEmail: "Email Address",
-      formLinkedin: "LinkedIn Profile (URL)",
       formFileLabel: "Curriculum Vitae / Portfolio",
       formFileSub: "Drop your file or browse",
       formFileFormat: "PDF, DOCX (MAX 10MB)",
       formFileSelected: "Selected file: ",
       formSubmitBtn: "SUBMIT APPLICATION",
       formSuccess: "Application successfully submitted! Our executive board will review your profile and contact you in absolute confidentiality.",
-      disclaimerText: "At Casa Loy, the only official channels we use to publish job vacancies are OCC, Indeed, Computrabajo, Facebook, and LinkedIn. Any vacancy posted outside of these media does not correspond to us and is completely unauthorized."
+      disclaimerText: "At Casa Loy, the only official channels we use to publish job vacancies are Indeed and LinkedIn. Any vacancy posted outside of these media does not correspond to us and is completely unauthorized."
     }
   };
 
@@ -74,12 +99,6 @@ export default function CareerDetail({ lang = "es", setPage, jobId }) {
     switch (id) {
       case "kam":
         return "/Empleado Casa Loy Tequilera.webp";
-      case "maestro-tequilero":
-        return "/Trabajo Duro Casa Loy Tequilera Jimado.webp";
-      case "brand-ambassador":
-        return "/Barra Casa Loy Experiencias.webp";
-      case "director-sostenibilidad":
-        return "/compostaje-escritorio.webp";
       default:
         return "/Trabajo Duro Casa Loy Tequilera Jimado.webp";
     }
@@ -358,16 +377,18 @@ export default function CareerDetail({ lang = "es", setPage, jobId }) {
                     className="w-full bg-transparent border-0 focus:ring-0 text-body-md py-4 focus:outline-none placeholder:text-outline-variant/60"
                     placeholder={t.formName}
                     type="text"
+                    disabled={submitting}
                   />
                 </div>
                 <div className="relative border-b border-outline-variant focus-within:border-primary transition-all duration-300">
                   <input
                     required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     className="w-full bg-transparent border-0 focus:ring-0 text-body-md py-4 focus:outline-none placeholder:text-outline-variant/60"
-                    placeholder={t.formEmail}
-                    type="email"
+                    placeholder={t.formPhone}
+                    type="tel"
+                    disabled={submitting}
                   />
                 </div>
               </div>
@@ -375,11 +396,12 @@ export default function CareerDetail({ lang = "es", setPage, jobId }) {
               <div className="relative border-b border-outline-variant focus-within:border-primary transition-all duration-300">
                 <input
                   required
-                  value={formData.linkedin}
-                  onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full bg-transparent border-0 focus:ring-0 text-body-md py-4 focus:outline-none placeholder:text-outline-variant/60"
-                  placeholder={t.formLinkedin}
-                  type="url"
+                  placeholder={t.formEmail}
+                  type="email"
+                  disabled={submitting}
                 />
               </div>
 
@@ -393,6 +415,7 @@ export default function CareerDetail({ lang = "es", setPage, jobId }) {
                     type="file"
                     accept=".pdf,.docx"
                     onChange={handleUpload}
+                    disabled={submitting}
                   />
                   <span className="material-symbols-outlined text-primary/50 text-4xl mb-2 font-light group-hover:scale-105 transition-transform block">
                     upload_file
@@ -410,8 +433,9 @@ export default function CareerDetail({ lang = "es", setPage, jobId }) {
                 <button
                   className="w-full bg-primary text-white py-6 font-navigation text-navigation uppercase tracking-[0.2em] hover:bg-[#592c0a] transition-all duration-500 shadow-xl shadow-primary/10 hover:shadow-primary/30 flex items-center justify-center gap-4 text-xs font-bold cursor-pointer focus:outline-none"
                   type="submit"
+                  disabled={submitting}
                 >
-                  {t.formSubmitBtn}
+                  {submitting ? (lang === "es" ? "ENVIANDO..." : "SENDING...") : t.formSubmitBtn}
                   <span className="material-symbols-outlined text-sm font-light">arrow_right_alt</span>
                 </button>
               </div>
