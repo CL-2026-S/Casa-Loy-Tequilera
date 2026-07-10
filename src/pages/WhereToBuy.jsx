@@ -265,7 +265,7 @@ export default function WhereToBuy({ lang }) {
               <img 
                 src="/Mercado_Libre_Logotipo.png" 
                 alt="Mercado Libre" 
-                className="h-14 object-contain opacity-60 group-hover:opacity-100 transition-all duration-500" 
+                className="h-20 object-contain opacity-60 group-hover:opacity-100 transition-all duration-500" 
               />
             </a>
             <a 
@@ -277,7 +277,7 @@ export default function WhereToBuy({ lang }) {
               <img 
                 src="/Liverpool_Logotipo.png" 
                 alt="Liverpool" 
-                className="h-10 object-contain opacity-60 group-hover:opacity-100 transition-all duration-500" 
+                className="h-14 object-contain opacity-60 group-hover:opacity-100 transition-all duration-500" 
               />
             </a>
             <a 
@@ -289,7 +289,7 @@ export default function WhereToBuy({ lang }) {
               <img 
                 src="/Amazon_Logotipo.png" 
                 alt="Amazon" 
-                className="h-8 object-contain opacity-60 group-hover:opacity-100 transition-all duration-500" 
+                className="h-12 object-contain opacity-60 group-hover:opacity-100 transition-all duration-500" 
               />
             </a>
           </div>
