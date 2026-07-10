@@ -257,7 +257,7 @@ export default function WhereToBuy({ lang }) {
         {region === "mx" ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center justify-items-center animate-fade-in">
             <a 
-              className="group relative w-full h-36 flex items-center justify-center bg-white/50 border border-outline-variant/20 hover:bg-white hover:border-primary transition-all duration-500 overflow-hidden shadow-sm px-4" 
+              className="group relative w-full h-44 flex items-center justify-center bg-white/50 border border-outline-variant/20 hover:bg-white hover:border-primary transition-all duration-500 overflow-hidden shadow-sm px-6" 
               href="https://www.mercadolibre.com.mx/tienda/casa-loy"
               target="_blank"
               rel="noopener noreferrer"
@@ -265,11 +265,11 @@ export default function WhereToBuy({ lang }) {
               <img 
                 src="/Mercado_Libre_Logotipo.png" 
                 alt="Mercado Libre" 
-                className="h-28 object-contain opacity-60 group-hover:opacity-100 transition-all duration-500" 
+                className="w-[70%] max-h-[65%] object-contain opacity-60 group-hover:opacity-100 transition-all duration-500" 
               />
             </a>
             <a 
-              className="group relative w-full h-36 flex items-center justify-center bg-white/50 border border-outline-variant/20 hover:bg-white hover:border-primary transition-all duration-500 overflow-hidden shadow-sm px-4" 
+              className="group relative w-full h-44 flex items-center justify-center bg-white/50 border border-outline-variant/20 hover:bg-white hover:border-primary transition-all duration-500 overflow-hidden shadow-sm px-6" 
               href="https://www.liverpool.com.mx/tienda/sp/casa-loy-tequilera"
               target="_blank"
               rel="noopener noreferrer"
@@ -277,11 +277,11 @@ export default function WhereToBuy({ lang }) {
               <img 
                 src="/Liverpool_Logotipo.png" 
                 alt="Liverpool" 
-                className="h-20 object-contain opacity-60 group-hover:opacity-100 transition-all duration-500" 
+                className="w-[70%] max-h-[65%] object-contain opacity-60 group-hover:opacity-100 transition-all duration-500" 
               />
             </a>
             <a 
-              className="group relative w-full h-36 flex items-center justify-center bg-white/50 border border-outline-variant/20 hover:bg-white hover:border-primary transition-all duration-500 overflow-hidden shadow-sm px-4" 
+              className="group relative w-full h-44 flex items-center justify-center bg-white/50 border border-outline-variant/20 hover:bg-white hover:border-primary transition-all duration-500 overflow-hidden shadow-sm px-6" 
               href="https://www.amazon.com.mx/s?me=A3UB51BZY3LWTE"
               target="_blank"
               rel="noopener noreferrer"
@@ -289,7 +289,7 @@ export default function WhereToBuy({ lang }) {
               <img 
                 src="/Amazon_Logotipo.png" 
                 alt="Amazon" 
-                className="h-16 object-contain opacity-60 group-hover:opacity-100 transition-all duration-500" 
+                className="w-[70%] max-h-[65%] object-contain opacity-60 group-hover:opacity-100 transition-all duration-500" 
               />
             </a>
           </div>
@@ -298,7 +298,7 @@ export default function WhereToBuy({ lang }) {
             {["REMEDY LIQUOR", "HIPROOF", "OLD TOWN TEQUILA", "HIGH END LIQUOR"].map((usOpt) => (
               <a
                 key={usOpt}
-                className="group h-36 w-full flex items-center justify-center bg-white/50 border border-outline-variant/20 hover:bg-white hover:border-primary transition-all duration-500 shadow-sm"
+                className="group h-44 w-full flex items-center justify-center bg-white/50 border border-outline-variant/20 hover:bg-white hover:border-primary transition-all duration-500 shadow-sm"
                 href="#"
               >
                 <span className="font-label-caps text-navigation text-on-surface-variant group-hover:text-primary tracking-widest text-[11px] font-bold">
