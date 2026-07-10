@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -353,68 +353,87 @@ export default function WhereToBuy({ lang }) {
     }
   };
 
-  // Filter criteria before viewport mapping
-  const storesFilteredByCriteria = stores.filter((store) => {
-    const matchesRegion = store.region === region;
+  // Filter criteria before viewport mapping - MEMOIZED to prevent map scroll bounce loops!
+  const storesFilteredByCriteria = useMemo(() => {
+    return stores.filter((store) => {
+      const matchesRegion = store.region === region;
 
-    const matchesTypes =
-      selectedTypes.length > 0
-        ? (selectedTypes.includes("pdv") && store.pdv) ||
-          (selectedTypes.includes("cdc") && store.cdc)
+      const matchesTypes =
+        selectedTypes.length > 0
+          ? (selectedTypes.includes("pdv") && store.pdv) ||
+            (selectedTypes.includes("cdc") && store.cdc)
+          : true;
+
+      const matchesSearch = searchQuery
+        ? store.postal_code?.includes(searchQuery) ||
+          store.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          store.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          store.retailer.toLowerCase().includes(searchQuery.toLowerCase())
         : true;
 
-    const matchesSearch = searchQuery
-      ? store.postal_code?.includes(searchQuery) ||
-        store.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        store.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        store.retailer.toLowerCase().includes(searchQuery.toLowerCase())
-      : true;
+      const matchesBrands =
+        selectedBrands.length > 0
+          ? store.brands && store.brands.some((b) => selectedBrands.includes(b))
+          : true;
 
-    const matchesBrands =
-      selectedBrands.length > 0
-        ? store.brands && store.brands.some((b) => selectedBrands.includes(b))
-        : true;
+      const matchesCategories =
+        selectedCategories.length > 0
+          ? store.categories &&
+            store.categories.some((c) => selectedCategories.includes(c))
+          : true;
 
-    const matchesCategories =
-      selectedCategories.length > 0
-        ? store.categories &&
-          store.categories.some((c) => selectedCategories.includes(c))
-        : true;
-
-    return matchesRegion && matchesTypes && matchesSearch && matchesBrands && matchesCategories;
-  });
+      return matchesRegion && matchesTypes && matchesSearch && matchesBrands && matchesCategories;
+    });
+  }, [stores, region, selectedTypes, searchQuery, selectedBrands, selectedCategories]);
 
   // Inject straight-line distances in km
-  const storesWithDistance = storesFilteredByCriteria.map((store) => {
-    if (userLocation && store.latitude && store.longitude) {
-      const distance = getHaversineDistance(
-        userLocation.latitude,
-        userLocation.longitude,
-        store.latitude,
-        store.longitude
-      );
-      return { ...store, distance };
-    }
-    return store;
-  });
+  const storesWithDistance = useMemo(() => {
+    return storesFilteredByCriteria.map((store) => {
+      if (userLocation && store.latitude && store.longitude) {
+        const distance = getHaversineDistance(
+          userLocation.latitude,
+          userLocation.longitude,
+          store.latitude,
+          store.longitude
+        );
+        return { ...store, distance };
+      }
+      return store;
+    });
+  }, [storesFilteredByCriteria, userLocation]);
 
   // Sort stores list
-  const sortedStores = [...storesWithDistance];
-  if (distanceSorted && userLocation) {
-    sortedStores.sort((a, b) => {
-      if (a.distance === undefined) return 1;
-      if (b.distance === undefined) return -1;
-      return a.distance - b.distance;
-    });
-  }
+  const sortedStores = useMemo(() => {
+    const sorted = [...storesWithDistance];
+    if (distanceSorted && userLocation) {
+      sorted.sort((a, b) => {
+        if (a.distance === undefined) return 1;
+        if (b.distance === undefined) return -1;
+        return a.distance - b.distance;
+      });
+    }
+    return sorted;
+  }, [storesWithDistance, distanceSorted, userLocation]);
 
   // Filter sidebar stores by viewport bounds if checked
-  const finalSidebarStores = sortedStores.filter((store) => {
-    if (filterByMap && mapBounds && store.latitude && store.longitude) {
-      return mapBounds.contains([store.latitude, store.longitude]);
+  const finalSidebarStores = useMemo(() => {
+    return sortedStores.filter((store) => {
+      if (filterByMap && mapBounds && store.latitude && store.longitude) {
+        return mapBounds.contains([store.latitude, store.longitude]);
+      }
+      return true;
+    });
+  }, [sortedStores, filterByMap, mapBounds]);
+
+  // Scroll active store card into view in the sidebar
+  useEffect(() => {
+    if (activeStore?.id) {
+      const element = document.getElementById(`store-card-${activeStore.id}`);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
     }
-    return true;
-  });
+  }, [activeStore]);
 
   // Update map markers when criteria or user location changes
   useEffect(() => {
@@ -896,6 +915,7 @@ export default function WhereToBuy({ lang }) {
                     return (
                       <div
                         key={store.id || store.name}
+                        id={`store-card-${store.id}`}
                         onClick={() => handleStoreClick(store)}
                         className="p-3 border-l-4 border-l-primary/10 bg-white/50 hover:border-l-primary/50 hover:bg-white transition-all duration-300 cursor-pointer flex justify-between items-center text-left shadow-sm"
                       >
@@ -925,6 +945,7 @@ export default function WhereToBuy({ lang }) {
                   return (
                     <div
                       key={store.id || store.name}
+                      id={`store-card-${store.id}`}
                       onClick={() => handleStoreClick(store)}
                       className="p-5 border-l-4 border-l-primary bg-white shadow-md transition-all duration-300 text-left"
                     >
