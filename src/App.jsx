@@ -47,6 +47,7 @@ export default function App() {
   }); // Navigation routing state
 
   const [selectedTour, setSelectedTour] = useState("oro");
+  const [selectedJobId, setSelectedJobId] = useState("kam");
 
   // Global Tourism Scheduling States (Shared between clients and CMS panel)
   const [maxCapacityLimit, setMaxCapacityLimit] = useState(50);
@@ -235,9 +236,9 @@ export default function App() {
       case "blog-post":
         return <BlogPost lang={lang} setPage={setPage} />;
       case "careers":
-        return <Careers lang={lang} setPage={setPage} />;
+        return <Careers lang={lang} setPage={setPage} setSelectedJobId={setSelectedJobId} />;
       case "career-detail":
-        return <CareerDetail lang={lang} setPage={setPage} />;
+        return <CareerDetail lang={lang} setPage={setPage} jobId={selectedJobId} />;
       case "privacy":
         return <PrivacyPolicy t={t} lang={lang} />;
       case "cookies":

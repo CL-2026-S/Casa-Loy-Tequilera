@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { jobsData } from "../data/jobs";
 
-export default function CareerDetail({ lang = "es", setPage }) {
+export default function CareerDetail({ lang = "es", setPage, jobId }) {
   const [cvFile, setCvFile] = useState(null);
   const [formData, setFormData] = useState({ name: "", email: "", linkedin: "" });
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+  }, [jobId]);
 
   const handleUpload = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -27,60 +28,14 @@ export default function CareerDetail({ lang = "es", setPage }) {
     }
   };
 
-  const content = {
+  // Find job details, fallback to first job if not found
+  const job = jobsData.find((j) => j.id === jobId) || jobsData[0];
+
+  const labels = {
     es: {
       breadcrumbCareers: "Carreras",
-      breadcrumbProduction: "Producción",
-      breadcrumbRole: "Maestro Tequilero",
-      title1: "Maestro",
-      title2: "Tequilero",
-      heroDesc: "Un legado forjado en tierra, fuego y tiempo. Buscamos un custodio visionario para nuestro linaje artesanal.",
-      roleTitle: "Rol & Herencia",
-      locLabel: "Ubicación",
-      locVal: "Ayotlán, Jalisco, México",
-      typeLabel: "Tipo",
-      typeVal: "Tiempo Completo, Permanente",
-      compLabel: "Compensación",
-      compVal: "Paquete Ejecutivo con Camino a Socios",
       applyBtn: "Aplicar Ahora",
       backBtn: "Volver a Vacantes",
-      sectionTitle: "El Arte del Oficio",
-      sectionDesc: "El Maestro Tequilero es el arquitecto de nuestro perfil sensorial, equilibrando la tradición ancestral con la precisión organoléptica.",
-      responsibilities: [
-        {
-          num: "01",
-          title: "Gobernanza de Destilación Artesanal",
-          desc: "Supervisar cada etapa de la cocción lenta y la destilación en pequeños lotes para garantizar el 100% de pureza y la expresión perfecta del terroir.",
-        },
-        {
-          num: "02",
-          title: "Evaluación Sensorial y Control de Calidad",
-          desc: "Llevar a cabo rigurosas evaluaciones organolépticas para cada lote, manteniendo la consistencia de la firma aromática de Casa Loy.",
-        },
-        {
-          num: "03",
-          title: "Mentoría de Herencia",
-          desc: "Transmitir el conocimiento ancestral a las futuras generaciones de artesanos destiladores, preservando el patrimonio intangible de Casa Loy.",
-        }
-      ],
-      reqTitle: "Guardián del Legado",
-      requirements: [
-        {
-          icon: "agriculture",
-          title: "Maestría en Agave",
-          desc: "Experiencia inigualable en la selección de Agave Azul Tequilana Weber, específicamente cultivado en Los Altos de Jalisco.",
-        },
-        {
-          icon: "history_edu",
-          title: "Experiencia Profunda",
-          desc: "Más de 15 años de liderazgo demostrable en la producción de destilados premium, preferiblemente licores de ultra-lujo.",
-        },
-        {
-          icon: "verified",
-          title: "Tradición de Mampostería",
-          desc: "Dominio de hornos tradicionales de mampostería y la técnica ancestral de trituración por tahona.",
-        }
-      ],
       formSectionTitle: "Únase al Linaje",
       formSectionDesc: "Envíe sus credenciales para evaluación privada por parte de nuestro consejo de administración.",
       formName: "Nombre completo",
@@ -92,60 +47,12 @@ export default function CareerDetail({ lang = "es", setPage }) {
       formFileSelected: "Archivo seleccionado: ",
       formSubmitBtn: "ENVIAR APLICACIÓN",
       formSuccess: "¡Aplicación enviada con éxito! Nuestro comité evaluará su perfil y se pondrá en contacto en absoluta confidencialidad.",
+      disclaimerText: "En Casa Loy los únicos medios oficiales que utilizamos para publicar vacantes son OCC, Indeed, Computrabajo, Facebook y LinkedIn. Cualquier vacante publicada fuera de estos medios no corresponde a nuestra empresa y carece de validez oficial."
     },
     en: {
       breadcrumbCareers: "Careers",
-      breadcrumbProduction: "Production",
-      breadcrumbRole: "Maestro Tequilero",
-      title1: "Maestro",
-      title2: "Tequilero",
-      heroDesc: "A legacy forged in earth, fire, and time. We seek a visionary custodian for our luxury artisanal lineage.",
-      roleTitle: "Role & Heritage",
-      locLabel: "Location",
-      locVal: "Ayotlán, Jalisco, Mexico",
-      typeLabel: "Type",
-      typeVal: "Full-time, Permanent",
-      compLabel: "Compensation",
-      compVal: "Executive Package with Equity Path",
       applyBtn: "Apply Now",
       backBtn: "Back to Careers",
-      sectionTitle: "The Art of the Craft",
-      sectionDesc: "The Maestro is the architect of our sensory profile, balancing ancient tradition with organoleptic precision.",
-      responsibilities: [
-        {
-          num: "01",
-          title: "Artisanal Distillation Governance",
-          desc: "Overseeing every stage of the slow-cook and small-batch distillation process to ensure 100% purity and terroir expression.",
-        },
-        {
-          num: "02",
-          title: "Sensory Evaluation & Quality Control",
-          desc: "Conducting rigorous organoleptic assessments for every batch, maintaining the signature Casa Loy profile consistency.",
-        },
-        {
-          num: "03",
-          title: "Heritage Mentorship",
-          desc: "Transmitting ancestral knowledge to the next generation of distillery craftsmen, preserving the intangible heritage of Casa Loy.",
-        }
-      ],
-      reqTitle: "Guardian of the Legacy",
-      requirements: [
-        {
-          icon: "agriculture",
-          title: "Agave Mastery",
-          desc: "Unrivaled expertise in the selection of 100% Blue Weber Agave, specifically grown in Los Altos de Jalisco.",
-        },
-        {
-          icon: "history_edu",
-          title: "Deep Experience",
-          desc: "15+ years of demonstrable leadership in premium distillate production, preferably with ultra-luxury spirits.",
-        },
-        {
-          icon: "verified",
-          title: "Masonry Traditions",
-          desc: "Mastery of traditional masonry ovens (hornos) and the ancestral tahona crushing method.",
-        }
-      ],
       formSectionTitle: "Join the Lineage",
       formSectionDesc: "Submit your credentials for private evaluation by our executive board.",
       formName: "Full Name",
@@ -157,16 +64,31 @@ export default function CareerDetail({ lang = "es", setPage }) {
       formFileSelected: "Selected file: ",
       formSubmitBtn: "SUBMIT APPLICATION",
       formSuccess: "Application successfully submitted! Our executive board will review your profile and contact you in absolute confidentiality.",
+      disclaimerText: "At Casa Loy, the only official channels we use to publish job vacancies are OCC, Indeed, Computrabajo, Facebook, and LinkedIn. Any vacancy posted outside of these media does not correspond to us and is completely unauthorized."
     }
   };
 
-  const t = content[lang];
+  const t = labels[lang] || labels.es;
+
+  const getJobImage = (id) => {
+    switch (id) {
+      case "kam":
+        return "/Empleado Casa Loy Tequilera.webp";
+      case "maestro-tequilero":
+        return "/Trabajo Duro Casa Loy Tequilera Jimado.webp";
+      case "brand-ambassador":
+        return "/Barra Casa Loy Experiencias.webp";
+      case "director-sostenibilidad":
+        return "/compostaje-escritorio.webp";
+      default:
+        return "/Trabajo Duro Casa Loy Tequilera Jimado.webp";
+    }
+  };
 
   return (
     <div className="bg-background text-on-surface text-left">
       {/* Hero Section */}
       <section className="pt-40 pb-20 md:pt-48 md:pb-32 px-gutter md:px-margin-desktop bg-surface relative overflow-hidden">
-        {/* Subtle decorative grid/linen overlay */}
         <div
           className="absolute inset-0 opacity-[0.03] pointer-events-none"
           style={{
@@ -182,24 +104,24 @@ export default function CareerDetail({ lang = "es", setPage }) {
                 {t.breadcrumbCareers}
               </span>
               <span className="material-symbols-outlined text-sm font-light">chevron_right</span>
-              <span>{t.breadcrumbProduction}</span>
+              <span>{job.breadcrumbProduction[lang]}</span>
               <span className="material-symbols-outlined text-sm font-light">chevron_right</span>
-              <span className="text-primary font-bold">{t.breadcrumbRole}</span>
+              <span className="text-primary font-bold">{job.breadcrumbRole[lang]}</span>
             </nav>
             <button
               onClick={() => setPage("careers")}
-              className="font-label-caps text-[10px] text-primary hover:opacity-75 tracking-widest font-bold border-b border-primary/30"
+              className="font-label-caps text-[10px] text-primary hover:opacity-75 tracking-widest font-bold border-b border-primary/30 cursor-pointer focus:outline-none"
             >
               {t.backBtn}
             </button>
           </div>
 
           <h1 className="font-serif text-5xl md:text-8xl lg:text-[100px] text-on-surface leading-none mb-8 tracking-tight font-medium">
-            {t.title1} <br />
-            <span className="italic text-primary font-light">{t.title2}</span>
+            {job.title1[lang]} <br />
+            <span className="italic text-primary font-light">{job.title2[lang]}</span>
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl border-l-2 border-primary/30 pl-8 italic font-light">
-            {t.heroDesc}
+            {job.heroDesc[lang]}
           </p>
         </div>
       </section>
@@ -209,7 +131,7 @@ export default function CareerDetail({ lang = "es", setPage }) {
         <div className="max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
           <div className="lg:col-span-5 space-y-10">
             <h2 className="font-serif text-3xl md:text-5xl text-primary font-medium tracking-tight mb-12">
-              {t.roleTitle}
+              {job.roleTitle[lang]}
             </h2>
 
             <div className="space-y-8">
@@ -219,9 +141,9 @@ export default function CareerDetail({ lang = "es", setPage }) {
                 </div>
                 <div>
                   <h4 className="font-label-caps text-[10px] text-primary/70 uppercase tracking-widest font-bold mb-1">
-                    {t.locLabel}
+                    {job.locLabel[lang]}
                   </h4>
-                  <p className="font-body-md text-on-surface font-light">{t.locVal}</p>
+                  <p className="font-body-md text-on-surface font-light">{job.locVal[lang]}</p>
                 </div>
               </div>
 
@@ -231,9 +153,9 @@ export default function CareerDetail({ lang = "es", setPage }) {
                 </div>
                 <div>
                   <h4 className="font-label-caps text-[10px] text-primary/70 uppercase tracking-widest font-bold mb-1">
-                    {t.typeLabel}
+                    {job.typeLabel[lang]}
                   </h4>
-                  <p className="font-body-md text-on-surface font-light">{t.typeVal}</p>
+                  <p className="font-body-md text-on-surface font-light">{job.typeVal[lang]}</p>
                 </div>
               </div>
 
@@ -245,9 +167,9 @@ export default function CareerDetail({ lang = "es", setPage }) {
                 </div>
                 <div>
                   <h4 className="font-label-caps text-[10px] text-primary/70 uppercase tracking-widest font-bold mb-1">
-                    {t.compLabel}
+                    {job.compLabel[lang]}
                   </h4>
-                  <p className="font-body-md text-on-surface font-light">{t.compVal}</p>
+                  <p className="font-body-md text-on-surface font-light">{job.compVal[lang]}</p>
                 </div>
               </div>
             </div>
@@ -255,7 +177,7 @@ export default function CareerDetail({ lang = "es", setPage }) {
             <div className="pt-6">
               <button
                 onClick={() => document.getElementById("apply")?.scrollIntoView({ behavior: "smooth" })}
-                className="bg-primary text-white font-label-caps px-8 py-4 hover:shadow-lg transition-all tracking-widest text-xs font-bold"
+                className="bg-primary text-white font-label-caps px-8 py-4 hover:shadow-lg transition-all tracking-widest text-xs font-bold cursor-pointer focus:outline-none"
               >
                 {t.applyBtn}
               </button>
@@ -265,9 +187,9 @@ export default function CareerDetail({ lang = "es", setPage }) {
           <div className="lg:col-span-7 mt-12 lg:mt-0 relative group">
             <div className="aspect-[16/10] overflow-hidden bg-white shadow-xl">
               <img
-                alt="Maestro Tequilero selection process"
+                alt={`${job.breadcrumbRole[lang]} presentation`}
                 className="w-full h-full object-cover grayscale brightness-95 group-hover:grayscale-0 group-hover:scale-102 transition-all duration-[1.5s]"
-                src="/Trabajo Duro Casa Loy Tequilera Jimado.webp"
+                src={getJobImage(job.id)}
               />
             </div>
             <div className="absolute inset-0 border border-primary/20 -m-4 -z-10 group-hover:-m-2 transition-all duration-700"></div>
@@ -281,16 +203,16 @@ export default function CareerDetail({ lang = "es", setPage }) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
             <div className="lg:col-span-4 border-t border-primary/20 pt-8 text-left">
               <h3 className="font-serif text-2xl md:text-3xl text-on-surface mb-4 tracking-tight font-medium">
-                {t.sectionTitle}
+                {job.sectionTitle[lang]}
               </h3>
               <p className="font-body-md text-on-surface-variant font-light leading-relaxed">
-                {t.sectionDesc}
+                {job.sectionDesc[lang]}
               </p>
             </div>
 
             <div className="lg:col-span-7 lg:col-start-6 mt-12 lg:mt-0">
               <ul className="space-y-8 text-left">
-                {t.responsibilities.map((resp) => (
+                {job.responsibilities.map((resp) => (
                   <li
                     key={resp.num}
                     className="flex gap-6 pb-8 border-b border-outline-variant/30 group last:border-b-0"
@@ -300,10 +222,10 @@ export default function CareerDetail({ lang = "es", setPage }) {
                     </span>
                     <div>
                       <h4 className="font-body-lg font-semibold text-on-surface mb-2 font-sans">
-                        {resp.title}
+                        {resp.title[lang]}
                       </h4>
                       <p className="font-body-md text-on-surface-variant/80 font-light leading-relaxed">
-                        {resp.desc}
+                        {resp.desc[lang]}
                       </p>
                     </div>
                   </li>
@@ -318,10 +240,10 @@ export default function CareerDetail({ lang = "es", setPage }) {
       <section className="py-32 px-gutter md:px-margin-desktop bg-surface-container-low text-center">
         <div className="max-w-container-max mx-auto">
           <h2 className="font-serif text-3xl md:text-5xl text-on-surface mb-16 tracking-tight font-medium">
-            {t.reqTitle}
+            {job.reqTitle[lang]}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {t.requirements.map((req, idx) => (
+            {job.requirements.map((req, idx) => (
               <div
                 key={idx}
                 className="p-10 bg-white border border-outline-variant/30 hover:border-primary transition-all duration-500 text-left shadow-sm hover:shadow-md"
@@ -330,10 +252,10 @@ export default function CareerDetail({ lang = "es", setPage }) {
                   {req.icon}
                 </span>
                 <h4 className="font-body-lg font-bold mb-4 font-sans uppercase tracking-wider text-sm">
-                  {req.title}
+                  {req.title[lang]}
                 </h4>
                 <p className="font-body-md text-on-surface-variant font-light leading-relaxed">
-                  {req.desc}
+                  {req.desc[lang]}
                 </p>
               </div>
             ))}
@@ -341,8 +263,71 @@ export default function CareerDetail({ lang = "es", setPage }) {
         </div>
       </section>
 
+      {/* Conocimientos Clave Section (if available) */}
+      {job.conocimientos && (
+        <section className="py-24 px-gutter md:px-margin-desktop bg-surface-container-low border-t border-outline-variant/20">
+          <div className="max-w-container-max mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+              <div className="lg:col-span-4 text-left">
+                <h3 className="font-serif text-2xl md:text-3xl text-primary mb-6 tracking-tight font-medium">
+                  {job.conocimientosTitle[lang]}
+                </h3>
+              </div>
+              <div className="lg:col-span-8">
+                <ul className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+                  {job.conocimientos.map((con, idx) => (
+                    <li key={idx} className="flex items-start gap-4">
+                      <span className="material-symbols-outlined text-primary text-base font-light shrink-0 mt-0.5">
+                        check_circle
+                      </span>
+                      <p className="font-body-md text-on-surface-variant text-sm font-light leading-relaxed">
+                        {con[lang]}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Ofrecemos Section (if available) */}
+      {job.ofrecemos && (
+        <section className="py-24 px-gutter md:px-margin-desktop bg-background border-t border-outline-variant/20">
+          <div className="max-w-container-max mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
+              <div className="lg:col-span-5 text-left">
+                <h3 className="font-serif text-3xl md:text-5xl text-primary mb-6 tracking-tight font-medium">
+                  {job.ofrecemosTitle[lang]}
+                </h3>
+                <p className="font-body-lg text-on-surface-variant/80 font-light leading-relaxed">
+                  {lang === "es"
+                    ? "Forme parte de una institución líder con un firme compromiso con la sustentabilidad y el bienestar de su equipo."
+                    : "Become part of a leading institution with a firm commitment to sustainability and our team's well-being."}
+                </p>
+              </div>
+              <div className="lg:col-span-7">
+                <div className="bg-surface-container p-8 md:p-12 border border-outline-variant/20 shadow-sm space-y-6">
+                  {job.ofrecemos.map((o, idx) => (
+                    <div key={idx} className="flex items-center gap-4 pb-4 border-b border-outline-variant/20 last:border-b-0 last:pb-0">
+                      <span className="material-symbols-outlined text-primary text-xl font-light shrink-0">
+                        redeem
+                      </span>
+                      <p className="font-body-md text-on-surface font-semibold text-sm">
+                        {o[lang]}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Application Form */}
-      <section className="py-32 px-gutter md:px-margin-desktop bg-background" id="apply">
+      <section className="py-32 px-gutter md:px-margin-desktop bg-background border-t border-outline-variant/20" id="apply">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-16 space-y-4">
             <h2 className="font-serif text-3xl md:text-5xl text-on-surface tracking-tight font-medium">
@@ -423,12 +408,22 @@ export default function CareerDetail({ lang = "es", setPage }) {
 
               <div className="pt-8">
                 <button
-                  className="w-full bg-primary text-white py-6 font-navigation text-navigation uppercase tracking-[0.2em] hover:bg-secondary transition-all duration-500 shadow-xl shadow-primary/10 hover:shadow-primary/30 flex items-center justify-center gap-4 text-xs font-bold"
+                  className="w-full bg-primary text-white py-6 font-navigation text-navigation uppercase tracking-[0.2em] hover:bg-[#592c0a] transition-all duration-500 shadow-xl shadow-primary/10 hover:shadow-primary/30 flex items-center justify-center gap-4 text-xs font-bold cursor-pointer focus:outline-none"
                   type="submit"
                 >
                   {t.formSubmitBtn}
                   <span className="material-symbols-outlined text-sm font-light">arrow_right_alt</span>
                 </button>
+              </div>
+
+              {/* Safety recruitment disclaimer on detail page */}
+              <div className="mt-8 pt-6 border-t border-outline-variant/20 flex gap-4 items-start bg-surface-container-low/40 p-4">
+                <span className="material-symbols-outlined text-primary text-xl shrink-0 font-light">
+                  gpp_maybe
+                </span>
+                <p className="font-body-md text-[11px] leading-relaxed text-on-surface-variant/70 font-light">
+                  {t.disclaimerText}
+                </p>
               </div>
             </form>
           )}

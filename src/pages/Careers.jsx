@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { jobsData } from "../data/jobs";
 
-export default function Careers({ lang = "es", setPage }) {
+export default function Careers({ lang = "es", setPage, setSelectedJobId }) {
   const [cvFile, setCvFile] = useState(null);
   const [formData, setFormData] = useState({ name: "", email: "", area: "Destilación y Campo" });
   const [submitted, setSubmitted] = useState(false);
+  const [activeFilter, setActiveFilter] = useState("all");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -37,12 +39,9 @@ export default function Careers({ lang = "es", setPage }) {
       sectionDesc: "Filtrando la excelencia para encontrar el ajuste perfecto entre el terroir y el talento humano.",
       published: "PUBLICADA",
       applyBtn: "APLICAR",
-      daysAgo: "Hace",
-      days: "días",
-      week: "semana",
       spontaneousTitle: "¿No encuentra su rol ideal?",
       spontaneousTitleItalic: "Escríbanos.",
-      spontaneousDesc: "Estamos en constante búsqueda de individuos excepcionales que compartan nuestra pasión por la tierra y el tiempo. Envíenos su perfil para futuras aperturas estratégicas.",
+      spontaneousDesc: "Estamos en constante búsqueda de de individuos excepcionales que compartan nuestra pasión por la tierra y el tiempo. Envíenos su perfil para futuras aperturas estratégicas.",
       spontaneousEmail: "talento@casaloy.com",
       formName: "Nombre completo",
       formEmail: "Correo electrónico",
@@ -52,32 +51,9 @@ export default function Careers({ lang = "es", setPage }) {
       formUploadSelected: "Archivo seleccionado: ",
       formSubmitBtn: "ENVIAR PERFIL PROFESIONAL",
       formSuccess: "¡Gracias! Su perfil ha sido registrado con éxito. Nos pondremos en contacto.",
-      jobs: [
-        {
-          id: "maestro-tequilero",
-          category: "PRODUCCIÓN",
-          title: "Maestro Tequilero / Mezclador Sr.",
-          location: "Ayotlán, Jalisco",
-          type: "Tiempo Completo",
-          time: "Hace 2 días",
-        },
-        {
-          id: "brand-ambassador",
-          category: "MARKETING & VENTAS",
-          title: "Brand Ambassador Global",
-          location: "Remoto / Internacional",
-          type: "Viaje 70%",
-          time: "Hace 5 días",
-        },
-        {
-          id: "director-sostenibilidad",
-          category: "ADMINISTRACIÓN",
-          title: "Director de Sostenibilidad",
-          location: "Guadalajara, HQ",
-          type: "ESG Focus",
-          time: "Hace 1 semana",
-        }
-      ]
+      disclaimerTitle: "AVISO IMPORTANTE SOBRE NUESTRAS VACANTES",
+      disclaimerText: "En Casa Loy los únicos medios oficiales que utilizamos para publicar vacantes son OCC, Indeed, Computrabajo, Facebook y LinkedIn. Cualquier vacante publicada fuera de estos medios no corresponde a nuestra empresa y carece de validez oficial.",
+      noJobs: "Actualmente no existen vacantes abiertas en este departamento. Le invitamos a enviar una postulación espontánea."
     },
     en: {
       category: "TALENT & TRADITION",
@@ -87,10 +63,7 @@ export default function Careers({ lang = "es", setPage }) {
       sectionTitle: "Current Opportunities",
       sectionDesc: "Filtering excellence to find the perfect fit between terroir and human talent.",
       published: "PUBLISHED",
-      applyBtn: "APPLY",
-      daysAgo: "Published",
-      days: "days ago",
-      week: "week ago",
+      applyBtn: "APPLY NOW",
       spontaneousTitle: "Can't find your ideal role?",
       spontaneousTitleItalic: "Write to us.",
       spontaneousDesc: "We are constantly searching for exceptional individuals who share our passion for land and time. Send us your profile for future strategic openings.",
@@ -103,36 +76,25 @@ export default function Careers({ lang = "es", setPage }) {
       formUploadSelected: "Selected file: ",
       formSubmitBtn: "SEND PROFESSIONAL PROFILE",
       formSuccess: "Thank you! Your profile has been successfully registered. We will be in touch.",
-      jobs: [
-        {
-          id: "maestro-tequilero",
-          category: "PRODUCTION",
-          title: "Maestro Tequilero / Sr. Blender",
-          location: "Ayotlán, Jalisco",
-          type: "Full Time",
-          time: "2 days ago",
-        },
-        {
-          id: "brand-ambassador",
-          category: "MARKETING & SALES",
-          title: "Global Brand Ambassador",
-          location: "Remote / International",
-          type: "70% Travel",
-          time: "5 days ago",
-        },
-        {
-          id: "director-sostenibilidad",
-          category: "ADMINISTRATION",
-          title: "Sustainability Director",
-          location: "Guadalajara, HQ",
-          type: "ESG Focus",
-          time: "1 week ago",
-        }
-      ]
+      disclaimerTitle: "IMPORTANT NOTICE ABOUT VACANCIES",
+      disclaimerText: "At Casa Loy, the only official channels we use to publish job vacancies are OCC, Indeed, Computrabajo, Facebook, and LinkedIn. Any vacancy posted outside of these media does not correspond to us and is completely unauthorized.",
+      noJobs: "There are currently no open positions in this department. We encourage you to submit a spontaneous application."
     }
   };
 
-  const t = content[lang];
+  const t = content[lang] || content.es;
+
+  const filters = [
+    { id: "all", label: lang === "es" ? "Todos" : "All" },
+    { id: "comercial", label: lang === "es" ? "Ventas y Comercial" : "Sales & Commercial" },
+    { id: "produccion", label: lang === "es" ? "Producción y Campo" : "Production & Fields" },
+    { id: "marketing", label: lang === "es" ? "Marketing y Lujo" : "Marketing & Luxury" },
+    { id: "administracion", label: lang === "es" ? "Administración" : "Administration" },
+  ];
+
+  const filteredJobs = jobsData.filter(
+    (job) => activeFilter === "all" || job.category === activeFilter
+  );
 
   return (
     <div className="bg-background text-on-surface text-left">
@@ -183,54 +145,101 @@ export default function Careers({ lang = "es", setPage }) {
           </div>
         </div>
 
-        <div className="space-y-6">
-          {t.jobs.map((job) => (
-            <div
-              key={job.id}
-              className="bg-background/40 backdrop-blur-md border border-outline-variant/20 p-8 hover:bg-surface-container-low transition-all duration-500 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm"
+        {/* Dynamic Filters Bar - Quiet Luxury Style */}
+        <div className="flex flex-wrap items-center justify-start gap-x-8 gap-y-4 mb-16 border-b border-outline-variant/15 pb-6 select-none">
+          {filters.map((f) => (
+            <button
+              key={f.id}
+              onClick={() => setActiveFilter(f.id)}
+              className={`font-navigation text-xs uppercase tracking-[0.2em] pb-2 transition-all duration-300 font-semibold cursor-pointer relative focus:outline-none ${
+                activeFilter === f.id
+                  ? "text-primary font-bold"
+                  : "text-on-surface-variant/50 hover:text-primary"
+              }`}
             >
-              <div className="flex-1 text-left">
-                <span className="font-label-caps text-secondary text-[10px] tracking-widest font-bold mb-2 block">
-                  {job.category}
-                </span>
-                <h3 className="font-serif text-2xl md:text-3xl text-on-surface mb-2 font-medium tracking-tight">
-                  {job.title}
-                </h3>
-                <div className="flex flex-wrap items-center gap-6 text-on-surface-variant/70 font-navigation text-xs tracking-wider">
-                  <span className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm font-light">location_on</span>{" "}
-                    {job.location}
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-sm font-light">schedule</span>{" "}
-                    {job.type}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between md:justify-end gap-8 border-t border-outline-variant/10 md:border-none pt-4 md:pt-0">
-                <div className="text-left md:text-right">
-                  <p className="font-label-caps text-[9px] text-on-surface-variant/50 tracking-widest font-bold">
-                    {t.published}
-                  </p>
-                  <p className="text-sm font-light text-on-surface-variant">{job.time}</p>
-                </div>
-                <button
-                  onClick={() => {
-                    if (job.id === "maestro-tequilero") {
-                      setPage("career-detail");
-                    } else {
-                      // Anchor to contact form
-                      document.getElementById("hr-contact")?.scrollIntoView({ behavior: "smooth" });
-                    }
-                  }}
-                  className="bg-primary text-white font-label-caps px-10 py-4 hover:scale-102 transition-transform tracking-widest font-bold text-xs"
-                >
-                  {t.applyBtn}
-                </button>
-              </div>
-            </div>
+              {f.label}
+              {activeFilter === f.id && (
+                <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-primary"></span>
+              )}
+            </button>
           ))}
+        </div>
+
+        {/* Job Listings Container */}
+        <div className="space-y-6 min-h-[200px]">
+          {filteredJobs.length === 0 ? (
+            <div className="p-12 text-center border border-dashed border-outline-variant/30 bg-surface-container-lowest/50">
+              <span className="material-symbols-outlined text-4xl text-outline-variant/60 mb-4 font-light block">
+                work_history
+              </span>
+              <p className="font-body-md text-on-surface-variant/80 font-light max-w-md mx-auto">
+                {t.noJobs}
+              </p>
+            </div>
+          ) : (
+            filteredJobs.map((job) => (
+              <div
+                key={job.id}
+                className="bg-background/40 backdrop-blur-md border border-outline-variant/20 p-8 hover:bg-surface-container-low transition-all duration-500 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm group hover:shadow-md"
+              >
+                <div className="flex-1 text-left">
+                  <span className="font-label-caps text-secondary text-[10px] tracking-widest font-bold mb-2 block">
+                    {job.categoryLabel[lang]}
+                  </span>
+                  <h3 className="font-serif text-2xl md:text-3xl text-on-surface mb-2 font-medium tracking-tight group-hover:text-primary transition-colors">
+                    {job.title[lang]}
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-6 text-on-surface-variant/70 font-navigation text-xs tracking-wider">
+                    <span className="flex items-center gap-2">
+                      <span className="material-symbols-outlined text-sm font-light">location_on</span>{" "}
+                      {job.location[lang]}
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <span className="material-symbols-outlined text-sm font-light">schedule</span>{" "}
+                      {job.type[lang]}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between md:justify-end gap-8 border-t border-outline-variant/10 md:border-none pt-4 md:pt-0">
+                  <div className="text-left md:text-right">
+                    <p className="font-label-caps text-[9px] text-on-surface-variant/50 tracking-widest font-bold">
+                      {t.published}
+                    </p>
+                    <p className="text-sm font-light text-on-surface-variant">{job.time[lang]}</p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setSelectedJobId(job.id);
+                      setPage("career-detail");
+                    }}
+                    className="bg-primary text-white font-label-caps px-10 py-4 hover:bg-[#592c0a] hover:scale-102 transition-all tracking-widest font-bold text-xs cursor-pointer focus:outline-none"
+                  >
+                    {t.applyBtn}
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </section>
+
+      {/* Recruitment Safety Disclaimer Banner */}
+      <section className="bg-surface-container-low border-y border-outline-variant/15 py-12">
+        <div className="max-w-container-max mx-auto px-gutter md:px-margin-desktop">
+          <div className="flex flex-col md:flex-row items-start gap-6 bg-white p-8 border border-outline-variant/30 shadow-sm">
+            <span className="material-symbols-outlined text-primary text-3xl shrink-0 font-light mt-1">
+              gpp_maybe
+            </span>
+            <div className="space-y-2 text-left">
+              <h4 className="font-label-caps text-xs tracking-wider font-bold text-primary uppercase">
+                {t.disclaimerTitle}
+              </h4>
+              <p className="font-body-md text-xs leading-relaxed text-on-surface-variant/80 font-light">
+                {t.disclaimerText}
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -321,7 +330,7 @@ export default function Careers({ lang = "es", setPage }) {
                 </div>
 
                 <button
-                  className="w-full bg-primary text-white font-label-caps py-5 hover:bg-primary-container transition-colors tracking-widest text-xs font-bold"
+                  className="w-full bg-primary text-white font-label-caps py-5 hover:bg-primary-container transition-colors tracking-widest text-xs font-bold cursor-pointer focus:outline-none"
                   type="submit"
                 >
                   {t.formSubmitBtn}
