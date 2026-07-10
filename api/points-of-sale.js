@@ -8,7 +8,8 @@ function mapStoreForFrontend(store) {
     store.casa_loy_reposado ||
     store.casa_loy_cristalino ||
     store.casa_loy_anejo ||
-    store.casa_loy_piedra_y_agave_blanco
+    store.casa_loy_piedra_y_agave_blanco ||
+    store.casa_loy_piedra_y_agave_reposado
   ) {
     brands.push('casa-loy');
   }
@@ -25,31 +26,46 @@ function mapStoreForFrontend(store) {
   }
 
   const categories = [];
-  if (
-    store.casa_loy_blanco ||
-    store.tierra_zafiro_blanco ||
-    store.tierra_zafiro_blanco_100_pure ||
-    store.taddel_plata ||
-    store.casa_loy_piedra_y_agave_blanco
-  ) {
-    categories.push('Blanco');
+  // Casa Loy categories
+  if (store.casa_loy_blanco) {
+    if (!categories.includes('Blanco')) categories.push('Blanco');
   }
-  if (
-    store.casa_loy_reposado ||
-    store.taddel_reposado ||
-    store.tierra_zafiro_reposado
-  ) {
-    categories.push('Reposado');
+  if (store.casa_loy_reposado) {
+    if (!categories.includes('Reposado')) categories.push('Reposado');
   }
-  if (
-    store.casa_loy_cristalino ||
-    store.taddel_cristalino ||
-    store.tierra_zafiro_cristalino
-  ) {
-    categories.push('Cristalino');
+  if (store.casa_loy_cristalino) {
+    if (!categories.includes('Cristalino')) categories.push('Cristalino');
   }
   if (store.casa_loy_anejo) {
-    categories.push('Añejo');
+    if (!categories.includes('Añejo')) categories.push('Añejo');
+  }
+  if (store.casa_loy_piedra_y_agave_blanco) {
+    categories.push('Piedra y Agave Blanco');
+  }
+  if (store.casa_loy_piedra_y_agave_reposado) {
+    categories.push('Piedra y Agave Reposado');
+  }
+
+  // Taddel categories
+  if (store.taddel_plata) {
+    categories.push('Plata');
+  }
+  if (store.taddel_reposado) {
+    if (!categories.includes('Reposado')) categories.push('Reposado');
+  }
+  if (store.taddel_cristalino) {
+    if (!categories.includes('Cristalino')) categories.push('Cristalino');
+  }
+
+  // Tierra Zafiro categories
+  if (store.tierra_zafiro_blanco || store.tierra_zafiro_blanco_100_pure) {
+    if (!categories.includes('Blanco')) categories.push('Blanco');
+  }
+  if (store.tierra_zafiro_reposado) {
+    if (!categories.includes('Reposado')) categories.push('Reposado');
+  }
+  if (store.tierra_zafiro_cristalino) {
+    if (!categories.includes('Cristalino')) categories.push('Cristalino');
   }
 
   return {
@@ -96,6 +112,7 @@ export default async function handler(req, res) {
       casa_loy_cristalino: false,
       casa_loy_anejo: true,
       casa_loy_piedra_y_agave_blanco: false,
+      casa_loy_piedra_y_agave_reposado: false,
       taddel_plata: true,
       taddel_reposado: true,
       taddel_cristalino: false,
@@ -120,6 +137,7 @@ export default async function handler(req, res) {
       casa_loy_cristalino: false,
       casa_loy_anejo: false,
       casa_loy_piedra_y_agave_blanco: false,
+      casa_loy_piedra_y_agave_reposado: false,
       taddel_plata: false,
       taddel_reposado: false,
       taddel_cristalino: false,
