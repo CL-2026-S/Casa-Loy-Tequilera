@@ -256,21 +256,41 @@ export default function WhereToBuy({ lang }) {
 
         {region === "mx" ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center justify-items-center animate-fade-in">
-            <a className="group relative w-full h-28 flex items-center justify-center bg-white/50 border border-outline-variant/20 hover:bg-white hover:border-primary transition-all duration-500 overflow-hidden shadow-sm" href="#">
-              <svg className="h-8 opacity-60 group-hover:opacity-100 transition-all duration-500" viewBox="0 0 160 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <text x="10" y="28" fontFamily="sans-serif" fontWeight="900" fontSize="22" fill="#2D3277">mercado</text>
-                <text x="102" y="28" fontFamily="sans-serif" fontWeight="300" fontSize="22" fill="#2D3277">libre</text>
-              </svg>
+            <a 
+              className="group relative w-full h-28 flex items-center justify-center bg-white/50 border border-outline-variant/20 hover:bg-white hover:border-primary transition-all duration-500 overflow-hidden shadow-sm px-4" 
+              href="https://www.mercadolibre.com.mx/tienda/casa-loy"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img 
+                src="/Mercado_Libre_Logotipo.png" 
+                alt="Mercado Libre" 
+                className="h-14 object-contain opacity-60 group-hover:opacity-100 transition-all duration-500" 
+              />
             </a>
-            <a className="group relative w-full h-28 flex items-center justify-center bg-white/50 border border-outline-variant/20 hover:bg-white hover:border-primary transition-all duration-500 overflow-hidden shadow-sm" href="#">
-              <svg className="h-5 opacity-60 group-hover:opacity-100 transition-all duration-500" viewBox="0 0 120 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <text x="10" y="18" fontFamily="sans-serif" fontWeight="bold" fontSize="20" fill="#E2007A">Liverpool</text>
-              </svg>
+            <a 
+              className="group relative w-full h-28 flex items-center justify-center bg-white/50 border border-outline-variant/20 hover:bg-white hover:border-primary transition-all duration-500 overflow-hidden shadow-sm px-4" 
+              href="https://www.liverpool.com.mx/tienda/sp/casa-loy-tequilera"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img 
+                src="/Liverpool_Logotipo.png" 
+                alt="Liverpool" 
+                className="h-10 object-contain opacity-60 group-hover:opacity-100 transition-all duration-500" 
+              />
             </a>
-            <a className="group relative w-full h-28 flex items-center justify-center bg-white/50 border border-outline-variant/20 hover:bg-white hover:border-primary transition-all duration-500 overflow-hidden shadow-sm" href="#">
-              <svg className="h-5 opacity-60 group-hover:opacity-100 transition-all duration-500" viewBox="0 0 100 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <text x="10" y="18" fontFamily="sans-serif" fontWeight="900" fontSize="20" fill="#111111">amazon</text>
-              </svg>
+            <a 
+              className="group relative w-full h-28 flex items-center justify-center bg-white/50 border border-outline-variant/20 hover:bg-white hover:border-primary transition-all duration-500 overflow-hidden shadow-sm px-4" 
+              href="https://www.amazon.com.mx/s?me=A3UB51BZY3LWTE"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img 
+                src="/Amazon_Logotipo.png" 
+                alt="Amazon" 
+                className="h-8 object-contain opacity-60 group-hover:opacity-100 transition-all duration-500" 
+              />
             </a>
           </div>
         ) : (
@@ -433,7 +453,7 @@ export default function WhereToBuy({ lang }) {
                     </div>
 
                     <div className="flex justify-between items-center text-xs">
-                      <span className="text-outline font-light tracking-wide">{store.phone}</span>
+                      <span className="text-outline font-light tracking-wide">{store.fase}</span>
                       {store.maps_url ? (
                         <a 
                           href={store.maps_url} 
