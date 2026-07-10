@@ -513,7 +513,7 @@ export default function WhereToBuy({ lang }) {
           setActiveStore(store);
           map.setView(
             [store.latitude, store.longitude],
-            11 // Medium zoom level so map space never feels empty
+            11
           );
         });
 
@@ -542,7 +542,7 @@ export default function WhereToBuy({ lang }) {
     }
 
     if (hasCoords && storesFilteredByCriteria.length > 0) {
-      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 11 }); // Fit all results comfortably
+      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 11 });
     }
   }, [storesFilteredByCriteria, userLocation]);
 
@@ -919,16 +919,22 @@ export default function WhereToBuy({ lang }) {
                       onClick={() => handleStoreClick(store)}
                       className="p-5 border-l-4 border-l-primary bg-white shadow-md transition-all duration-300 text-left"
                     >
-                      <div className="flex justify-between items-start mb-1">
-                        <h4 className="font-label-caps text-primary text-[10px] tracking-widest font-bold">
-                          {store.retailer}
-                        </h4>
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="text-[8px] uppercase tracking-widest font-bold text-on-surface-variant/50 border border-outline-variant/20 px-1.5 py-0.5 bg-white">
+                          {store.pdv 
+                            ? (lang === "es" ? "Punto de Venta" : "Retail Store") 
+                            : (lang === "es" ? "Centro de Consumo" : "Restaurant/Bar")}
+                        </span>
                         {store.distance !== undefined && (
                           <span className="text-[8px] bg-[#C58B58]/15 text-[#C58B58] px-1.5 py-0.5 font-bold uppercase tracking-wider">
                             {store.distance.toFixed(1)} km
                           </span>
                         )}
                       </div>
+                      
+                      <h4 className="font-label-caps text-primary text-[10px] tracking-widest font-bold mb-0.5">
+                        {store.retailer}
+                      </h4>
                       <h3 className="font-headline-md text-[17px] font-semibold mb-1">
                         {store.name}
                       </h3>
@@ -936,36 +942,20 @@ export default function WhereToBuy({ lang }) {
                         {store.address}
                       </p>
 
-                      {/* Establishment Type, Brand and Category Tags */}
-                      <div className="flex flex-wrap gap-1 mb-4">
-                        {store.pdv && (
-                          <span className="text-[8px] uppercase tracking-wider bg-outline-variant/10 text-on-surface-variant/70 px-1.5 py-0.5 font-bold">
-                            {lang === "es" ? "Punto de Venta" : "Retail Store"}
-                          </span>
+                      {/* Quiet Luxury clean lists for Brands and Categories instead of cluttered pills */}
+                      <div className="text-[10px] text-on-surface-variant/80 space-y-1 mb-4 leading-relaxed font-sans border-t border-outline-variant/10 pt-3">
+                        {store.brands && store.brands.length > 0 && (
+                          <div>
+                            <span className="font-semibold text-primary">{lang === "es" ? "Marcas: " : "Brands: "}</span>
+                            <span>{store.brands.map(b => brandOptions.find(o => o.id === b)?.name || b).join(", ")}</span>
+                          </div>
                         )}
-                        {store.cdc && (
-                          <span className="text-[8px] uppercase tracking-wider bg-outline-variant/10 text-on-surface-variant/70 px-1.5 py-0.5 font-bold">
-                            {lang === "es" ? "Centro de Consumo" : "Restaurant/Bar"}
-                          </span>
+                        {store.categories && store.categories.length > 0 && (
+                          <div>
+                            <span className="font-semibold text-primary">{lang === "es" ? "Categorías: " : "Categories: "}</span>
+                            <span>{store.categories.join(", ")}</span>
+                          </div>
                         )}
-                        {store.brands &&
-                          store.brands.map((b) => (
-                            <span
-                              key={b}
-                              className="text-[8px] uppercase tracking-wider bg-primary/15 text-primary px-1.5 py-0.5 font-bold"
-                            >
-                              {brandOptions.find((o) => o.id === b)?.name || b}
-                            </span>
-                          ))}
-                        {store.categories &&
-                          store.categories.map((c) => (
-                            <span
-                              key={c}
-                              className="text-[8px] uppercase tracking-wider bg-on-surface-variant/5 text-on-surface-variant/80 px-1.5 py-0.5 font-medium"
-                            >
-                              {c}
-                            </span>
-                          ))}
                       </div>
 
                       <div className="flex justify-end items-center text-xs">
@@ -999,71 +989,6 @@ export default function WhereToBuy({ lang }) {
           <div className="lg:w-2/3 h-[450px] lg:h-[580px] relative overflow-hidden bg-[#EDE7DE] border border-outline-variant/20 shadow-md">
             {/* Map container */}
             <div ref={mapContainerRef} className="w-full h-full z-0" />
-
-            {/* Overlay Info Card (React overlay on map) */}
-            {activeStore && (
-              <div className="absolute bottom-6 left-6 right-6 lg:right-auto z-[1000] p-6 bg-white/90 backdrop-blur-md border border-outline-variant/10 shadow-xl min-w-[280px] lg:max-w-md text-left font-sans transition-all duration-300">
-                <p className="font-label-caps text-primary text-[8px] tracking-[0.2em] font-bold mb-1.5">
-                  {activeT.selected}
-                </p>
-                <p className="font-display-hero text-[15px] font-semibold text-on-surface mb-0.5">
-                  {activeStore.retailer}
-                </p>
-                <p className="text-[12px] text-on-surface-variant font-light mb-1">
-                  {activeStore.name}
-                </p>
-                <p className="text-[11px] text-on-surface-variant/80 font-light mb-4 leading-relaxed max-w-[320px]">
-                  {activeStore.address}
-                </p>
-
-                <div className="flex flex-wrap gap-1 mb-4">
-                  {activeStore.pdv && (
-                    <span className="text-[8px] uppercase tracking-wider bg-outline-variant/10 text-on-surface-variant/70 px-1.5 py-0.5 font-bold">
-                      {lang === "es" ? "Punto de Venta" : "Retail Store"}
-                    </span>
-                  )}
-                  {activeStore.cdc && (
-                    <span className="text-[8px] uppercase tracking-wider bg-outline-variant/10 text-on-surface-variant/70 px-1.5 py-0.5 font-bold">
-                      {lang === "es" ? "Centro de Consumo" : "Restaurant/Bar"}
-                    </span>
-                  )}
-                  {activeStore.brands &&
-                    activeStore.brands.map((b) => (
-                      <span
-                        key={b}
-                        className="text-[8px] uppercase tracking-wider bg-primary/10 text-primary px-1.5 py-0.5 font-bold"
-                      >
-                        {brandOptions.find((o) => o.id === b)?.name || b}
-                      </span>
-                    ))}
-                  {activeStore.categories &&
-                    activeStore.categories.map((c) => (
-                      <span
-                        key={c}
-                        className="text-[8px] uppercase tracking-wider bg-on-surface-variant/5 text-on-surface-variant/70 px-1.5 py-0.5 font-medium"
-                      >
-                        {c}
-                      </span>
-                    ))}
-                </div>
-
-                <div className="flex justify-end items-center text-[10px] pt-3 border-t border-outline-variant/10">
-                  {activeStore.maps_url && (
-                    <a
-                      href={activeStore.maps_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-[#C58B58] font-label-caps font-bold hover:underline"
-                    >
-                      {activeT.viewOnMaps}{" "}
-                      <span className="material-symbols-outlined text-[10px]">
-                        arrow_forward
-                      </span>
-                    </a>
-                  )}
-                </div>
-              </div>
-            )}
 
             {/* Viewport filter indicator */}
             {filterByMap && mapBounds && (
