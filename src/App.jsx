@@ -9,7 +9,6 @@ import AgeGatePremium from "./components/AgeGatePremium";
 
 // Pages
 import Home from "./pages/Home";
-import HomeEditorialV2 from "./pages/HomeEditorialV2";
 import HomeInteractive from "./pages/HomeInteractive";
 import AboutUs from "./pages/AboutUs";
 import Maquilas from "./pages/Maquilas";
@@ -169,9 +168,9 @@ export default function App() {
   const renderPage = () => {
     switch (page) {
       case "home":
-        return <HomeEditorialV2 lang={lang} setPage={setPage} setLang={setLang} />;
+        return <Home lang={lang} setPage={setPage} setLang={setLang} />;
       case "editorial-preview":
-        return <HomeEditorialV2 lang={lang} setPage={setPage} setLang={setLang} />;
+        return <Home lang={lang} setPage={setPage} setLang={setLang} />;
       case "home-interactive":
         return <HomeInteractive lang={lang} setPage={setPage} />;
       case "about":
@@ -262,7 +261,7 @@ export default function App() {
           />
         );
       default:
-        return <Home t={t} setPage={setPage} lang={lang} />;
+        return <Home lang={lang} setPage={setPage} setLang={setLang} />;
     }
   };
 

@@ -184,3 +184,20 @@
     display: block !important;
   }
 }
+
+/* Animations for premium hero banners */
+@keyframes slide-in-left-right {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-left-right {
+  animation: slide-in-left-right 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
