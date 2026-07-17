@@ -412,9 +412,6 @@ export default function Maquilas({ lang = "es" }) {
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/45"></div>
         </div>
         <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center h-full pt-16 pb-28 animate-slide-left-right">
-          <span className="font-navigation text-[clamp(11px,1vw,13px)] text-white uppercase tracking-[0.4em] mb-4 block font-semibold">
-            {currentT.heroSub}
-          </span>
           <h1 className="font-serif text-[clamp(28px,4.5vw,60px)] leading-[1.1] tracking-tight font-light text-white uppercase max-w-4xl mx-auto mb-10">
             {currentT.heroTitle} <br />
             <span className="text-white italic font-normal">{currentT.heroTitleItalic}</span>

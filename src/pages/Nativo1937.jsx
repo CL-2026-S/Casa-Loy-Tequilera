@@ -30,6 +30,18 @@ export default function Nativo1937({ lang = "es", t }) {
       identityTitle: "Honramos la tierra y el origen.",
       identityDesc: "Honramos la tierra y el origen de Ayotlán, transformando la hospitalidad en una experiencia que conecta a las personas con el tequila, la cocina y la identidad local.",
       historyLink: "Conoce nuestra historia",
+      pillarsOvertitle: "La Experiencia Nativo",
+      pillarsTitle: "Una mesa cocinada con alma, fuego y agave",
+      pillarsDesc: "Fusionamos la fuerza de la brasa con la fineza del tequila para crear una propuesta culinaria que honra sus raíces y cautiva los sentidos.",
+      pillar1Title: "El Fuego y la Brasa",
+      pillar1Sub: "Leña de encino y mezquite",
+      pillar1Desc: "Nuestra cocina gira en torno a la brasa viva. Un ahumado lento que infunde notas rústicas y profundas en cortes premium y mariscos frescos.",
+      pillar2Title: "La Esencia del Agave",
+      pillar2Sub: "El alma de Casa Loy",
+      pillar2Desc: "El tequila no solo acompaña, se integra. Reducciones aromáticas, adobos en pencas y mixología de autor diseñados en perfecta armonía.",
+      pillar3Title: "El Respeto al Origen",
+      pillar3Sub: "Trazabilidad local",
+      pillar3Desc: "Honramos los Altos de Jalisco trabajando de la mano con productores locales, garantizando ingredientes frescos y sustentables en cada plato.",
       menuTitle: "La Carta",
       menuDesc: "Cocina Contemporánea con Productos Nativos: un viaje sensorial a través de los sabores más puros de nuestra región.",
       pdfMenu: "Descargar Menú Completo (PDF)",
@@ -133,6 +145,18 @@ export default function Nativo1937({ lang = "es", t }) {
       identityTitle: "We honor the land and the origin.",
       identityDesc: "We honor the land and origin of Ayotlán, transforming hospitality into an experience that connects people with tequila, cuisine, and local identity.",
       historyLink: "Discover our history",
+      pillarsOvertitle: "The Nativo Experience",
+      pillarsTitle: "A table cooked with soul, fire, and agave",
+      pillarsDesc: "We fuse the strength of the wood fire with the refinement of tequila to create a culinary proposal that honors its roots and captivates the senses.",
+      pillar1Title: "Fire & Live Embers",
+      pillar1Sub: "Oak and mesquite wood",
+      pillar1Desc: "Our kitchen revolves around the live fire. Slow smoking that infuses rustic and deep notes into premium cuts and fresh seafood.",
+      pillar2Title: "Agave Essence",
+      pillar2Sub: "The soul of Casa Loy",
+      pillar2Desc: "Tequila is not just a companion, it integrates. Aromatic reductions, adobos in agave leaves, and signature mixology designed in perfect harmony.",
+      pillar3Title: "Respect for Origin",
+      pillar3Sub: "Local traceability",
+      pillar3Desc: "We honor the Highlands of Jalisco by working hand-in-hand with local producers, guaranteeing fresh and sustainable ingredients on every plate.",
       menuTitle: "The Menu",
       menuDesc: "Contemporary Cuisine with Native Products: a sensory journey through the purest flavors of our region.",
       pdfMenu: "Download Full Menu (PDF)",
@@ -378,16 +402,11 @@ export default function Nativo1937({ lang = "es", t }) {
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/45"></div>
         </div>
         <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center h-full pt-16 pb-28 animate-slide-left-right">
-          <span className="font-navigation text-[clamp(11px,1vw,13px)] text-white uppercase tracking-[0.4em] mb-4 block font-semibold">
-            {currentT.heroOvertitle}
-          </span>
-          <h1 className="font-serif text-[clamp(28px,4.5vw,60px)] leading-[1.1] tracking-tight font-light text-white uppercase max-w-4xl mx-auto mb-10">
-            {currentT.heroTitle1} <br />
-            <span className="text-white italic font-normal">{currentT.heroTitle2}</span>
-          </h1>
-          <p className="font-sans text-[clamp(13px,1.1vw,16px)] text-white/85 max-w-2xl mx-auto mb-8 font-light leading-relaxed">
-            {currentT.heroDesc}
-          </p>
+          <img
+            src="/logo-nativo-1937-white.png"
+            alt="1937 Nativo"
+            className="w-auto h-48 sm:h-56 md:h-64 object-contain mb-12 select-none pointer-events-none"
+          />
           <div className="flex flex-col sm:flex-row gap-6 items-center justify-center w-full max-w-md sm:max-w-none pt-2">
             <a
               href="#reservations"
@@ -428,33 +447,119 @@ export default function Nativo1937({ lang = "es", t }) {
         </div>
       </section>
 
-      {/* Philosophy Section */}
-      <section className="py-section-gap bg-surface text-left" id="heritage">
-        <div className="max-w-container-max mx-auto px-margin-desktop">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
+      {/* Michelin Star Editorial Section */}
+      <section className="py-28 md:py-36 bg-[#fcf9f3] text-left relative overflow-hidden" id="heritage">
+        {/* Subtle background texture */}
+        <div
+          className="absolute inset-0 opacity-[0.015] mix-blend-multiply bg-cover bg-center pointer-events-none"
+          style={{ backgroundImage: "url('/Fibras de Agave Cocido.webp')" }}
+        />
+        
+        <div className="max-w-container-max mx-auto px-margin-desktop relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
             
-            <div className="lg:col-span-5 space-y-8">
-              <span className="font-label-caps text-label-caps text-primary mb-4 block">{currentT.identityLabel}</span>
-              <h2 className="font-headline-lg text-4xl md:text-6xl font-medium">{currentT.identityTitle}</h2>
-              <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed font-light">
-                {currentT.identityDesc}
-              </p>
-              <div className="flex items-center gap-4 text-primary font-navigation uppercase tracking-widest text-[12px] group cursor-pointer">
-                <span>{currentT.historyLink}</span>
-                <span className="material-symbols-outlined group-hover:translate-x-2 transition-transform">
-                  arrow_right_alt
-                </span>
+            {/* Visual Off-set Grid (Left Column) */}
+            <div className="lg:col-span-6 relative flex items-center justify-center">
+              {/* Main Background Frame (The Interior) */}
+              <div className="relative w-4/5 aspect-[3/4] overflow-hidden shadow-[0_24px_50px_rgba(0,0,0,0.08)] border border-outline-variant/10">
+                <img
+                  src="/Restaurante 1937 Nativo Instalaciones.webp"
+                  alt="Restaurante 1937 Nativo Lounge"
+                  className="w-full h-full object-cover brightness-[0.93] scale-100 hover:scale-102 transition-transform duration-[3000ms]"
+                />
+              </div>
+              
+              {/* Overlapping Detail Frame (The Plated Dish) */}
+              <div className="absolute -bottom-10 -right-4 w-3/5 aspect-square overflow-hidden shadow-[0_30px_60px_rgba(140,71,35,0.15)] border-4 border-[#fcf9f3] translate-x-2">
+                <img
+                  src="/Platillo 1 1937 Nativo.webp"
+                  alt="Alta cocina en 1937 Nativo"
+                  className="w-full h-full object-cover scale-100 hover:scale-105 transition-transform duration-[3000ms]"
+                />
               </div>
             </div>
 
-            <div className="lg:col-span-6 lg:col-start-7">
-              <div className="relative aspect-[4/5] overflow-hidden shadow-md">
-                <img
-                  alt="Close up of an artisanal Mexican dish"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-[2000ms]"
-                  src="/Restaurante 1937 Nativo Instalaciones.webp"
-                />
+            {/* Editorial Content (Right Column) */}
+            <div className="lg:col-span-6 space-y-10 lg:pl-6">
+              
+              {/* Header */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <span className="w-6 h-[0.5px] bg-[#8C4723]" />
+                  <span className="font-navigation text-[9px] tracking-[0.4em] font-bold text-[#8C4723] uppercase">
+                    {lang === "es" ? "Filosofía Culinaria" : "Culinary Philosophy"}
+                  </span>
+                </div>
+                
+                <h2 className="font-serif text-[clamp(28px,3.8vw,46px)] leading-[1.15] tracking-tight text-[#1c1c18] font-medium max-w-xl">
+                  {lang === "es" 
+                    ? "Donde el fuego de los Altos se convierte en alta cocina." 
+                    : "Where the fire of the Highlands becomes haute cuisine."}
+                </h2>
+                
+                <p className="font-sans text-[clamp(14px,1.05vw,16px)] text-[#1c1c18]/70 font-light leading-relaxed max-w-xl">
+                  {lang === "es"
+                    ? "Restaurante 1937 Nativo es un templo gastronómico donde cada plato narra la riqueza de Ayotlán. La cocina de humo a la leña y los ingredientes locales de trazabilidad absoluta se elevan mediante maridajes sublimes diseñados en exclusiva junto a Tequila Casa Loy."
+                    : "Restaurante 1937 Nativo is a gastronomic temple where every dish tells the story of Ayotlán. Our wood-fired cuisine and local ingredients of absolute traceability are elevated through sublime pairings designed exclusively alongside Tequila Casa Loy."}
+                </p>
               </div>
+
+              {/* Michelin Pillars Detail */}
+              <div className="space-y-6 max-w-xl">
+                
+                {/* Item 1 */}
+                <div className="border-t border-[#1c1c18]/10 pt-4 flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-6 group">
+                  <span className="font-serif italic text-sm text-[#8C4723] font-semibold w-10 select-none">
+                    01
+                  </span>
+                  <div className="space-y-1">
+                    <h4 className="font-sans text-[13px] tracking-wider font-bold text-[#1c1c18] uppercase">
+                      {lang === "es" ? "La Brasa y el Humo" : "Wood Fire & Smoke"}
+                    </h4>
+                    <p className="font-sans text-[12.5px] text-[#1c1c18]/65 font-light leading-relaxed">
+                      {lang === "es"
+                        ? "Robles y mezquites locales seleccionados meticulosamente para perfumar de manera única cada corte y marisco directo al fuego."
+                        : "Meticulously selected local oak and mesquite woods to uniquely perfume each cut and fresh seafood grilled over open fire."}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Item 2 */}
+                <div className="border-t border-[#1c1c18]/10 pt-4 flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-6 group">
+                  <span className="font-serif italic text-sm text-[#8C4723] font-semibold w-10 select-none">
+                    02
+                  </span>
+                  <div className="space-y-1">
+                    <h4 className="font-sans text-[13px] tracking-wider font-bold text-[#1c1c18] uppercase">
+                      {lang === "es" ? "El Terruño de Ayotlán" : "Ayotlán Terroir"}
+                    </h4>
+                    <p className="font-sans text-[12.5px] text-[#1c1c18]/65 font-light leading-relaxed">
+                      {lang === "es"
+                        ? "Ingredientes nativos cosechados bajo esquemas de comercio justo, garantizando una trazabilidad pura del campo a su plato."
+                        : "Native ingredients harvested under fair trade guidelines, guaranteeing pure traceability from the field to your plate."}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Item 3 */}
+                <div className="border-t border-[#1c1c18]/10 pt-4 pb-4 flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-6 group">
+                  <span className="font-serif italic text-sm text-[#8C4723] font-semibold w-10 select-none">
+                    03
+                  </span>
+                  <div className="space-y-1">
+                    <h4 className="font-sans text-[13px] tracking-wider font-bold text-[#1c1c18] uppercase">
+                      {lang === "es" ? "Simbiosis con el Tequila" : "Tequila Symbiosis"}
+                    </h4>
+                    <p className="font-sans text-[12.5px] text-[#1c1c18]/65 font-light leading-relaxed">
+                      {lang === "es"
+                        ? "Reducciones de agave, adobos en penca y una mixología de autor diseñada en sintonía con las notas organolépticas de Casa Loy."
+                        : "Agave reductions, leaves-wrapped adobos, and signature mixology designed in perfect harmony with Casa Loy's organoleptic notes."}
+                    </p>
+                  </div>
+                </div>
+
+              </div>
+
             </div>
 
           </div>
@@ -598,390 +703,428 @@ export default function Nativo1937({ lang = "es", t }) {
       </section>
 
       {/* Reservation Section */}
-      <section className="py-section-gap bg-[#fcf9f3] border-t border-primary/10 text-left" id="reservations">
-        <div className="max-w-container-max mx-auto px-margin-desktop">
+      <section className="relative bg-[#fcf9f3] border-t border-[#8C4723]/10 overflow-hidden scroll-mt-28" id="reservations">
+        {/* Subtle organic background element */}
+        <div
+          className="absolute inset-0 opacity-[0.02] mix-blend-multiply bg-cover bg-center pointer-events-none"
+          style={{ backgroundImage: "url('/Fibras de Agave Cocido.webp')" }}
+        />
+        
+        <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[680px] items-stretch relative z-10">
           
-          <div className="text-center mb-16 space-y-4">
-            <span className="font-label-caps text-label-caps text-primary tracking-[0.3em] uppercase block">
-              {lang === "es" ? "Reserva tu Experiencia" : "Book Your Experience"}
-            </span>
-            <h2 className="font-headline-lg text-4xl md:text-5xl font-medium">{currentT.booking.title}</h2>
-            <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto font-light leading-relaxed">
-              {currentT.booking.subtitle}
-            </p>
-          </div>
-
-          <div className="max-w-3xl mx-auto bg-[#f6f3ed] p-8 md:p-12 border border-primary/10 shadow-2xl relative">
+          {/* Left Column: Full-bleed Atmospheric Photo */}
+          <div className="lg:col-span-5 relative min-h-[350px] lg:min-h-full bg-zinc-100 overflow-hidden">
+            <img
+              src="/Restaurante 1937 Nativo Instalaciones.webp"
+              alt="1937 Nativo Reservaciones"
+              className="absolute inset-0 w-full h-full object-cover brightness-[0.97]"
+            />
+            {/* Soft tint overlay */}
+            <div className="absolute inset-0 bg-[#8C4723]/5 mix-blend-multiply pointer-events-none" />
             
-            {/* Steps indicator - Only show if page channel selected */}
-            {bookingChannel === "page" && (
-              <div className="flex items-center justify-between mb-12 max-w-md mx-auto relative">
-                {/* Background line */}
-                <div className="absolute top-1/2 left-0 w-full h-[1px] bg-black/10 -z-10"></div>
-                {/* Active progress line */}
-                <div 
-                  className="absolute top-1/2 left-0 h-[1px] bg-primary transition-all duration-500 -z-10"
-                  style={{ width: `${bookingStep === 1 ? '0%' : bookingStep === 2 ? '50%' : '100%'}` }}
-                ></div>
-                
-                {/* Step 1 */}
-                <div className="flex flex-col items-center gap-2">
-                  <div className={`w-8 h-8 rounded-full border flex items-center justify-center text-xs font-semibold font-sans transition-all duration-300 ${bookingStep >= 1 ? 'bg-primary border-primary text-white' : 'bg-white border-black/10 text-on-surface/55'}`}>
-                    1
-                  </div>
-                  <span className={`text-[10px] uppercase tracking-wider font-semibold font-sans ${bookingStep >= 1 ? 'text-primary font-bold' : 'text-on-surface/55'}`}>
-                    {lang === "es" ? "Datos" : "Details"}
-                  </span>
-                </div>
-
-                {/* Step 2 */}
-                <div className="flex flex-col items-center gap-2">
-                  <div className={`w-8 h-8 rounded-full border flex items-center justify-center text-xs font-semibold font-sans transition-all duration-300 ${bookingStep >= 2 ? 'bg-primary border-primary text-white' : 'bg-white border-black/10 text-on-surface/55'}`}>
-                    2
-                  </div>
-                  <span className={`text-[10px] uppercase tracking-wider font-semibold font-sans ${bookingStep >= 2 ? 'text-primary font-bold' : 'text-on-surface/55'}`}>
-                    {lang === "es" ? "Confirmar" : "Confirm"}
-                  </span>
-                </div>
-
-                {/* Step 3 */}
-                <div className="flex flex-col items-center gap-2">
-                  <div className={`w-8 h-8 rounded-full border flex items-center justify-center text-xs font-semibold font-sans transition-all duration-300 ${bookingStep >= 3 ? 'bg-primary border-primary text-white' : 'bg-white border-black/10 text-on-surface/55'}`}>
-                    3
-                  </div>
-                  <span className={`text-[10px] uppercase tracking-wider font-semibold font-sans ${bookingStep >= 3 ? 'text-primary font-bold' : 'text-on-surface/55'}`}>
-                    {lang === "es" ? "Listo" : "Ready"}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* Channel Selection Panel */}
-            {bookingChannel === null && (
-              <div className="space-y-8 text-center">
-                <p className="text-on-surface-variant font-sans font-light">
-                  {currentT.booking.selectMethod}
-                </p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  
-                  {/* WhatsApp Channel */}
-                  <a
-                    href="https://wa.me/5213313334751?text=Hola%2C%20me%20gustar%C3%ADa%20solicitar%20informaci%C3%B3n%20para%20una%20reservaci%C3%B3n%20en%20Restaurante%201937%20Nativo."
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="border border-primary/20 hover:border-primary hover:bg-[#25D366]/5 p-6 flex flex-col items-center gap-4 group transition-all duration-300"
-                  >
-                    <div className="w-12 h-12 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366] group-hover:scale-110 transition-transform">
-                      <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24">
-                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.805-9.805.001-2.621-1.013-5.086-2.86-6.936C16.37 1.947 13.907 1.01 11.996 1.01c-5.41 0-9.813 4.402-9.815 9.813-.001 1.638.455 3.236 1.32 4.654L2.46 19.95l4.187-1.096L6.647 19.16zM17.15 14.5c-.282-.141-1.664-.822-1.921-.916-.257-.094-.445-.141-.631.141-.188.281-.727.916-.891 1.101-.164.186-.328.21-.61.07-2.8-.14-4.88-1.22-6.52-3.08-.282-.482.282-.447.805-1.492.083-.164.041-.309-.021-.45-.062-.141-.563-1.36-.77-1.859-.203-.489-.407-.423-.563-.431-.145-.007-.312-.009-.48-.009-.168 0-.441.063-.672.312-.23.25-1.012.988-1.012 2.41 0 1.42 1.031 2.793 1.17 2.98.14.188 2.03 3.102 4.921 4.35.688.297 1.224.474 1.644.607.69.219 1.319.188 1.816.114.553-.082 1.664-.68 1.898-1.336.234-.656.234-1.219.164-1.336-.07-.117-.258-.188-.54-.328z"/>
-                      </svg>
-                    </div>
-                    <h3 className="font-navigation text-xs uppercase tracking-wider font-bold">WhatsApp</h3>
-                    <p className="text-xs text-on-surface-variant/80 font-light leading-relaxed">
-                      {lang === "es" ? "Reserva rápida y directa mediante mensaje de WhatsApp." : "Quick and direct booking via WhatsApp chat."}
-                    </p>
-                  </a>
-
-                  {/* Phone Call Channel */}
-                  <a
-                    href="tel:+5213313334751"
-                    className="border border-primary/20 hover:border-primary hover:bg-primary/5 p-6 flex flex-col items-center gap-4 group transition-all duration-300"
-                  >
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                      <span className="material-symbols-outlined text-2xl">call</span>
-                    </div>
-                    <h3 className="font-navigation text-xs uppercase tracking-wider font-bold">
-                      {lang === "es" ? "Llamada Directa" : "Direct Call"}
-                    </h3>
-                    <p className="text-xs text-on-surface-variant/80 font-light leading-relaxed">
-                      {lang === "es" ? "Reserva al instante hablando con nuestro anfitrión." : "Book instantly by speaking with our host."}
-                    </p>
-                  </a>
-
-                  {/* Web Page Channel */}
-                  <button
-                    onClick={() => {
-                      setBookingChannel("page");
-                      setBookingStep(1);
-                    }}
-                    className="border border-primary/20 hover:border-primary hover:bg-[#8C4723]/5 p-6 flex flex-col items-center gap-4 group transition-all duration-300 w-full cursor-pointer bg-transparent"
-                  >
-                    <div className="w-12 h-12 rounded-full bg-[#8C4723]/10 flex items-center justify-center text-[#8C4723] group-hover:scale-110 transition-transform">
-                      <span className="material-symbols-outlined text-2xl">calendar_month</span>
-                    </div>
-                    <h3 className="font-navigation text-xs uppercase tracking-wider font-bold">
-                      {lang === "es" ? "En la Página" : "On this Page"}
-                    </h3>
-                    <p className="text-xs text-on-surface-variant/80 font-light leading-relaxed">
-                      {lang === "es" ? "Completa nuestro formulario interactivo en línea." : "Fill out our interactive online booking form."}
-                    </p>
-                  </button>
-
-                </div>
-
-                <div className="text-xs text-on-surface-variant/60 font-light font-sans pt-4">
-                  {currentT.booking.maxCapacity}
-                </div>
-              </div>
-            )}
-
-            {/* Step 1: Info Form */}
-            {bookingChannel === "page" && bookingStep === 1 && (
-              <form onSubmit={handleNextStep} className="space-y-6 text-left">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  
-                  {/* Name Input */}
-                  <div className="space-y-1.5">
-                    <label className="block text-xs uppercase tracking-wider font-semibold font-sans text-on-surface-variant">
-                      {currentT.booking.nameLabel} *
-                    </label>
-                    <input
-                      type="text"
-                      className="w-full bg-white border border-primary/20 px-4 py-3 text-sm focus:outline-none focus:border-primary font-sans font-light"
-                      placeholder={lang === "es" ? "Ej. Juan Pérez" : "e.g. John Doe"}
-                      value={bookingData.name}
-                      onChange={(e) => setBookingData({ ...bookingData, name: e.target.value })}
-                    />
-                    {errors.name && <p className="text-xs text-red-600 font-sans">{errors.name}</p>}
-                  </div>
-
-                  {/* Phone Input */}
-                  <div className="space-y-1.5">
-                    <label className="block text-xs uppercase tracking-wider font-semibold font-sans text-on-surface-variant">
-                      {currentT.booking.phoneLabel} *
-                    </label>
-                    <input
-                      type="tel"
-                      className="w-full bg-white border border-primary/20 px-4 py-3 text-sm focus:outline-none focus:border-primary font-sans font-light"
-                      placeholder={lang === "es" ? "Ej. +52 33 1234 5678" : "e.g. +1 555 123 4567"}
-                      value={bookingData.phone}
-                      onChange={(e) => setBookingData({ ...bookingData, phone: e.target.value })}
-                    />
-                    {errors.phone && <p className="text-xs text-red-600 font-sans">{errors.phone}</p>}
-                  </div>
-
-                  {/* Number of Guests */}
-                  <div className="space-y-1.5">
-                    <label className="block text-xs uppercase tracking-wider font-semibold font-sans text-on-surface-variant flex justify-between">
-                      <span>{currentT.booking.guestsLabel} *</span>
-                      <span className="text-[10px] text-primary/70 italic normal-case font-normal">(1-75 pax)</span>
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="75"
-                      className="w-full bg-white border border-primary/20 px-4 py-3 text-sm focus:outline-none focus:border-primary font-sans font-light"
-                      value={bookingData.guests}
-                      onChange={(e) => setBookingData({ ...bookingData, guests: parseInt(e.target.value, 10) || "" })}
-                    />
-                    {errors.guests && <p className="text-xs text-red-600 font-sans">{errors.guests}</p>}
-                  </div>
-
-                  {/* Reason for Visit */}
-                  <div className="space-y-1.5">
-                    <label className="block text-xs uppercase tracking-wider font-semibold font-sans text-on-surface-variant">
-                      {currentT.booking.reasonLabel} *
-                    </label>
-                    <select
-                      className="w-full bg-white border border-primary/20 px-4 py-3 text-sm focus:outline-none focus:border-primary font-sans font-light"
-                      value={bookingData.reason}
-                      onChange={(e) => setBookingData({ ...bookingData, reason: e.target.value })}
-                    >
-                      <option value="">{currentT.booking.reasonPlaceholder}</option>
-                      {Object.entries(currentT.booking.reasons).map(([key, label]) => (
-                        <option key={key} value={key}>{label}</option>
-                      ))}
-                    </select>
-                    {errors.reason && <p className="text-xs text-red-600 font-sans">{errors.reason}</p>}
-                  </div>
-
-                  {/* Date Input */}
-                  <div className="space-y-1.5">
-                    <label className="block text-xs uppercase tracking-wider font-semibold font-sans text-on-surface-variant flex justify-between">
-                      <span>{currentT.booking.dateLabel} *</span>
-                      <span className="text-[10px] text-primary/70 italic normal-case font-normal">{lang === "es" ? "(Mar - Dom)" : "(Tue - Sun)"}</span>
-                    </label>
-                    <input
-                      type="date"
-                      className="w-full bg-white border border-primary/20 px-4 py-3 text-sm focus:outline-none focus:border-primary font-sans font-light"
-                      value={bookingData.date}
-                      onChange={(e) => setBookingData({ ...bookingData, date: e.target.value })}
-                    />
-                    {errors.date && <p className="text-xs text-red-600 font-sans">{errors.date}</p>}
-                  </div>
-
-                  {/* Time Input */}
-                  <div className="space-y-1.5">
-                    <label className="block text-xs uppercase tracking-wider font-semibold font-sans text-on-surface-variant flex justify-between">
-                      <span>{currentT.booking.timeLabel} *</span>
-                      <span className="text-[10px] text-primary/70 italic normal-case font-normal">(12:00 - 20:00)</span>
-                    </label>
-                    <input
-                      type="time"
-                      className="w-full bg-white border border-primary/20 px-4 py-3 text-sm focus:outline-none focus:border-primary font-sans font-light"
-                      value={bookingData.time}
-                      onChange={(e) => setBookingData({ ...bookingData, time: e.target.value })}
-                    />
-                    {errors.time && <p className="text-xs text-red-600 font-sans">{errors.time}</p>}
-                  </div>
-
-                </div>
-
-                <div className="flex gap-4 pt-6 border-t border-primary/10">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setBookingChannel(null);
-                      setBookingData({ name: "", phone: "", guests: 2, date: "", time: "", reason: "" });
-                      setErrors({});
-                    }}
-                    className="flex-1 border border-primary/20 hover:bg-black/5 text-on-surface font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold py-3 transition-all cursor-pointer text-center bg-transparent"
-                  >
-                    {currentT.booking.btnBack}
-                  </button>
-                  <button
-                    type="submit"
-                    className="flex-1 bg-primary hover:bg-[#8C4723] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold py-3 transition-all cursor-pointer shadow hover:shadow-md text-center"
-                  >
-                    {currentT.booking.btnNext}
-                  </button>
-                </div>
-              </form>
-            )}
-
-            {/* Step 2: Confirmation Summary */}
-            {bookingChannel === "page" && bookingStep === 2 && (
-              <div className="space-y-6 text-left">
-                <h3 className="font-navigation text-xs uppercase tracking-wider font-bold text-primary mb-4 text-center">
-                  {lang === "es" ? "Resumen de Reservación" : "Reservation Summary"}
-                </h3>
-                
-                <div className="bg-[#fcf9f3] p-6 border border-primary/10 space-y-4 font-sans font-light text-sm">
-                  <div className="grid grid-cols-3 py-2 border-b border-black/5">
-                    <span className="text-on-surface-variant font-medium">{currentT.booking.nameLabel}:</span>
-                    <span className="col-span-2 text-right text-on-surface font-semibold">{bookingData.name}</span>
-                  </div>
-                  <div className="grid grid-cols-3 py-2 border-b border-black/5">
-                    <span className="text-on-surface-variant font-medium">{currentT.booking.phoneLabel}:</span>
-                    <span className="col-span-2 text-right text-on-surface">{bookingData.phone}</span>
-                  </div>
-                  <div className="grid grid-cols-3 py-2 border-b border-black/5">
-                    <span className="text-on-surface-variant font-medium">{currentT.booking.guestsLabel}:</span>
-                    <span className="col-span-2 text-right text-on-surface font-semibold">{bookingData.guests} pax</span>
-                  </div>
-                  <div className="grid grid-cols-3 py-2 border-b border-black/5">
-                    <span className="text-on-surface-variant font-medium">{currentT.booking.dateLabel}:</span>
-                    <span className="col-span-2 text-right text-on-surface">{bookingData.date}</span>
-                  </div>
-                  <div className="grid grid-cols-3 py-2 border-b border-black/5">
-                    <span className="text-on-surface-variant font-medium">{currentT.booking.timeLabel}:</span>
-                    <span className="col-span-2 text-right text-on-surface">{bookingData.time} hrs</span>
-                  </div>
-                  <div className="grid grid-cols-3 py-2">
-                    <span className="text-on-surface-variant font-medium">{currentT.booking.reasonLabel}:</span>
-                    <span className="col-span-2 text-right text-on-surface italic">
-                      {currentT.booking.reasons[bookingData.reason] || bookingData.reason}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex gap-4 pt-6 border-t border-primary/10">
-                  <button
-                    disabled={isSubmitting}
-                    onClick={() => setBookingStep(1)}
-                    className="flex-1 border border-primary/20 hover:bg-black/5 text-on-surface font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold py-3 transition-all cursor-pointer text-center bg-transparent disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {currentT.booking.btnBack}
-                  </button>
-                  <button
-                    disabled={isSubmitting}
-                    onClick={handleConfirmBooking}
-                    className="flex-1 bg-primary hover:bg-[#8C4723] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold py-3 transition-all cursor-pointer shadow hover:shadow-md text-center disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <span>{lang === "es" ? "Procesando..." : "Processing..."}</span>
-                      </>
-                    ) : (
-                      currentT.booking.btnConfirm
-                    )}
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Step 3: Success Screen */}
-            {bookingChannel === "page" && bookingStep === 3 && (
-              <div className="space-y-8 text-center">
-                <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center text-green-600 mx-auto">
-                  <span className="material-symbols-outlined text-3xl">check_circle</span>
-                </div>
-                
-                <div className="space-y-3">
-                  <h3 className="font-serif text-2xl font-light text-primary">
-                    {currentT.booking.stepSuccessTitle}
-                  </h3>
-                  <p className="text-sm font-sans font-light text-on-surface-variant max-w-md mx-auto leading-relaxed">
-                    {currentT.booking.successDesc}
-                  </p>
-                </div>
-
-                <div className="bg-[#fcf9f3] p-6 border border-primary/10 rounded-sm inline-block max-w-sm w-full mx-auto text-center shadow-inner">
-                  <span className="text-[10px] uppercase tracking-wider font-semibold font-sans text-on-surface-variant block mb-1">
-                    {currentT.booking.codeLabel}
-                  </span>
-                  <span className="text-xl font-mono font-bold text-primary block tracking-wider">
-                    {bookingCode}
-                  </span>
-                </div>
-
-                <div className="bg-[#2F403E]/5 border border-[#2F403E]/10 p-4 max-w-md mx-auto text-xs text-on-surface-variant font-sans font-light rounded-sm flex items-start gap-3 text-left">
-                  <span className="material-symbols-outlined text-[#2F403E] text-lg shrink-0">notifications_active</span>
-                  <div>
-                    <span className="font-semibold text-on-surface block mb-1">
-                      {lang === "es" ? "Recordatorio Automático" : "Automatic Reminder"}
-                    </span>
-                    {lang === "es" 
-                      ? "Nativo enviará un recordatorio 30 minutos previos a tu hora estimada de llegada para mantener la reserva activa." 
-                      : "Nativo will send a reminder 30 minutes prior to your estimated arrival time to keep the reservation active."}
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6 border-t border-primary/10">
-                  <a
-                    href={getWhatsAppLink()}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-[#25D366] hover:bg-[#20b855] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold py-3 px-6 transition-all cursor-pointer shadow hover:shadow-md flex items-center justify-center gap-2"
-                  >
-                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.805-9.805.001-2.621-1.013-5.086-2.86-6.936C16.37 1.947 13.907 1.01 11.996 1.01c-5.41 0-9.813 4.402-9.815 9.813-.001 1.638.455 3.236 1.32 4.654L2.46 19.95l4.187-1.096L6.647 19.16zM17.15 14.5c-.282-.141-1.664-.822-1.921-.916-.257-.094-.445-.141-.631.141-.188.281-.727.916-.891 1.101-.164.186-.328.21-.61.07-2.8-.14-4.88-1.22-6.52-3.08-.282-.482.282-.447.805-1.492.083-.164.041-.309-.021-.45-.062-.141-.563-1.36-.77-1.859-.203-.489-.407-.423-.563-.431-.145-.007-.312-.009-.48-.009-.168 0-.441.063-.672.312-.23.25-1.012.988-1.012 2.41 0 1.42 1.031 2.793 1.17 2.98.14.188 2.03 3.102 4.921 4.35.688.297 1.224.474 1.644.607.69.219 1.319.188 1.816.114.553-.082 1.664-.68 1.898-1.336.234-.656.234-1.219.164-1.336-.07-.117-.258-.188-.54-.328z"/>
-                    </svg>
-                    {currentT.booking.btnWaSend}
-                  </a>
-                  <button
-                    onClick={() => {
-                      setBookingChannel(null);
-                      setBookingData({ name: "", phone: "", guests: 2, date: "", time: "", reason: "" });
-                      setBookingStep(1);
-                      setBookingCode("");
-                    }}
-                    className="border border-primary/20 hover:bg-black/5 text-on-surface font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold py-3 px-6 transition-all cursor-pointer text-center bg-transparent"
-                  >
-                    {currentT.booking.btnNewBooking}
-                  </button>
-                </div>
-              </div>
-            )}
-
+            {/* Elegant text overlay at the bottom of the image */}
+            <div className="absolute bottom-8 left-8 right-8 z-10 text-white space-y-2 hidden lg:block">
+              <span className="font-navigation text-[9px] tracking-[0.3em] font-bold text-white/90 uppercase block">
+                NATIVO 1937
+              </span>
+              <p className="text-xs font-sans font-light text-white/80 leading-relaxed max-w-xs">
+                {lang === "es"
+                  ? "Disfruta de una velada inigualable rodeado de campos de agave y alta cocina."
+                  : "Enjoy an unforgettable evening surrounded by agave fields and haute cuisine."}
+              </p>
+            </div>
+            {/* Gradient protection */}
+            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/60 to-transparent pointer-events-none hidden lg:block" />
           </div>
 
-        </div>
+          {/* Right Column: Reservation Title, Subtitle, & Interactive Form */}
+          <div className="lg:col-span-7 py-20 px-6 sm:px-12 lg:px-16 flex flex-col justify-center space-y-10 bg-[#f8f5ee]/40 w-full">
+            
+            {/* Header */}
+            <div className="space-y-4 max-w-xl">
+              <div className="flex items-center gap-3">
+                <span className="w-6 h-[0.5px] bg-[#8C4723]/40" />
+                <span className="font-navigation text-[9px] tracking-[0.35em] font-bold text-[#8C4723] uppercase block">
+                  {lang === "es" ? "Reserva tu Experiencia" : "Book Your Experience"}
+                </span>
+              </div>
+              <h2 className="font-serif text-[clamp(30px,3.2vw,44px)] leading-[1.1] tracking-tight font-medium text-[#1c1c18]">
+                {currentT.booking.title}
+              </h2>
+              <p className="font-sans text-[clamp(13px,0.95vw,14.5px)] text-[#1c1c18]/70 font-light leading-relaxed">
+                {currentT.booking.subtitle}
+              </p>
+            </div>
+
+            {/* Interactive Form Area */}
+            <div className="max-w-xl w-full">
+                
+                {/* Steps indicator - Only show if page channel selected */}
+                {bookingChannel === "page" && (
+                  <div className="flex items-center justify-between mb-10 max-w-md mx-auto relative">
+                    {/* Background line */}
+                    <div className="absolute top-1/2 left-0 w-full h-[1px] bg-[#1c1c18]/10 -z-10"></div>
+                    {/* Active progress line */}
+                    <div 
+                      className="absolute top-1/2 left-0 h-[1px] bg-[#8C4723] transition-all duration-500 -z-10"
+                      style={{ width: `${bookingStep === 1 ? '0%' : bookingStep === 2 ? '50%' : '100%'}` }}
+                    ></div>
+                    
+                    {/* Step 1 */}
+                    <div className="flex flex-col items-center gap-1.5">
+                      <div className={`w-7 h-7 rounded-full border flex items-center justify-center text-[10px] font-semibold font-sans transition-all duration-300 ${bookingStep >= 1 ? 'bg-[#8C4723] border-[#8C4723] text-white' : 'bg-[#fcf9f3] border-[#1c1c18]/15 text-[#1c1c18]/40'}`}>
+                        1
+                      </div>
+                      <span className={`text-[9px] uppercase tracking-wider font-semibold font-sans ${bookingStep >= 1 ? 'text-[#8C4723] font-bold' : 'text-[#1c1c18]/40'}`}>
+                        {lang === "es" ? "Datos" : "Details"}
+                      </span>
+                    </div>
+
+                    {/* Step 2 */}
+                    <div className="flex flex-col items-center gap-1.5">
+                      <div className={`w-7 h-7 rounded-full border flex items-center justify-center text-[10px] font-semibold font-sans transition-all duration-300 ${bookingStep >= 2 ? 'bg-[#8C4723] border-[#8C4723] text-white' : 'bg-[#fcf9f3] border-[#1c1c18]/15 text-[#1c1c18]/40'}`}>
+                        2
+                      </div>
+                      <span className={`text-[9px] uppercase tracking-wider font-semibold font-sans ${bookingStep >= 2 ? 'text-[#8C4723] font-bold' : 'text-[#1c1c18]/40'}`}>
+                        {lang === "es" ? "Confirmar" : "Confirm"}
+                      </span>
+                    </div>
+
+                    {/* Step 3 */}
+                    <div className="flex flex-col items-center gap-1.5">
+                      <div className={`w-7 h-7 rounded-full border flex items-center justify-center text-[10px] font-semibold font-sans transition-all duration-300 ${bookingStep >= 3 ? 'bg-[#8C4723] border-[#8C4723] text-white' : 'bg-[#fcf9f3] border-[#1c1c18]/15 text-[#1c1c18]/40'}`}>
+                        3
+                      </div>
+                      <span className={`text-[9px] uppercase tracking-wider font-semibold font-sans ${bookingStep >= 3 ? 'text-[#8C4723] font-bold' : 'text-[#1c1c18]/40'}`}>
+                        {lang === "es" ? "Listo" : "Ready"}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Channel Selection Panel */}
+                {bookingChannel === null && (
+                  <div className="space-y-6 text-center lg:text-left">
+                    <p className="text-[#1c1c18]/80 font-sans font-light text-[13px] leading-relaxed">
+                      {currentT.booking.selectMethod}
+                    </p>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 pt-2">
+                      
+                      {/* WhatsApp Channel */}
+                      <a
+                        href="https://wa.me/5213313334751?text=Hola%2C%20me%20gustar%C3%ADa%20solicitar%20informaci%C3%B3n%20para%20una%20reservaci%C3%B3n%20en%20Restaurante%201937%20Nativo."
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="border border-[#8C4723]/10 bg-[#fdfbf9] hover:border-[#8C4723]/35 hover:bg-[#8C4723]/5 p-5 flex flex-col items-center text-center gap-4 group transition-all duration-500 rounded-[2px]"
+                      >
+                        <div className="w-10 h-10 rounded-full bg-[#25D366]/8 flex items-center justify-center text-[#25D366] group-hover:scale-105 transition-transform duration-500">
+                          <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.805-9.805.001-2.621-1.013-5.086-2.86-6.936C16.37 1.947 13.907 1.01 11.996 1.01c-5.41 0-9.813 4.402-9.815 9.813-.001 1.638.455 3.236 1.32 4.654L2.46 19.95l4.187-1.096L6.647 19.16zM17.15 14.5c-.282-.141-1.664-.822-1.921-.916-.257-.094-.445-.141-.631.141-.188.281-.727.916-.891 1.101-.164.186-.328.21-.61.07-2.8-.14-4.88-1.22-6.52-3.08-.282-.482.282-.447.805-1.492.083-.164.041-.309-.021-.45-.062-.141-.563-1.36-.77-1.859-.203-.489-.407-.423-.563-.431-.145-.007-.312-.009-.48-.009-.168 0-.441.063-.672.312-.23.25-1.012.988-1.012 2.41 0 1.42 1.031 2.793 1.17 2.98.14.188 2.03 3.102 4.921 4.35.688.297 1.224.474 1.644.607.69.219 1.319.188 1.816.114.553-.082 1.664-.68 1.898-1.336.234-.656.234-1.219.164-1.336-.07-.117-.258-.188-.54-.328z"/>
+                          </svg>
+                        </div>
+                        <h3 className="font-navigation text-[11px] uppercase tracking-[0.15em] font-bold text-[#1c1c18] group-hover:text-[#8C4723] transition-colors">WhatsApp</h3>
+                        <p className="text-[10px] text-[#1c1c18]/50 font-light leading-relaxed group-hover:text-[#1c1c18]/70 transition-colors">
+                          {lang === "es" ? "Reserva rápida y directa." : "Quick and direct booking."}
+                        </p>
+                      </a>
+
+                      {/* Phone Call Channel */}
+                      <a
+                        href="tel:+5213313334751"
+                        className="border border-[#8C4723]/10 bg-[#fdfbf9] hover:border-[#8C4723]/35 hover:bg-[#8C4723]/5 p-5 flex flex-col items-center text-center gap-4 group transition-all duration-500 rounded-[2px]"
+                      >
+                        <div className="w-10 h-10 rounded-full bg-[#8C4723]/8 flex items-center justify-center text-[#8C4723] group-hover:scale-105 transition-transform duration-500">
+                          <span className="material-symbols-outlined text-[18px]">call</span>
+                        </div>
+                        <h3 className="font-navigation text-[11px] uppercase tracking-[0.15em] font-bold text-[#1c1c18] group-hover:text-[#8C4723] transition-colors">
+                          {lang === "es" ? "Llamada" : "Direct Call"}
+                        </h3>
+                        <p className="text-[10px] text-[#1c1c18]/50 font-light leading-relaxed group-hover:text-[#1c1c18]/70 transition-colors">
+                          {lang === "es" ? "Reserva al instante por teléfono." : "Book instantly by phone."}
+                        </p>
+                      </a>
+
+                      {/* Web Page Channel */}
+                      <button
+                        onClick={() => {
+                          setBookingChannel("page");
+                          setBookingStep(1);
+                        }}
+                        className="border border-[#8C4723]/10 bg-[#fdfbf9] hover:border-[#8C4723]/35 hover:bg-[#8C4723]/5 p-5 flex flex-col items-center text-center gap-4 group transition-all duration-500 w-full cursor-pointer bg-transparent rounded-[2px]"
+                      >
+                        <div className="w-10 h-10 rounded-full bg-[#8C4723]/8 flex items-center justify-center text-[#8C4723] group-hover:scale-105 transition-transform duration-500">
+                          <span className="material-symbols-outlined text-[18px]">calendar_month</span>
+                        </div>
+                        <h3 className="font-navigation text-[11px] uppercase tracking-[0.15em] font-bold text-[#1c1c18] group-hover:text-[#8C4723] transition-colors">
+                          {lang === "es" ? "En la Página" : "On this Page"}
+                        </h3>
+                        <p className="text-[10px] text-[#1c1c18]/50 font-light leading-relaxed group-hover:text-[#1c1c18]/70 transition-colors">
+                          {lang === "es" ? "Formulario en línea interactivo." : "Interactive online form."}
+                        </p>
+                      </button>
+
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 1: Info Form */}
+                {bookingChannel === "page" && bookingStep === 1 && (
+                  <form onSubmit={handleNextStep} className="space-y-6 text-left">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      
+                      {/* Name Input */}
+                      <div className="space-y-1.5">
+                        <label className="block text-[11px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/70">
+                          {currentT.booking.nameLabel} *
+                        </label>
+                        <input
+                          type="text"
+                          className="w-full bg-[#fcfbf9] border border-[#1c1c18]/12 px-4 py-3 text-sm focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-sans font-light text-[#1c1c18] transition-all duration-300 placeholder:text-[#1c1c18]/30 rounded-none"
+                          placeholder={lang === "es" ? "Ej. Juan Pérez" : "e.g. John Doe"}
+                          value={bookingData.name}
+                          onChange={(e) => setBookingData({ ...bookingData, name: e.target.value })}
+                        />
+                        {errors.name && <p className="text-xs text-red-600 font-sans">{errors.name}</p>}
+                      </div>
+
+                      {/* Phone Input */}
+                      <div className="space-y-1.5">
+                        <label className="block text-[11px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/70">
+                          {currentT.booking.phoneLabel} *
+                        </label>
+                        <input
+                          type="tel"
+                          className="w-full bg-[#fcfbf9] border border-[#1c1c18]/12 px-4 py-3 text-sm focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-sans font-light text-[#1c1c18] transition-all duration-300 placeholder:text-[#1c1c18]/30 rounded-none"
+                          placeholder={lang === "es" ? "Ej. +52 33 1234 5678" : "e.g. +1 555 123 4567"}
+                          value={bookingData.phone}
+                          onChange={(e) => setBookingData({ ...bookingData, phone: e.target.value })}
+                        />
+                        {errors.phone && <p className="text-xs text-red-600 font-sans">{errors.phone}</p>}
+                      </div>
+
+                      {/* Number of Guests */}
+                      <div className="space-y-1.5">
+                        <label className="block text-[11px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/70 flex justify-between">
+                          <span>{currentT.booking.guestsLabel} *</span>
+                          <span className="text-[10px] text-[#1c1c18]/45 italic normal-case font-normal">(1-75 pax)</span>
+                        </label>
+                        <input
+                          type="number"
+                          min="1"
+                          max="75"
+                          className="w-full bg-[#fcfbf9] border border-[#1c1c18]/12 px-4 py-3 text-sm focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-sans font-light text-[#1c1c18] transition-all duration-300 rounded-none"
+                          value={bookingData.guests}
+                          onChange={(e) => setBookingData({ ...bookingData, guests: parseInt(e.target.value, 10) || "" })}
+                        />
+                        {errors.guests && <p className="text-xs text-red-600 font-sans">{errors.guests}</p>}
+                      </div>
+
+                      {/* Reason for Visit */}
+                      <div className="space-y-1.5">
+                        <label className="block text-[11px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/70">
+                          {currentT.booking.reasonLabel} *
+                        </label>
+                        <select
+                          className="w-full bg-[#fcfbf9] border border-[#1c1c18]/12 px-4 py-3 text-sm focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-sans font-light text-[#1c1c18] transition-all duration-300 rounded-none"
+                          value={bookingData.reason}
+                          onChange={(e) => setBookingData({ ...bookingData, reason: e.target.value })}
+                        >
+                          <option value="">{currentT.booking.reasonPlaceholder}</option>
+                          {Object.entries(currentT.booking.reasons).map(([key, label]) => (
+                            <option key={key} value={key} className="bg-white text-[#1c1c18]">{label}</option>
+                          ))}
+                        </select>
+                        {errors.reason && <p className="text-xs text-red-600 font-sans">{errors.reason}</p>}
+                      </div>
+
+                      {/* Date Input */}
+                      <div className="space-y-1.5">
+                        <label className="block text-[11px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/70 flex justify-between">
+                          <span>{currentT.booking.dateLabel} *</span>
+                          <span className="text-[10px] text-[#1c1c18]/45 italic normal-case font-normal">{lang === "es" ? "(Mar - Dom)" : "(Tue - Sun)"}</span>
+                        </label>
+                        <input
+                          type="date"
+                          className="w-full bg-[#fcfbf9] border border-[#1c1c18]/12 px-4 py-3 text-sm focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-sans font-light text-[#1c1c18] transition-all duration-300 rounded-none"
+                          value={bookingData.date}
+                          onChange={(e) => setBookingData({ ...bookingData, date: e.target.value })}
+                        />
+                        {errors.date && <p className="text-xs text-red-600 font-sans">{errors.date}</p>}
+                      </div>
+
+                      {/* Time Input */}
+                      <div className="space-y-1.5">
+                        <label className="block text-[11px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/70 flex justify-between">
+                          <span>{currentT.booking.timeLabel} *</span>
+                          <span className="text-[10px] text-[#1c1c18]/45 italic normal-case font-normal">(12:00 - 20:00)</span>
+                        </label>
+                        <input
+                          type="time"
+                          className="w-full bg-[#fcfbf9] border border-[#1c1c18]/12 px-4 py-3 text-sm focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-sans font-light text-[#1c1c18] transition-all duration-300 rounded-none"
+                          value={bookingData.time}
+                          onChange={(e) => setBookingData({ ...bookingData, time: e.target.value })}
+                        />
+                        {errors.time && <p className="text-xs text-red-600 font-sans">{errors.time}</p>}
+                      </div>
+
+                    </div>
+
+                    <div className="flex gap-4 pt-6 border-t border-[#1c1c18]/10">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setBookingChannel(null);
+                          setBookingData({ name: "", phone: "", guests: 2, date: "", time: "", reason: "" });
+                          setErrors({});
+                        }}
+                        className="flex-1 border border-[#1c1c18]/20 hover:bg-[#1c1c18]/5 text-[#1c1c18] font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold py-3 transition-all cursor-pointer text-center bg-transparent rounded-none"
+                      >
+                        {currentT.booking.btnBack}
+                      </button>
+                      <button
+                        type="submit"
+                        className="flex-1 bg-[#8C4723] hover:bg-[#a6562b] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold py-3 transition-all cursor-pointer shadow hover:shadow-md text-center rounded-none"
+                      >
+                        {currentT.booking.btnNext}
+                      </button>
+                    </div>
+                  </form>
+                )}
+
+                {/* Step 2: Confirmation Summary */}
+                {bookingChannel === "page" && bookingStep === 2 && (
+                  <div className="space-y-6 text-left">
+                    <h3 className="font-navigation text-[11px] uppercase tracking-wider font-bold text-[#8C4723] mb-4 text-center">
+                      {lang === "es" ? "Resumen de Reservación" : "Reservation Summary"}
+                    </h3>
+                    
+                    <div className="bg-[#fcfbf9] p-6 border border-[#1c1c18]/10 space-y-4 font-sans font-light text-sm text-[#1c1c18]">
+                      <div className="grid grid-cols-3 py-2 border-b border-[#1c1c18]/8">
+                        <span className="text-[#1c1c18]/60 font-medium">{currentT.booking.nameLabel}:</span>
+                        <span className="col-span-2 text-right text-[#1c1c18] font-semibold">{bookingData.name}</span>
+                      </div>
+                      <div className="grid grid-cols-3 py-2 border-b border-[#1c1c18]/8">
+                        <span className="text-[#1c1c18]/60 font-medium">{currentT.booking.phoneLabel}:</span>
+                        <span className="col-span-2 text-right text-[#1c1c18]">{bookingData.phone}</span>
+                      </div>
+                      <div className="grid grid-cols-3 py-2 border-b border-[#1c1c18]/8">
+                        <span className="text-[#1c1c18]/60 font-medium">{currentT.booking.guestsLabel}:</span>
+                        <span className="col-span-2 text-right text-[#1c1c18] font-semibold">{bookingData.guests} pax</span>
+                      </div>
+                      <div className="grid grid-cols-3 py-2 border-b border-[#1c1c18]/8">
+                        <span className="text-[#1c1c18]/60 font-medium">{currentT.booking.dateLabel}:</span>
+                        <span className="col-span-2 text-right text-[#1c1c18]">{bookingData.date}</span>
+                      </div>
+                      <div className="grid grid-cols-3 py-2 border-b border-[#1c1c18]/8">
+                        <span className="text-[#1c1c18]/60 font-medium">{currentT.booking.timeLabel}:</span>
+                        <span className="col-span-2 text-right text-[#1c1c18]">{bookingData.time} hrs</span>
+                      </div>
+                      <div className="grid grid-cols-3 py-2">
+                        <span className="text-[#1c1c18]/60 font-medium">{currentT.booking.reasonLabel}:</span>
+                        <span className="col-span-2 text-right text-[#1c1c18] italic">
+                          {currentT.booking.reasons[bookingData.reason] || bookingData.reason}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-4 pt-6 border-t border-[#1c1c18]/10">
+                      <button
+                        disabled={isSubmitting}
+                        onClick={() => setBookingStep(1)}
+                        className="flex-1 border border-[#1c1c18]/20 hover:bg-[#1c1c18]/5 text-[#1c1c18] font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold py-3 transition-all cursor-pointer text-center bg-transparent disabled:opacity-50 disabled:cursor-not-allowed rounded-none"
+                      >
+                        {currentT.booking.btnBack}
+                      </button>
+                      <button
+                        disabled={isSubmitting}
+                        onClick={handleConfirmBooking}
+                        className="flex-1 bg-[#8C4723] hover:bg-[#a6562b] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold py-3 transition-all cursor-pointer shadow hover:shadow-md text-center disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 rounded-none"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span>{lang === "es" ? "Procesando..." : "Processing..."}</span>
+                          </>
+                        ) : (
+                          currentT.booking.btnConfirm
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 3: Success Screen */}
+                {bookingChannel === "page" && bookingStep === 3 && (
+                  <div className="space-y-8 text-center">
+                    <div className="w-16 h-16 rounded-full bg-green-50 border border-green-500/10 flex items-center justify-center text-green-600 mx-auto">
+                      <span className="material-symbols-outlined text-3xl">check_circle</span>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <h3 className="font-serif text-2xl font-light text-[#8C4723]">
+                        {currentT.booking.stepSuccessTitle}
+                      </h3>
+                      <p className="text-sm font-sans font-light text-[#1c1c18]/75 max-w-md mx-auto leading-relaxed">
+                        {currentT.booking.successDesc}
+                      </p>
+                    </div>
+
+                    <div className="bg-[#fcfbf9] p-6 border border-[#1c1c18]/10 rounded-sm inline-block max-w-sm w-full mx-auto text-center shadow-inner">
+                      <span className="text-[10px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/60 block mb-1">
+                        {currentT.booking.codeLabel}
+                      </span>
+                      <span className="text-xl font-mono font-bold text-[#8C4723] block tracking-wider">
+                        {bookingCode}
+                      </span>
+                    </div>
+
+                    <div className="bg-[#fdfbf8] border border-[#8C4723]/10 p-4 max-w-md mx-auto text-xs text-[#1c1c18]/75 font-sans font-light rounded-sm flex items-start gap-3 text-left">
+                      <span className="material-symbols-outlined text-[#8C4723] text-lg shrink-0">notifications_active</span>
+                      <div>
+                        <span className="font-semibold text-[#1c1c18] block mb-1">
+                          {lang === "es" ? "Recordatorio Automático" : "Automatic Reminder"}
+                        </span>
+                        {lang === "es" 
+                          ? "Nativo enviará un recordatorio 30 minutos previos a tu hora estimada de llegada para mantener la reserva activa." 
+                          : "Nativo will send a reminder 30 minutes prior to your estimated arrival time to keep the reservation active."}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6 border-t border-[#1c1c18]/10">
+                      <a
+                        href={getWhatsAppLink()}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-[#25D366] hover:bg-[#20b855] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold py-3 px-6 transition-all cursor-pointer shadow hover:shadow-md flex items-center justify-center gap-2 rounded-none"
+                      >
+                        <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                          <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.805-9.805.001-2.621-1.013-5.086-2.86-6.936C16.37 1.947 13.907 1.01 11.996 1.01c-5.41 0-9.813 4.402-9.815 9.813-.001 1.638.455 3.236 1.32 4.654L2.46 19.95l4.187-1.096L6.647 19.16zM17.15 14.5c-.282-.141-1.664-.822-1.921-.916-.257-.094-.445-.141-.631.141-.188.281-.727.916-.891 1.101-.164.186-.328.21-.61.07-2.8-.14-4.88-1.22-6.52-3.08-.282-.482.282-.447.805-1.492.083-.164.041-.309-.021-.45-.062-.141-.563-1.36-.77-1.859-.203-.489-.407-.423-.563-.431-.145-.007-.312-.009-.48-.009-.168 0-.441.063-.672.312-.23.25-1.012.988-1.012 2.41 0 1.42 1.031 2.793 1.17 2.98.14.188 2.03 3.102 4.921 4.35.688.297 1.224.474 1.644.607.69.219 1.319.188 1.816.114.553-.082 1.664-.68 1.898-1.336.234-.656.234-1.219.164-1.336-.07-.117-.258-.188-.54-.328z"/>
+                        </svg>
+                        {currentT.booking.btnWaSend}
+                      </a>
+                      <button
+                        onClick={() => {
+                          setBookingChannel(null);
+                          setBookingData({ name: "", phone: "", guests: 2, date: "", time: "", reason: "" });
+                          setBookingStep(1);
+                          setBookingCode("");
+                        }}
+                        className="border border-[#1c1c18]/20 hover:bg-[#1c1c18]/5 text-[#1c1c18] font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.2em] font-semibold py-3 px-6 transition-all cursor-pointer text-center bg-transparent rounded-none"
+                      >
+                        {currentT.booking.btnNewBooking}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+            </div>
+
+          </div>
       </section>
 
       {/* Location Section */}
@@ -998,13 +1141,22 @@ export default function Nativo1937({ lang = "es", t }) {
                   </span>
                   <p className="font-body-lg text-base md:text-lg text-on-surface-variant" dangerouslySetInnerHTML={{ __html: currentT.hoursVal }} />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <span className="font-label-caps text-label-caps text-primary uppercase text-xs">
                     {currentT.addressLabel}
                   </span>
                   <p className="font-body-lg text-base md:text-lg text-on-surface-variant leading-relaxed">
                     {currentT.addressVal}
                   </p>
+                  <a
+                    href="https://maps.app.goo.gl/u6vrCmwi2Yphuv3v7"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 border border-[#8C4723] hover:bg-[#8C4723] text-[#8C4723] hover:text-white px-5 py-2.5 text-[11px] font-navigation uppercase tracking-wider font-semibold transition-all duration-300 rounded-[2px]"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">navigation</span>
+                    {lang === "es" ? "Cómo llegar con Google Maps" : "Get Directions with Google Maps"}
+                  </a>
                 </div>
                 <div className="space-y-2">
                   <span className="font-label-caps text-label-caps text-primary uppercase text-xs">
@@ -1055,31 +1207,17 @@ export default function Nativo1937({ lang = "es", t }) {
               </div>
             </div>
 
-            <div className="lg:col-span-8 mt-12 lg:mt-0">
-              <div className="bg-[#fcf9f3]/60 backdrop-blur-md p-4 shadow-md overflow-hidden relative group">
-                <picture>
-                  <source media="(max-width: 768px)" srcSet="/Casa Loy Tequilera-movil.webp" />
-                  <source 
-                    media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
-                    srcSet="/Casa Loy Tequilera-retina.webp" 
-                  />
-                  <img
-                    alt="Highlands of Jalisco map locator details"
-                    className="w-full aspect-[16/10] object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000"
-                    src="/Casa Loy Tequilera-escritorio.webp"
-                  />
-                </picture>
-                <div className="absolute inset-0 flex items-center justify-center z-10">
-                  <a 
-                    href="https://maps.google.com/?q=Carretera+Ayotlan-Atotonilco+km+6.5,+Las+Villas,+47930+Ayotlan,+Jal." 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="bg-primary text-on-primary p-6 rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-transform flex items-center justify-center cursor-pointer"
-                  >
-                    <span className="material-symbols-outlined text-[32px] text-white">location_on</span>
-                  </a>
-                </div>
-              </div>
+            <div className="lg:col-span-8 mt-12 lg:mt-0 w-full min-h-[400px] lg:min-h-[480px] bg-[#fcf9f3]/60 backdrop-blur-md p-2 shadow-sm rounded-[3px] border border-black/5 overflow-hidden">
+              <iframe
+                title="Google Maps Location"
+                src="https://maps.google.com/maps?q=1937+Nativo+Restaurante,+Ayotlan,+Jal.&z=16&t=&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                className="w-full h-full min-h-[380px] lg:min-h-[460px] border-0 rounded-[2px]"
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
 
           </div>

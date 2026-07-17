@@ -162,16 +162,10 @@ export default function Turismo({ lang, setPage }) {
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/45"></div>
         </div>
         <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center h-full pt-16 pb-28 animate-slide-left-right">
-          <span className="font-navigation text-[clamp(11px,1vw,13px)] text-white uppercase tracking-[0.4em] mb-4 block font-semibold">
-            {activeT.overtitle}
-          </span>
           <h1 className="font-serif text-[clamp(28px,4.5vw,60px)] leading-[1.1] tracking-tight font-light text-white uppercase max-w-4xl mx-auto mb-10">
             {activeT.titlePart1} <br />
             <span className="text-white italic font-normal">{activeT.titlePart2}</span>
           </h1>
-          <p className="font-sans text-[clamp(13px,1.1vw,16px)] text-white/85 max-w-2xl mx-auto mb-8 font-light leading-relaxed">
-            {activeT.subtitle}
-          </p>
           <div className="flex flex-col sm:flex-row gap-6 items-center justify-center w-full max-w-md sm:max-w-none pt-2">
             <a
               href="#packages"

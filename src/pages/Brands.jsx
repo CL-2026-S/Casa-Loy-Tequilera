@@ -49,14 +49,10 @@ function BrandCard({ brand, lang, index }) {
 
   const label = lang === "es" ? brand.nameEs : brand.nameEn;
   const tagline = lang === "es" ? brand.taglineEs : brand.taglineEn;
-  const visitLabel = lang === "es" ? "Visitar sitio" : "Visit site";
 
   return (
-    <motion.a
+    <motion.div
       ref={cardRef}
-      href={brand.url}
-      target="_blank"
-      rel="noopener noreferrer"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
@@ -68,14 +64,14 @@ function BrandCard({ brand, lang, index }) {
         border ${brand.borderAccent}
         bg-white/70 backdrop-blur-sm
         p-12 sm:p-16 md:p-20
-        overflow-hidden cursor-pointer
+        overflow-hidden
         transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
         hover:shadow-[0_24px_64px_rgba(0,0,0,0.10)]
         hover:-translate-y-1
         select-none
         rounded-[2px]
       `}
-      aria-label={`${label} - ${visitLabel}`}
+      aria-label={label}
     >
       {/* Subtle gradient accent */}
       <div
@@ -87,23 +83,6 @@ function BrandCard({ brand, lang, index }) {
         className="absolute inset-0 opacity-[0.025] mix-blend-multiply bg-cover bg-center pointer-events-none"
         style={{ backgroundImage: "url('/Fibras de Agave Cocido.webp')" }}
       />
-
-      {/* Index number (top left) */}
-      <span
-        className="absolute top-5 left-6 font-serif italic text-[11px] text-[#1c1c18]/20 tracking-widest select-none"
-        style={{ fontFamily: "'EB Garamond', serif" }}
-      >
-        {String(index + 1).padStart(2, "0")}
-      </span>
-
-      {/* External link indicator (top right) */}
-      <motion.span
-        animate={{ opacity: hovered ? 1 : 0, x: hovered ? 0 : 4, y: hovered ? 0 : -4 }}
-        transition={{ duration: 0.3 }}
-        className="absolute top-5 right-5 material-symbols-outlined text-[16px] text-[#1c1c18]/40"
-      >
-        open_in_new
-      </motion.span>
 
       {/* Logo */}
       <div className="relative z-10 flex items-center justify-center w-full mb-8">
@@ -140,28 +119,11 @@ function BrandCard({ brand, lang, index }) {
         {tagline}
       </p>
 
-      {/* Visit CTA */}
-      <motion.div
-        animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 6 }}
-        transition={{ duration: 0.35 }}
-        className="relative z-10 mt-7 flex items-center gap-2"
-      >
-        <span
-          className="text-[9px] tracking-[0.25em] font-bold uppercase text-[#1c1c18]/55"
-          style={{ fontFamily: "'Montserrat', sans-serif" }}
-        >
-          {visitLabel}
-        </span>
-        <span className="material-symbols-outlined text-[12px] text-[#1c1c18]/40">
-          arrow_forward
-        </span>
-      </motion.div>
-
       {/* Bottom accent dot */}
       <div
         className={`absolute bottom-5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full ${brand.dotColor} opacity-0 group-hover:opacity-40 transition-all duration-500`}
       />
-    </motion.a>
+    </motion.div>
   );
 }
 

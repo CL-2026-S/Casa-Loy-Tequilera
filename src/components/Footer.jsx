@@ -167,14 +167,9 @@ export default function Footer({ lang = "es", setPage }) {
               {t.brands.map((link, idx) => (
                 <li key={idx}>
                   {link.external ? (
-                    <a
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-[#8C4723] transition-colors duration-300 block"
-                    >
+                    <span className="text-[#1A1615]/50 block select-none cursor-default">
                       {link.name}
-                    </a>
+                    </span>
                   ) : (
                     <button
                       onClick={() => setPage(link.page)}
