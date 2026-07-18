@@ -13,7 +13,7 @@ const packagesData = {
       duration: "2.5 Horas",
       capacity: "Máximo 50 personas",
       desc: "Un viaje de origen a través de nuestro campo de agaves y procesos de destilación artesanal, culminando con una cata privada y nuestro prestigioso obsequio.",
-      heroImg: "/Exp_test_1.jpeg",
+      heroImg: "/Oro Experiencias.jpg",
       features: [
         {
           title: "Recorrido campo de agaves",
@@ -23,7 +23,7 @@ const packagesData = {
         {
           title: "Murales e Historia",
           desc: "Recorre el legacy familiar a través de las expresiones artísticas y los murales históricos que relatan nuestro origen.",
-          img: "/Exp_test_2.jpeg"
+          img: "/Mural Historia Casa Loy.jpg"
         },
         {
           title: "Recorrido por la destilería",
@@ -33,7 +33,7 @@ const packagesData = {
         {
           title: "Cata en cava subterránea",
           desc: "Experiencia sensorial: activa tus 5 sentidos y degusta nuestras expresiones de tequila en nuestra cava subterránea.",
-          img: "/Exp_test_4.jpeg"
+          img: "/Cava de Añejamiento.jpg"
         },
         {
           title: "Mixología de autor",
@@ -53,7 +53,7 @@ const packagesData = {
       duration: "2.5 Hours",
       capacity: "Max 50 people",
       desc: "A journey of origin through our agave fields and artisanal distillation processes, culminating with a private tasting and our prestigious gift.",
-      heroImg: "/Exp_test_1.jpeg",
+      heroImg: "/Oro Experiencias.jpg",
       features: [
         {
           title: "Agave Field Tour",
@@ -63,7 +63,7 @@ const packagesData = {
         {
           title: "Murals & History",
           desc: "Explore our family heritage through artistic expressions and historic murals that tell our origin story.",
-          img: "/Exp_test_2.jpeg"
+          img: "/Mural Historia Casa Loy.jpg"
         },
         {
           title: "Distillery Tour",
@@ -73,7 +73,7 @@ const packagesData = {
         {
           title: "Underground Cellar Tasting",
           desc: "Sensory experience: activate your 5 senses and taste our tequila expressions in our underground cellar.",
-          img: "/Exp_test_4.jpeg"
+          img: "/Cava de Añejamiento.jpg"
         },
         {
           title: "Signature Mixology",
@@ -95,7 +95,7 @@ const packagesData = {
       duration: "4.0 Horas",
       capacity: "Máximo 50 personas",
       desc: "La experiencia insignia que fusiona el arte del tequila premium con la alta gastronomía de nuestro restaurante 1937 Nativo.",
-      heroImg: "/Exp_test_7.jpeg",
+      heroImg: "/Platino Experiencias.jpg",
       features: [
         {
           title: "Recorrido campo de agaves",
@@ -105,7 +105,7 @@ const packagesData = {
         {
           title: "Murales e Historia",
           desc: "Un recorrido guiado por nuestra historia familiar que honra las tradiciones locales y la perseverancia de la tierra.",
-          img: "/Exp_test_9.jpeg"
+          img: "/Mural Historia Casa Loy.jpg"
         },
         {
           title: "Recorrido por la fábrica",
@@ -115,7 +115,7 @@ const packagesData = {
         {
           title: "Cata en cava subterránea",
           desc: "Cata sensorial de nuestras expresiones, llenas de notas, aromas y matices que reflejan nuestra tradición tequilera.",
-          img: "/Exp_test_11.jpeg"
+          img: "/Pasillo Cava de Añejamiento.jpg"
         },
         {
           title: "Mixología de autor",
@@ -140,7 +140,7 @@ const packagesData = {
       duration: "4.0 Hours",
       capacity: "Max 50 people",
       desc: "Our flagship experience fusing premium tequila craftsmanship with fine dining at our 1937 Nativo restaurant.",
-      heroImg: "/Exp_test_7.jpeg",
+      heroImg: "/Platino Experiencias.jpg",
       features: [
         {
           title: "Agave Field Tour",
@@ -150,7 +150,7 @@ const packagesData = {
         {
           title: "Murals & History",
           desc: "A guided journey through our family history honoring local traditions and the perseverance of the land.",
-          img: "/Exp_test_9.jpeg"
+          img: "/Mural Historia Casa Loy.jpg"
         },
         {
           title: "Factory Tour",
@@ -160,7 +160,7 @@ const packagesData = {
         {
           title: "Underground Cellar Tasting",
           desc: "Sensory tasting of our expressions, full of notes, aromas, and nuances that reflect our tequila tradition.",
-          img: "/Exp_test_11.jpeg"
+          img: "/Pasillo Cava de Añejamiento.jpg"
         },
         {
           title: "Signature Mixology",
@@ -187,7 +187,7 @@ const packagesData = {
       duration: "4.0 Horas",
       capacity: "Máximo 50 personas",
       desc: "Una experiencia gastronómica y de tequila de primer nivel que ofrece acceso a colecciones privadas, mixología de autor, cata subterránea y el menú de lujo de 1937 Nativo.",
-      heroImg: "/Exp_test_15.jpeg",
+      heroImg: "/Cava de Añejamiento.jpg",
       features: [
         {
           title: "Recorrido campo de agaves",
@@ -197,7 +197,7 @@ const packagesData = {
         {
           title: "Murales y Historia",
           desc: "Una retrospectiva artística e histórica de Casa Loy y el desarrollo de Ayotlán como referente tequilero.",
-          img: "/Exp_test_16.jpeg"
+          img: "/Mural Historia Casa Loy.jpg"
         },
         {
           title: "Recorrido por la destilería",
@@ -207,12 +207,12 @@ const packagesData = {
         {
           title: "Cata en cava subterránea",
           desc: "Cata sensorial: degusta nuestras expresiones de tequila y descubre sus aromas, notas y personalidad.",
-          img: "/Exp_test_18.jpeg"
+          img: "/Cava de Añejamiento 2.jpg"
         },
         {
           title: "Clase de Mixología de autor",
           desc: "Aprende y diseña tu propio cóctel con base en tequila asistido por nuestro mixólogo principal.",
-          img: "/Exp_test_19.jpeg"
+          img: "/Terraza TADDEL.jpg"
         },
         {
           title: "Experiencia Luxury Gastronómica en 1937 Nativo",
@@ -232,7 +232,7 @@ const packagesData = {
       duration: "4.0 Hours",
       capacity: "Max 50 people",
       desc: "A premier tequila and dining experience offering access to private reserves, signature mixology class, cellar tasting, and the special signature menu at 1937 Nativo.",
-      heroImg: "/Exp_test_15.jpeg",
+      heroImg: "/Cava de Añejamiento.jpg",
       features: [
         {
           title: "Agave Field Tour",
@@ -242,7 +242,7 @@ const packagesData = {
         {
           title: "Murals & History",
           desc: "An artistic and historical retrospective of Casa Loy and Ayotlan's emergence as a premier tequila region.",
-          img: "/Exp_test_16.jpeg"
+          img: "/Mural Historia Casa Loy.jpg"
         },
         {
           title: "Distillery Tour",
@@ -252,12 +252,12 @@ const packagesData = {
         {
           title: "Underground Cellar Tasting",
           desc: "Sensory tasting: taste our tequila expressions and discover their aromas, notes, and personality.",
-          img: "/Exp_test_18.jpeg"
+          img: "/Cava de Añejamiento 2.jpg"
         },
         {
           title: "Signature Mixology Class",
           desc: "Learn and craft your own tequila-based cocktail guided by our master mixologist.",
-          img: "/Exp_test_19.jpeg"
+          img: "/Terraza TADDEL.jpg"
         },
         {
           title: "Luxury Gastronomic Experience at 1937 Nativo",

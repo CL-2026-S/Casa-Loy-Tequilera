@@ -198,7 +198,7 @@ export default function Turismo({ lang, setPage }) {
             <img
               alt="Agave fields experience background"
               className="w-full h-full object-cover brightness-[0.82]"
-              src="/Banner Experiencias-escritorio.webp"
+              src="/Columpio Experiencias.jpg"
             />
           </picture>
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/45"></div>
@@ -281,7 +281,7 @@ export default function Turismo({ lang, setPage }) {
                 activeT.tourOroBullet6,
               ],
               btnText: activeT.tourOroBtn,
-              img: "/Casa Loy Experiencias Oro.webp"
+              img: "/Oro Experiencias.jpg"
             },
             {
               id: "platino",
@@ -297,7 +297,7 @@ export default function Turismo({ lang, setPage }) {
                 activeT.tourPlatinoBullet7,
               ],
               btnText: activeT.tourPlatinoBtn,
-              img: "/Casa Loy Experiencias Platino.webp"
+              img: "/Platino Experiencias.jpg"
             },
             {
               id: "diamante",
@@ -313,7 +313,7 @@ export default function Turismo({ lang, setPage }) {
                 activeT.tourDiamanteBullet7,
               ],
               btnText: activeT.tourDiamanteBtn,
-              img: "/Casa Loy Experiencias Diamante.webp"
+              img: "/Cava de Añejamiento.jpg"
             }
           ].map((exp) => (
             <div key={exp.id} className="group relative overflow-hidden shadow-lg h-[620px] cursor-pointer">
@@ -378,7 +378,7 @@ export default function Turismo({ lang, setPage }) {
           <img
             alt="Luxurious dims banquet hall inside a traditional Mexican hacienda"
             className="w-full h-full object-cover opacity-45"
-            src="/Terraza Casa Loy Experiencias.webp"
+            src="/Vive la Experiencia.jpg"
           />
           <div className="absolute inset-0 bg-primary/30 mix-blend-multiply"></div>
         </div>

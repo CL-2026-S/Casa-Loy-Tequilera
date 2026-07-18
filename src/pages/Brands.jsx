@@ -191,6 +191,28 @@ export default function Brands({ t, lang }) {
         </motion.div>
       </section>
 
+      {/* Editorial Intro Banner with Terraza TADDEL */}
+      <section className="relative h-[65vh] min-h-[400px] w-full overflow-hidden bg-zinc-950 flex items-center justify-center">
+        <div className="absolute inset-0 z-0">
+          <img
+            alt="TADDEL Tequila Terrace Experience"
+            className="w-full h-full object-cover brightness-[0.7] contrast-[1.05]"
+            src="/Terraza TADDEL.jpg"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/35"></div>
+        </div>
+        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto space-y-4">
+          <span className="font-navigation text-[9px] tracking-[0.35em] font-bold text-white/95 uppercase">
+            {lang === "es" ? "Estilo de Vida & Distinción" : "Lifestyle & Distinction"}
+          </span>
+          <h2 className="font-serif text-[clamp(24px,3vw,42px)] text-white font-medium leading-snug">
+            {lang === "es" 
+              ? "Espacios donde el diseño, la pureza y el legado se encuentran." 
+              : "Spaces where design, purity, and legacy meet."}
+          </h2>
+        </div>
+      </section>
+
       {/* Thin separator */}
       <div className="w-full h-[0.5px] bg-[#1c1c18]/8" />
 

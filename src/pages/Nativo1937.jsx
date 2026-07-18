@@ -463,8 +463,8 @@ export default function Nativo1937({ lang = "es", t }) {
               {/* Main Background Frame (The Interior) */}
               <div className="relative w-4/5 aspect-[3/4] overflow-hidden shadow-[0_24px_50px_rgba(0,0,0,0.08)] border border-outline-variant/10">
                 <img
-                  src="/Restaurante 1937 Nativo Instalaciones.webp"
-                  alt="Restaurante 1937 Nativo Lounge"
+                  src="/Diosa.jpg"
+                  alt="Restaurante 1937 Nativo Mural Diosa"
                   className="w-full h-full object-cover brightness-[0.93] scale-100 hover:scale-102 transition-transform duration-[3000ms]"
                 />
               </div>
@@ -695,6 +695,51 @@ export default function Nativo1937({ lang = "es", t }) {
                 <p className="font-sans text-[12px] text-on-surface-variant/70 font-light tracking-wide leading-relaxed">
                   {currentT.chefConceptDesc}
                 </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Boutique Experience Section */}
+      <section className="py-28 md:py-36 bg-[#fcf9f3] text-left relative overflow-hidden">
+        <div className="max-w-container-max mx-auto px-margin-desktop relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
+            
+            {/* Left Column: Editorial Text */}
+            <div className="lg:col-span-5 space-y-8">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <span className="w-6 h-[0.5px] bg-[#8C4723]" />
+                  <span className="font-navigation text-[9px] tracking-[0.4em] font-bold text-[#8C4723] uppercase">
+                    {lang === "es" ? "Espacios Casa Loy" : "Casa Loy Spaces"}
+                  </span>
+                </div>
+                
+                <h2 className="font-serif text-[clamp(28px,3.8vw,46px)] leading-[1.15] tracking-tight text-[#1c1c18] font-medium">
+                  {lang === "es" ? "La Boutique de Tequila" : "The Tequila Boutique"}
+                </h2>
+                <h3 className="font-headline-md text-[20px] italic text-primary/80">
+                  {lang === "es" ? "Lleva la excelencia a casa." : "Take excellence home."}
+                </h3>
+              </div>
+              
+              <p className="font-sans text-[clamp(14px,1.05vw,16px)] text-[#1c1c18]/70 font-light leading-relaxed">
+                {lang === "es"
+                  ? "Al finalizar tu experiencia gastronómica en 1937 Nativo, te invitamos a visitar nuestra exclusiva boutique. Descubre ediciones limitadas y botellas especiales de nuestro portafolio —Casa Loy, TADDEL y Tierra Zafiro—, así como artículos artesanales de diseño seleccionados para honrar la herencia tequilera."
+                  : "At the conclusion of your culinary experience at 1937 Nativo, we invite you to browse our exclusive boutique. Discover limited editions and special bottles from our portfolio—Casa Loy, TADDEL, and Tierra Zafiro—along with select handcrafted designer pieces curated to honor the tequila heritage."}
+              </p>
+            </div>
+
+            {/* Right Column: Stunning Visual Card */}
+            <div className="lg:col-span-7 relative flex items-center justify-center">
+              <div className="relative w-full aspect-[16/10] overflow-hidden shadow-2xl border border-outline-variant/10">
+                <img
+                  src="/Boutique Restaurante.jpg"
+                  alt="Casa Loy Tequila Boutique"
+                  className="w-full h-full object-cover brightness-[0.95] hover:scale-102 transition-transform duration-[3000ms]"
+                />
               </div>
             </div>
 
