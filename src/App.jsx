@@ -32,107 +32,181 @@ import AdminPanel from "./pages/AdminPanel";
 
 export default function App() {
   const [hasBypass, setHasBypass] = useState(true); // Teaser retirado - sitio activo
-  const [lang, setLang] = useState("es"); // Default language set to Spanish (ES)
+  const [lang, setLangState] = useState("es"); // Default language set to Spanish (ES)
 
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Derive the page state from the URL pathname to maintain backward compatibility
-  const getPageFromPath = (pathname) => {
-    if (pathname === "/" || pathname === "") return "home";
-    if (pathname === "/interactivo") return "home-interactive";
-    if (pathname === "/quienes-somos") return "about";
-    if (pathname === "/maquilas") return "maquilas";
-    if (pathname === "/marcas") return "brands";
-    if (pathname === "/turismo") return "turismo";
-    if (pathname === "/turismo/oro") return "experience-oro";
-    if (pathname === "/turismo/platino") return "experience-platino";
-    if (pathname === "/turismo/diamante") return "experience-diamante";
-    if (pathname === "/nativo") return "nativo";
-    if (pathname === "/donde-comprar") return "where-to-buy";
-    if (pathname === "/blog") return "blog";
-    if (pathname.startsWith("/blog/")) return "blog-post";
-    if (pathname === "/bolsa-de-trabajo") return "careers";
-    if (pathname.startsWith("/bolsa-de-trabajo/")) return "career-detail";
-    if (pathname === "/politica-de-privacidad") return "privacy";
-    if (pathname === "/politica-de-cookies") return "cookies";
-    if (pathname === "/terminos-y-condiciones") return "terms";
-    if (pathname === "/validar-ticket") return "validate-ticket";
-    if (pathname === "/panel") return "panel";
-    if (pathname === "/editorial-preview") return "editorial-preview";
-    return "home";
-  };
-  const page = getPageFromPath(location.pathname);
+  // Bilingual routing map
+  const routesMap = {
+    // Spanish Paths
+    "/": { page: "home", lang: "es" },
+    "/interactivo": { page: "home-interactive", lang: "es" },
+    "/quienes-somos": { page: "about", lang: "es" },
+    "/maquilas": { page: "maquilas", lang: "es" },
+    "/marcas": { page: "brands", lang: "es" },
+    "/turismo": { page: "turismo", lang: "es" },
+    "/turismo/oro": { page: "experience-oro", lang: "es" },
+    "/turismo/platino": { page: "experience-platino", lang: "es" },
+    "/turismo/diamante": { page: "experience-diamante", lang: "es" },
+    "/nativo": { page: "nativo", lang: "es" },
+    "/donde-comprar": { page: "where-to-buy", lang: "es" },
+    "/blog": { page: "blog", lang: "es" },
+    "/bolsa-de-trabajo": { page: "careers", lang: "es" },
+    "/politica-de-privacidad": { page: "privacy", lang: "es" },
+    "/politica-de-cookies": { page: "cookies", lang: "es" },
+    "/terminos-y-condiciones": { page: "terms", lang: "es" },
+    "/validar-ticket": { page: "validate-ticket", lang: "es" },
+    "/panel": { page: "panel", lang: "es" },
+    "/editorial-preview": { page: "editorial-preview", lang: "es" },
 
-  // setPage wrapper to push state changes using react-router navigation
-  const setPage = (targetPage) => {
-    switch (targetPage) {
-      case "home":
-        navigate("/");
-        break;
-      case "home-interactive":
-        navigate("/interactivo");
-        break;
-      case "about":
-        navigate("/quienes-somos");
-        break;
-      case "maquilas":
-        navigate("/maquilas");
-        break;
-      case "brands":
-        navigate("/marcas");
-        break;
-      case "turismo":
-        navigate("/turismo");
-        break;
-      case "experience-oro":
-        navigate("/turismo/oro");
-        break;
-      case "experience-platino":
-        navigate("/turismo/platino");
-        break;
-      case "experience-diamante":
-        navigate("/turismo/diamante");
-        break;
-      case "nativo":
-        navigate("/nativo");
-        break;
-      case "where-to-buy":
-        navigate("/donde-comprar");
-        break;
-      case "blog":
-        navigate("/blog");
-        break;
-      case "blog-post":
-        navigate("/blog/el-arte-de-la-cata");
-        break;
-      case "careers":
-        navigate("/bolsa-de-trabajo");
-        break;
-      case "career-detail":
-        navigate(`/bolsa-de-trabajo/${selectedJobId}`);
-        break;
-      case "privacy":
-        navigate("/politica-de-privacidad");
-        break;
-      case "cookies":
-        navigate("/politica-de-cookies");
-        break;
-      case "terms":
-        navigate("/terminos-y-condiciones");
-        break;
-      case "validate-ticket":
-        navigate("/validar-ticket");
-        break;
-      case "panel":
-        navigate("/panel");
-        break;
-      case "editorial-preview":
-        navigate("/editorial-preview");
-        break;
-      default:
-        navigate("/");
+    // English Paths
+    "/about": { page: "about", lang: "en" },
+    "/about-us": { page: "about", lang: "en" },
+    "/bottling": { page: "maquilas", lang: "en" },
+    "/brands": { page: "brands", lang: "en" },
+    "/tourism": { page: "turismo", lang: "en" },
+    "/tourism/gold": { page: "experience-oro", lang: "en" },
+    "/tourism/platinum": { page: "experience-platino", lang: "en" },
+    "/tourism/diamond": { page: "experience-diamante", lang: "en" },
+    "/restaurant-nativo": { page: "nativo", lang: "en" },
+    "/where-to-buy": { page: "where-to-buy", lang: "en" },
+    "/careers": { page: "careers", lang: "en" },
+    "/privacy-policy": { page: "privacy", lang: "en" },
+    "/cookie-policy": { page: "cookies", lang: "en" },
+    "/terms-and-conditions": { page: "terms", lang: "en" }
+  };
+
+  const getPageInfoFromPath = (pathname) => {
+    if (routesMap[pathname]) {
+      return routesMap[pathname];
     }
+    if (pathname.startsWith("/blog/")) {
+      return { page: "blog-post", lang: "es" };
+    }
+    if (pathname.startsWith("/bolsa-de-trabajo/")) {
+      return { page: "career-detail", lang: "es" };
+    }
+    if (pathname.startsWith("/careers/")) {
+      return { page: "career-detail", lang: "en" };
+    }
+    return { page: "home", lang: "es" };
+  };
+
+  const pageInfo = getPageInfoFromPath(location.pathname);
+  const page = pageInfo.page;
+
+  // Automatically update the language state based on the current URL path
+  useEffect(() => {
+    if (pageInfo.lang && pageInfo.lang !== lang) {
+      setLangState(pageInfo.lang);
+    }
+  }, [location.pathname, lang, pageInfo.lang]);
+
+  // Wrapper setLang to handle URL switching when user clicks the ES/EN toggle in Header/Footer
+  const setLang = (targetLang) => {
+    if (targetLang === lang) return;
+
+    const languageRedirects = {
+      es: {
+        "home": "/",
+        "home-interactive": "/interactivo",
+        "about": "/quienes-somos",
+        "maquilas": "/maquilas",
+        "brands": "/marcas",
+        "turismo": "/turismo",
+        "experience-oro": "/turismo/oro",
+        "experience-platino": "/turismo/platino",
+        "experience-diamante": "/turismo/diamante",
+        "nativo": "/nativo",
+        "where-to-buy": "/donde-comprar",
+        "blog": "/blog",
+        "careers": "/bolsa-de-trabajo",
+        "privacy": "/politica-de-privacidad",
+        "cookies": "/politica-de-cookies",
+        "terms": "/terminos-y-condiciones"
+      },
+      en: {
+        "home": "/",
+        "home-interactive": "/interactivo",
+        "about": "/about",
+        "maquilas": "/bottling",
+        "brands": "/brands",
+        "turismo": "/tourism",
+        "experience-oro": "/tourism/gold",
+        "experience-platino": "/tourism/platinum",
+        "experience-diamante": "/tourism/diamond",
+        "nativo": "/restaurant-nativo",
+        "where-to-buy": "/where-to-buy",
+        "blog": "/blog",
+        "careers": "/careers",
+        "privacy": "/privacy-policy",
+        "cookies": "/cookie-policy",
+        "terms": "/terms-and-conditions"
+      }
+    };
+
+    if (languageRedirects[targetLang] && languageRedirects[targetLang][page]) {
+      const targetPath = languageRedirects[targetLang][page];
+      navigate(targetPath);
+    }
+    setLangState(targetLang);
+  };
+
+  // setPage wrapper to push state changes using react-router navigation, respecting the active language
+  const setPage = (targetPage) => {
+    const paths = {
+      es: {
+        home: "/",
+        "home-interactive": "/interactivo",
+        about: "/quienes-somos",
+        maquilas: "/maquilas",
+        brands: "/marcas",
+        turismo: "/turismo",
+        "experience-oro": "/turismo/oro",
+        "experience-platino": "/turismo/platino",
+        "experience-diamante": "/turismo/diamante",
+        nativo: "/nativo",
+        "where-to-buy": "/donde-comprar",
+        blog: "/blog",
+        "blog-post": "/blog/el-arte-de-la-cata",
+        careers: "/bolsa-de-trabajo",
+        "career-detail": `/bolsa-de-trabajo/${selectedJobId}`,
+        privacy: "/politica-de-privacidad",
+        cookies: "/politica-de-cookies",
+        terms: "/terminos-y-condiciones",
+        "validate-ticket": "/validar-ticket",
+        panel: "/panel",
+        "editorial-preview": "/editorial-preview"
+      },
+      en: {
+        home: "/",
+        "home-interactive": "/interactivo",
+        about: "/about",
+        maquilas: "/bottling",
+        brands: "/brands",
+        turismo: "/tourism",
+        "experience-oro": "/tourism/gold",
+        "experience-platino": "/tourism/platinum",
+        "experience-diamante": "/tourism/diamond",
+        nativo: "/restaurant-nativo",
+        "where-to-buy": "/where-to-buy",
+        blog: "/blog",
+        "blog-post": "/blog/el-arte-de-la-cata",
+        careers: "/careers",
+        "career-detail": `/careers/${selectedJobId}`,
+        privacy: "/privacy-policy",
+        cookies: "/cookie-policy",
+        terms: "/terms-and-conditions",
+        "validate-ticket": "/validar-ticket",
+        panel: "/panel",
+        "editorial-preview": "/editorial-preview"
+      }
+    };
+
+    const activePaths = paths[lang] || paths.es;
+    const targetPath = activePaths[targetPage] || "/";
+    navigate(targetPath);
   };
 
   const [selectedTour, setSelectedTour] = useState("oro");
@@ -269,10 +343,20 @@ export default function App() {
             <Route path="/" element={<Home lang={lang} setPage={setPage} setLang={setLang} />} />
             <Route path="/editorial-preview" element={<Home lang={lang} setPage={setPage} setLang={setLang} />} />
             <Route path="/interactivo" element={<HomeInteractive lang={lang} setPage={setPage} />} />
+            
             <Route path="/quienes-somos" element={<AboutUs t={t} lang={lang} setPage={setPage} />} />
+            <Route path="/about" element={<AboutUs t={t} lang={lang} setPage={setPage} />} />
+            <Route path="/about-us" element={<AboutUs t={t} lang={lang} setPage={setPage} />} />
+            
             <Route path="/maquilas" element={<Maquilas t={t} lang={lang} />} />
+            <Route path="/bottling" element={<Maquilas t={t} lang={lang} />} />
+            
             <Route path="/marcas" element={<Brands t={t} lang={lang} />} />
+            <Route path="/brands" element={<Brands t={t} lang={lang} />} />
+            
             <Route path="/turismo" element={<Turismo lang={lang} setPage={setPage} selectedTour={selectedTour} setSelectedTour={setSelectedTour} />} />
+            <Route path="/tourism" element={<Turismo lang={lang} setPage={setPage} selectedTour={selectedTour} setSelectedTour={setSelectedTour} />} />
+            
             <Route path="/turismo/oro" element={
               <ExperienceDetail
                 lang={lang}
@@ -287,6 +371,21 @@ export default function App() {
                 setBookingsCapacity={setBookingsCapacity}
               />
             } />
+            <Route path="/tourism/gold" element={
+              <ExperienceDetail
+                lang={lang}
+                packageId="oro"
+                setPage={setPage}
+                setSelectedTour={setSelectedTour}
+                maxCapacityLimit={maxCapacityLimit}
+                setMaxCapacityLimit={setMaxCapacityLimit}
+                blockedDates={blockedDates}
+                setBlockedDates={setBlockedDates}
+                bookingsCapacity={bookingsCapacity}
+                setBookingsCapacity={setBookingsCapacity}
+              />
+            } />
+            
             <Route path="/turismo/platino" element={
               <ExperienceDetail
                 lang={lang}
@@ -301,6 +400,21 @@ export default function App() {
                 setBookingsCapacity={setBookingsCapacity}
               />
             } />
+            <Route path="/tourism/platinum" element={
+              <ExperienceDetail
+                lang={lang}
+                packageId="platino"
+                setPage={setPage}
+                setSelectedTour={setSelectedTour}
+                maxCapacityLimit={maxCapacityLimit}
+                setMaxCapacityLimit={setMaxCapacityLimit}
+                blockedDates={blockedDates}
+                setBlockedDates={setBlockedDates}
+                bookingsCapacity={bookingsCapacity}
+                setBookingsCapacity={setBookingsCapacity}
+              />
+            } />
+            
             <Route path="/turismo/diamante" element={
               <ExperienceDetail
                 lang={lang}
@@ -315,15 +429,45 @@ export default function App() {
                 setBookingsCapacity={setBookingsCapacity}
               />
             } />
+            <Route path="/tourism/diamond" element={
+              <ExperienceDetail
+                lang={lang}
+                packageId="diamante"
+                setPage={setPage}
+                setSelectedTour={setSelectedTour}
+                maxCapacityLimit={maxCapacityLimit}
+                setMaxCapacityLimit={setMaxCapacityLimit}
+                blockedDates={blockedDates}
+                setBlockedDates={setBlockedDates}
+                bookingsCapacity={bookingsCapacity}
+                setBookingsCapacity={setBookingsCapacity}
+              />
+            } />
+            
             <Route path="/nativo" element={<Nativo1937 t={t} lang={lang} />} />
+            <Route path="/restaurant-nativo" element={<Nativo1937 t={t} lang={lang} />} />
+            
             <Route path="/donde-comprar" element={<WhereToBuy t={t} lang={lang} />} />
+            <Route path="/where-to-buy" element={<WhereToBuy t={t} lang={lang} />} />
+            
             <Route path="/blog" element={<Blog setPage={setPage} t={t} lang={lang} />} />
             <Route path="/blog/:slug" element={<BlogPost lang={lang} setPage={setPage} />} />
+            
             <Route path="/bolsa-de-trabajo" element={<Careers lang={lang} setPage={setPage} setSelectedJobId={setSelectedJobId} />} />
+            <Route path="/careers" element={<Careers lang={lang} setPage={setPage} setSelectedJobId={setSelectedJobId} />} />
+            
             <Route path="/bolsa-de-trabajo/:jobId" element={<CareerDetailWrapper lang={lang} setPage={setPage} setSelectedJobId={setSelectedJobId} />} />
+            <Route path="/careers/:jobId" element={<CareerDetailWrapper lang={lang} setPage={setPage} setSelectedJobId={setSelectedJobId} />} />
+            
             <Route path="/politica-de-privacidad" element={<PrivacyPolicy t={t} lang={lang} />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy t={t} lang={lang} />} />
+            
             <Route path="/politica-de-cookies" element={<CookiePolicy t={t} lang={lang} />} />
+            <Route path="/cookie-policy" element={<CookiePolicy t={t} lang={lang} />} />
+            
             <Route path="/terminos-y-condiciones" element={<TermsConditions t={t} lang={lang} />} />
+            <Route path="/terms-and-conditions" element={<TermsConditions t={t} lang={lang} />} />
+            
             <Route path="/validar-ticket" element={<ValidateTicket lang={lang} setPage={setPage} />} />
             <Route path="/panel" element={
               <AdminPanel

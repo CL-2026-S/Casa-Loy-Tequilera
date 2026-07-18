@@ -165,7 +165,7 @@ export default function Footer({ lang = "es", setPage }) {
             </p>
             <div className="pt-2">
               <Link
-                to="/quienes-somos"
+                to={lang === "en" ? "/about" : "/quienes-somos"}
                 className="group inline-flex items-center gap-3 font-navigation text-[12px] font-semibold text-[#8C4723] hover:text-[#2F403E] transition-colors duration-300 uppercase tracking-widest focus:outline-none"
               >
                 <span>{t.aboutCTA}</span>
@@ -184,12 +184,23 @@ export default function Footer({ lang = "es", setPage }) {
             <ul className="space-y-3 font-navigation text-[13.5px] font-medium text-[#1A1615]/80">
               {t.brands.map((link, idx) => {
                 const getPageRoute = (p) => {
-                  if (p === "maquilas") return "/maquilas";
-                  if (p === "turismo") return "/turismo";
-                  if (p === "nativo") return "/nativo";
-                  if (p === "blog") return "/blog";
-                  if (p === "careers") return "/bolsa-de-trabajo";
-                  return "/";
+                  const paths = {
+                    es: {
+                      maquilas: "/maquilas",
+                      turismo: "/turismo",
+                      nativo: "/nativo",
+                      blog: "/blog",
+                      careers: "/bolsa-de-trabajo"
+                    },
+                    en: {
+                      maquilas: "/bottling",
+                      turismo: "/tourism",
+                      nativo: "/restaurant-nativo",
+                      blog: "/blog",
+                      careers: "/careers"
+                    }
+                  };
+                  return (paths[lang] || paths.es)[p] || "/";
                 };
                 return (
                   <li key={idx}>
@@ -333,7 +344,7 @@ export default function Footer({ lang = "es", setPage }) {
               <span className="font-navigation text-[9.5px] text-[#1A1615]/50 leading-relaxed font-normal block">
                 {t.newsletterDisclaimer}
                 <Link
-                  to="/politica-de-privacidad"
+                  to={lang === "en" ? "/privacy-policy" : "/politica-de-privacidad"}
                   className="text-[#8C4723] hover:text-[#2F403E] transition-colors duration-300 underline underline-offset-2 focus:outline-none cursor-pointer"
                 >
                   {t.privacyLinkText}
@@ -361,10 +372,19 @@ export default function Footer({ lang = "es", setPage }) {
                 );
               }
               const getLegalRoute = (p) => {
-                if (p === "privacy") return "/politica-de-privacidad";
-                if (p === "cookies") return "/politica-de-cookies";
-                if (p === "terms") return "/terminos-y-condiciones";
-                return "/";
+                const paths = {
+                  es: {
+                    privacy: "/politica-de-privacidad",
+                    cookies: "/politica-de-cookies",
+                    terms: "/terminos-y-condiciones"
+                  },
+                  en: {
+                    privacy: "/privacy-policy",
+                    cookies: "/cookie-policy",
+                    terms: "/terms-and-conditions"
+                  }
+                };
+                return (paths[lang] || paths.es)[p] || "/";
               };
               return link.external ? (
                 <a

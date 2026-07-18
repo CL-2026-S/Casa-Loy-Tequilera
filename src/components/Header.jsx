@@ -6,6 +6,30 @@ export default function Header({ lang, setLang, t, page, setPage }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [lastPage, setLastPage] = useState(page);
 
+  const getPath = (pageKey) => {
+    const paths = {
+      es: {
+        home: "/",
+        about: "/quienes-somos",
+        maquilas: "/maquilas",
+        brands: "/marcas",
+        turismo: "/turismo",
+        nativo: "/nativo",
+        "where-to-buy": "/donde-comprar"
+      },
+      en: {
+        home: "/",
+        about: "/about",
+        maquilas: "/bottling",
+        brands: "/brands",
+        turismo: "/tourism",
+        nativo: "/restaurant-nativo",
+        "where-to-buy": "/where-to-buy"
+      }
+    };
+    return (paths[lang] || paths.es)[pageKey] || "/";
+  };
+
   if (page !== lastPage) {
     setLastPage(page);
     setScrolled(false);
@@ -80,7 +104,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
           {/* Mobile Actions (Where to Buy and Hamburger) */}
           <div className="flex items-center gap-4">
             <Link
-              to="/donde-comprar"
+              to={getPath("where-to-buy")}
               className={`h-9 px-4 font-label-caps text-[10px] uppercase tracking-[0.15em] transition-all duration-300 shadow-sm font-semibold whitespace-nowrap text-center flex items-center justify-center rounded-none active:scale-[0.98] ${
                 isDarkHeroPage && !scrolled
                   ? "bg-white text-[#1c1c18] hover:bg-primary hover:text-white"
@@ -124,7 +148,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
 
           {/* Column 2: Quiénes Somos */}
           <Link
-            to="/quienes-somos"
+            to={getPath("about")}
             className={getLinkClass("about")}
           >
             {t.nav.about}
@@ -133,7 +157,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
 
           {/* Column 3: Desarrolla tu Marca */}
           <Link
-            to="/maquilas"
+            to={getPath("maquilas")}
             className={getLinkClass("maquilas")}
           >
             {t.nav.bottling}
@@ -142,7 +166,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
 
           {/* Column 4: Nuestras Marcas */}
           <Link
-            to="/marcas"
+            to={getPath("brands")}
             className={getLinkClass("brands")}
           >
             {t.nav.brands}
@@ -151,7 +175,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
 
           {/* Column 5: Experiencias */}
           <Link
-            to="/turismo"
+            to={getPath("turismo")}
             className={getLinkClass("turismo")}
           >
             {t.nav.tourism}
@@ -160,7 +184,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
 
           {/* Column 6: Restaurante 1937 Nativo */}
           <Link
-            to="/nativo"
+            to={getPath("nativo")}
             className={getLinkClass("nativo")}
           >
             {t.nav.nativo}
@@ -200,7 +224,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
 
           {/* Column 8: Botón Dónde Comprar */}
           <Link
-            to="/donde-comprar"
+            to={getPath("where-to-buy")}
             className={`h-10 px-5 font-label-caps text-[clamp(9px,0.7vw,11px)] uppercase tracking-[0.18em] transition-all duration-300 shadow-sm font-semibold whitespace-nowrap text-center flex items-center justify-center rounded-none active:scale-[0.98] ${
               isDarkHeroPage && !scrolled
                 ? "bg-white text-[#1c1c18] hover:bg-primary hover:text-white"
@@ -250,7 +274,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
             {/* Mobile Navigation Links */}
             <nav className="flex flex-col gap-5 pt-8 text-left">
               <Link
-                to="/quienes-somos"
+                to={getPath("about")}
                 onClick={() => setMobileMenuOpen(false)}
                 className={`font-navigation text-navigation text-left py-1 transition-colors duration-300 ${
                   page === "about" ? "text-primary font-semibold" : "text-[#1c1c18] hover:text-primary"
@@ -259,7 +283,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
                 {t.nav.about}
               </Link>
               <Link
-                to="/maquilas"
+                to={getPath("maquilas")}
                 onClick={() => setMobileMenuOpen(false)}
                 className={`font-navigation text-navigation text-left py-1 transition-colors duration-300 ${
                   page === "maquilas" ? "text-primary font-semibold" : "text-[#1c1c18] hover:text-primary"
@@ -268,7 +292,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
                 {t.nav.bottling}
               </Link>
               <Link
-                to="/marcas"
+                to={getPath("brands")}
                 onClick={() => setMobileMenuOpen(false)}
                 className={`font-navigation text-navigation text-left py-1 transition-colors duration-300 ${
                   page === "brands" ? "text-primary font-semibold" : "text-[#1c1c18] hover:text-primary"
@@ -277,7 +301,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
                 {t.nav.brands}
               </Link>
               <Link
-                to="/turismo"
+                to={getPath("turismo")}
                 onClick={() => setMobileMenuOpen(false)}
                 className={`font-navigation text-navigation text-left py-1 transition-colors duration-300 ${
                   page === "turismo" ? "text-primary font-semibold" : "text-[#1c1c18] hover:text-primary"
@@ -286,7 +310,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
                 {t.nav.tourism}
               </Link>
               <Link
-                to="/nativo"
+                to={getPath("nativo")}
                 onClick={() => setMobileMenuOpen(false)}
                 className={`font-navigation text-navigation text-left py-1 transition-colors duration-300 ${
                   page === "nativo" ? "text-primary font-semibold" : "text-[#1c1c18] hover:text-primary"
@@ -326,7 +350,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
               </span>
             </div>
             <Link
-              to="/donde-comprar"
+              to={getPath("where-to-buy")}
               onClick={() => setMobileMenuOpen(false)}
               className="w-full bg-primary text-white py-4 font-label-caps text-[10px] uppercase tracking-[0.25em] transition-all duration-300 hover:bg-[#914b27] block text-center"
             >
