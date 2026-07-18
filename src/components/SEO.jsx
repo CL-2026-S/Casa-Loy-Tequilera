@@ -10,25 +10,41 @@ const seoData = {
       ogImage: "/Casa Loy Tequilera.webp",
       schema: {
         "@context": "https://schema.org",
-        "@type": "Distillery",
-        "name": "Casa Loy Tequilera",
-        "description": "Destilería premium de tequila 100% agave en los Altos de Jalisco.",
-        "image": "https://casaloy.com/Logotipo%20Casa%20Loy%20Tequilera.png",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "Carretera Ayotlán–Atotonilco km 6.5, Las Villas",
-          "addressLocality": "Ayotlán",
-          "addressRegion": "Jalisco",
-          "addressCountry": "MX"
-        },
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": "20.5342",
-          "longitude": "-102.3245"
-        },
-        "url": "https://casaloy.com",
-        "telephone": "+5213332504359",
-        "priceRange": "$$$$"
+        "@graph": [
+          {
+            "@type": "Distillery",
+            "@id": "https://casaloy.com/#distillery",
+            "name": "Casa Loy Tequilera",
+            "description": "Destilería premium de tequila 100% agave en los Altos de Jalisco.",
+            "image": "https://casaloy.com/Logotipo%20Casa%20Loy%20Tequilera.png",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Carretera Ayotlán–Atotonilco km 6.5, Las Villas",
+              "addressLocality": "Ayotlán",
+              "addressRegion": "Jalisco",
+              "addressCountry": "MX"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": "20.5342",
+              "longitude": "-102.3245"
+            },
+            "url": "https://casaloy.com",
+            "telephone": "+5213332504359",
+            "priceRange": "$$$$"
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://casaloy.com/#organization",
+            "name": "Casa Loy Tequilera",
+            "url": "https://casaloy.com",
+            "logo": "https://casaloy.com/Logotipo%20Casa%20Loy%20Tequilera.png",
+            "sameAs": [
+              "https://www.linkedin.com/company/casaloy",
+              "https://www.youtube.com/@casaloytequilera"
+            ]
+          }
+        ]
       }
     },
     "home-interactive": {
@@ -83,23 +99,38 @@ const seoData = {
       ogImage: "/taddel_200ml_bottle.png",
       schema: {
         "@context": "https://schema.org",
-        "@type": "CollectionPage",
-        "name": "Colección de Tequilas Casa Loy",
-        "hasPart": [
+        "@graph": [
           {
-            "@type": "Product",
-            "name": "Casa Loy Tequila",
-            "category": "Tequila 100% Agave"
+            "@type": "CollectionPage",
+            "name": "Colección de Tequilas Casa Loy",
+            "description": "Portafolio de tequilas premium destilados de agaves cultivados en los Altos de Jalisco."
           },
           {
             "@type": "Product",
-            "name": "TADDEL Tequila",
-            "category": "Tequila Artesanal de Diseño"
+            "name": "Tequila Casa Loy Blanco",
+            "description": "Tequila 100% de agave de cocimiento tradicional y destilación delicada en hornos de mampostería.",
+            "brand": {
+              "@type": "Brand",
+              "name": "Casa Loy"
+            }
           },
           {
             "@type": "Product",
-            "name": "Tierra Zafiro Tequila",
-            "category": "Tequila Místico Premium"
+            "name": "TADDEL Tequila Plata",
+            "description": "Tequila artesanal premium de diseño elegante y sabor cristalino.",
+            "brand": {
+              "@type": "Brand",
+              "name": "TADDEL"
+            }
+          },
+          {
+            "@type": "Product",
+            "name": "Tierra Zafiro Tequila Blanco",
+            "description": "Tequila místico premium inspirado en la pureza y los cosmos.",
+            "brand": {
+              "@type": "Brand",
+              "name": "Tierra Zafiro"
+            }
           }
         ]
       }
@@ -112,14 +143,53 @@ const seoData = {
       ogImage: "/Barra Casa Loy Experiencias.webp",
       schema: {
         "@context": "https://schema.org",
-        "@type": "TouristAttraction",
-        "name": "Experiencias de Turismo Casa Loy",
-        "description": "Tours guiados y catas en la destilería Casa Loy en Jalisco.",
-        "location": {
-          "@type": "Place",
-          "name": "Casa Loy Tequilera",
-          "address": "Carretera Ayotlán–Atotonilco km 6.5, Las Villas, Jalisco"
-        }
+        "@graph": [
+          {
+            "@type": "TouristAttraction",
+            "name": "Experiencias de Turismo Casa Loy",
+            "description": "Tours guiados y catas en la destilería Casa Loy en Jalisco.",
+            "location": {
+              "@type": "Place",
+              "name": "Casa Loy Tequilera",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Carretera Ayotlán–Atotonilco km 6.5, Las Villas",
+                "addressLocality": "Ayotlán",
+                "addressRegion": "Jalisco",
+                "addressCountry": "MX"
+              }
+            }
+          },
+          {
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "¿Dónde está ubicada Casa Loy Tequilera?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Casa Loy Tequilera se ubica en la Carretera Ayotlán–Atotonilco km 6.5, Las Villas, Jalisco, México."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "¿Qué días están abiertas las experiencias de turismo?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Nuestras puertas están abiertas para visitas guiadas de Martes a Domingo con reservación previa."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "¿Cuáles son los paquetes o tours disponibles?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Contamos con tres experiencias: Experiencia Oro (MXN 550), Experiencia Platino (MXN 750, incluye comida de 3 tiempos) y Experiencia Diamante (MXN 1,500, incluye clase de mixología, kit de souvenirs y banquete de lujo en Restaurante 1937 Nativo)."
+                }
+              }
+            ]
+          }
+        ]
       }
     },
     "experience-oro": {
@@ -154,6 +224,7 @@ const seoData = {
         "@type": "Restaurant",
         "name": "Restaurante 1937 Nativo",
         "servesCuisine": "Mexicana Contemporánea",
+        "priceRange": "$$$",
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "Carretera Ayotlán–Atotonilco km 6.5",
@@ -238,7 +309,27 @@ const seoData = {
       description: "Premium Mexican distillery specializing in the production, development, and marketing of 100% agave tequila in Los Altos de Jalisco. Tradition, innovation, and operational excellence.",
       ogTitle: "Casa Loy Tequilera - Tradition & Innovation in Tequila",
       ogDesc: "We preserve a heritage of excellence dedicated to the art of creating ultra-luxury tequila from Jalisco, Mexico.",
-      ogImage: "/Casa Loy Tequilera.webp"
+      ogImage: "/Casa Loy Tequilera.webp",
+      schema: {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Distillery",
+            "name": "Casa Loy Tequilera",
+            "description": "100% Agave Premium Tequila Distillery in Jalisco Highlands, Mexico.",
+            "image": "https://casaloy.com/Logotipo%20Casa%20Loy%20Tequilera.png",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Ayotlán–Atotonilco Highway km 6.5, Las Villas",
+              "addressLocality": "Ayotlán",
+              "addressRegion": "Jalisco",
+              "addressCountry": "MX"
+            },
+            "url": "https://casaloy.com",
+            "telephone": "+5213332504359"
+          }
+        ]
+      }
     },
     about: {
       title: "About Us | Casa Loy Tequilera History & Heritage",
@@ -266,7 +357,46 @@ const seoData = {
       description: "Book a premium tequila tour in Jalisco. Visit agave fields, the distillery, underground aging cellars, and enjoy tastings and signature mixology.",
       ogTitle: "Casa Loy Tourism Experiences - Book Your Visit",
       ogDesc: "Immerse yourself in the craft of our distillery with cellar tastings and traditional gastronomy.",
-      ogImage: "/Barra Casa Loy Experiences.webp"
+      ogImage: "/Barra Casa Loy Experiences.webp",
+      schema: {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "TouristAttraction",
+            "name": "Casa Loy Tourism Experiences",
+            "description": "Guided tours and tequila tastings at Casa Loy Distillery in Jalisco.",
+            "location": {
+              "@type": "Place",
+              "name": "Casa Loy Tequilera",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Ayotlán–Atotonilco Highway km 6.5, Las Villas, Jalisco"
+              }
+            }
+          },
+          {
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Where is Casa Loy Tequilera located?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Casa Loy Tequilera is located at Ayotlán–Atotonilco Highway km 6.5, Las Villas, Jalisco, Mexico."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What days are distillery tours available?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "We are open for guided tours from Tuesday to Sunday. Prior booking is required."
+                }
+              }
+            ]
+          }
+        ]
+      }
     },
     nativo: {
       title: "1937 Nativo Restaurant | Mexican Culinary Experience in Jalisco",
@@ -329,7 +459,31 @@ export default function SEO({ page, lang = "es" }) {
     updateTwitterTag("twitter:description", pageData.ogDesc || pageData.description);
     updateTwitterTag("twitter:image", pageData.ogImage || "/Casa Loy Tequilera.webp");
 
-    // 5. Inject/Update JSON-LD Structured Data
+    // 5. Inyectar Canonical y Hreflang de manera dinámica
+    const updateLinkTag = (rel, hreflang, href) => {
+      let selector = `link[rel="${rel}"]`;
+      if (hreflang) {
+        selector += `[hreflang="${hreflang}"]`;
+      }
+      let tag = document.querySelector(selector);
+      if (!tag) {
+        tag = document.createElement("link");
+        tag.rel = rel;
+        if (hreflang) tag.hreflang = hreflang;
+        document.head.appendChild(tag);
+      }
+      tag.href = href;
+    };
+
+    const currentPath = window.location.pathname;
+    const canonicalUrl = `https://casaloy.com${currentPath}`;
+    
+    updateLinkTag("canonical", null, canonicalUrl);
+    updateLinkTag("alternate", "es", canonicalUrl);
+    updateLinkTag("alternate", "en", canonicalUrl);
+    updateLinkTag("alternate", "x-default", canonicalUrl);
+
+    // 6. Inject/Update JSON-LD Structured Data
     // Remove previous script tag if it exists
     const previousScript = document.getElementById("casa-loy-jsonld");
     if (previousScript) {

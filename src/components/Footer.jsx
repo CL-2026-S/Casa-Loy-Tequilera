@@ -28,6 +28,23 @@ export default function Footer({ lang = "es", setPage }) {
       const data = await response.json();
 
       if (response.ok && data.success) {
+        // Trigger GA4 and Meta Pixel newsletter lead conversion events
+        try {
+          if (typeof window.gtag === 'function') {
+            window.gtag('event', 'generate_lead', {
+              lead_source: 'footer'
+            });
+          }
+          if (typeof window.fbq === 'function') {
+            window.fbq('track', 'Lead', {
+              content_category: 'newsletter',
+              content_name: 'footer_subscription'
+            });
+          }
+        } catch (trackError) {
+          console.warn("Newsletter tracking failed:", trackError);
+        }
+
         setStatus("success");
         setEmail("");
         localStorage.setItem("casa_loy_subscribed", "true");

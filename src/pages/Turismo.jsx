@@ -1,6 +1,48 @@
 import { useState } from "react";
 
 export default function Turismo({ lang, setPage }) {
+  const [openFaqIdx, setOpenFaqIdx] = useState(null);
+
+  const faqList = {
+    es: [
+      {
+        q: "¿Dónde está ubicada la destilería de Casa Loy Tequilera?",
+        a: "Nuestra destilería se encuentra en el km 6.5 de la carretera Ayotlán–Atotonilco, en el corazón de los Altos de Jalisco. Es un entorno de hacienda rodeado de majestuosos campos de agave azul."
+      },
+      {
+        q: "¿Cuáles son los días y horarios disponibles para los tours?",
+        a: "Los tours y experiencias gastronómicas están disponibles de Martes a Domingo en diversos horarios. Es indispensable reservar con antelación a través del portal para asegurar el cupo."
+      },
+      {
+        q: "¿Cómo reservar una Experiencia Platino o Diamante?",
+        a: "Puedes seleccionar la experiencia desde el listado anterior, dar click en 'Ver Detalles' y luego elegir el día, hora y cantidad de personas para efectuar tu pago de forma segura por PayPal."
+      },
+      {
+        q: "¿Cuál es la política de cancelación o cambios de fecha?",
+        a: "Aceptamos cancelaciones y cambios de fecha sin costo hasta 48 horas antes de tu experiencia programada. Contáctanos por WhatsApp al +52 1 33 3250 4359 para cualquier ajuste."
+      }
+    ],
+    en: [
+      {
+        q: "Where is the Casa Loy Tequilera distillery located?",
+        a: "Our distillery is located at km 6.5 of the Ayotlán–Atotonilco Highway, in Las Villas, Jalisco. It is a traditional hacienda setting surrounded by blue agave fields."
+      },
+      {
+        q: "What days and times are available for the tours?",
+        a: "Tours and culinary experiences are available from Tuesday to Sunday at various scheduled times. Booking in advance through our website is required to secure your spots."
+      },
+      {
+        q: "How can I book a Platinum or Diamond Experience?",
+        a: "Simply select your desired experience above, click 'View Details', and choose the date, time, and number of guests to pay securely via PayPal."
+      },
+      {
+        q: "What is the cancellation or rescheduling policy?",
+        a: "We accept cancellations and date changes free of charge up to 48 hours prior to your scheduled tour. Contact us via WhatsApp at +52 1 33 3250 4359 for assistance."
+      }
+    ]
+  };
+
+  const activeFaq = faqList[lang] || faqList.es;
 
   const localT = {
     es: {
@@ -361,6 +403,47 @@ export default function Turismo({ lang, setPage }) {
             <button className="border border-white text-white px-12 py-5 font-label-caps text-label-caps uppercase tracking-widest hover:bg-white/10 active:scale-95 transition-all flex items-center justify-center gap-2">
               <span className="material-symbols-outlined text-sm">download</span> {activeT.eventsBtnFolleto}
             </button>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Accordion Section */}
+      <section className="py-24 bg-[#FAF6F0] border-t border-[#1A1615]/10">
+        <div className="max-w-3xl mx-auto px-margin-mobile md:px-6">
+          <div className="text-center mb-16">
+            <span className="font-navigation text-[11px] font-semibold text-primary uppercase tracking-[0.25em] block mb-3">
+              FAQ
+            </span>
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#2F403E] leading-tight">
+              {lang === "es" ? "Preguntas Frecuentes" : "Frequently Asked Questions"}
+            </h2>
+          </div>
+
+          <div className="space-y-4">
+            {activeFaq.map((item, idx) => {
+              const isOpen = openFaqIdx === idx;
+              return (
+                <div key={idx} className="border-b border-[#1A1615]/10 pb-4">
+                  <button
+                    onClick={() => setOpenFaqIdx(isOpen ? null : idx)}
+                    className="w-full flex justify-between items-center text-left py-3 font-serif text-lg font-bold text-[#2F403E] hover:text-primary transition-colors focus:outline-none"
+                  >
+                    <span>{item.q}</span>
+                    <span className="material-symbols-outlined transition-transform duration-300 transform" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                      keyboard_arrow_down
+                    </span>
+                  </button>
+                  <div
+                    className="transition-all duration-300 overflow-hidden"
+                    style={{ maxHeight: isOpen ? '200px' : '0px', opacity: isOpen ? 1 : 0 }}
+                  >
+                    <p className="font-navigation text-sm text-[#1A1615]/75 leading-relaxed pt-2 pb-1 font-normal">
+                      {item.a}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

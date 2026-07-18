@@ -648,6 +648,35 @@ export default function ExperienceDetail({
         console.error(err);
       }
     }
+
+    // Trigger GA4 and Meta Pixel Purchase Conversion Events
+    try {
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'purchase', {
+          transaction_id: code,
+          value: totalPrice,
+          currency: 'MXN',
+          items: [{
+            item_id: packageId,
+            item_name: activeData?.title || `Tour ${packageId}`,
+            quantity: numGuests,
+            price: numGuests > 0 ? (totalPrice / numGuests) : totalPrice
+          }]
+        });
+      }
+      if (typeof window.fbq === 'function') {
+        window.fbq('track', 'Purchase', {
+          value: totalPrice,
+          currency: 'MXN',
+          content_name: activeData?.title || `Tour ${packageId}`,
+          content_ids: [packageId],
+          content_type: 'product',
+          num_items: numGuests
+        });
+      }
+    } catch (trackError) {
+      console.warn("Analytics tracking failed:", trackError);
+    }
   };
 
   const handleSimulatePayment = (method) => {
