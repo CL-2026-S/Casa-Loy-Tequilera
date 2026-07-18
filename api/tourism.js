@@ -1,4 +1,4 @@
-import { supabase } from './_utils/clients.js';
+import { supabase, authorizeInternal } from './_utils/clients.js';
 import { sendBookingEmail } from './_utils/emails.js';
 
 const getCurrentGuadalajaraTime = () => {
@@ -162,6 +162,16 @@ export default async function handler(req, res) {
 
     if (!action) {
       return res.status(400).json({ error: 'Action parameter is required.' });
+    }
+
+    // Security Check: Enforce authorization for all admin mutations (actions other than create_booking and resend_email)
+    if (action !== 'create_booking' && action !== 'resend_email') {
+      if (!authorizeInternal(req)) {
+        return res.status(401).json({ 
+          error: 'UNAUTHORIZED', 
+          message: 'No tienes autorización para realizar esta acción administrativa.' 
+        });
+      }
     }
 
     try {

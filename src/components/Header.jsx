@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export default function Header({ lang, setLang, t, page, setPage }) {
   const [scrolled, setScrolled] = useState(false);
@@ -60,11 +61,9 @@ export default function Header({ lang, setLang, t, page, setPage }) {
         {/* Mobile Navbar Layout */}
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop h-full flex xl:hidden justify-between items-center w-full">
           {/* Mobile Brand Logo */}
-          <button
-            onClick={() => {
-              setPage("home");
-              setMobileMenuOpen(false);
-            }}
+          <Link
+            to="/"
+            onClick={() => setMobileMenuOpen(false)}
             className="flex items-center h-full"
           >
             <img
@@ -76,12 +75,12 @@ export default function Header({ lang, setLang, t, page, setPage }) {
               }`}
               src={isDarkHeroPage && !scrolled ? "/Logotipo Casa Loy Tequilera Color Blanco.png" : "/Logotipo Casa Loy Tequilera.png"}
             />
-          </button>
+          </Link>
 
           {/* Mobile Actions (Where to Buy and Hamburger) */}
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => setPage("where-to-buy")}
+            <Link
+              to="/donde-comprar"
               className={`h-9 px-4 font-label-caps text-[10px] uppercase tracking-[0.15em] transition-all duration-300 shadow-sm font-semibold whitespace-nowrap text-center flex items-center justify-center rounded-none active:scale-[0.98] ${
                 isDarkHeroPage && !scrolled
                   ? "bg-white text-[#1c1c18] hover:bg-primary hover:text-white"
@@ -89,7 +88,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
               }`}
             >
               {t.nav.whereToBuy}
-            </button>
+            </Link>
 
             <button
               onClick={() => setMobileMenuOpen(true)}
@@ -108,8 +107,8 @@ export default function Header({ lang, setLang, t, page, setPage }) {
         <div className="max-w-[1440px] mx-auto px-6 lg:px-10 h-full hidden xl:grid grid-cols-[1.3fr_1.1fr_1.4fr_1.1fr_1.1fr_1.8fr_0.8fr_1.4fr] gap-x-6 items-center justify-items-center">
           
           {/* Column 1: Logotipo Casa Loy */}
-          <button
-            onClick={() => setPage("home")}
+          <Link
+            to="/"
             className="flex items-center justify-center hover:opacity-85 transition-opacity"
           >
             <img
@@ -121,52 +120,52 @@ export default function Header({ lang, setLang, t, page, setPage }) {
               } ${scrolled ? "h-[58px]" : "h-[68px]"}`}
               src={isDarkHeroPage && !scrolled ? "/Logotipo Casa Loy Tequilera Color Blanco.png" : "/Logotipo Casa Loy Tequilera.png"}
             />
-          </button>
+          </Link>
 
           {/* Column 2: Quiénes Somos */}
-          <button
-            onClick={() => setPage("about")}
+          <Link
+            to="/quienes-somos"
             className={getLinkClass("about")}
           >
             {t.nav.about}
             <span className={getUnderlineClass("about")} />
-          </button>
+          </Link>
 
           {/* Column 3: Desarrolla tu Marca */}
-          <button
-            onClick={() => setPage("maquilas")}
+          <Link
+            to="/maquilas"
             className={getLinkClass("maquilas")}
           >
             {t.nav.bottling}
             <span className={getUnderlineClass("maquilas")} />
-          </button>
+          </Link>
 
           {/* Column 4: Nuestras Marcas */}
-          <button
-            onClick={() => setPage("brands")}
+          <Link
+            to="/marcas"
             className={getLinkClass("brands")}
           >
             {t.nav.brands}
             <span className={getUnderlineClass("brands")} />
-          </button>
+          </Link>
 
           {/* Column 5: Experiencias */}
-          <button
-            onClick={() => setPage("turismo")}
+          <Link
+            to="/turismo"
             className={getLinkClass("turismo")}
           >
             {t.nav.tourism}
             <span className={getUnderlineClass("turismo")} />
-          </button>
+          </Link>
 
           {/* Column 6: Restaurante 1937 Nativo */}
-          <button
-            onClick={() => setPage("nativo")}
+          <Link
+            to="/nativo"
             className={getLinkClass("nativo")}
           >
             {t.nav.nativo}
             <span className={getUnderlineClass("nativo")} />
-          </button>
+          </Link>
 
           {/* Column 7: Selector de idioma ES / EN */}
           <div className="flex items-center gap-2 font-navigation text-[clamp(9.5px,0.65vw,12px)] tracking-widest font-semibold select-none whitespace-nowrap">
@@ -200,8 +199,8 @@ export default function Header({ lang, setLang, t, page, setPage }) {
           </div>
 
           {/* Column 8: Botón Dónde Comprar */}
-          <button
-            onClick={() => setPage("where-to-buy")}
+          <Link
+            to="/donde-comprar"
             className={`h-10 px-5 font-label-caps text-[clamp(9px,0.7vw,11px)] uppercase tracking-[0.18em] transition-all duration-300 shadow-sm font-semibold whitespace-nowrap text-center flex items-center justify-center rounded-none active:scale-[0.98] ${
               isDarkHeroPage && !scrolled
                 ? "bg-white text-[#1c1c18] hover:bg-primary hover:text-white"
@@ -209,7 +208,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
             }`}
           >
             {t.nav.whereToBuy}
-          </button>
+          </Link>
         </div>
       </header>
 
@@ -229,11 +228,9 @@ export default function Header({ lang, setLang, t, page, setPage }) {
           {/* Drawer Top */}
           <div className="space-y-8">
             <div className="flex justify-between items-center">
-              <button
-                onClick={() => {
-                  setPage("home");
-                  setMobileMenuOpen(false);
-                }}
+              <Link
+                to="/"
+                onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center"
               >
                 <img
@@ -241,7 +238,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
                   className="h-10 w-auto object-contain"
                   src="/Logotipo Casa Loy Tequilera.png"
                 />
-              </button>
+              </Link>
               <button
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-surface-container-high/40 text-on-surface transition-colors"
@@ -252,61 +249,51 @@ export default function Header({ lang, setLang, t, page, setPage }) {
 
             {/* Mobile Navigation Links */}
             <nav className="flex flex-col gap-5 pt-8 text-left">
-              <button
-                onClick={() => {
-                  setPage("about");
-                  setMobileMenuOpen(false);
-                }}
+              <Link
+                to="/quienes-somos"
+                onClick={() => setMobileMenuOpen(false)}
                 className={`font-navigation text-navigation text-left py-1 transition-colors duration-300 ${
                   page === "about" ? "text-primary font-semibold" : "text-[#1c1c18] hover:text-primary"
                 }`}
               >
                 {t.nav.about}
-              </button>
-              <button
-                onClick={() => {
-                  setPage("maquilas");
-                  setMobileMenuOpen(false);
-                }}
+              </Link>
+              <Link
+                to="/maquilas"
+                onClick={() => setMobileMenuOpen(false)}
                 className={`font-navigation text-navigation text-left py-1 transition-colors duration-300 ${
                   page === "maquilas" ? "text-primary font-semibold" : "text-[#1c1c18] hover:text-primary"
                 }`}
               >
                 {t.nav.bottling}
-              </button>
-              <button
-                onClick={() => {
-                  setPage("brands");
-                  setMobileMenuOpen(false);
-                }}
+              </Link>
+              <Link
+                to="/marcas"
+                onClick={() => setMobileMenuOpen(false)}
                 className={`font-navigation text-navigation text-left py-1 transition-colors duration-300 ${
                   page === "brands" ? "text-primary font-semibold" : "text-[#1c1c18] hover:text-primary"
                 }`}
               >
                 {t.nav.brands}
-              </button>
-              <button
-                onClick={() => {
-                  setPage("turismo");
-                  setMobileMenuOpen(false);
-                }}
+              </Link>
+              <Link
+                to="/turismo"
+                onClick={() => setMobileMenuOpen(false)}
                 className={`font-navigation text-navigation text-left py-1 transition-colors duration-300 ${
                   page === "turismo" ? "text-primary font-semibold" : "text-[#1c1c18] hover:text-primary"
                 }`}
               >
                 {t.nav.tourism}
-              </button>
-              <button
-                onClick={() => {
-                  setPage("nativo");
-                  setMobileMenuOpen(false);
-                }}
+              </Link>
+              <Link
+                to="/nativo"
+                onClick={() => setMobileMenuOpen(false)}
                 className={`font-navigation text-navigation text-left py-1 transition-colors duration-300 ${
                   page === "nativo" ? "text-primary font-semibold" : "text-[#1c1c18] hover:text-primary"
                 }`}
               >
                 {t.nav.nativo}
-              </button>
+              </Link>
             </nav>
           </div>
 
@@ -338,15 +325,13 @@ export default function Header({ lang, setLang, t, page, setPage }) {
                 ENGLISH
               </span>
             </div>
-            <button
-              onClick={() => {
-                setPage("where-to-buy");
-                setMobileMenuOpen(false);
-              }}
-              className="w-full bg-primary text-white py-4 font-label-caps text-[10px] uppercase tracking-[0.25em] transition-all duration-300 hover:bg-[#914b27]"
+            <Link
+              to="/donde-comprar"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full bg-primary text-white py-4 font-label-caps text-[10px] uppercase tracking-[0.25em] transition-all duration-300 hover:bg-[#914b27] block text-center"
             >
               {t.nav.whereToBuy}
-            </button>
+            </Link>
           </div>
         </div>
       </div>

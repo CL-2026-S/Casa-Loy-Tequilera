@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Footer({ lang = "es", setPage }) {
   const [email, setEmail] = useState("");
@@ -146,15 +147,15 @@ export default function Footer({ lang = "es", setPage }) {
               {t.desc}
             </p>
             <div className="pt-2">
-              <button
-                onClick={() => setPage("about")}
+              <Link
+                to="/quienes-somos"
                 className="group inline-flex items-center gap-3 font-navigation text-[12px] font-semibold text-[#8C4723] hover:text-[#2F403E] transition-colors duration-300 uppercase tracking-widest focus:outline-none"
               >
                 <span>{t.aboutCTA}</span>
                 <span className="material-symbols-outlined text-sm font-light group-hover:translate-x-1.5 transition-transform duration-300">
                   arrow_right_alt
                 </span>
-              </button>
+              </Link>
             </div>
           </div>
 
@@ -164,22 +165,37 @@ export default function Footer({ lang = "es", setPage }) {
               {t.portfolioTitle}
             </h4>
             <ul className="space-y-3 font-navigation text-[13.5px] font-medium text-[#1A1615]/80">
-              {t.brands.map((link, idx) => (
-                <li key={idx}>
-                  {link.external ? (
-                    <span className="text-[#1A1615]/50 block select-none cursor-default">
-                      {link.name}
-                    </span>
-                  ) : (
-                    <button
-                      onClick={() => setPage(link.page)}
-                      className="hover:text-[#8C4723] transition-colors duration-300 block text-left focus:outline-none cursor-pointer"
-                    >
-                      {link.name}
-                    </button>
-                  )}
-                </li>
-              ))}
+              {t.brands.map((link, idx) => {
+                const getPageRoute = (p) => {
+                  if (p === "maquilas") return "/maquilas";
+                  if (p === "turismo") return "/turismo";
+                  if (p === "nativo") return "/nativo";
+                  if (p === "blog") return "/blog";
+                  if (p === "careers") return "/bolsa-de-trabajo";
+                  return "/";
+                };
+                return (
+                  <li key={idx}>
+                    {link.external ? (
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-[#8C4723] text-[#1A1615]/80 transition-colors duration-300 block text-left cursor-pointer"
+                      >
+                        {link.name}
+                      </a>
+                    ) : (
+                      <Link
+                        to={getPageRoute(link.page)}
+                        className="hover:text-[#8C4723] transition-colors duration-300 block text-left cursor-pointer"
+                      >
+                        {link.name}
+                      </Link>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
@@ -299,12 +315,12 @@ export default function Footer({ lang = "es", setPage }) {
 
               <span className="font-navigation text-[9.5px] text-[#1A1615]/50 leading-relaxed font-normal block">
                 {t.newsletterDisclaimer}
-                <button
-                  onClick={() => setPage("privacy")}
+                <Link
+                  to="/politica-de-privacidad"
                   className="text-[#8C4723] hover:text-[#2F403E] transition-colors duration-300 underline underline-offset-2 focus:outline-none cursor-pointer"
                 >
                   {t.privacyLinkText}
-                </button>
+                </Link>
                 .
               </span>
             </div>
@@ -327,6 +343,12 @@ export default function Footer({ lang = "es", setPage }) {
                   </span>
                 );
               }
+              const getLegalRoute = (p) => {
+                if (p === "privacy") return "/politica-de-privacidad";
+                if (p === "cookies") return "/politica-de-cookies";
+                if (p === "terms") return "/terminos-y-condiciones";
+                return "/";
+              };
               return link.external ? (
                 <a
                   key={idx}
@@ -338,13 +360,13 @@ export default function Footer({ lang = "es", setPage }) {
                   {link.name}
                 </a>
               ) : (
-                <button
+                <Link
                   key={idx}
-                  onClick={() => setPage(link.page)}
+                  to={getLegalRoute(link.page)}
                   className="hover:text-[#8C4723] transition-colors duration-300 uppercase tracking-widest focus:outline-none cursor-pointer"
                 >
                   {link.name}
-                </button>
+                </Link>
               );
             })}
           </div>

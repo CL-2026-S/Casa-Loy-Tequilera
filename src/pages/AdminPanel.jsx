@@ -174,7 +174,10 @@ export default function AdminPanel({
     try {
       const res = await fetch("/api/tourism", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${import.meta.env.VITE_API_SECRET_KEY || 'dev_secret_key'}`
+        },
         body: JSON.stringify({
           action: shouldBlock ? "block_dates" : "unblock_dates",
           dates
@@ -226,7 +229,10 @@ export default function AdminPanel({
 
       const res = await fetch("/api/tourism", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${import.meta.env.VITE_API_SECRET_KEY || 'dev_secret_key'}`
+        },
         body: JSON.stringify({
           action: "bulk_set_occupancy",
           slotOverrides
@@ -252,7 +258,10 @@ export default function AdminPanel({
     try {
       const res = await fetch("/api/tourism", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${import.meta.env.VITE_API_SECRET_KEY || 'dev_secret_key'}`
+        },
         body: JSON.stringify({
           action: "set_capacity",
           capacity: maxCapacityLimit
@@ -364,7 +373,10 @@ export default function AdminPanel({
     try {
       const res = await fetch("/api/tourism", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${import.meta.env.VITE_API_SECRET_KEY || 'dev_secret_key'}`
+        },
         body: JSON.stringify({
           action: "validate_ticket",
           code: searchedTicket.code
@@ -772,7 +784,10 @@ export default function AdminPanel({
                                 try {
                                   const res = await fetch("/api/tourism", {
                                     method: "POST",
-                                    headers: { "Content-Type": "application/json" },
+                                    headers: { 
+                                      "Content-Type": "application/json",
+                                      "Authorization": `Bearer ${import.meta.env.VITE_API_SECRET_KEY || 'dev_secret_key'}`
+                                    },
                                     body: JSON.stringify({ action: "unblock_dates", dates: [dateStr] })
                                   });
                                   if (res.ok) {

@@ -2,11 +2,15 @@ import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 
 // Initialize Supabase Client
-const supabaseUrl = process.env.SUPABASE_URL || 'https://skftswhrzbekjkrcfffb.supabase.co';
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNrZnRzd2hyemJla2prcmNmZmZiIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MTU3MzQ0NSwiZXhwIjoyMDk3MTQ5NDQ1fQ.JCJj2naXLlhnkeJLlJjm-toLHghEfTmIiN-hxx-CRkc';
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 // Check if the keys are valid (and not placeholder templates)
 const isSupabaseValid = supabaseUrl && supabaseServiceKey && supabaseServiceKey.startsWith('eyJ');
+if (!isSupabaseValid) {
+  console.warn("Supabase credentials not configured or invalid in environment variables.");
+}
+
 export const supabase = isSupabaseValid 
   ? createClient(supabaseUrl, supabaseServiceKey, {
       auth: {
@@ -17,8 +21,12 @@ export const supabase = isSupabaseValid
   : null;
 
 // Initialize Resend Client (Resend keys usually start with 're_')
-const resendApiKey = process.env.RESEND_API_KEY || 're_QRNSi3Pz_CyDrLXo78jB1qjdgCevpVYq8';
+const resendApiKey = process.env.RESEND_API_KEY;
 const isResendValid = resendApiKey && resendApiKey.startsWith('re_');
+if (!isResendValid) {
+  console.warn("Resend API Key not configured or invalid in environment variables.");
+}
+
 export const resend = isResendValid ? new Resend(resendApiKey) : null;
 
 // Helper to check authorization for internal calls (like welcome email called from subscribe)

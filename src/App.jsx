@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import { Routes, Route, Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import { translations } from "./data/translations";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import NewsletterPopup from "./components/NewsletterPopup";
 import AgeGatePremium from "./components/AgeGatePremium";
+import SEO from "./components/SEO";
 
 // Pages
 import Home from "./pages/Home";
@@ -31,19 +33,107 @@ import AdminPanel from "./pages/AdminPanel";
 export default function App() {
   const [hasBypass, setHasBypass] = useState(true); // Teaser retirado - sitio activo
   const [lang, setLang] = useState("es"); // Default language set to Spanish (ES)
-  const [page, setPage] = useState(() => {
-    const path = window.location.pathname;
-    if (path === "/editorial-preview" || path === "/editorial-preview/") {
-      return "editorial-preview";
-    }
-    if (path === "/privacy-policy" || path === "/privacy-policy/") {
-      return "privacy";
-    }
-    if (path === "/panel" || path === "/panel/") {
-      return "panel";
-    }
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Derive the page state from the URL pathname to maintain backward compatibility
+  const getPageFromPath = (pathname) => {
+    if (pathname === "/" || pathname === "") return "home";
+    if (pathname === "/interactivo") return "home-interactive";
+    if (pathname === "/quienes-somos") return "about";
+    if (pathname === "/maquilas") return "maquilas";
+    if (pathname === "/marcas") return "brands";
+    if (pathname === "/turismo") return "turismo";
+    if (pathname === "/turismo/oro") return "experience-oro";
+    if (pathname === "/turismo/platino") return "experience-platino";
+    if (pathname === "/turismo/diamante") return "experience-diamante";
+    if (pathname === "/nativo") return "nativo";
+    if (pathname === "/donde-comprar") return "where-to-buy";
+    if (pathname === "/blog") return "blog";
+    if (pathname.startsWith("/blog/")) return "blog-post";
+    if (pathname === "/bolsa-de-trabajo") return "careers";
+    if (pathname.startsWith("/bolsa-de-trabajo/")) return "career-detail";
+    if (pathname === "/politica-de-privacidad") return "privacy";
+    if (pathname === "/politica-de-cookies") return "cookies";
+    if (pathname === "/terminos-y-condiciones") return "terms";
+    if (pathname === "/validar-ticket") return "validate-ticket";
+    if (pathname === "/panel") return "panel";
+    if (pathname === "/editorial-preview") return "editorial-preview";
     return "home";
-  }); // Navigation routing state
+  };
+  const page = getPageFromPath(location.pathname);
+
+  // setPage wrapper to push state changes using react-router navigation
+  const setPage = (targetPage) => {
+    switch (targetPage) {
+      case "home":
+        navigate("/");
+        break;
+      case "home-interactive":
+        navigate("/interactivo");
+        break;
+      case "about":
+        navigate("/quienes-somos");
+        break;
+      case "maquilas":
+        navigate("/maquilas");
+        break;
+      case "brands":
+        navigate("/marcas");
+        break;
+      case "turismo":
+        navigate("/turismo");
+        break;
+      case "experience-oro":
+        navigate("/turismo/oro");
+        break;
+      case "experience-platino":
+        navigate("/turismo/platino");
+        break;
+      case "experience-diamante":
+        navigate("/turismo/diamante");
+        break;
+      case "nativo":
+        navigate("/nativo");
+        break;
+      case "where-to-buy":
+        navigate("/donde-comprar");
+        break;
+      case "blog":
+        navigate("/blog");
+        break;
+      case "blog-post":
+        navigate("/blog/el-arte-de-la-cata");
+        break;
+      case "careers":
+        navigate("/bolsa-de-trabajo");
+        break;
+      case "career-detail":
+        navigate(`/bolsa-de-trabajo/${selectedJobId}`);
+        break;
+      case "privacy":
+        navigate("/politica-de-privacidad");
+        break;
+      case "cookies":
+        navigate("/politica-de-cookies");
+        break;
+      case "terms":
+        navigate("/terminos-y-condiciones");
+        break;
+      case "validate-ticket":
+        navigate("/validar-ticket");
+        break;
+      case "panel":
+        navigate("/panel");
+        break;
+      case "editorial-preview":
+        navigate("/editorial-preview");
+        break;
+      default:
+        navigate("/");
+    }
+  };
 
   const [selectedTour, setSelectedTour] = useState("oro");
   const [selectedJobId, setSelectedJobId] = useState("kam");
@@ -152,124 +242,15 @@ export default function App() {
     window.scrollTo(0, 0);
   }, [page, hasBypass]);
 
-  useEffect(() => {
-    if (!hasBypass) return;
-    if (page === "editorial-preview") {
-      window.history.pushState({}, "", "/editorial-preview");
-    } else if (page === "privacy") {
-      window.history.pushState({}, "", "/privacy-policy");
-    } else {
-      // Clear path back to root for other state-routed pages
-      window.history.pushState({}, "", "/");
-    }
-  }, [page, hasBypass]);
-
-
-  const renderPage = () => {
-    switch (page) {
-      case "home":
-        return <Home lang={lang} setPage={setPage} setLang={setLang} />;
-      case "editorial-preview":
-        return <Home lang={lang} setPage={setPage} setLang={setLang} />;
-      case "home-interactive":
-        return <HomeInteractive lang={lang} setPage={setPage} />;
-      case "about":
-        return <AboutUs t={t} lang={lang} setPage={setPage} />;
-      case "maquilas":
-        return <Maquilas t={t} lang={lang} />;
-      case "brands":
-        return <Brands t={t} lang={lang} />;
-      case "turismo":
-        return <Turismo lang={lang} setPage={setPage} selectedTour={selectedTour} setSelectedTour={setSelectedTour} />;
-      case "experience-oro":
-        return (
-          <ExperienceDetail
-            lang={lang}
-            packageId="oro"
-            setPage={setPage}
-            setSelectedTour={setSelectedTour}
-            maxCapacityLimit={maxCapacityLimit}
-            setMaxCapacityLimit={setMaxCapacityLimit}
-            blockedDates={blockedDates}
-            setBlockedDates={setBlockedDates}
-            bookingsCapacity={bookingsCapacity}
-            setBookingsCapacity={setBookingsCapacity}
-          />
-        );
-      case "experience-platino":
-        return (
-          <ExperienceDetail
-            lang={lang}
-            packageId="platino"
-            setPage={setPage}
-            setSelectedTour={setSelectedTour}
-            maxCapacityLimit={maxCapacityLimit}
-            setMaxCapacityLimit={setMaxCapacityLimit}
-            blockedDates={blockedDates}
-            setBlockedDates={setBlockedDates}
-            bookingsCapacity={bookingsCapacity}
-            setBookingsCapacity={setBookingsCapacity}
-          />
-        );
-      case "experience-diamante":
-        return (
-          <ExperienceDetail
-            lang={lang}
-            packageId="diamante"
-            setPage={setPage}
-            setSelectedTour={setSelectedTour}
-            maxCapacityLimit={maxCapacityLimit}
-            setMaxCapacityLimit={setMaxCapacityLimit}
-            blockedDates={blockedDates}
-            setBlockedDates={setBlockedDates}
-            bookingsCapacity={bookingsCapacity}
-            setBookingsCapacity={setBookingsCapacity}
-          />
-        );
-      case "nativo":
-        return <Nativo1937 t={t} lang={lang} />;
-      case "where-to-buy":
-        return <WhereToBuy t={t} lang={lang} />;
-      case "blog":
-        return <Blog setPage={setPage} t={t} lang={lang} />;
-      case "blog-post":
-        return <BlogPost lang={lang} setPage={setPage} />;
-      case "careers":
-        return <Careers lang={lang} setPage={setPage} setSelectedJobId={setSelectedJobId} />;
-      case "career-detail":
-        return <CareerDetail lang={lang} setPage={setPage} jobId={selectedJobId} />;
-      case "privacy":
-        return <PrivacyPolicy t={t} lang={lang} />;
-      case "cookies":
-        return <CookiePolicy t={t} lang={lang} />;
-      case "terms":
-        return <TermsConditions t={t} lang={lang} />;
-      case "validate-ticket":
-        return <ValidateTicket lang={lang} setPage={setPage} />;
-      case "panel":
-        return (
-          <AdminPanel
-            lang={lang}
-            setPage={setPage}
-            maxCapacityLimit={maxCapacityLimit}
-            setMaxCapacityLimit={setMaxCapacityLimit}
-            blockedDates={blockedDates}
-            setBlockedDates={setBlockedDates}
-            bookingsCapacity={bookingsCapacity}
-            setBookingsCapacity={setBookingsCapacity}
-            refreshData={fetchTourismData}
-          />
-        );
-      default:
-        return <Home lang={lang} setPage={setPage} setLang={setLang} />;
-    }
-  };
 
   const shouldShowAgeGate = !ageVerified && page !== "privacy";
 
   return (
     <PayPalScriptProvider options={{ "client-id": "ATvqpIUvCDHFIHEAzauNdAX4o2qPqT-971MgriMfcpZFNQV9_af-WWa0kHCZHwiGFGnnSe2bhK33JPsL", currency: "MXN" }}>
       <div className="bg-[#fcf9f3] text-[#1c1c18] font-body-md overflow-x-hidden antialiased select-none relative">
+        {/* Dynamic SEO Injector for Meta Tags and JSON-LD microdata */}
+        <SEO page={page} lang={lang} />
+
         <AnimatePresence>
           {shouldShowAgeGate && (
             <AgeGatePremium
@@ -284,7 +265,81 @@ export default function App() {
         <Header lang={lang} setLang={setLang} t={t} page={page} setPage={setPage} />
         
         <main className="min-h-screen">
-          {renderPage()}
+          <Routes>
+            <Route path="/" element={<Home lang={lang} setPage={setPage} setLang={setLang} />} />
+            <Route path="/editorial-preview" element={<Home lang={lang} setPage={setPage} setLang={setLang} />} />
+            <Route path="/interactivo" element={<HomeInteractive lang={lang} setPage={setPage} />} />
+            <Route path="/quienes-somos" element={<AboutUs t={t} lang={lang} setPage={setPage} />} />
+            <Route path="/maquilas" element={<Maquilas t={t} lang={lang} />} />
+            <Route path="/marcas" element={<Brands t={t} lang={lang} />} />
+            <Route path="/turismo" element={<Turismo lang={lang} setPage={setPage} selectedTour={selectedTour} setSelectedTour={setSelectedTour} />} />
+            <Route path="/turismo/oro" element={
+              <ExperienceDetail
+                lang={lang}
+                packageId="oro"
+                setPage={setPage}
+                setSelectedTour={setSelectedTour}
+                maxCapacityLimit={maxCapacityLimit}
+                setMaxCapacityLimit={setMaxCapacityLimit}
+                blockedDates={blockedDates}
+                setBlockedDates={setBlockedDates}
+                bookingsCapacity={bookingsCapacity}
+                setBookingsCapacity={setBookingsCapacity}
+              />
+            } />
+            <Route path="/turismo/platino" element={
+              <ExperienceDetail
+                lang={lang}
+                packageId="platino"
+                setPage={setPage}
+                setSelectedTour={setSelectedTour}
+                maxCapacityLimit={maxCapacityLimit}
+                setMaxCapacityLimit={setMaxCapacityLimit}
+                blockedDates={blockedDates}
+                setBlockedDates={setBlockedDates}
+                bookingsCapacity={bookingsCapacity}
+                setBookingsCapacity={setBookingsCapacity}
+              />
+            } />
+            <Route path="/turismo/diamante" element={
+              <ExperienceDetail
+                lang={lang}
+                packageId="diamante"
+                setPage={setPage}
+                setSelectedTour={setSelectedTour}
+                maxCapacityLimit={maxCapacityLimit}
+                setMaxCapacityLimit={setMaxCapacityLimit}
+                blockedDates={blockedDates}
+                setBlockedDates={setBlockedDates}
+                bookingsCapacity={bookingsCapacity}
+                setBookingsCapacity={setBookingsCapacity}
+              />
+            } />
+            <Route path="/nativo" element={<Nativo1937 t={t} lang={lang} />} />
+            <Route path="/donde-comprar" element={<WhereToBuy t={t} lang={lang} />} />
+            <Route path="/blog" element={<Blog setPage={setPage} t={t} lang={lang} />} />
+            <Route path="/blog/:slug" element={<BlogPost lang={lang} setPage={setPage} />} />
+            <Route path="/bolsa-de-trabajo" element={<Careers lang={lang} setPage={setPage} setSelectedJobId={setSelectedJobId} />} />
+            <Route path="/bolsa-de-trabajo/:jobId" element={<CareerDetailWrapper lang={lang} setPage={setPage} setSelectedJobId={setSelectedJobId} />} />
+            <Route path="/politica-de-privacidad" element={<PrivacyPolicy t={t} lang={lang} />} />
+            <Route path="/politica-de-cookies" element={<CookiePolicy t={t} lang={lang} />} />
+            <Route path="/terminos-y-condiciones" element={<TermsConditions t={t} lang={lang} />} />
+            <Route path="/validar-ticket" element={<ValidateTicket lang={lang} setPage={setPage} />} />
+            <Route path="/panel" element={
+              <AdminPanel
+                lang={lang}
+                setPage={setPage}
+                maxCapacityLimit={maxCapacityLimit}
+                setMaxCapacityLimit={setMaxCapacityLimit}
+                blockedDates={blockedDates}
+                setBlockedDates={setBlockedDates}
+                bookingsCapacity={bookingsCapacity}
+                setBookingsCapacity={setBookingsCapacity}
+                refreshData={fetchTourismData}
+              />
+            } />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
         </main>
 
         {/* Modern Watermarked Footer */}
@@ -308,4 +363,15 @@ export default function App() {
       </div>
     </PayPalScriptProvider>
   );
+}
+
+// CareerDetailWrapper to capture parameters from URL using useParams
+function CareerDetailWrapper({ lang, setPage, setSelectedJobId }) {
+  const { jobId } = useParams();
+  useEffect(() => {
+    if (jobId) {
+      setSelectedJobId(jobId);
+    }
+  }, [jobId, setSelectedJobId]);
+  return <CareerDetail lang={lang} setPage={setPage} jobId={jobId} />;
 }
