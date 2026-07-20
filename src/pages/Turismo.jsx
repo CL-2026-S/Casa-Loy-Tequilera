@@ -46,10 +46,10 @@ export default function Turismo({ lang, setPage }) {
 
   const localT = {
     es: {
-      overtitle: "Tradición y Excelencia",
-      titlePart1: "El Corazón del Tequila:",
-      titlePart2: "Una Experiencia de Origen",
-      subtitle: "Sumérgete en la maestría artesanal de nuestra tierra, donde el tiempo se detiene para honrar el legado del agave.",
+      overtitle: "Tours de Tequila en Los Altos de Jalisco",
+      titlePart1: "Experiencias Casa Loy Tequilera:",
+      titlePart2: "Visita a Destilería, Catas & Gastronomía",
+      subtitle: "Sumérgete en la maestría artesanal de nuestra tierra. Recorre los campos de agave azul, la destilería y vive una cata en cava subterránea con gastronomía en 1937 Nativo.",
       btnChooseTour: "elige tu tour",
       btnGastronomy: "disfruta de la GASTRONOMÍA",
       expOvertitle: "Nuestras Experiencias",
@@ -281,7 +281,7 @@ export default function Turismo({ lang, setPage }) {
                 activeT.tourOroBullet6,
               ],
               btnText: activeT.tourOroBtn,
-              img: "/Oro Experiencias.jpg"
+              img: "/Cata Experiencias.jpg"
             },
             {
               id: "platino",
@@ -297,7 +297,7 @@ export default function Turismo({ lang, setPage }) {
                 activeT.tourPlatinoBullet7,
               ],
               btnText: activeT.tourPlatinoBtn,
-              img: "/Platino Experiencias.jpg"
+              img: "/Recorrido Platino.jpg"
             },
             {
               id: "diamante",
@@ -313,7 +313,7 @@ export default function Turismo({ lang, setPage }) {
                 activeT.tourDiamanteBullet7,
               ],
               btnText: activeT.tourDiamanteBtn,
-              img: "/Cava de Añejamiento.jpg"
+              img: "/Diamante Experiencias.jpg"
             }
           ].map((exp) => (
             <div key={exp.id} className="group relative overflow-hidden shadow-lg h-[620px] cursor-pointer">

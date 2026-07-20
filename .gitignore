@@ -32,3 +32,4 @@ dist-ssr
 # Backup video and scratch files
 *-backup.mp4
 scratch_ffmpeg/
+scratch/

@@ -3,10 +3,10 @@ import React, { useEffect } from "react";
 const seoData = {
   es: {
     home: {
-      title: "Casa Loy Tequilera | Tequila 100% Agave Altos de Jalisco",
-      description: "Destilería mexicana premium especializada en la producción, desarrollo y comercialización de tequila 100% agave de los Altos de Jalisco. Tradición, innovación y capacidad operativa.",
-      ogTitle: "Casa Loy Tequilera - Tradición e Innovación en Tequila",
-      ogDesc: "Preservamos una herencia de excelencia dedicada al arte de crear tequila de ultra-lujo desde Jalisco, México.",
+      title: "Casa Loy Tequilera | Destilería, Maquila de Tequila B2B, Tours & Restaurante 1937 Nativo",
+      description: "Destilería mexicana premium en los Altos de Jalisco. Especialistas en Maquila de Tequila 100% Agave B2B, Tours Agaveros y Gastronomía de Autor en Restaurante 1937 Nativo.",
+      ogTitle: "Casa Loy Tequilera - Destilería, Maquila B2B, Tours & Gastronomía",
+      ogDesc: "Maquila de Tequila para marcas propias, experiencias turísticas en destilería y alta cocina en Restaurante 1937 Nativo.",
       ogImage: "/Casa Loy Tequilera.webp",
       schema: {
         "@context": "https://schema.org",
@@ -15,7 +15,7 @@ const seoData = {
             "@type": "Distillery",
             "@id": "https://casaloy.com/#distillery",
             "name": "Casa Loy Tequilera",
-            "description": "Destilería premium de tequila 100% agave en los Altos de Jalisco.",
+            "description": "Destilería premium de tequila 100% agave en los Altos de Jalisco ofreciendo servicios de Maquila B2B, Tours Agaveros y Gastronomía de Autor.",
             "image": "https://casaloy.com/Logotipo%20Casa%20Loy%20Tequilera.png",
             "address": {
               "@type": "PostalAddress",
@@ -55,7 +55,7 @@ const seoData = {
       ogImage: "/Casa Loy Tequilera Instalaciones.webp"
     },
     about: {
-      title: "Quiénes Somos | Historia y Herencia de Casa Loy",
+      title: "Quiénes Somos | Historia y Herencia de Casa Loy Tequilera",
       description: "Conoce el origen de Casa Loy Tequilera en Ayotlán, Jalisco. Nuestra historia familiar, el legado de Don Manuel Loy y el amor por la tierra del agave.",
       ogTitle: "Nuestra Historia - Casa Loy Tequilera",
       ogDesc: "Conoce la historia familiar y el legado agavero que da vida a nuestros tequilas premium.",
@@ -75,15 +75,15 @@ const seoData = {
       }
     },
     maquilas: {
-      title: "Desarrolla tu Marca | Maquila de Tequila Casa Loy",
-      description: "Ofrecemos servicios integrales de desarrollo de marcas privadas y maquila de tequila 100% agave. Hornos de mampostería, destilación experta y envasado.",
-      ogTitle: "Servicio de Maquila de Tequila Premium - Casa Loy",
-      ogDesc: "Lleva tu marca al mercado global con nuestra capacidad operativa y estándares de calidad internacional.",
+      title: "Maquila de Tequila 100% Agave & Marca Propia B2B | Casa Loy Tequilera",
+      description: "Servicios integrales de Maquila de Tequila 100% agave, envasado, desarrollo de marca privada (Private Label) y exportación internacional. Hornos de mampostería y certificación CRT.",
+      ogTitle: "Servicio de Maquila de Tequila B2B - Casa Loy Tequilera",
+      ogDesc: "Lleva tu marca al mercado global con nuestra capacidad operativa, certificación CRT y estándares internacionales.",
       ogImage: "/Molienda.webp",
       schema: {
         "@context": "https://schema.org",
         "@type": "Service",
-        "serviceType": "Maquila y Embotellado de Tequila",
+        "serviceType": "Maquila de Tequila B2B y Marca Propia",
         "provider": {
           "@type": "Organization",
           "name": "Casa Loy Tequilera"

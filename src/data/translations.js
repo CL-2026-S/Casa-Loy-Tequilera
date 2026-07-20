@@ -1,12 +1,12 @@
 export const translations = {
   es: {
     nav: {
-      home: "Home",
+      home: "Inicio",
       about: "Quiénes Somos",
-      bottling: "Desarrolla tu Marca",
+      bottling: "Maquila Tequila B2B",
       brands: "Nuestras Marcas",
-      tourism: "Experiencias",
-      nativo: "Restaurante 1937 Nativo",
+      tourism: "Tours & Experiencias",
+      nativo: "1937 Nativo Gastronomía",
       whereToBuy: "Dónde Comprar",
     },
     hero: {
@@ -85,10 +85,10 @@ export const translations = {
     nav: {
       home: "Home",
       about: "About Us",
-      bottling: "Develop your Brand",
+      bottling: "Private Label B2B",
       brands: "Our Brands",
-      tourism: "Experiences",
-      nativo: "Restaurante 1937 Nativo",
+      tourism: "Tours & Experiences",
+      nativo: "1937 Nativo Gastronomy",
       whereToBuy: "Where to Buy",
     },
     hero: {

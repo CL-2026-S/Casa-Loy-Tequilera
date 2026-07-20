@@ -105,10 +105,10 @@ export default function Maquilas({ lang = "es" }) {
 
   const content = {
     es: {
-      heroSub: "Desarrolla tu Marca",
-      heroTitle: "Tu marca, nuestra esencia.",
-      heroTitleItalic: "El arte de la Maquila con Legado.",
-      heroBtn: "Inicia tu Proyecto",
+      heroSub: "Destilería & Maquila Tequila B2B",
+      heroTitle: "Maquila de Tequila 100% Agave y Marca Propia",
+      heroTitleItalic: "Infraestructura, Certificación CRT y Exportación Global.",
+      heroBtn: "Cotizar Maquila B2B",
       
       quizOvertitle: "Quiz estratégico de 3 preguntas",
       quizTitle: "¿Qué tipo de proyecto buscas desarrollar?",
@@ -222,10 +222,10 @@ export default function Maquilas({ lang = "es" }) {
       scheduleBtn: "Agendar Consulta",
     },
     en: {
-      heroSub: "Develop your Brand",
-      heroTitle: "Your brand, our essence.",
-      heroTitleItalic: "The Art of Private Label with Legacy.",
-      heroBtn: "Start your Project",
+      heroSub: "Tequila Distillery & Private Label B2B",
+      heroTitle: "100% Agave Tequila Private Label & Bottling",
+      heroTitleItalic: "Infrastructure, CRT Certification & Global Export.",
+      heroBtn: "Get B2B Quote",
       
       quizOvertitle: "Strategic 3-Question Quiz",
       quizTitle: "What type of project are you looking to develop?",

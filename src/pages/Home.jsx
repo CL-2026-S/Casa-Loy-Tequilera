@@ -821,32 +821,32 @@ export default function Home({ lang = "es", setPage, setLang }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 w-full">
             {[
               {
-                title: currentLang === "es" ? "DESARROLLA TU MARCA" : "DEVELOP YOUR BRAND",
-                desc: currentLang === "es" ? "Maquila, diseño y proyectos estratégicos de tequila con la mayor infraestructura operativa." : "Private label, design, and strategic tequila projects backed by the largest operational capacity.",
+                title: currentLang === "es" ? "DESTILERÍA & MAQUILA B2B" : "DISTILLERY & PRIVATE LABEL B2B",
+                desc: currentLang === "es" ? "Maquila de tequila 100% agave, desarrollo de marca propia, envasado y exportación internacional." : "100% agave tequila contract manufacturing, private label development, bottling, and global export.",
                 img: "/Destilación.webp",
                 route: "maquilas",
-                cta: currentLang === "es" ? "Desarrolla Tu Marca" : "Develop Your Brand"
+                cta: currentLang === "es" ? "Cotizar Maquila Tequila" : "Get Maquila Quote"
+              },
+              {
+                title: currentLang === "es" ? "TOURS & EXPERIENCIA CASA LOY" : "CASA LOY TOURS & EXPERIENCES",
+                desc: currentLang === "es" ? "Recorridos guiados por campos de agave, destilería artesanal y catas sensoriales en cava subterránea." : "Guided tours through agave fields, artisanal distillery, and sensory tastings in underground cellars.",
+                img: "/Terraza Casa Loy Experiencias.webp",
+                route: "turismo",
+                cta: currentLang === "es" ? "Reservar Tour de Tequila" : "Book Tequila Tour"
+              },
+              {
+                title: currentLang === "es" ? "1937 NATIVO GASTRONOMÍA" : "1937 NATIVO GASTRONOMY",
+                desc: currentLang === "es" ? "Alta cocina mexicana a las brasas, maridaje con tequilas premium y mixología de autor." : "High-end Mexican wood-fired cuisine, premium tequila pairings, and conceptual mixology.",
+                img: "/Restaurante 1937 Nativo.webp",
+                route: "nativo",
+                cta: currentLang === "es" ? "Reservar Mesa en 1937 Nativo" : "Reserve Table at 1937 Nativo"
               },
               {
                 title: currentLang === "es" ? "PORTAFOLIO DE MARCAS" : "BRAND PORTFOLIO",
-                desc: currentLang === "es" ? "El agave resguardado en su máxima pureza a través de nuestras expresiones selectas." : "Agave preserved in its maximum purity through our select brand portfolio.",
+                desc: currentLang === "es" ? "El agave resguardado en su máxima pureza a través de nuestras expresiones selectas de la casa." : "Agave preserved in its maximum purity through our select house brand portfolio.",
                 img: "/Añejamiento.webp",
                 route: "brands",
                 cta: currentLang === "es" ? "Explorar Marcas" : "Explore Brands"
-              },
-              {
-                title: currentLang === "es" ? "VIVE EL ORIGEN" : "LIVE THE ORIGIN",
-                desc: currentLang === "es" ? "Recorra los campos donde nace la leyenda y descubra los secretos de nuestra destilación." : "Walk the fields where the legend is born and discover the secrets of our distillation.",
-                img: "/Terraza Casa Loy Experiencias.webp",
-                route: "turismo",
-                cta: currentLang === "es" ? "Reservar Experiencia" : "Book Experience"
-              },
-              {
-                title: currentLang === "es" ? "SABOREA EL LEGADO" : "SAVOR THE LEGACY",
-                desc: currentLang === "es" ? "Cocina contemporánea y mixología de autor maridadas en el corazón de nuestra destilería." : "Contemporary cuisine and signature mixology paired in the heart of our distillery.",
-                img: "/Restaurante 1937 Nativo.webp",
-                route: "nativo",
-                cta: currentLang === "es" ? "Reservar Mesa" : "Book Table"
               }
             ].map((sol, index) => (
               <Reveal key={sol.title} delay={index * 150} duration={1000} className="w-full">

@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Casa Loy Tequilera - Framework del Sitio & Manual de Estilo Visual</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 16mm 14mm 18mm 14mm;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      color: #1C1C18;
+      background-color: #FFFFFF;
+      margin: 0;
+      padding: 0;
+      font-size: 9.5pt;
+      line-height: 1.55;
+    }
+
+    .page-break {
+      page-break-after: always;
+      break-after: page;
+    }
+
+    .avoid-break {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* Cover Page */
+    .cover-container {
+      height: 265mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 45px;
+      background-color: #1A1615;
+      color: #F6F2EA;
+      border: 10px solid #8C4723;
+      position: relative;
+    }
+
+    .cover-top {
+      border-bottom: 2px solid #855C37;
+      padding-bottom: 20px;
+    }
+
+    .cover-brand-sub {
+      font-size: 9pt;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: #855C37;
+      margin: 0 0 12px 0;
+      font-weight: 600;
+    }
+
+    .cover-brand-title {
+      font-family: 'EB Garamond', serif;
+      font-size: 42pt;
+      font-weight: 400;
+      color: #F6F2EA;
+      margin: 0;
+      line-height: 1.05;
+      letter-spacing: -1px;
+    }
+
+    .cover-middle {
+      margin: 50px 0;
+    }
+
+    .doc-badge {
+      display: inline-block;
+      background-color: #8C4723;
+      color: #FFFFFF;
+      font-size: 8.5pt;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 7px 18px;
+      border-radius: 2px;
+      margin-bottom: 25px;
+    }
+
+    .cover-doc-h1 {
+      font-family: 'EB Garamond', serif;
+      font-size: 30pt;
+      color: #EDE7DE;
+      margin: 0 0 18px 0;
+      line-height: 1.15;
+    }
+
+    .cover-desc {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10.5pt;
+      font-weight: 300;
+      color: #D3E6E3;
+      line-height: 1.75;
+      max-width: 92%;
+    }
+
+    .cover-bottom {
+      border-top: 1px solid rgba(237, 231, 222, 0.25);
+      padding-top: 22px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 8.5pt;
+      color: #EDE7DE;
+    }
+
+    /* Standard Header & Titles */
+    .doc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1.5px solid #8C4723;
+      padding-bottom: 8px;
+      margin-bottom: 22px;
+    }
+
+    .doc-header-title {
+      font-family: 'EB Garamond', serif;
+      font-size: 14pt;
+      font-weight: 600;
+      color: #7D3F0F;
+    }
+
+    .doc-header-meta {
+      font-size: 7.5pt;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #53443A;
+    }
+
+    h1.section-title {
+      font-family: 'EB Garamond', serif;
+      font-size: 22pt;
+      color: #7D3F0F;
+      border-bottom: 2px solid #8C4723;
+      padding-bottom: 6px;
+      margin-top: 24px;
+      margin-bottom: 16px;
+    }
+
+    h2.subsection-title {
+      font-family: 'EB Garamond', serif;
+      font-size: 15pt;
+      color: #2F403E;
+      margin-top: 18px;
+      margin-bottom: 10px;
+      border-left: 4px solid #855C37;
+      padding-left: 10px;
+    }
+
+    h3.sub-subsection-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10pt;
+      font-weight: 600;
+      color: #1C1C18;
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 12px;
+      text-align: justify;
+    }
+
+    /* Tables */
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 20px 0;
+      font-size: 8.5pt;
+    }
+
+    table.data-table th {
+      background-color: #2F403E;
+      color: #FFFFFF;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 9px 11px;
+      text-align: left;
+      border: 1px solid #2F403E;
+    }
+
+    table.data-table td {
+      padding: 8px 11px;
+      border: 1px solid #EDE7DE;
+      vertical-align: top;
+    }
+
+    table.data-table tr:nth-child(even) {
+      background-color: #FCF9F3;
+    }
+
+    /* Color Palette Grid */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 14px 0 20px 0;
+    }
+
+    .color-card {
+      border: 1px solid #E5E2DC;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #FFFFFF;
+    }
+
+    .color-swatch {
+      height: 48px;
+      width: 100%;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .color-info {
+      padding: 7px 9px;
+    }
+
+    .color-name {
+      font-weight: 700;
+      font-size: 9pt;
+      color: #1C1C18;
+      margin-bottom: 2px;
+    }
+
+    .color-var {
+      font-family: monospace;
+      font-size: 7pt;
+      color: #53443A;
+      background: #F0EEE8;
+      padding: 1px 4px;
+      border-radius: 2px;
+      display: inline-block;
+      margin-bottom: 3px;
+    }
+
+    .color-hex {
+      font-size: 8pt;
+      color: #7D3F0F;
+      font-weight: 600;
+    }
+
+    /* Typography Samples */
+    .type-sample-box {
+      background: #FCF9F3;
+      border: 1px solid #D9C2B6;
+      border-left: 4px solid #8C4723;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      border-radius: 2px;
+    }
+
+    .type-label {
+      font-size: 7.5pt;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #8C4723;
+      margin-bottom: 4px;
+    }
+
+    .type-display-hero {
+      font-family: 'EB Garamond', serif;
+      font-size: 24pt;
+      line-height: 1.1;
+      font-weight: 400;
+      color: #1C1C18;
+    }
+
+    .type-headline-lg {
+      font-family: 'EB Garamond', serif;
+      font-size: 19pt;
+      line-height: 1.2;
+      font-weight: 400;
+      color: #7D3F0F;
+    }
+
+    .type-headline-md {
+      font-family: 'EB Garamond', serif;
+      font-size: 14.5pt;
+      line-height: 1.3;
+      font-weight: 500;
+      color: #2F403E;
+    }
+
+    .type-body-lg {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9.5pt;
+      line-height: 1.6;
+      font-weight: 300;
+      color: #1C1C18;
+    }
+
+    .type-navigation {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 8pt;
+      letter-spacing: 1.5px;
+      font-weight: 500;
+      text-transform: uppercase;
+      color: #7D3F0F;
+    }
+
+    .type-label-caps {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 7.5pt;
+      letter-spacing: 2.2px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #596B69;
+    }
+
+    /* Callouts & Highlights */
+    .callout-box {
+      background-color: #F6F2EA;
+      border-left: 4px solid #2F403E;
+      padding: 10px 14px;
+      margin: 12px 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .callout-title {
+      font-weight: 700;
+      color: #2F403E;
+      margin-bottom: 4px;
+      font-size: 9pt;
+    }
+
+    .code-block {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #1C1C18;
+      color: #F3F0EA;
+      padding: 9px 12px;
+      border-radius: 3px;
+      font-size: 7.8pt;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      margin: 8px 0;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      font-size: 7pt;
+      font-weight: 700;
+      border-radius: 3px;
+      text-transform: uppercase;
+    }
+
+    .badge-primary { background: #8C4723; color: #FFF; }
+    .badge-secondary { background: #2F403E; color: #FFF; }
+    .badge-outline { border: 1px solid #8C4723; color: #8C4723; }
+
+    ul, ol {
+      margin-top: 0;
+      margin-bottom: 12px;
+      padding-left: 18px;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PORTADA -->
+  <div class="cover-container page-break">
+    <div class="cover-top">
+      <p class="cover-brand-sub">Manual de Identidad & Sistema Web</p>
+      <h1 class="cover-brand-title">Casa Loy Tequilera</h1>
+    </div>
+
+    <div class="cover-middle">
+      <span class="doc-badge">Especificación Técnica & Guía de Diseño</span>
+      <h2 class="cover-doc-h1">Framework del Sitio Web,<br>Sistema de Tokens y Lineamientos</h2>
+      <p class="cover-desc">
+        Documentación integral de la arquitectura frontend, sistema visual, paleta de colores Material 3 & Tailwind, escala tipográfica, catálogo de componentes UI, patrones de interacción y normativas legales para la plataforma web de Casa Loy Tequilera.
+      </p>
+    </div>
+
+    <div class="cover-bottom">
+      <div><strong>Versión:</strong> 2.0 (Producción Activa)</div>
+      <div><strong>Tecnología:</strong> React 18 + Tailwind CSS v4 + Vite</div>
+      <div><strong>Estado:</strong> Oficial / Publicado</div>
+    </div>
+  </div>
+
+  <!-- PÁGINA 2: RESUMEN Y ARQUITECTURA -->
+  <div class="doc-header">
+    <span class="doc-header-title">Casa Loy Tequilera — Framework & Manual de Estilo</span>
+    <span class="doc-header-meta">Sección 1: Arquitectura y Filosofía</span>
+  </div>
+
+  <h1 class="section-title">1. Resumen Ejecutivo y Filosofía del Sitio</h1>
+
+  <p>
+    El sitio web de <strong>Casa Loy Tequilera</strong> ha sido diseñado como un portal digital ultra-premium que fusiona la tradición tequilera de Jalisco con los más altos estándares de diseño interactivo contemporáneo. La arquitectura visual busca transmitir sofisticación, autenticidad artesanal, herencia cultural y elegancia mediante una paleta de colores inspirada en la tierra, la piedra volcánica y el agave azul.
+  </p>
+
+  <div class="callout-box">
+    <div class="callout-title">Principios Fundamentales de Diseño Visual</div>
+    <ul>
+      <li><strong>Estética Neoclásica-Artesanal:</strong> Tipografía serif sofisticada (EB Garamond / Cormorant Garamond) para titulares principales, evocando tradición editorial.</li>
+      <li><strong>Interactividad Fluida (Glassmorphism & Micro-animaciones):</strong> Navegación traslúcida con desenfoque de fondo (blur) y transiciones suavizadas por curvas Bézier.</li>
+      <li><strong>Experiencia de Lujo Adaptativa:</strong> Maquetación responsive basada en rejilla flexible, accesibilidad WCAG y cumplimiento de normas legales para bebidas alcohólicas.</li>
+    </ul>
+  </div>
+
+  <h2 class="subsection-title">1.1 Stack Tecnológico del Framework</h2>
+  <p>
+    La aplicación está construida sobre una arquitectura modular moderna centrada en velocidad de carga, escalabilidad y flexibilidad estilística:
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Capa / Componente</th>
+        <th>Tecnología / Librería</th>
+        <th>Propósito e Integración</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Core Framework</strong></td>
+        <td>React 18 + Vite</td>
+        <td>Renderizado ultra-rápido, arquitectura basada en componentes y recarga en tiempo real.</td>
+      </tr>
+      <tr>
+        <td><strong>Sistema de Estilos</strong></td>
+        <td>Tailwind CSS v4 + PostCSS</td>
+        <td>Definición de tokens visuales globales vía <code>@theme</code> en <code>index.css</code> y <code>tailwind.config.js</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>Animaciones UI</strong></td>
+        <td>Framer Motion</td>
+        <td>Transiciones de página, apertura de modales, efectos de presencia y micro-interacciones.</td>
+      </tr>
+      <tr>
+        <td><strong>Enrutamiento Bilingüe</strong></td>
+        <td>React Router DOM v6</td>
+        <td>Rutas dinámicas mapeadas para soporte simultáneo en Español (<code>/quienes-somos</code>) e Inglés (<code>/about</code>).</td>
+      </tr>
+      <tr>
+        <td><strong>Base de Datos y Backend</strong></td>
+        <td>Supabase DB + Edge Functions</td>
+        <td>Gestión de Puntos de Venta, registros de validación de tickets y suscripciones a newsletter.</td>
+      </tr>
+      <tr>
+        <td><strong>Pasarela de Pago</strong></td>
+        <td>PayPal JS SDK</td>
+        <td>Procesamiento seguro de reservaciones de experiencias turísticas (Oro, Platino, Diamante).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-break"></div>
+
+  <!-- PÁGINA 3: SISTEMA DE COLORES -->
+  <div class="doc-header">
+    <span class="doc-header-title">Casa Loy Tequilera — Framework & Manual de Estilo</span>
+    <span class="doc-header-meta">Sección 2: Paleta de Colores</span>
+  </div>
+
+  <h1 class="section-title">2. Sistema de Colores (Color Palette Tokens)</h1>
+
+  <p>
+    El sistema de color se estructura en dos capas: <strong>Colores Emblema de Marca</strong> (inspirados en el terruño, agave y cobre) y el <strong>Sistema Material 3 Design Tokens</strong> (para superficies, contenedores, textos de alto y bajo contraste, y estados).
+  </p>
+
+  <h2 class="subsection-title">2.1 Colores Emblema de Marca (Brand Core Colors)</h2>
+  
+  <div class="color-grid">
+    <div class="color-card">
+      <div class="color-swatch" style="background-color: #8C4723;"></div>
+      <div class="color-info">
+        <div class="color-name">Terroir Clay / Red Clay</div>
+        <div class="color-var">--color-terroir-clay</div>
+        <div class="color-hex">#8C4723 | rgb(140, 71, 35)</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="color-swatch" style="background-color: #7D3F0F;"></div>
+      <div class="color-info">
+        <div class="color-name">Brand Primary</div>
+        <div class="color-var">--color-primary</div>
+        <div class="color-hex">#7D3F0F | rgb(125, 63, 15)</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="color-swatch" style="background-color: #2F403E;"></div>
+      <div class="color-info">
+        <div class="color-name">Brand Agave Green</div>
+        <div class="color-var">--color-brand-agave-green</div>
+        <div class="color-hex">#2F403E | rgb(47, 64, 62)</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="color-swatch" style="background-color: #855C37;"></div>
+      <div class="color-info">
+        <div class="color-name">Brand Copper</div>
+        <div class="color-var">--color-brand-copper</div>
+        <div class="color-hex">#855C37 | rgb(133, 92, 55)</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="color-swatch" style="background-color: #EDE7DE;"></div>
+      <div class="color-info">
+        <div class="color-name">Volcanic Stone</div>
+        <div class="color-var">--color-volcanic-stone</div>
+        <div class="color-hex">#EDE7DE | rgb(237, 231, 222)</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="color-swatch" style="background-color: #F6F2EA;"></div>
+      <div class="color-info">
+        <div class="color-name">Canvas Ivory</div>
+        <div class="color-var">--color-canvas-ivory</div>
+        <div class="color-hex">#F6F2EA | rgb(246, 242, 234)</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="color-swatch" style="background-color: #FCF9F3;"></div>
+      <div class="color-info">
+        <div class="color-name">Surface Bright / Background</div>
+        <div class="color-var">--color-background</div>
+        <div class="color-hex">#FCF9F3 | rgb(252, 249, 243)</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="color-swatch" style="background-color: #1C1C18;"></div>
+      <div class="color-info">
+        <div class="color-name">Charcoal / On Surface</div>
+        <div class="color-var">--color-on-surface</div>
+        <div class="color-hex">#1C1C18 | rgb(28, 28, 24)</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="color-swatch" style="background-color: #1A1615;"></div>
+      <div class="color-info">
+        <div class="color-name">Brand Charcoal Dark</div>
+        <div class="color-var">--color-brand-charcoal</div>
+        <div class="color-hex">#1A1615 | rgb(26, 22, 21)</div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="subsection-title">2.2 Matriz Completa de Tokens Material 3 UI</h2>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Token Name (Variable CSS)</th>
+        <th>HEX Code</th>
+        <th>Uso y Aplicación en Interfaz</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>--color-primary</code></td>
+        <td>#7D3F0F</td>
+        <td>Color primario de acción, botones destacados, acentos principales de marca.</td>
+      </tr>
+      <tr>
+        <td><code>--color-primary-container</code></td>
+        <td>#9A5625</td>
+        <td>Contenedores elevados primarios, tarjetas destacadas.</td>
+      </tr>
+      <tr>
+        <td><code>--color-tertiary</code></td>
+        <td>#415351</td>
+        <td>Acentos de contraste vegetal/agave, divisores e iconos secundarios.</td>
+      </tr>
+      <tr>
+        <td><code>--color-tertiary-container</code></td>
+        <td>#596B69</td>
+        <td>Fondos de módulos de experiencia, bloques de información complementaria.</td>
+      </tr>
+      <tr>
+        <td><code>--color-surface</code></td>
+        <td>#FCF9F3</td>
+        <td>Superficie base principal del cuerpo de la página.</td>
+      </tr>
+      <tr>
+        <td><code>--color-surface-container</code></td>
+        <td>#F0EEE8</td>
+        <td>Superficie de tarjetas secundarias, campos de entrada de datos.</td>
+      </tr>
+      <tr>
+        <td><code>--color-surface-container-high</code></td>
+        <td>#EBE8E2</td>
+        <td>Banners flotantes, paneles desplegables y navegación secundarias.</td>
+      </tr>
+      <tr>
+        <td><code>--color-surface-dim</code></td>
+        <td>#DCDAD4</td>
+        <td>Superficies atenuadas, modales y zonas de descanso visual.</td>
+      </tr>
+      <tr>
+        <td><code>--color-on-surface</code></td>
+        <td>#1C1C18</td>
+        <td>Texto principal para máxima legibilidad sobre superficies claras.</td>
+      </tr>
+      <tr>
+        <td><code>--color-on-surface-variant</code></td>
+        <td>#53443A</td>
+        <td>Subtítulos, leyendas secundarias y textos descriptivos de menor peso.</td>
+      </tr>
+      <tr>
+        <td><code>--color-outline</code></td>
+        <td>#867369</td>
+        <td>Bordes de inputs, líneas divisoras de secciones y marcos formales.</td>
+      </tr>
+      <tr>
+        <td><code>--color-outline-variant</code></td>
+        <td>#D9C2B6</td>
+        <td>Bordes sutiles, separadores ligeros de listas.</td>
+      </tr>
+      <tr>
+        <td><code>--color-error</code></td>
+        <td>#BA1A1A</td>
+        <td>Alertas de error, mensajes de validación fallida y avisos restrictivos.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-break"></div>
+
+  <!-- PÁGINA 4: TIPOGRAFÍA -->
+  <div class="doc-header">
+    <span class="doc-header-title">Casa Loy Tequilera — Framework & Manual de Estilo</span>
+    <span class="doc-header-meta">Sección 3: Tipografía y Jerarquía</span>
+  </div>
+
+  <h1 class="section-title">3. Sistema de Tipografía y Escala Editorial</h1>
+
+  <p>
+    La jerarquía tipográfica combina dos familias de fuentes de clase mundial: <strong>EB Garamond / Cormorant Garamond</strong> para titulares que requieren solemnidad y distinción artesanal, y <strong>Montserrat</strong> para una lectura limpia, directa y estructurada en cuerpo de texto y navegación.
+  </p>
+
+  <h2 class="subsection-title">3.1 Familias Tipográficas Oficiales</h2>
+  <ul>
+    <li><strong>Serif Editorial:</strong> <code>"EB Garamond", "Cormorant Garamond", serif</code> — Utilizada en Display Hero, Titulares de Sección (Headline LG, Headline MD).</li>
+    <li><strong>Sans-Serif Funcional:</strong> <code>"Montserrat", sans-serif</code> — Utilizada en Cuerpo (Body LG, Body MD), Navegación, Botones y Etiquetas Caps.</li>
+  </ul>
+
+  <h2 class="subsection-title">3.2 Muestras Visuales de la Escala Tipográfica</h2>
+
+  <div class="type-sample-box">
+    <div class="type-label">display-hero (96px / Line Height 104px / Weight 400)</div>
+    <div class="type-display-hero">CASA LOY TEQUILERA</div>
+  </div>
+
+  <div class="type-sample-box">
+    <div class="type-label">headline-lg (64px / Line Height 72px / Weight 400)</div>
+    <div class="type-headline-lg">El Arte y Herencia del Agave Azul</div>
+  </div>
+
+  <div class="type-sample-box">
+    <div class="type-label">headline-md (36px / Line Height 44px / Weight 500)</div>
+    <div class="type-headline-md">Procesos Artesanales de Destilación Tradicional</div>
+  </div>
+
+  <div class="type-sample-box">
+    <div class="type-label">body-lg (17px / Line Height 34px / Weight 300 / Spacing 0.02em)</div>
+    <div class="type-body-lg">Cada gota de tequila Casa Loy representa décadas de maestría, pasión por la tierra de Jalisco y un compromiso inquebrantable con la pureza organoléptica.</div>
+  </div>
+
+  <div class="type-sample-box">
+    <div class="type-label">navigation (13px / Line Height 20px / Weight 500 / Letter Spacing 0.1em)</div>
+    <div class="type-navigation">INICIO &nbsp;•&nbsp; QUIÉNES SOMOS &nbsp;•&nbsp; MAQUILAS &nbsp;•&nbsp; DÓNDE COMPRAR</div>
+  </div>
+
+  <div class="type-sample-box">
+    <div class="type-label">label-caps (11px / Line Height 16px / Weight 700 / Letter Spacing 0.25em)</div>
+    <div class="type-label-caps">DESTILERÍA ARTESANAL — JALISCO, MÉXICO</div>
+  </div>
+
+  <h2 class="subsection-title">3.3 Especificaciones de la Escala Tipográfica</h2>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Clase Tailwind / Token</th>
+        <th>Familia</th>
+        <th>Tamaño</th>
+        <th>Interlineado</th>
+        <th>Tracking / Spacing</th>
+        <th>Font Weight</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>display-hero</code></td>
+        <td>EB Garamond</td>
+        <td>96px / 6.0rem</td>
+        <td>104px</td>
+        <td>-0.01em</td>
+        <td>400 (Regular)</td>
+      </tr>
+      <tr>
+        <td><code>headline-lg</code></td>
+        <td>EB Garamond</td>
+        <td>64px / 4.0rem</td>
+        <td>72px</td>
+        <td>-0.01em</td>
+        <td>400 (Regular)</td>
+      </tr>
+      <tr>
+        <td><code>headline-lg-mobile</code></td>
+        <td>EB Garamond</td>
+        <td>44px / 2.75rem</td>
+        <td>52px</td>
+        <td>Normal</td>
+        <td>400 (Regular)</td>
+      </tr>
+      <tr>
+        <td><code>headline-md</code></td>
+        <td>EB Garamond</td>
+        <td>36px / 2.25rem</td>
+        <td>44px</td>
+        <td>0.02em</td>
+        <td>500 (Medium)</td>
+      </tr>
+      <tr>
+        <td><code>body-lg</code></td>
+        <td>Montserrat</td>
+        <td>17px / 1.06rem</td>
+        <td>34px</td>
+        <td>0.02em</td>
+        <td>300 (Light)</td>
+      </tr>
+      <tr>
+        <td><code>body-md</code></td>
+        <td>Montserrat</td>
+        <td>15px / 0.93rem</td>
+        <td>30px</td>
+        <td>Normal</td>
+        <td>400 (Regular)</td>
+      </tr>
+      <tr>
+        <td><code>navigation</code></td>
+        <td>Montserrat</td>
+        <td>13px / 0.81rem</td>
+        <td>20px</td>
+        <td>0.10em</td>
+        <td>500 (Medium)</td>
+      </tr>
+      <tr>
+        <td><code>label-caps</code></td>
+        <td>Montserrat</td>
+        <td>11px / 0.68rem</td>
+        <td>16px</td>
+        <td>0.25em</td>
+        <td>700 (Bold)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-break"></div>
+
+  <!-- PÁGINA 5: LAYOUT, SPACING & GRID -->
+  <div class="doc-header">
+    <span class="doc-header-title">Casa Loy Tequilera — Framework & Manual de Estilo</span>
+    <span class="doc-header-meta">Sección 4: Layout, Rejilla y Espaciado</span>
+  </div>
+
+  <h1 class="section-title">4. Layout, Rejilla y Sistema de Espaciado</h1>
+
+  <p>
+    El layout del sitio responde a un sistema de cuadrícula modular responsiva diseñada para adaptarse con elegancia desde dispositivos móviles (pantallas pequeñas de 360px) hasta monitores ultrapanorámicos de 4K.
+  </p>
+
+  <h2 class="subsection-title">4.1 Tokens de Espaciado y Dimensiones</h2>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Token de Espacio</th>
+        <th>Valor CSS / PX</th>
+        <th>Propósito y Aplicación</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>container-max</code></td>
+        <td>1280px</td>
+        <td>Ancho máximo del contenedor central para proteger la densidad de lectura.</td>
+      </tr>
+      <tr>
+        <td><code>section-gap</code></td>
+        <td>200px</td>
+        <td>Separación vertical entre grandes bloques narrativos en escritorio.</td>
+      </tr>
+      <tr>
+        <td><code>margin-desktop</code></td>
+        <td>64px</td>
+        <td>Margen lateral exterior del viewport en pantallas de escritorio (&gt;1024px).</td>
+      </tr>
+      <tr>
+        <td><code>margin-mobile</code></td>
+        <td>24px</td>
+        <td>Margen lateral exterior del viewport en smartphones (&lt;768px).</td>
+      </tr>
+      <tr>
+        <td><code>gutter</code></td>
+        <td>32px</td>
+        <td>Espacio intercolumnar (gap) en cuadrículas de productos y tarjetas.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="subsection-title">4.2 Sistema de Radios de Borde (Border Radius Tokens)</h2>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Token Radius</th>
+        <th>Valor REM / PX</th>
+        <th>Uso Recomendado en Interfaz</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>DEFAULT</code></td>
+        <td>0.125rem (2px)</td>
+        <td>Bordes sutiles en tarjetas, inputs y botones de ángulo recto refinado.</td>
+      </tr>
+      <tr>
+        <td><code>lg</code></td>
+        <td>0.25rem (4px)</td>
+        <td>Contenedores elevados, modales pequeños y Tooltips.</td>
+      </tr>
+      <tr>
+        <td><code>xl</code></td>
+        <td>0.5rem (8px)</td>
+        <td>Tarjetas interactivas de experiencia y popups promocionales.</td>
+      </tr>
+      <tr>
+        <td><code>full</code></td>
+        <td>9999px</td>
+        <td>Píldoras de estado, insignias de idiomas (ES/EN) y avatares.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="subsection-title">4.3 Animaciones y Efectos Visuales Personalizados</h2>
+
+  <div class="callout-box">
+    <div class="callout-title">Utilidades y Animaciones del Sistema</div>
+    <ul>
+      <li><code>.glass-nav</code>: Efecto Glassmorphic con <code>backdrop-filter: blur(30px)</code> y fondo semi-transparente <code>rgba(252, 249, 243, 0.85)</code>.</li>
+      <li><code>.hero-overlay</code>: Degradado sutil oscuro <code>linear-gradient(to bottom, rgba(28,28,24,0.3) 0%, rgba(28,28,24,0.1) 50%, rgba(28,28,24,0.5) 100%)</code> para garantizar contraste sobre imágenes.</li>
+      <li><code>.transition-organic</code>: Transición suavizada de 0.6s con curva bézier <code>cubic-bezier(0.22, 1, 0.36, 1)</code> para hovers de lujo.</li>
+      <li><code>@keyframes fade-in-slide</code>: Animación de entrada vertical con desvanecimiento de 0.8s para títulos y elementos clave.</li>
+    </ul>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- PÁGINA 6: CATÁLOGO DE COMPONENTES -->
+  <div class="doc-header">
+    <span class="doc-header-title">Casa Loy Tequilera — Framework & Manual de Estilo</span>
+    <span class="doc-header-meta">Sección 5: Componentes del Sitio</span>
+  </div>
+
+  <h1 class="section-title">5. Catálogo de Componentes UI y Patrones de Interacción</h1>
+
+  <p>
+    La interfaz de usuario se compone de módulos reutilizables altamente cohesionados. A continuación se detallan los principales componentes del sistema y su comportamiento técnico:
+  </p>
+
+  <h2 class="subsection-title">5.1 Encabezado Dinámico y Navegación Header (Header.jsx)</h2>
+  <p>
+    El componente <code>Header.jsx</code> proporciona una navegación fija superior con comportamiento reactivo según el desplazamiento (scroll) y el estado de la página:
+  </p>
+  <ul>
+    <li><strong>Estado Sin Scroll (Transparente / Hero):</strong> Altura de 80px con degradado sutil superior (<code>header-unscrolled-dark</code>) o fondo transparente (<code>header-unscrolled-light</code>).</li>
+    <li><strong>Estado Con Scroll (Compacto Glassmorphic):</strong> Altura comprimida a 72px con fondo blanco marfil <code>rgba(252, 249, 243, 0.85)</code> y desenfoque <code>backdrop-filter: blur(20px)</code> (<code>header-scrolled</code>).</li>
+    <li><strong>Selector de Idioma Bilingüe:</strong> Alternador dinámico ES / EN que actualiza instantáneamente las rutas y los textos de la interfaz.</li>
+    <li><strong>Menú Móvil Desplegable:</strong> Cajón lateral animado con navegación vertical y enlaces rápidos de contacto.</li>
+  </ul>
+
+  <h2 class="subsection-title">5.2 Sistema Restrictivo de Verificación de Edad (AgeGatePremium.jsx)</h2>
+  <p>
+    Modal de cumplimiento legal obligatorio para el acceso a portales de bebidas alcohólicas:
+  </p>
+  <ul>
+    <li><strong>Verificación por Fecha de Nacimiento:</strong> Validación precisa de edad (+18 en México / LATAM / Europa, +21 en EE.UU.).</li>
+    <li><strong>Persistencia de Estado:</strong> Almacena el consentimiento validado en <code>localStorage</code> para evitar molestias en visitas subsecuentes.</li>
+    <li><strong>Estética De Lujo:</strong> Fondo oscuro de gran contraste con detalles en color barro y tipografía Garamond.</li>
+  </ul>
+
+  <h2 class="subsection-title">5.3 Módulo de Búsqueda y Puntos de Venta (WhereToBuy.jsx)</h2>
+  <p>
+    Buscador interactivo de distribuidores, tiendas especializadas y restaurantes autorizados:
+  </p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Característica</th>
+        <th>Descripción Funcional</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Filtros Dinámicos</strong></td>
+        <td>Filtrado multi-criterio por Estado, Ciudad, Tipo de Establecimiento (Boutique, Restaurante, Hotel, Tienda).</td>
+      </tr>
+      <tr>
+        <td><strong>Autocompletado</strong></td>
+        <td>Búsqueda en tiempo real con resaltado de coincidencia tipográfica.</td>
+      </tr>
+      <tr>
+        <td><strong>Integración de Mapas</strong></td>
+        <td>Coordenadas de geolocalización y enlaces directos a Google Maps / Waze.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="subsection-title">5.4 Módulo de Validación de Tickets e Impresión (ValidateTicket.jsx)</h2>
+  <p>
+    Sistema de consulta e impresión de comprobantes oficiales para dinámicas promocionales y recorridos turísticos:
+  </p>
+  <ul>
+    <li><strong>Impresión CSS Dedicada (<code>@media print</code>):</strong> Reglas específicas que ocultan la navegación, pie de página y botones, imprimiendo únicamente el recibo oficial con borde formal y máxima claridad.</li>
+    <li><strong>Generación de Código QR y Folio:</strong> Identificación única para verificación en destilería.</li>
+  </ul>
+
+  <div class="page-break"></div>
+
+  <!-- PÁGINA 7: CONDICIONES, NORMAS Y DIRECTRICES -->
+  <div class="doc-header">
+    <span class="doc-header-title">Casa Loy Tequilera — Framework & Manual de Estilo</span>
+    <span class="doc-header-meta">Sección 6: Normativas y Reglas</span>
+  </div>
+
+  <h1 class="section-title">6. Condiciones, Normativas Legales y Reglas de Uso</h1>
+
+  <p>
+    El desarrollo, mantenimiento y despliegue del portal web de Casa Loy Tequilera debe sujetarse estrictamente a las siguientes normativas técnicas, estéticas y legales.
+  </p>
+
+  <h2 class="subsection-title">6.1 Marco Legal y Consumo Responsable</h2>
+
+  <div class="callout-box">
+    <div class="callout-title">Obligaciones Legales de la Marca</div>
+    <ol>
+      <li><strong>Mensaje de Consumo Responsable:</strong> Todas las páginas del sitio deben incluir visiblemente la leyenda legal: <em>"EL ABUSO EN EL CONSUMO DE ESTE PRODUCTO ES NOCIVO PARA LA SALUD. EVITE EL EXCESO. PROHIBIDA LA VENTA A MENORES DE EDAD."</em></li>
+      <li><strong>Denominación de Origen Tequila (DOT):</strong> El uso del término "Tequila" debe cumplir con la norma NOM-006-SCFI y los lineamientos del Consejo Regulador del Tequila (CRT).</li>
+      <li><strong>Protección de Datos Personales (ARCO):</strong> El tratamiento de información en formularios (Bolsa de trabajo, Validación de tickets, Maquilas) está protegido bajo la Política de Privacidad del sitio.</li>
+    </ol>
+  </div>
+
+  <h2 class="subsection-title">6.2 Estándares de Accesibilidad (WCAG 2.1 AA)</h2>
+  <ul>
+    <li><strong>Relación de Contraste Mínima:</strong> Todo texto en cuerpo debe superar un contraste de 4.5:1 respecto al fondo (ej. texto <code>#1C1C18</code> sobre superficie <code>#FCF9F3</code> tiene un ratio de 15.8:1).</li>
+    <li><strong>Navegación por Teclado:</strong> Todos los botones, enlaces y campos de formulario deben contar con estados de foco visibles (<code>outline: 2px solid #8C4723</code>).</li>
+    <li><strong>Atributos ARIA y Alt en Imágenes:</strong> Atributos descriptivos <code>alt</code> obligatorios en todas las fotografías de botellas y procesos de destilación.</li>
+  </ul>
+
+  <h2 class="subsection-title">6.3 Directrices de Rendimiento y Optimización SEO</h2>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Métrica / Dimensión</th>
+        <th>Criterio Estándar</th>
+        <th>Implementación en el Sitio</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Optimización de Imágenes</strong></td>
+        <td>Formato WebP con Lazy Loading</td>
+        <td>Uso de <code>loading="lazy"</code> y atributos <code>srcset</code> para pantallas retina.</td>
+      </tr>
+      <tr>
+        <td><strong>SEO Estructurado</strong></td>
+        <td>JSON-LD Schema & Meta tags</td>
+        <td>Componente <code>SEO.jsx</code> inyecta OpenGraph, Twitter Cards y Rich Snippets de organización.</td>
+      </tr>
+      <tr>
+        <td><strong>Carga de Fuentes</strong></td>
+        <td>Google Fonts preconnect + swap</td>
+        <td>Carga asíncrona de fuentes Garamond y Montserrat sin bloqueo de renderizado.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="subsection-title">6.4 Conclusión y Control de Revisiones</h2>
+  <p>
+    Este documento constituye la especificación oficial del framework visual y técnico de <strong>Casa Loy Tequilera</strong>. Cualquier modificación a los tokens de color, componentes clave o tipografía debe ser revisada y aprobada para preservar la coherencia de la marca en todas sus plataformas digitales.
+  </p>
+
+  <div style="margin-top: 35px; border-top: 1px solid #D9C2B6; padding-top: 15px; font-size: 8pt; color: #53443A; display: flex; justify-content: space-between;">
+    <div><strong>Casa Loy Tequilera © 2026</strong> — Todos los derechos reservados.</div>
+    <div>Jalisco, México • Destilería Artesanal</div>
+  </div>
+
+</body>
+</html>

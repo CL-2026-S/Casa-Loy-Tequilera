@@ -13,12 +13,12 @@ const packagesData = {
       duration: "2.5 Horas",
       capacity: "Máximo 50 personas",
       desc: "Un viaje de origen a través de nuestro campo de agaves y procesos de destilación artesanal, culminando con una cata privada y nuestro prestigioso obsequio.",
-      heroImg: "/Oro Experiencias.jpg",
+      heroImg: "/Cata Experiencias.jpg",
       features: [
         {
           title: "Recorrido campo de agaves",
           desc: "Camina entre agaves azules en las tierras altas de Ayotlán, Jalisco, y descubre el arte milenario del cultivo y la jima.",
-          img: "/Exp_test_1.jpeg"
+          img: "/Cata en Terraza TADDEL.jpg"
         },
         {
           title: "Murales e Historia",
@@ -28,17 +28,17 @@ const packagesData = {
         {
           title: "Recorrido por la destilería",
           desc: "Conoce de primera mano la destilería y descubre el proceso detrás de nuestras expresiones de tequila.",
-          img: "/Exp_test_3.jpeg"
+          img: "/Cata Experiencias.jpg"
         },
         {
           title: "Cata en cava subterránea",
           desc: "Experiencia sensorial: activa tus 5 sentidos y degusta nuestras expresiones de tequila en nuestra cava subterránea.",
-          img: "/Cava de Añejamiento.jpg"
+          img: "/Cata experiencias (2).jpg"
         },
         {
           title: "Mixología de autor",
           desc: "Degusta cocteles de autor elaborados por nuestro mixólogo con ingredientes locales y el toque característico de nuestras expresiones de tequila.",
-          img: "/Exp_test_5.jpeg"
+          img: "/Terraza.jpg"
         },
         {
           title: "Botella de TADDEL 200 ML",
@@ -53,12 +53,12 @@ const packagesData = {
       duration: "2.5 Hours",
       capacity: "Max 50 people",
       desc: "A journey of origin through our agave fields and artisanal distillation processes, culminating with a private tasting and our prestigious gift.",
-      heroImg: "/Oro Experiencias.jpg",
+      heroImg: "/Cata Experiencias.jpg",
       features: [
         {
           title: "Agave Field Tour",
           desc: "Walk among blue agaves in the highlands of Ayotlán, Jalisco, and discover the ancient art of cultivation and harvesting.",
-          img: "/Exp_test_1.jpeg"
+          img: "/Cata en Terraza TADDEL.jpg"
         },
         {
           title: "Murals & History",
@@ -68,17 +68,17 @@ const packagesData = {
         {
           title: "Distillery Tour",
           desc: "Witness firsthand our distillery and discover the process behind our tequila expressions.",
-          img: "/Exp_test_3.jpeg"
+          img: "/Cata Experiencias.jpg"
         },
         {
           title: "Underground Cellar Tasting",
           desc: "Sensory experience: activate your 5 senses and taste our tequila expressions in our underground cellar.",
-          img: "/Cava de Añejamiento.jpg"
+          img: "/Cata experiencias (2).jpg"
         },
         {
           title: "Signature Mixology",
           desc: "Savor signature cocktails crafted by our mixologist with local ingredients and the characteristic touch of our tequila expressions.",
-          img: "/Exp_test_5.jpeg"
+          img: "/Terraza.jpg"
         },
         {
           title: "TADDEL 200 ML Bottle",
@@ -95,12 +95,12 @@ const packagesData = {
       duration: "4.0 Horas",
       capacity: "Máximo 50 personas",
       desc: "La experiencia insignia que fusiona el arte del tequila premium con la alta gastronomía de nuestro restaurante 1937 Nativo.",
-      heroImg: "/Platino Experiencias.jpg",
+      heroImg: "/Recorrido Platino.jpg",
       features: [
         {
           title: "Recorrido campo de agaves",
           desc: "Descubre la majestuosidad del campo de agave azul y aprende sobre el suelo y el clima que otorgan un perfil único a nuestros destilados.",
-          img: "/Exp_test_7.jpeg"
+          img: "/Recorrido Platino.jpg"
         },
         {
           title: "Murales e Historia",
@@ -110,27 +110,27 @@ const packagesData = {
         {
           title: "Recorrido por la fábrica",
           desc: "Desde la siembra hasta la elaboración de nuestras expresiones de tequila.",
-          img: "/Exp_test_10.jpeg"
+          img: "/Recorrido Platino.jpg"
         },
         {
           title: "Cata en cava subterránea",
           desc: "Cata sensorial de nuestras expresiones, llenas de notas, aromas y matices que reflejan nuestra tradición tequilera.",
-          img: "/Pasillo Cava de Añejamiento.jpg"
+          img: "/Recorrido Platino Cava Cata.jpg"
         },
         {
           title: "Mixología de autor",
           desc: "Cocteles de autor diseñados para maridar con gastronomía contemporánea.",
-          img: "/Exp_test_12.jpeg"
+          img: "/Cata experiencias (2).jpg"
         },
         {
           title: "Comida de 3 tiempos",
           desc: "Una experiencia culinaria completa en 1937 Nativo: Entrada de la casa, Plato a escoger entre 3 opciones de autor y un delicioso postre.",
-          img: "/Exp_test_13.jpeg"
+          img: "/Terraza.jpg"
         },
         {
           title: "Bebida (2 por persona)",
           desc: "Acompaña tu comida con 2 bebidas selectas por persona para complementar la propuesta gastronomómica del chef.",
-          img: "/Exp_test_14.jpeg"
+          img: "/Cata en Terraza TADDEL.jpg"
         }
       ]
     },
@@ -140,12 +140,12 @@ const packagesData = {
       duration: "4.0 Hours",
       capacity: "Max 50 people",
       desc: "Our flagship experience fusing premium tequila craftsmanship with fine dining at our 1937 Nativo restaurant.",
-      heroImg: "/Platino Experiencias.jpg",
+      heroImg: "/Recorrido Platino.jpg",
       features: [
         {
           title: "Agave Field Tour",
           desc: "Discover the majesty of the blue agave fields and learn how the soil and climate shape our distillates' profile.",
-          img: "/Exp_test_7.jpeg"
+          img: "/Recorrido Platino.jpg"
         },
         {
           title: "Murals & History",
@@ -155,27 +155,27 @@ const packagesData = {
         {
           title: "Factory Tour",
           desc: "From planting to the crafting of our tequila expressions.",
-          img: "/Exp_test_10.jpeg"
+          img: "/Recorrido Platino.jpg"
         },
         {
           title: "Underground Cellar Tasting",
           desc: "Sensory tasting of our expressions, full of notes, aromas, and nuances that reflect our tequila tradition.",
-          img: "/Pasillo Cava de Añejamiento.jpg"
+          img: "/Recorrido Platino Cava Cata.jpg"
         },
         {
           title: "Signature Mixology",
           desc: "Signature cocktails designed to pair with contemporary gastronomy.",
-          img: "/Exp_test_12.jpeg"
+          img: "/Cata experiencias (2).jpg"
         },
         {
           title: "3-Course Fine Dining",
           desc: "A complete dining experience at 1937 Nativo: House appetizer, selection of 3 main courses, and a delicious dessert.",
-          img: "/Exp_test_13.jpeg"
+          img: "/Terraza.jpg"
         },
         {
           title: "Drinks (2 per person)",
           desc: "Accompany your meal with 2 select drinks per person to complement the chef's culinary design.",
-          img: "/Exp_test_14.jpeg"
+          img: "/Cata en Terraza TADDEL.jpg"
         }
       ]
     }
@@ -187,12 +187,12 @@ const packagesData = {
       duration: "4.0 Horas",
       capacity: "Máximo 50 personas",
       desc: "Una experiencia gastronómica y de tequila de primer nivel que ofrece acceso a colecciones privadas, mixología de autor, cata subterránea y el menú de lujo de 1937 Nativo.",
-      heroImg: "/Cava de Añejamiento.jpg",
+      heroImg: "/Diamante Experiencias.jpg",
       features: [
         {
           title: "Recorrido campo de agaves",
           desc: "Camina por los campos de la destilería guiado por nuestros expertos.",
-          img: "/Exp_test_15.jpeg"
+          img: "/Recorrido Diamante Visita.jpg"
         },
         {
           title: "Murales y Historia",
@@ -202,27 +202,27 @@ const packagesData = {
         {
           title: "Recorrido por la destilería",
           desc: "Aprende el minucioso proceso de destilación para lograr nuestras expresiones de tequila.",
-          img: "/Exp_test_17.jpeg"
+          img: "/Recorrido Diamante proceso.jpg"
         },
         {
           title: "Cata en cava subterránea",
           desc: "Cata sensorial: degusta nuestras expresiones de tequila y descubre sus aromas, notas y personalidad.",
-          img: "/Cava de Añejamiento 2.jpg"
+          img: "/Recorrido Diamante Cava Cata.jpg"
         },
         {
           title: "Clase de Mixología de autor",
           desc: "Aprende y diseña tu propio cóctel con base en tequila asistido por nuestro mixólogo principal.",
-          img: "/Terraza TADDEL.jpg"
+          img: "/Recorrido Diamante Cava.jpg"
         },
         {
           title: "Experiencia Luxury Gastronómica en 1937 Nativo",
           desc: "Comida gourmet maridaje de primer nivel en la terraza de 1937 Nativo con platillos exclusivos de autor.",
-          img: "/Exp_test_13.jpeg"
+          img: "/Recorrido Diamante.jpg"
         },
         {
           title: "Kit de Souvenirs",
           desc: "Llévate un recuerdo exclusivo de tu paso por Casa Loy Tequilera.",
-          img: "/Exp_test_14.jpeg"
+          img: "/Recorrido Diamante agave cocido.jpg"
         }
       ]
     },
@@ -232,12 +232,12 @@ const packagesData = {
       duration: "4.0 Hours",
       capacity: "Max 50 people",
       desc: "A premier tequila and dining experience offering access to private reserves, signature mixology class, cellar tasting, and the special signature menu at 1937 Nativo.",
-      heroImg: "/Cava de Añejamiento.jpg",
+      heroImg: "/Diamante Experiencias.jpg",
       features: [
         {
           title: "Agave Field Tour",
           desc: "Walk through the distillery's fields guided by our experts.",
-          img: "/Exp_test_15.jpeg"
+          img: "/Recorrido Diamante Visita.jpg"
         },
         {
           title: "Murals & History",
@@ -247,27 +247,27 @@ const packagesData = {
         {
           title: "Distillery Tour",
           desc: "Learn the meticulous distillation process to achieve our tequila expressions.",
-          img: "/Exp_test_17.jpeg"
+          img: "/Recorrido Diamante proceso.jpg"
         },
         {
           title: "Underground Cellar Tasting",
           desc: "Sensory tasting: taste our tequila expressions and discover their aromas, notes, and personality.",
-          img: "/Cava de Añejamiento 2.jpg"
+          img: "/Recorrido Diamante Cava Cata.jpg"
         },
         {
           title: "Signature Mixology Class",
           desc: "Learn and craft your own tequila-based cocktail guided by our master mixologist.",
-          img: "/Terraza TADDEL.jpg"
+          img: "/Recorrido Diamante Cava.jpg"
         },
         {
           title: "Luxury Gastronomic Experience at 1937 Nativo",
           desc: "A world-class gourmet pairing lunch on the terrace of 1937 Nativo with exclusive signature dishes.",
-          img: "/Exp_test_13.jpeg"
+          img: "/Recorrido Diamante.jpg"
         },
         {
           title: "Souvenir Kit",
           desc: "Take home an exclusive souvenir of your visit to Casa Loy Tequilera.",
-          img: "/Exp_test_14.jpeg"
+          img: "/Recorrido Diamante agave cocido.jpg"
         }
       ]
     }
