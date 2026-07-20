@@ -525,31 +525,174 @@ export default function Nativo1937({ lang = "es", t }) {
             </p>
           </div>
 
-          {/* 6 Public Images Gallery Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {nativoGallery.map((item, idx) => (
+          {/* Editorial Silent Luxury Gallery */}
+          <div className="space-y-16 md:space-y-24">
+            
+            {/* Row 1: Asymmetric 7 / 5 split */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-end">
+              {/* Item 1 - Featured 7 cols */}
               <div 
-                key={idx}
-                className="group relative overflow-hidden rounded-sm shadow-md hover:shadow-xl transition-all duration-500 bg-white border border-[#1c1c18]/10 cursor-pointer"
-                onClick={() => setSelectedModalImg(item.img)}
+                className="lg:col-span-7 group cursor-pointer space-y-4"
+                onClick={() => setSelectedModalImg(nativoGallery[0].img)}
               >
-                <div className="aspect-[4/3] overflow-hidden bg-zinc-900">
+                <div className="relative overflow-hidden aspect-[16/10] bg-zinc-950 shadow-[0_20px_40px_rgba(0,0,0,0.05)] border border-[#1c1c18]/5">
                   <img
-                    src={item.img}
-                    alt={item.title[lang === "es" ? "es" : "en"]}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 brightness-[0.95] group-hover:brightness-100"
+                    src={nativoGallery[0].img}
+                    alt={nativoGallery[0].title[lang === "es" ? "es" : "en"]}
+                    className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103 brightness-[0.96] group-hover:brightness-100"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                    <span className="text-white font-navigation text-[10px] uppercase tracking-[0.3em] font-medium flex items-center gap-2">
+                      <span className="w-4 h-[0.5px] bg-white/80" />
+                      {lang === "es" ? "Ver en detalle" : "View detail"}
+                    </span>
+                  </div>
                 </div>
-                <div className="p-4 bg-white border-t border-[#1c1c18]/5 flex items-center justify-between">
-                  <span className="font-navigation text-[11px] uppercase tracking-[0.2em] font-medium text-[#1c1c18]">
-                    {item.title[lang === "es" ? "es" : "en"]}
-                  </span>
-                  <span className="font-serif italic text-xs text-[#8C4723]">
-                    0{idx + 1}
-                  </span>
+                <div className="flex items-baseline justify-between pt-1 border-b border-[#1c1c18]/10 pb-3">
+                  <h3 className="font-serif text-lg md:text-xl text-[#1c1c18] font-normal tracking-tight">
+                    {nativoGallery[0].title[lang === "es" ? "es" : "en"]}
+                  </h3>
+                  <span className="font-serif italic text-xs text-[#8C4723]">01</span>
                 </div>
               </div>
-            ))}
+
+              {/* Item 2 - Portrait 5 cols */}
+              <div 
+                className="lg:col-span-5 group cursor-pointer space-y-4"
+                onClick={() => setSelectedModalImg(nativoGallery[1].img)}
+              >
+                <div className="relative overflow-hidden aspect-[4/5] bg-zinc-950 shadow-[0_20px_40px_rgba(0,0,0,0.05)] border border-[#1c1c18]/5">
+                  <img
+                    src={nativoGallery[1].img}
+                    alt={nativoGallery[1].title[lang === "es" ? "es" : "en"]}
+                    className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103 brightness-[0.96] group-hover:brightness-100"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                    <span className="text-white font-navigation text-[10px] uppercase tracking-[0.3em] font-medium flex items-center gap-2">
+                      <span className="w-4 h-[0.5px] bg-white/80" />
+                      {lang === "es" ? "Ver en detalle" : "View detail"}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-baseline justify-between pt-1 border-b border-[#1c1c18]/10 pb-3">
+                  <h3 className="font-serif text-lg md:text-xl text-[#1c1c18] font-normal tracking-tight">
+                    {nativoGallery[1].title[lang === "es" ? "es" : "en"]}
+                  </h3>
+                  <span className="font-serif italic text-xs text-[#8C4723]">02</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Row 2: Asymmetric 5 / 7 split */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-start">
+              {/* Item 3 - 5 cols */}
+              <div 
+                className="lg:col-span-5 group cursor-pointer space-y-4"
+                onClick={() => setSelectedModalImg(nativoGallery[2].img)}
+              >
+                <div className="relative overflow-hidden aspect-[4/3] bg-zinc-950 shadow-[0_20px_40px_rgba(0,0,0,0.05)] border border-[#1c1c18]/5">
+                  <img
+                    src={nativoGallery[2].img}
+                    alt={nativoGallery[2].title[lang === "es" ? "es" : "en"]}
+                    className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103 brightness-[0.96] group-hover:brightness-100"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                    <span className="text-white font-navigation text-[10px] uppercase tracking-[0.3em] font-medium flex items-center gap-2">
+                      <span className="w-4 h-[0.5px] bg-white/80" />
+                      {lang === "es" ? "Ver en detalle" : "View detail"}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-baseline justify-between pt-1 border-b border-[#1c1c18]/10 pb-3">
+                  <h3 className="font-serif text-lg md:text-xl text-[#1c1c18] font-normal tracking-tight">
+                    {nativoGallery[2].title[lang === "es" ? "es" : "en"]}
+                  </h3>
+                  <span className="font-serif italic text-xs text-[#8C4723]">03</span>
+                </div>
+              </div>
+
+              {/* Item 4 - Wide 7 cols */}
+              <div 
+                className="lg:col-span-7 group cursor-pointer space-y-4"
+                onClick={() => setSelectedModalImg(nativoGallery[3].img)}
+              >
+                <div className="relative overflow-hidden aspect-[16/10] bg-zinc-950 shadow-[0_20px_40px_rgba(0,0,0,0.05)] border border-[#1c1c18]/5">
+                  <img
+                    src={nativoGallery[3].img}
+                    alt={nativoGallery[3].title[lang === "es" ? "es" : "en"]}
+                    className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103 brightness-[0.96] group-hover:brightness-100"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                    <span className="text-white font-navigation text-[10px] uppercase tracking-[0.3em] font-medium flex items-center gap-2">
+                      <span className="w-4 h-[0.5px] bg-white/80" />
+                      {lang === "es" ? "Ver en detalle" : "View detail"}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-baseline justify-between pt-1 border-b border-[#1c1c18]/10 pb-3">
+                  <h3 className="font-serif text-lg md:text-xl text-[#1c1c18] font-normal tracking-tight">
+                    {nativoGallery[3].title[lang === "es" ? "es" : "en"]}
+                  </h3>
+                  <span className="font-serif italic text-xs text-[#8C4723]">04</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Row 3: Balanced 6 / 6 split */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-center">
+              {/* Item 5 - 6 cols */}
+              <div 
+                className="lg:col-span-6 group cursor-pointer space-y-4"
+                onClick={() => setSelectedModalImg(nativoGallery[4].img)}
+              >
+                <div className="relative overflow-hidden aspect-[16/10] bg-zinc-950 shadow-[0_20px_40px_rgba(0,0,0,0.05)] border border-[#1c1c18]/5">
+                  <img
+                    src={nativoGallery[4].img}
+                    alt={nativoGallery[4].title[lang === "es" ? "es" : "en"]}
+                    className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103 brightness-[0.96] group-hover:brightness-100"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                    <span className="text-white font-navigation text-[10px] uppercase tracking-[0.3em] font-medium flex items-center gap-2">
+                      <span className="w-4 h-[0.5px] bg-white/80" />
+                      {lang === "es" ? "Ver en detalle" : "View detail"}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-baseline justify-between pt-1 border-b border-[#1c1c18]/10 pb-3">
+                  <h3 className="font-serif text-lg md:text-xl text-[#1c1c18] font-normal tracking-tight">
+                    {nativoGallery[4].title[lang === "es" ? "es" : "en"]}
+                  </h3>
+                  <span className="font-serif italic text-xs text-[#8C4723]">05</span>
+                </div>
+              </div>
+
+              {/* Item 6 - 6 cols */}
+              <div 
+                className="lg:col-span-6 group cursor-pointer space-y-4"
+                onClick={() => setSelectedModalImg(nativoGallery[5].img)}
+              >
+                <div className="relative overflow-hidden aspect-[16/10] bg-zinc-950 shadow-[0_20px_40px_rgba(0,0,0,0.05)] border border-[#1c1c18]/5">
+                  <img
+                    src={nativoGallery[5].img}
+                    alt={nativoGallery[5].title[lang === "es" ? "es" : "en"]}
+                    className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103 brightness-[0.96] group-hover:brightness-100"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                    <span className="text-white font-navigation text-[10px] uppercase tracking-[0.3em] font-medium flex items-center gap-2">
+                      <span className="w-4 h-[0.5px] bg-white/80" />
+                      {lang === "es" ? "Ver en detalle" : "View detail"}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-baseline justify-between pt-1 border-b border-[#1c1c18]/10 pb-3">
+                  <h3 className="font-serif text-lg md:text-xl text-[#1c1c18] font-normal tracking-tight">
+                    {nativoGallery[5].title[lang === "es" ? "es" : "en"]}
+                  </h3>
+                  <span className="font-serif italic text-xs text-[#8C4723]">06</span>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
