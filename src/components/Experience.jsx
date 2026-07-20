@@ -10,7 +10,7 @@ export default function Experience({ t, setPage }) {
         <img
           alt="Turismo Casa Loy"
           className="absolute inset-0 w-full h-full object-cover grayscale-[30%] transition-transform duration-1000 group-hover:scale-105 group-hover:grayscale-0"
-          src="/Experiencias tours Casa Loy Tequilera.webp"
+          src="/Terraza.jpg"
         />
         
         {/* Vignette */}
