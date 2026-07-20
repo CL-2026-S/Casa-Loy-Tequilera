@@ -2,6 +2,52 @@ import React, { useState } from "react";
 
 export default function Nativo1937({ lang = "es", t }) {
   const [showPdf, setShowPdf] = useState(false);
+  const [selectedModalImg, setSelectedModalImg] = useState(null);
+
+  const nativoGallery = [
+    {
+      img: "/Vive la Experiencia.jpg",
+      title: {
+        es: "Vive la experiencia Nativo",
+        en: "Live the Nativo experience"
+      }
+    },
+    {
+      img: "/Restaurante 1937 Nativo atención al cliente.webp",
+      title: {
+        es: "Nativo Ambiente",
+        en: "Nativo Atmosphere"
+      }
+    },
+    {
+      img: "/Platillo 2 1937 Nativo.webp",
+      title: {
+        es: "Nativo Platillos",
+        en: "Nativo Dishes"
+      }
+    },
+    {
+      img: "/Restaurante 1937 Nativo Instalaciones.webp",
+      title: {
+        es: "Nativo Espacios 1",
+        en: "Nativo Spaces 1"
+      }
+    },
+    {
+      img: "/Restaurante 1937 Nativo Instalaciones Mural 2.webp",
+      title: {
+        es: "Nativo Espacios 2",
+        en: "Nativo Spaces 2"
+      }
+    },
+    {
+      img: "/Restaurante 1937 Nativo Instalaciones Mural 3.webp",
+      title: {
+        es: "Nativo Espacios 3",
+        en: "Nativo Spaces 3"
+      }
+    }
+  ];
   
   // Booking States
   const [bookingChannel, setBookingChannel] = useState(null); // null, 'whatsapp', 'call', 'page'
@@ -448,7 +494,7 @@ export default function Nativo1937({ lang = "es", t }) {
       </section>
 
       {/* Michelin Star Editorial Section */}
-      <section className="py-28 md:py-36 bg-[#fcf9f3] text-left relative overflow-hidden" id="heritage">
+      <section className="py-24 md:py-32 bg-[#fcf9f3] text-left relative overflow-hidden" id="heritage">
         {/* Subtle background texture */}
         <div
           className="absolute inset-0 opacity-[0.015] mix-blend-multiply bg-cover bg-center pointer-events-none"
@@ -456,112 +502,54 @@ export default function Nativo1937({ lang = "es", t }) {
         />
         
         <div className="max-w-container-max mx-auto px-margin-desktop relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-center">
+          {/* Header */}
+          <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
+            <div className="flex items-center justify-center gap-3">
+              <span className="w-6 h-[0.5px] bg-[#8C4723]" />
+              <span className="font-navigation text-[9px] tracking-[0.4em] font-bold text-[#8C4723] uppercase">
+                {lang === "es" ? "Filosofía Culinaria" : "Culinary Philosophy"}
+              </span>
+              <span className="w-6 h-[0.5px] bg-[#8C4723]" />
+            </div>
             
-            {/* Visual Off-set Grid (Left Column) */}
-            <div className="lg:col-span-6 relative flex items-center justify-center">
-              {/* Main Background Frame (The Interior) */}
-              <div className="relative w-4/5 aspect-[3/4] overflow-hidden shadow-[0_24px_50px_rgba(0,0,0,0.08)] border border-outline-variant/10">
-                <img
-                  src="/Diosa.jpg"
-                  alt="Restaurante 1937 Nativo Mural Diosa"
-                  className="w-full h-full object-cover brightness-[0.93] scale-100 hover:scale-102 transition-transform duration-[3000ms]"
-                />
-              </div>
-              
-              {/* Overlapping Detail Frame (The Plated Dish) */}
-              <div className="absolute -bottom-10 -right-4 w-3/5 aspect-square overflow-hidden shadow-[0_30px_60px_rgba(140,71,35,0.15)] border-4 border-[#fcf9f3] translate-x-2">
-                <img
-                  src="/Platillo 1 1937 Nativo.webp"
-                  alt="Alta cocina en 1937 Nativo"
-                  className="w-full h-full object-cover scale-100 hover:scale-105 transition-transform duration-[3000ms]"
-                />
-              </div>
-            </div>
+            <h2 className="font-serif text-[clamp(28px,3.8vw,46px)] leading-[1.15] tracking-tight text-[#1c1c18] font-medium">
+              {lang === "es" 
+                ? "Donde el fuego de los Altos se convierte en alta cocina." 
+                : "Where the fire of the Highlands becomes haute cuisine."}
+            </h2>
+            
+            <p className="font-sans text-[clamp(14px,1.05vw,16px)] text-[#1c1c18]/70 font-light leading-relaxed">
+              {lang === "es"
+                ? "Restaurante 1937 Nativo es un templo gastronómico donde cada plato narra la riqueza de Ayotlán. La cocina de humo a la leña y los ingredientes locales de trazabilidad absoluta se elevan mediante maridajes sublimes diseñados en exclusiva junto a Tequila Casa Loy."
+                : "Restaurante 1937 Nativo is a gastronomic temple where every dish tells the story of Ayotlán. Our wood-fired cuisine and local ingredients of absolute traceability are elevated through sublime pairings designed exclusively alongside Tequila Casa Loy."}
+            </p>
+          </div>
 
-            {/* Editorial Content (Right Column) */}
-            <div className="lg:col-span-6 space-y-10 lg:pl-6">
-              
-              {/* Header */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <span className="w-6 h-[0.5px] bg-[#8C4723]" />
-                  <span className="font-navigation text-[9px] tracking-[0.4em] font-bold text-[#8C4723] uppercase">
-                    {lang === "es" ? "Filosofía Culinaria" : "Culinary Philosophy"}
+          {/* 6 Public Images Gallery Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {nativoGallery.map((item, idx) => (
+              <div 
+                key={idx}
+                className="group relative overflow-hidden rounded-sm shadow-md hover:shadow-xl transition-all duration-500 bg-white border border-[#1c1c18]/10 cursor-pointer"
+                onClick={() => setSelectedModalImg(item.img)}
+              >
+                <div className="aspect-[4/3] overflow-hidden bg-zinc-900">
+                  <img
+                    src={item.img}
+                    alt={item.title[lang === "es" ? "es" : "en"]}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 brightness-[0.95] group-hover:brightness-100"
+                  />
+                </div>
+                <div className="p-4 bg-white border-t border-[#1c1c18]/5 flex items-center justify-between">
+                  <span className="font-navigation text-[11px] uppercase tracking-[0.2em] font-medium text-[#1c1c18]">
+                    {item.title[lang === "es" ? "es" : "en"]}
+                  </span>
+                  <span className="font-serif italic text-xs text-[#8C4723]">
+                    0{idx + 1}
                   </span>
                 </div>
-                
-                <h2 className="font-serif text-[clamp(28px,3.8vw,46px)] leading-[1.15] tracking-tight text-[#1c1c18] font-medium max-w-xl">
-                  {lang === "es" 
-                    ? "Donde el fuego de los Altos se convierte en alta cocina." 
-                    : "Where the fire of the Highlands becomes haute cuisine."}
-                </h2>
-                
-                <p className="font-sans text-[clamp(14px,1.05vw,16px)] text-[#1c1c18]/70 font-light leading-relaxed max-w-xl">
-                  {lang === "es"
-                    ? "Restaurante 1937 Nativo es un templo gastronómico donde cada plato narra la riqueza de Ayotlán. La cocina de humo a la leña y los ingredientes locales de trazabilidad absoluta se elevan mediante maridajes sublimes diseñados en exclusiva junto a Tequila Casa Loy."
-                    : "Restaurante 1937 Nativo is a gastronomic temple where every dish tells the story of Ayotlán. Our wood-fired cuisine and local ingredients of absolute traceability are elevated through sublime pairings designed exclusively alongside Tequila Casa Loy."}
-                </p>
               </div>
-
-              {/* Michelin Pillars Detail */}
-              <div className="space-y-6 max-w-xl">
-                
-                {/* Item 1 */}
-                <div className="border-t border-[#1c1c18]/10 pt-4 flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-6 group">
-                  <span className="font-serif italic text-sm text-[#8C4723] font-semibold w-10 select-none">
-                    01
-                  </span>
-                  <div className="space-y-1">
-                    <h4 className="font-sans text-[13px] tracking-wider font-bold text-[#1c1c18] uppercase">
-                      {lang === "es" ? "La Brasa y el Humo" : "Wood Fire & Smoke"}
-                    </h4>
-                    <p className="font-sans text-[12.5px] text-[#1c1c18]/65 font-light leading-relaxed">
-                      {lang === "es"
-                        ? "Robles y mezquites locales seleccionados meticulosamente para perfumar de manera única cada corte y marisco directo al fuego."
-                        : "Meticulously selected local oak and mesquite woods to uniquely perfume each cut and fresh seafood grilled over open fire."}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Item 2 */}
-                <div className="border-t border-[#1c1c18]/10 pt-4 flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-6 group">
-                  <span className="font-serif italic text-sm text-[#8C4723] font-semibold w-10 select-none">
-                    02
-                  </span>
-                  <div className="space-y-1">
-                    <h4 className="font-sans text-[13px] tracking-wider font-bold text-[#1c1c18] uppercase">
-                      {lang === "es" ? "El Terruño de Ayotlán" : "Ayotlán Terroir"}
-                    </h4>
-                    <p className="font-sans text-[12.5px] text-[#1c1c18]/65 font-light leading-relaxed">
-                      {lang === "es"
-                        ? "Ingredientes nativos cosechados bajo esquemas de comercio justo, garantizando una trazabilidad pura del campo a su plato."
-                        : "Native ingredients harvested under fair trade guidelines, guaranteeing pure traceability from the field to your plate."}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Item 3 */}
-                <div className="border-t border-[#1c1c18]/10 pt-4 pb-4 flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-6 group">
-                  <span className="font-serif italic text-sm text-[#8C4723] font-semibold w-10 select-none">
-                    03
-                  </span>
-                  <div className="space-y-1">
-                    <h4 className="font-sans text-[13px] tracking-wider font-bold text-[#1c1c18] uppercase">
-                      {lang === "es" ? "Simbiosis con el Tequila" : "Tequila Symbiosis"}
-                    </h4>
-                    <p className="font-sans text-[12.5px] text-[#1c1c18]/65 font-light leading-relaxed">
-                      {lang === "es"
-                        ? "Reducciones de agave, adobos en penca y una mixología de autor diseñada en sintonía con las notas organolépticas de Casa Loy."
-                        : "Agave reductions, leaves-wrapped adobos, and signature mixology designed in perfect harmony with Casa Loy's organoleptic notes."}
-                    </p>
-                  </div>
-                </div>
-
-              </div>
-
-            </div>
-
+            ))}
           </div>
         </div>
       </section>
@@ -1268,6 +1256,31 @@ export default function Nativo1937({ lang = "es", t }) {
           </div>
         </div>
       </section>
+
+      {/* Image Lightbox Modal */}
+      {selectedModalImg && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 cursor-pointer animate-fadeIn"
+          onClick={() => setSelectedModalImg(null)}
+        >
+          <div className="relative max-w-5xl max-h-[90vh] overflow-hidden rounded shadow-2xl">
+            <button
+              onClick={() => setSelectedModalImg(null)}
+              className="absolute top-4 right-4 text-white bg-black/60 hover:bg-black p-2.5 rounded-full transition-colors z-10"
+              aria-label="Cerrar"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <img 
+              src={selectedModalImg} 
+              alt="Ampliada" 
+              className="w-full h-full max-h-[85vh] object-contain rounded"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
