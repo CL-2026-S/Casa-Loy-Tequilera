@@ -25,8 +25,12 @@ export default function AdminPanel({
   const [errorMsg, setErrorMsg] = useState("");
 
   // CMS states
-  const [activeTab, setActiveTab] = useState("calendar"); // "calendar", "validate", "log"
+  const [activeTab, setActiveTab] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("tab") || "log";
+  });
   const [bookingsLog, setBookingsLog] = useState([]);
+  const [selectedQrTicket, setSelectedQrTicket] = useState(null);
   
   // Validation query states
   const [ticketSearchCode, setTicketSearchCode] = useState("");
@@ -78,17 +82,57 @@ export default function AdminPanel({
   }, [manualGuests, manualTour]);
 
   const loadData = async () => {
+    let apiLogs = [];
     try {
       const res = await fetch("/api/tourism");
       if (res.ok) {
         const data = await res.json();
-        if (data.bookingsLog) {
-          setBookingsLog(data.bookingsLog);
+        if (data.bookingsLog && Array.isArray(data.bookingsLog)) {
+          apiLogs = data.bookingsLog;
         }
       }
     } catch (e) {
       console.error("Could not fetch reservations log from API.", e);
     }
+
+    // Merge with localStorage logs
+    let localLogs = [];
+    try {
+      const saved = localStorage.getItem("casa_loy_bookings_log");
+      if (saved) {
+        localLogs = JSON.parse(saved);
+      }
+    } catch (e) {
+      console.error("Error reading local bookings log", e);
+    }
+
+    // Known backup reservations (such as July 17th sale)
+    const backupReservations = [
+      {
+        code: "CL-PLATINO-202607254775",
+        name: "Edgar Giovanni Martinez Lopez",
+        email: "edgrmtz23@gmail.com",
+        phone: "9941080231",
+        packageName: "Experiencia Casa Loy Platino",
+        date: "2026-07-25",
+        time: "10:00 AM",
+        guests: 6,
+        amount: 4500,
+        method: "PayPal",
+        timestamp: "2026-07-17 19:09:43",
+        used_at: null
+      }
+    ];
+
+    // Combine logs without duplicates by code
+    const map = new Map();
+    [...apiLogs, ...localLogs, ...backupReservations].forEach(item => {
+      if (item && item.code && !map.has(item.code)) {
+        map.set(item.code, item);
+      }
+    });
+
+    setBookingsLog(Array.from(map.values()));
   };
 
   const handleRegister = (e) => {
@@ -1120,12 +1164,13 @@ export default function AdminPanel({
                         <th className="p-3 text-center">Visitantes</th>
                         <th className="p-3 text-right">Pago</th>
                         <th className="p-3 text-center">Estado</th>
+                        <th className="p-3 text-center">Boleto QR</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-stone-100">
                       {bookingsLog.length === 0 ? (
                         <tr>
-                          <td colSpan="7" className="p-8 text-center text-stone-400 italic">No hay registros de reservaciones en Supabase.</td>
+                          <td colSpan="8" className="p-8 text-center text-stone-400 italic">No hay registros de reservaciones en Supabase.</td>
                         </tr>
                       ) : (
                         bookingsLog.map((log) => {
@@ -1157,6 +1202,15 @@ export default function AdminPanel({
                                   {isUsed ? "Acceso Completado" : "Vigente"}
                                 </span>
                               </td>
+                              <td className="p-3 text-center">
+                                <button
+                                  onClick={() => setSelectedQrTicket(log)}
+                                  className="bg-primary/10 hover:bg-primary hover:text-white text-primary px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider transition-colors cursor-pointer flex items-center justify-center gap-1 mx-auto"
+                                >
+                                  <span className="material-symbols-outlined text-xs">qr_code_2</span>
+                                  Ver QR
+                                </button>
+                              </td>
                             </tr>
                           );
                         })
@@ -1169,6 +1223,86 @@ export default function AdminPanel({
 
           </div>
 
+        </div>
+      )}
+
+      {/* QR Ticket Modal for Admin */}
+      {selectedQrTicket && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white max-w-md w-full p-6 shadow-2xl relative border border-stone-200 text-stone-800 space-y-4">
+            <button
+              onClick={() => setSelectedQrTicket(null)}
+              className="absolute top-3 right-3 text-stone-400 hover:text-stone-700 cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-xl">close</span>
+            </button>
+
+            <div className="text-center space-y-1">
+              <h4 className="font-serif text-lg font-bold text-primary">Boleto Digital de Acceso</h4>
+              <p className="text-xs text-stone-500 uppercase tracking-wider font-mono font-semibold">{selectedQrTicket.code}</p>
+            </div>
+
+            <div className="bg-stone-50 p-4 border border-stone-200/60 flex flex-col items-center justify-center space-y-2">
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(
+                  `${window.location.origin}/validar-ticket?code=${selectedQrTicket.code}&package=${encodeURIComponent(selectedQrTicket.packageName)}&date=${selectedQrTicket.date}&time=${encodeURIComponent(selectedQrTicket.time)}&guests=${selectedQrTicket.guests}`
+                )}`}
+                alt="Código QR de Acceso"
+                className="w-48 h-48 border border-white shadow-sm bg-white p-2"
+              />
+              <span className="text-[10px] text-stone-400 text-center">Escanea este código QR con cualquier dispositivo para validar la entrada</span>
+            </div>
+
+            <div className="space-y-2 text-xs border-t border-stone-100 pt-3">
+              <div className="flex justify-between border-b border-stone-100 pb-1.5">
+                <span className="text-stone-500">Titular:</span>
+                <span className="font-bold text-stone-900">{selectedQrTicket.name}</span>
+              </div>
+              {selectedQrTicket.email && (
+                <div className="flex justify-between border-b border-stone-100 pb-1.5">
+                  <span className="text-stone-500">Correo:</span>
+                  <span className="font-semibold text-stone-800">{selectedQrTicket.email}</span>
+                </div>
+              )}
+              {selectedQrTicket.phone && (
+                <div className="flex justify-between border-b border-stone-100 pb-1.5">
+                  <span className="text-stone-500">Teléfono:</span>
+                  <span className="font-semibold text-stone-800">{selectedQrTicket.phone}</span>
+                </div>
+              )}
+              <div className="flex justify-between border-b border-stone-100 pb-1.5">
+                <span className="text-stone-500">Experiencia:</span>
+                <span className="font-bold text-stone-900">{selectedQrTicket.packageName}</span>
+              </div>
+              <div className="flex justify-between border-b border-stone-100 pb-1.5">
+                <span className="text-stone-500">Fecha y Hora:</span>
+                <span className="font-bold text-stone-900">{selectedQrTicket.date} a las {selectedQrTicket.time}</span>
+              </div>
+              <div className="flex justify-between border-b border-stone-100 pb-1.5">
+                <span className="text-stone-500">Visitantes:</span>
+                <span className="font-bold text-stone-900">{selectedQrTicket.guests} pax</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-stone-500">Monto Cobrado:</span>
+                <span className="font-bold text-stone-900">${selectedQrTicket.amount} MXN ({selectedQrTicket.method})</span>
+              </div>
+            </div>
+
+            <div className="pt-2 flex gap-2">
+              <button
+                onClick={() => window.print()}
+                className="flex-1 bg-stone-100 hover:bg-stone-200 text-stone-700 py-2.5 font-semibold text-xs uppercase tracking-wider cursor-pointer"
+              >
+                Imprimir / PDF
+              </button>
+              <button
+                onClick={() => setSelectedQrTicket(null)}
+                className="flex-1 bg-primary hover:bg-[#8c4723] text-white py-2.5 font-semibold text-xs uppercase tracking-wider cursor-pointer"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
