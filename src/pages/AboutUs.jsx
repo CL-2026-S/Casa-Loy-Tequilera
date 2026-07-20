@@ -878,13 +878,13 @@ export default function AboutUs({ t, lang, setPage }) {
         >
           {(lang === "en" ? [
             { title: "Solar Energy", text: "We harness clean energy through solar panels to reduce our environmental impact and operate more sustainably.", img: "/Paneles Solares.webp" },
-            { title: "Composting Center", text: "Specialized space for the sustainable transformation of organic waste from the tequila process, converting vinazas and bagasse into valuable compost for the fields.", img: "/Cordones.jpg" },
-            { title: "Vinazas Management & Compost", text: "Utilization system where the vinazas are distributed via spreader trucks and compost windrows, favoring organic integration and natural soil enrichment.", img: "/Compostaje.jpeg" },
+            { title: "Composting Center", text: "Specialized space for the sustainable transformation of organic waste from the tequila process, converting vinazas and bagasse into valuable compost for the fields.", img: "/Compostaje.jpeg" },
+            { title: "Vinazas Management & Compost", text: "Utilization system where the vinazas are distributed via spreader trucks and compost windrows, favoring organic integration and natural soil enrichment.", img: "/Cordones.jpg" },
             { title: "Social & Family Development", text: "We promote the development and well-being of rural communities, strengthening opportunities, employment, and local growth around the agave culture.", img: "/Empleado Jimador Casa Loy Tequilera.webp" },
           ] : [
             { title: "Energía Solar", text: "Aprovechamos energía limpia mediante paneles solares para reducir nuestro impacto ambiental y operar de forma más sustentable.", img: "/Paneles Solares.webp" },
-            { title: "Centro de Compostaje", text: "Espacio especializado para la transformación sustentable de residuos orgánicos del proceso tequilero, convirtiendo vinazas y bagazo en composta de valor para el campo.", img: "/Cordones.jpg" },
-            { title: "Manejo de Vinazas y Composta", text: "Sistema de aprovechamiento donde las vinazas son distribuidas mediante camiones con vertedor y cordones de composta, favoreciendo la integración orgánica y el enriquecimiento natural del suelo.", img: "/Compostaje.jpeg" },
+            { title: "Centro de Compostaje", text: "Espacio especializado para la transformación sustentable de residuos orgánicos del proceso tequilero, convirtiendo vinazas y bagazo en composta de valor para el campo.", img: "/Compostaje.jpeg" },
+            { title: "Manejo de Vinazas y Composta", text: "Sistema de aprovechamiento donde las vinazas son distribuidas mediante camiones con vertedor y cordones de composta, favoreciendo la integración orgánica y el enriquecimiento natural del suelo.", img: "/Cordones.jpg" },
             { title: "Desarrollo Social y Familiar", text: "Impulsamos el desarrollo y bienestar de las comunidades rurales, fortaleciendo oportunidades, empleo y crecimiento local alrededor de la cultura del agave.", img: "/Empleado Jimador Casa Loy Tequilera.webp" },
           ]).map((pillar, idx) => (
             <div
