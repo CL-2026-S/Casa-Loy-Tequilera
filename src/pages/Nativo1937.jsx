@@ -1,53 +1,124 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function Nativo1937({ lang = "es", t }) {
   const [showPdf, setShowPdf] = useState(false);
-  const [selectedModalImg, setSelectedModalImg] = useState(null);
+  const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
+  const [selectedModalIndex, setSelectedModalIndex] = useState(null);
+  const [galleryViewMode, setGalleryViewMode] = useState("stage"); // 'stage' or 'mosaic'
 
   const nativoGallery = [
     {
+      id: "01",
       img: "/Vive la Experiencia.jpg",
       title: {
-        es: "Vive la experiencia Nativo",
-        en: "Live the Nativo experience"
+        es: "Vive la Experiencia Nativo",
+        en: "Live the Nativo Experience"
+      },
+      subtitle: {
+        es: "Terrazas al aire libre, agaves seleccionados y un ambiente que celebra el origen de Ayotlán.",
+        en: "Open-air terraces, selected agaves, and an atmosphere celebrating Ayotlán's origin."
+      },
+      category: {
+        es: "Hospitalidad & Entorno",
+        en: "Hospitality & Setting"
       }
     },
     {
+      id: "02",
       img: "/Restaurante 1937 Nativo atención al cliente.webp",
       title: {
-        es: "Nativo Ambiente",
-        en: "Nativo Atmosphere"
+        es: "Ambiente & Mixología de Autor",
+        en: "Atmosphere & Signature Mixology"
+      },
+      subtitle: {
+        es: "Coctelería conceptual diseñada en maridaje armónico con las notas de Tequila Casa Loy.",
+        en: "Conceptual mixology crafted in harmonic pairing with Casa Loy Tequila notes."
+      },
+      category: {
+        es: "Servicio & Barra",
+        en: "Service & Bar"
       }
     },
     {
+      id: "03",
       img: "/Platillo 2 1937 Nativo.webp",
       title: {
-        es: "Nativo Platillos",
-        en: "Nativo Dishes"
+        es: "Gastronomía a las Brasas",
+        en: "Wood-Fired Gastronomy"
+      },
+      subtitle: {
+        es: "Cortes premium y mariscos ahumados con leña de encino y mezquite de origen local.",
+        en: "Premium cuts and seafood smoked with locally sourced oak and mesquite wood."
+      },
+      category: {
+        es: "Cocina de Autor",
+        en: "Signature Cuisine"
       }
     },
     {
+      id: "04",
       img: "/Restaurante 1937 Nativo Instalaciones.webp",
       title: {
-        es: "Nativo Espacios 1",
-        en: "Nativo Spaces 1"
+        es: "Murales & Arquitectura Tequilera",
+        en: "Murals & Tequila Architecture"
+      },
+      subtitle: {
+        es: "Murales artísticos dedicados a la mitología del agave y acabados en piedra volcánica.",
+        en: "Artistic murals dedicated to agave mythology and volcanic stone finishes."
+      },
+      category: {
+        es: "Arquitectura & Arte",
+        en: "Architecture & Art"
       }
     },
     {
+      id: "05",
       img: "/Restaurante 1937 Nativo Instalaciones Mural 2.webp",
       title: {
-        es: "Nativo Espacios 2",
-        en: "Nativo Spaces 2"
+        es: "Espacios & Salones Privados",
+        en: "Spaces & Private Dining"
+      },
+      subtitle: {
+        es: "Muebles de madera noble, muros vegetales e iluminación cálida de confort superior.",
+        en: "Hardwood furnishings, living plant walls, and warm high-comfort ambient lighting."
+      },
+      category: {
+        es: "Salones & Confort",
+        en: "Lounges & Comfort"
       }
     },
     {
+      id: "06",
       img: "/Restaurante 1937 Nativo Instalaciones Mural 3.webp",
       title: {
-        es: "Nativo Espacios 3",
-        en: "Nativo Spaces 3"
+        es: "La Cava & Barra Principal",
+        en: "The Cellar & Main Bar"
+      },
+      subtitle: {
+        es: "Colección exclusiva de botellas Casa Loy y ediciones especiales directo de destilería.",
+        en: "Exclusive collection of Casa Loy bottles and special editions direct from the distillery."
+      },
+      category: {
+        es: "Cava & Destilados",
+        en: "Cellar & Spirits"
       }
     }
   ];
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (selectedModalIndex === null) return;
+      if (e.key === "Escape") setSelectedModalIndex(null);
+      if (e.key === "ArrowLeft") {
+        setSelectedModalIndex((prev) => (prev > 0 ? prev - 1 : nativoGallery.length - 1));
+      }
+      if (e.key === "ArrowRight") {
+        setSelectedModalIndex((prev) => (prev < nativoGallery.length - 1 ? prev + 1 : 0));
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedModalIndex]);
   
   // Booking States
   const [bookingChannel, setBookingChannel] = useState(null); // null, 'whatsapp', 'call', 'page'
@@ -493,207 +564,357 @@ export default function Nativo1937({ lang = "es", t }) {
         </div>
       </section>
 
-      {/* Michelin Star Editorial Section */}
-      <section className="py-24 md:py-32 bg-[#fcf9f3] text-left relative overflow-hidden" id="heritage">
-        {/* Subtle background texture */}
+      {/* 2026 Michelin-Star Luxury Editorial Section */}
+      <section className="py-24 md:py-36 bg-[#141311] text-white text-left relative overflow-hidden" id="heritage">
+        {/* Ambient background glow & subtle texture */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-[#8C4723]/20 via-transparent to-transparent opacity-60 pointer-events-none" />
         <div
-          className="absolute inset-0 opacity-[0.015] mix-blend-multiply bg-cover bg-center pointer-events-none"
+          className="absolute inset-0 opacity-[0.025] mix-blend-overlay bg-cover bg-center pointer-events-none"
           style={{ backgroundImage: "url('/Fibras de Agave Cocido.webp')" }}
         />
-        
+
         <div className="max-w-container-max mx-auto px-margin-desktop relative z-10">
-          {/* Header */}
-          <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
-            <div className="flex items-center justify-center gap-3">
-              <span className="w-6 h-[0.5px] bg-[#8C4723]" />
-              <span className="font-navigation text-[9px] tracking-[0.4em] font-bold text-[#8C4723] uppercase">
-                {lang === "es" ? "Filosofía Culinaria" : "Culinary Philosophy"}
-              </span>
-              <span className="w-6 h-[0.5px] bg-[#8C4723]" />
+          
+          {/* Top Section Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 pb-8 border-b border-white/10">
+            <div className="space-y-3 max-w-2xl">
+              <div className="flex items-center gap-3">
+                <span className="w-8 h-[1px] bg-[#8C4723]" />
+                <span className="font-navigation text-[10px] tracking-[0.4em] font-bold text-[#D4A373] uppercase">
+                  {lang === "es" ? "Galería Editorial 2026" : "2026 Editorial Gallery"}
+                </span>
+              </div>
+              <h2 className="font-serif text-[clamp(28px,3.8vw,48px)] leading-[1.15] tracking-tight text-white font-normal">
+                {lang === "es" 
+                  ? "Donde el fuego de los Altos se convierte en alta cocina." 
+                  : "Where the fire of the Highlands becomes haute cuisine."}
+              </h2>
             </div>
-            
-            <h2 className="font-serif text-[clamp(28px,3.8vw,46px)] leading-[1.15] tracking-tight text-[#1c1c18] font-medium">
-              {lang === "es" 
-                ? "Donde el fuego de los Altos se convierte en alta cocina." 
-                : "Where the fire of the Highlands becomes haute cuisine."}
-            </h2>
-            
-            <p className="font-sans text-[clamp(14px,1.05vw,16px)] text-[#1c1c18]/70 font-light leading-relaxed">
-              {lang === "es"
-                ? "Restaurante 1937 Nativo es un templo gastronómico donde cada plato narra la riqueza de Ayotlán. La cocina de humo a la leña y los ingredientes locales de trazabilidad absoluta se elevan mediante maridajes sublimes diseñados en exclusiva junto a Tequila Casa Loy."
-                : "Restaurante 1937 Nativo is a gastronomic temple where every dish tells the story of Ayotlán. Our wood-fired cuisine and local ingredients of absolute traceability are elevated through sublime pairings designed exclusively alongside Tequila Casa Loy."}
-            </p>
+
+            {/* View Mode Selector Tabs (Stage vs Mosaic) */}
+            <div className="flex items-center gap-2 bg-white/5 p-1 rounded-full border border-white/10 self-start md:self-auto">
+              <button
+                onClick={() => setGalleryViewMode("stage")}
+                className={`px-5 py-2 rounded-full font-navigation text-[10px] uppercase tracking-[0.2em] transition-all duration-300 ${
+                  galleryViewMode === "stage"
+                    ? "bg-[#8C4723] text-white shadow-lg font-bold"
+                    : "text-white/60 hover:text-white"
+                }`}
+              >
+                {lang === "es" ? "Escenario Master" : "Master Stage"}
+              </button>
+              <button
+                onClick={() => setGalleryViewMode("mosaic")}
+                className={`px-5 py-2 rounded-full font-navigation text-[10px] uppercase tracking-[0.2em] transition-all duration-300 ${
+                  galleryViewMode === "mosaic"
+                    ? "bg-[#8C4723] text-white shadow-lg font-bold"
+                    : "text-white/60 hover:text-white"
+                }`}
+              >
+                {lang === "es" ? "Mosaico Editorial" : "Editorial Mosaic"}
+              </button>
+            </div>
           </div>
 
-          {/* Editorial Silent Luxury Gallery */}
-          <div className="space-y-16 md:space-y-24">
-            
-            {/* Row 1: Asymmetric 7 / 5 split */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-end">
-              {/* Item 1 - Featured 7 cols */}
-              <div 
-                className="lg:col-span-7 group cursor-pointer space-y-4"
-                onClick={() => setSelectedModalImg(nativoGallery[0].img)}
-              >
-                <div className="relative overflow-hidden aspect-[16/10] bg-zinc-950 shadow-[0_20px_40px_rgba(0,0,0,0.05)] border border-[#1c1c18]/5">
-                  <img
-                    src={nativoGallery[0].img}
-                    alt={nativoGallery[0].title[lang === "es" ? "es" : "en"]}
-                    className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103 brightness-[0.96] group-hover:brightness-100"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                    <span className="text-white font-navigation text-[10px] uppercase tracking-[0.3em] font-medium flex items-center gap-2">
-                      <span className="w-4 h-[0.5px] bg-white/80" />
-                      {lang === "es" ? "Ver en detalle" : "View detail"}
-                    </span>
-                  </div>
+          {/* VIEW MODE A: MASTERSTAGE SHOWCASE */}
+          {galleryViewMode === "stage" ? (
+            <div className="space-y-8 animate-fadeIn">
+              
+              {/* Grand Main Stage */}
+              <div className="relative rounded-sm overflow-hidden aspect-[16/9] md:aspect-[21/9] bg-black shadow-2xl border border-white/10 group">
+                <img
+                  src={nativoGallery[activeGalleryIndex].img}
+                  alt={nativoGallery[activeGalleryIndex].title[lang === "es" ? "es" : "en"]}
+                  className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-102 brightness-[0.9]"
+                />
+                
+                {/* Subtle vignette gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-black/30 pointer-events-none" />
+
+                {/* Top Corner Badge */}
+                <div className="absolute top-6 left-6 md:top-8 md:left-8 flex items-center gap-3">
+                  <span className="px-3.5 py-1 bg-black/60 backdrop-blur-md border border-white/15 text-[#D4A373] font-navigation text-[9px] uppercase tracking-[0.3em] font-medium rounded-full">
+                    {nativoGallery[activeGalleryIndex].category[lang === "es" ? "es" : "en"]}
+                  </span>
+                  <span className="font-serif italic text-sm text-white/70">
+                    {nativoGallery[activeGalleryIndex].id} / 06
+                  </span>
                 </div>
-                <div className="flex items-baseline justify-between pt-1 border-b border-[#1c1c18]/10 pb-3">
-                  <h3 className="font-serif text-lg md:text-xl text-[#1c1c18] font-normal tracking-tight">
-                    {nativoGallery[0].title[lang === "es" ? "es" : "en"]}
-                  </h3>
-                  <span className="font-serif italic text-xs text-[#8C4723]">01</span>
+
+                {/* Top Right Expand Trigger */}
+                <button
+                  onClick={() => setSelectedModalIndex(activeGalleryIndex)}
+                  className="absolute top-6 right-6 md:top-8 md:right-8 bg-black/60 hover:bg-[#8C4723] backdrop-blur-md border border-white/20 p-3 rounded-full text-white transition-all duration-300 hover:scale-110 shadow-xl flex items-center gap-2"
+                  title={lang === "es" ? "Ampliar pantalla completa" : "Fullscreen preview"}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4" />
+                  </svg>
+                  <span className="hidden md:inline font-navigation text-[9px] uppercase tracking-[0.2em] pr-1">
+                    {lang === "es" ? "Pantalla Completa" : "Fullscreen"}
+                  </span>
+                </button>
+
+                {/* Bottom Stage Overlay Info */}
+                <div className="absolute bottom-6 left-6 right-6 md:bottom-10 md:left-10 md:right-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                  <div className="space-y-2 max-w-2xl">
+                    <h3 className="font-serif text-2xl md:text-4xl text-white font-light tracking-tight">
+                      {nativoGallery[activeGalleryIndex].title[lang === "es" ? "es" : "en"]}
+                    </h3>
+                    <p className="font-sans text-xs md:text-sm text-white/70 font-light leading-relaxed">
+                      {nativoGallery[activeGalleryIndex].subtitle[lang === "es" ? "es" : "en"]}
+                    </p>
+                  </div>
+
+                  {/* Stage Navigation Arrow Controls */}
+                  <div className="flex items-center gap-3 shrink-0">
+                    <button
+                      onClick={() => setActiveGalleryIndex((prev) => (prev > 0 ? prev - 1 : nativoGallery.length - 1))}
+                      className="w-12 h-12 rounded-full border border-white/20 bg-black/40 hover:bg-[#8C4723] hover:border-[#8C4723] text-white flex items-center justify-center transition-all duration-300 backdrop-blur-md"
+                      aria-label="Anterior"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => setActiveGalleryIndex((prev) => (prev < nativoGallery.length - 1 ? prev + 1 : 0))}
+                      className="w-12 h-12 rounded-full border border-white/20 bg-black/40 hover:bg-[#8C4723] hover:border-[#8C4723] text-white flex items-center justify-center transition-all duration-300 backdrop-blur-md"
+                      aria-label="Siguiente"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
 
-              {/* Item 2 - Portrait 5 cols */}
-              <div 
-                className="lg:col-span-5 group cursor-pointer space-y-4"
-                onClick={() => setSelectedModalImg(nativoGallery[1].img)}
-              >
-                <div className="relative overflow-hidden aspect-[4/5] bg-zinc-950 shadow-[0_20px_40px_rgba(0,0,0,0.05)] border border-[#1c1c18]/5">
-                  <img
-                    src={nativoGallery[1].img}
-                    alt={nativoGallery[1].title[lang === "es" ? "es" : "en"]}
-                    className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103 brightness-[0.96] group-hover:brightness-100"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                    <span className="text-white font-navigation text-[10px] uppercase tracking-[0.3em] font-medium flex items-center gap-2">
-                      <span className="w-4 h-[0.5px] bg-white/80" />
-                      {lang === "es" ? "Ver en detalle" : "View detail"}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-baseline justify-between pt-1 border-b border-[#1c1c18]/10 pb-3">
-                  <h3 className="font-serif text-lg md:text-xl text-[#1c1c18] font-normal tracking-tight">
-                    {nativoGallery[1].title[lang === "es" ? "es" : "en"]}
-                  </h3>
-                  <span className="font-serif italic text-xs text-[#8C4723]">02</span>
-                </div>
+              {/* Interactive Filmstrip Selector Track */}
+              <div className="grid grid-cols-3 md:grid-cols-6 gap-3 md:gap-4 pt-4">
+                {nativoGallery.map((item, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveGalleryIndex(idx)}
+                    className={`group relative text-left rounded-sm overflow-hidden border transition-all duration-300 ${
+                      activeGalleryIndex === idx
+                        ? "border-[#8C4723] ring-1 ring-[#8C4723] scale-[1.02] shadow-lg opacity-100"
+                        : "border-white/10 opacity-50 hover:opacity-100 hover:border-white/30"
+                    }`}
+                  >
+                    <div className="aspect-[4/3] bg-zinc-900 overflow-hidden">
+                      <img
+                        src={item.img}
+                        alt={item.title[lang === "es" ? "es" : "en"]}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+                    <div className="p-2.5 bg-black/60 backdrop-blur-sm flex items-center justify-between">
+                      <span className="font-navigation text-[9px] uppercase tracking-[0.15em] truncate font-medium text-white/90">
+                        {item.id} · {item.title[lang === "es" ? "es" : "en"].split(" ")[0]}
+                      </span>
+                    </div>
+                  </button>
+                ))}
               </div>
+
             </div>
-
-            {/* Row 2: Asymmetric 5 / 7 split */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-start">
-              {/* Item 3 - 5 cols */}
-              <div 
-                className="lg:col-span-5 group cursor-pointer space-y-4"
-                onClick={() => setSelectedModalImg(nativoGallery[2].img)}
-              >
-                <div className="relative overflow-hidden aspect-[4/3] bg-zinc-950 shadow-[0_20px_40px_rgba(0,0,0,0.05)] border border-[#1c1c18]/5">
-                  <img
-                    src={nativoGallery[2].img}
-                    alt={nativoGallery[2].title[lang === "es" ? "es" : "en"]}
-                    className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103 brightness-[0.96] group-hover:brightness-100"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                    <span className="text-white font-navigation text-[10px] uppercase tracking-[0.3em] font-medium flex items-center gap-2">
-                      <span className="w-4 h-[0.5px] bg-white/80" />
-                      {lang === "es" ? "Ver en detalle" : "View detail"}
-                    </span>
+          ) : (
+            /* VIEW MODE B: ARCHITECTURAL EDITORIAL MOSAIC */
+            <div className="space-y-16 md:space-y-24 animate-fadeIn">
+              
+              {/* Row 1: 7 / 5 split */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-end">
+                <div 
+                  className="lg:col-span-7 group cursor-pointer space-y-4"
+                  onClick={() => setSelectedModalIndex(0)}
+                >
+                  <div className="relative overflow-hidden aspect-[16/10] bg-zinc-950 rounded-sm border border-white/10 shadow-2xl">
+                    <img
+                      src={nativoGallery[0].img}
+                      alt={nativoGallery[0].title[lang === "es" ? "es" : "en"]}
+                      className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103 brightness-[0.92] group-hover:brightness-100"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                      <span className="text-white font-navigation text-[10px] uppercase tracking-[0.3em] font-medium flex items-center gap-2">
+                        <span className="w-4 h-[0.5px] bg-[#D4A373]" />
+                        {lang === "es" ? "Ampliar en detalle" : "Expand in detail"}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-baseline justify-between pt-2 border-b border-white/10 pb-3">
+                    <div>
+                      <span className="font-navigation text-[9px] text-[#D4A373] uppercase tracking-[0.25em] block mb-1">
+                        {nativoGallery[0].category[lang === "es" ? "es" : "en"]}
+                      </span>
+                      <h3 className="font-serif text-xl md:text-2xl text-white font-light">
+                        {nativoGallery[0].title[lang === "es" ? "es" : "en"]}
+                      </h3>
+                    </div>
+                    <span className="font-serif italic text-sm text-[#D4A373]">01</span>
                   </div>
                 </div>
-                <div className="flex items-baseline justify-between pt-1 border-b border-[#1c1c18]/10 pb-3">
-                  <h3 className="font-serif text-lg md:text-xl text-[#1c1c18] font-normal tracking-tight">
-                    {nativoGallery[2].title[lang === "es" ? "es" : "en"]}
-                  </h3>
-                  <span className="font-serif italic text-xs text-[#8C4723]">03</span>
+
+                <div 
+                  className="lg:col-span-5 group cursor-pointer space-y-4"
+                  onClick={() => setSelectedModalIndex(1)}
+                >
+                  <div className="relative overflow-hidden aspect-[4/5] bg-zinc-950 rounded-sm border border-white/10 shadow-2xl">
+                    <img
+                      src={nativoGallery[1].img}
+                      alt={nativoGallery[1].title[lang === "es" ? "es" : "en"]}
+                      className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103 brightness-[0.92] group-hover:brightness-100"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                      <span className="text-white font-navigation text-[10px] uppercase tracking-[0.3em] font-medium flex items-center gap-2">
+                        <span className="w-4 h-[0.5px] bg-[#D4A373]" />
+                        {lang === "es" ? "Ampliar en detalle" : "Expand in detail"}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-baseline justify-between pt-2 border-b border-white/10 pb-3">
+                    <div>
+                      <span className="font-navigation text-[9px] text-[#D4A373] uppercase tracking-[0.25em] block mb-1">
+                        {nativoGallery[1].category[lang === "es" ? "es" : "en"]}
+                      </span>
+                      <h3 className="font-serif text-xl md:text-2xl text-white font-light">
+                        {nativoGallery[1].title[lang === "es" ? "es" : "en"]}
+                      </h3>
+                    </div>
+                    <span className="font-serif italic text-sm text-[#D4A373]">02</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Item 4 - Wide 7 cols */}
-              <div 
-                className="lg:col-span-7 group cursor-pointer space-y-4"
-                onClick={() => setSelectedModalImg(nativoGallery[3].img)}
-              >
-                <div className="relative overflow-hidden aspect-[16/10] bg-zinc-950 shadow-[0_20px_40px_rgba(0,0,0,0.05)] border border-[#1c1c18]/5">
-                  <img
-                    src={nativoGallery[3].img}
-                    alt={nativoGallery[3].title[lang === "es" ? "es" : "en"]}
-                    className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103 brightness-[0.96] group-hover:brightness-100"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                    <span className="text-white font-navigation text-[10px] uppercase tracking-[0.3em] font-medium flex items-center gap-2">
-                      <span className="w-4 h-[0.5px] bg-white/80" />
-                      {lang === "es" ? "Ver en detalle" : "View detail"}
-                    </span>
+              {/* Row 2: 5 / 7 split */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-start">
+                <div 
+                  className="lg:col-span-5 group cursor-pointer space-y-4"
+                  onClick={() => setSelectedModalIndex(2)}
+                >
+                  <div className="relative overflow-hidden aspect-[4/3] bg-zinc-950 rounded-sm border border-white/10 shadow-2xl">
+                    <img
+                      src={nativoGallery[2].img}
+                      alt={nativoGallery[2].title[lang === "es" ? "es" : "en"]}
+                      className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103 brightness-[0.92] group-hover:brightness-100"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                      <span className="text-white font-navigation text-[10px] uppercase tracking-[0.3em] font-medium flex items-center gap-2">
+                        <span className="w-4 h-[0.5px] bg-[#D4A373]" />
+                        {lang === "es" ? "Ampliar en detalle" : "Expand in detail"}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-baseline justify-between pt-2 border-b border-white/10 pb-3">
+                    <div>
+                      <span className="font-navigation text-[9px] text-[#D4A373] uppercase tracking-[0.25em] block mb-1">
+                        {nativoGallery[2].category[lang === "es" ? "es" : "en"]}
+                      </span>
+                      <h3 className="font-serif text-xl md:text-2xl text-white font-light">
+                        {nativoGallery[2].title[lang === "es" ? "es" : "en"]}
+                      </h3>
+                    </div>
+                    <span className="font-serif italic text-sm text-[#D4A373]">03</span>
                   </div>
                 </div>
-                <div className="flex items-baseline justify-between pt-1 border-b border-[#1c1c18]/10 pb-3">
-                  <h3 className="font-serif text-lg md:text-xl text-[#1c1c18] font-normal tracking-tight">
-                    {nativoGallery[3].title[lang === "es" ? "es" : "en"]}
-                  </h3>
-                  <span className="font-serif italic text-xs text-[#8C4723]">04</span>
+
+                <div 
+                  className="lg:col-span-7 group cursor-pointer space-y-4"
+                  onClick={() => setSelectedModalIndex(3)}
+                >
+                  <div className="relative overflow-hidden aspect-[16/10] bg-zinc-950 rounded-sm border border-white/10 shadow-2xl">
+                    <img
+                      src={nativoGallery[3].img}
+                      alt={nativoGallery[3].title[lang === "es" ? "es" : "en"]}
+                      className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103 brightness-[0.92] group-hover:brightness-100"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                      <span className="text-white font-navigation text-[10px] uppercase tracking-[0.3em] font-medium flex items-center gap-2">
+                        <span className="w-4 h-[0.5px] bg-[#D4A373]" />
+                        {lang === "es" ? "Ampliar en detalle" : "Expand in detail"}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-baseline justify-between pt-2 border-b border-white/10 pb-3">
+                    <div>
+                      <span className="font-navigation text-[9px] text-[#D4A373] uppercase tracking-[0.25em] block mb-1">
+                        {nativoGallery[3].category[lang === "es" ? "es" : "en"]}
+                      </span>
+                      <h3 className="font-serif text-xl md:text-2xl text-white font-light">
+                        {nativoGallery[3].title[lang === "es" ? "es" : "en"]}
+                      </h3>
+                    </div>
+                    <span className="font-serif italic text-sm text-[#D4A373]">04</span>
+                  </div>
                 </div>
               </div>
+
+              {/* Row 3: 6 / 6 split */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-center">
+                <div 
+                  className="lg:col-span-6 group cursor-pointer space-y-4"
+                  onClick={() => setSelectedModalIndex(4)}
+                >
+                  <div className="relative overflow-hidden aspect-[16/10] bg-zinc-950 rounded-sm border border-white/10 shadow-2xl">
+                    <img
+                      src={nativoGallery[4].img}
+                      alt={nativoGallery[4].title[lang === "es" ? "es" : "en"]}
+                      className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103 brightness-[0.92] group-hover:brightness-100"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                      <span className="text-white font-navigation text-[10px] uppercase tracking-[0.3em] font-medium flex items-center gap-2">
+                        <span className="w-4 h-[0.5px] bg-[#D4A373]" />
+                        {lang === "es" ? "Ampliar en detalle" : "Expand in detail"}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-baseline justify-between pt-2 border-b border-white/10 pb-3">
+                    <div>
+                      <span className="font-navigation text-[9px] text-[#D4A373] uppercase tracking-[0.25em] block mb-1">
+                        {nativoGallery[4].category[lang === "es" ? "es" : "en"]}
+                      </span>
+                      <h3 className="font-serif text-xl md:text-2xl text-white font-light">
+                        {nativoGallery[4].title[lang === "es" ? "es" : "en"]}
+                      </h3>
+                    </div>
+                    <span className="font-serif italic text-sm text-[#D4A373]">05</span>
+                  </div>
+                </div>
+
+                <div 
+                  className="lg:col-span-6 group cursor-pointer space-y-4"
+                  onClick={() => setSelectedModalIndex(5)}
+                >
+                  <div className="relative overflow-hidden aspect-[16/10] bg-zinc-950 rounded-sm border border-white/10 shadow-2xl">
+                    <img
+                      src={nativoGallery[5].img}
+                      alt={nativoGallery[5].title[lang === "es" ? "es" : "en"]}
+                      className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103 brightness-[0.92] group-hover:brightness-100"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                      <span className="text-white font-navigation text-[10px] uppercase tracking-[0.3em] font-medium flex items-center gap-2">
+                        <span className="w-4 h-[0.5px] bg-[#D4A373]" />
+                        {lang === "es" ? "Ampliar en detalle" : "Expand in detail"}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-baseline justify-between pt-2 border-b border-white/10 pb-3">
+                    <div>
+                      <span className="font-navigation text-[9px] text-[#D4A373] uppercase tracking-[0.25em] block mb-1">
+                        {nativoGallery[5].category[lang === "es" ? "es" : "en"]}
+                      </span>
+                      <h3 className="font-serif text-xl md:text-2xl text-white font-light">
+                        {nativoGallery[5].title[lang === "es" ? "es" : "en"]}
+                      </h3>
+                    </div>
+                    <span className="font-serif italic text-sm text-[#D4A373]">06</span>
+                  </div>
+                </div>
+              </div>
+
             </div>
+          )}
 
-            {/* Row 3: Balanced 6 / 6 split */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-center">
-              {/* Item 5 - 6 cols */}
-              <div 
-                className="lg:col-span-6 group cursor-pointer space-y-4"
-                onClick={() => setSelectedModalImg(nativoGallery[4].img)}
-              >
-                <div className="relative overflow-hidden aspect-[16/10] bg-zinc-950 shadow-[0_20px_40px_rgba(0,0,0,0.05)] border border-[#1c1c18]/5">
-                  <img
-                    src={nativoGallery[4].img}
-                    alt={nativoGallery[4].title[lang === "es" ? "es" : "en"]}
-                    className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103 brightness-[0.96] group-hover:brightness-100"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                    <span className="text-white font-navigation text-[10px] uppercase tracking-[0.3em] font-medium flex items-center gap-2">
-                      <span className="w-4 h-[0.5px] bg-white/80" />
-                      {lang === "es" ? "Ver en detalle" : "View detail"}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-baseline justify-between pt-1 border-b border-[#1c1c18]/10 pb-3">
-                  <h3 className="font-serif text-lg md:text-xl text-[#1c1c18] font-normal tracking-tight">
-                    {nativoGallery[4].title[lang === "es" ? "es" : "en"]}
-                  </h3>
-                  <span className="font-serif italic text-xs text-[#8C4723]">05</span>
-                </div>
-              </div>
-
-              {/* Item 6 - 6 cols */}
-              <div 
-                className="lg:col-span-6 group cursor-pointer space-y-4"
-                onClick={() => setSelectedModalImg(nativoGallery[5].img)}
-              >
-                <div className="relative overflow-hidden aspect-[16/10] bg-zinc-950 shadow-[0_20px_40px_rgba(0,0,0,0.05)] border border-[#1c1c18]/5">
-                  <img
-                    src={nativoGallery[5].img}
-                    alt={nativoGallery[5].title[lang === "es" ? "es" : "en"]}
-                    className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-103 brightness-[0.96] group-hover:brightness-100"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
-                    <span className="text-white font-navigation text-[10px] uppercase tracking-[0.3em] font-medium flex items-center gap-2">
-                      <span className="w-4 h-[0.5px] bg-white/80" />
-                      {lang === "es" ? "Ver en detalle" : "View detail"}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-baseline justify-between pt-1 border-b border-[#1c1c18]/10 pb-3">
-                  <h3 className="font-serif text-lg md:text-xl text-[#1c1c18] font-normal tracking-tight">
-                    {nativoGallery[5].title[lang === "es" ? "es" : "en"]}
-                  </h3>
-                  <span className="font-serif italic text-xs text-[#8C4723]">06</span>
-                </div>
-              </div>
-            </div>
-
-          </div>
         </div>
       </section>
 
@@ -1400,27 +1621,81 @@ export default function Nativo1937({ lang = "es", t }) {
         </div>
       </section>
 
-      {/* Image Lightbox Modal */}
-      {selectedModalImg && (
+      {/* 2026 Cinema Lightbox Modal */}
+      {selectedModalIndex !== null && (
         <div 
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 cursor-pointer animate-fadeIn"
-          onClick={() => setSelectedModalImg(null)}
+          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-2xl flex flex-col justify-between p-6 md:p-10 text-white animate-fadeIn select-none"
+          onClick={() => setSelectedModalIndex(null)}
         >
-          <div className="relative max-w-5xl max-h-[90vh] overflow-hidden rounded shadow-2xl">
+          {/* Top Bar Controls */}
+          <div className="flex items-center justify-between border-b border-white/10 pb-4 z-10" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-3">
+              <span className="w-6 h-[0.5px] bg-[#8C4723]" />
+              <span className="font-navigation text-[10px] uppercase tracking-[0.3em] text-[#D4A373]">
+                {nativoGallery[selectedModalIndex].category[lang === "es" ? "es" : "en"]}
+              </span>
+            </div>
+            <div className="flex items-center gap-6">
+              <span className="font-serif italic text-sm text-white/70">
+                {nativoGallery[selectedModalIndex].id} / 06
+              </span>
+              <button
+                onClick={() => setSelectedModalIndex(null)}
+                className="w-10 h-10 rounded-full border border-white/20 hover:bg-[#8C4723] hover:border-[#8C4723] flex items-center justify-center transition-all duration-300"
+                aria-label="Cerrar"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Main Stage & Prev/Next Arrows */}
+          <div className="relative flex-1 flex items-center justify-center my-4 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            {/* Prev Arrow */}
             <button
-              onClick={() => setSelectedModalImg(null)}
-              className="absolute top-4 right-4 text-white bg-black/60 hover:bg-black p-2.5 rounded-full transition-colors z-10"
-              aria-label="Cerrar"
+              onClick={() => setSelectedModalIndex((prev) => (prev > 0 ? prev - 1 : nativoGallery.length - 1))}
+              className="absolute left-2 md:left-6 z-20 w-12 h-12 md:w-14 md:h-14 rounded-full border border-white/20 bg-black/50 hover:bg-[#8C4723] hover:border-[#8C4723] text-white flex items-center justify-center backdrop-blur-md transition-all duration-300 shadow-2xl"
+              aria-label="Anterior"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
+
+            {/* High-Res Image Display */}
             <img 
-              src={selectedModalImg} 
-              alt="Ampliada" 
-              className="w-full h-full max-h-[85vh] object-contain rounded"
+              src={nativoGallery[selectedModalIndex].img} 
+              alt={nativoGallery[selectedModalIndex].title[lang === "es" ? "es" : "en"]} 
+              className="max-w-full max-h-[75vh] object-contain shadow-2xl rounded-sm border border-white/10 transition-transform duration-500"
             />
+
+            {/* Next Arrow */}
+            <button
+              onClick={() => setSelectedModalIndex((prev) => (prev < nativoGallery.length - 1 ? prev + 1 : 0))}
+              className="absolute right-2 md:right-6 z-20 w-12 h-12 md:w-14 md:h-14 rounded-full border border-white/20 bg-black/50 hover:bg-[#8C4723] hover:border-[#8C4723] text-white flex items-center justify-center backdrop-blur-md transition-all duration-300 shadow-2xl"
+              aria-label="Siguiente"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Bottom Bar Info */}
+          <div className="border-t border-white/10 pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 z-10" onClick={(e) => e.stopPropagation()}>
+            <div>
+              <h3 className="font-serif text-xl md:text-2xl text-white font-light">
+                {nativoGallery[selectedModalIndex].title[lang === "es" ? "es" : "en"]}
+              </h3>
+              <p className="font-sans text-xs md:text-sm text-white/60 font-light mt-1">
+                {nativoGallery[selectedModalIndex].subtitle[lang === "es" ? "es" : "en"]}
+              </p>
+            </div>
+            <div className="font-navigation text-[10px] uppercase tracking-[0.2em] text-[#D4A373] hidden md:block">
+              {lang === "es" ? "Navega con flechas o clic" : "Navigate with arrows or click"}
+            </div>
           </div>
         </div>
       )}
