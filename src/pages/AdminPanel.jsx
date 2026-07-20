@@ -88,7 +88,7 @@ export default function AdminPanel({
       if (res.ok) {
         const data = await res.json();
         if (data.bookingsLog && Array.isArray(data.bookingsLog)) {
-          apiLogs = data.bookingsLog;
+          apiLogs = data.bookingsLog.map(item => ({ ...item, isRealSupabase: true }));
         }
       }
     } catch (e) {
@@ -100,13 +100,16 @@ export default function AdminPanel({
     try {
       const saved = localStorage.getItem("casa_loy_bookings_log");
       if (saved) {
-        localLogs = JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          localLogs = parsed.map(item => ({ ...item, isLocalOnly: true }));
+        }
       }
     } catch (e) {
       console.error("Error reading local bookings log", e);
     }
 
-    // Known backup reservations (such as July 17th sale)
+    // Known backup reservations (such as July 17th sale from Supabase)
     const backupReservations = [
       {
         code: "CL-PLATINO-202607254775",
@@ -120,19 +123,27 @@ export default function AdminPanel({
         amount: 4500,
         method: "PayPal",
         timestamp: "2026-07-17 19:09:43",
-        used_at: null
+        used_at: null,
+        isRealSupabase: true
       }
     ];
 
-    // Combine logs without duplicates by code
+    // Combine logs without duplicates by code (Supabase records take priority)
     const map = new Map();
-    [...apiLogs, ...localLogs, ...backupReservations].forEach(item => {
+    [...apiLogs, ...backupReservations, ...localLogs].forEach(item => {
       if (item && item.code && !map.has(item.code)) {
         map.set(item.code, item);
       }
     });
 
     setBookingsLog(Array.from(map.values()));
+  };
+
+  const handleClearLocalLogs = () => {
+    if (confirm("¿Deseas borrar las reservaciones de prueba guardadas en la memoria local de este navegador? Las reservaciones reales de Supabase se conservarán.")) {
+      localStorage.removeItem("casa_loy_bookings_log");
+      loadData();
+    }
   };
 
   const handleRegister = (e) => {
@@ -1018,6 +1029,14 @@ export default function AdminPanel({
                     >
                       <span className="material-symbols-outlined text-xs">refresh</span>
                       Actualizar
+                    </button>
+                    <button
+                      onClick={handleClearLocalLogs}
+                      title="Borrar reservaciones de prueba guardadas solo en la memoria de este navegador"
+                      className="text-xs text-stone-500 hover:text-red-700 font-semibold cursor-pointer border border-stone-200 px-3 py-1 flex items-center gap-1.5 hover:bg-red-50 hover:border-red-200"
+                    >
+                      <span className="material-symbols-outlined text-xs">delete_sweep</span>
+                      Limpiar Pruebas Locales
                     </button>
                   </div>
                 </div>
