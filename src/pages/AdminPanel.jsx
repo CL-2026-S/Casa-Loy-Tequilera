@@ -49,7 +49,7 @@ export default function AdminPanel({
   const [manualPhone, setManualPhone] = useState("");
   const [manualTour, setManualTour] = useState("oro");
   const [manualDate, setManualDate] = useState("");
-  const [manualTime, setManualTime] = useState("10:00 AM");
+  const [manualTime, setManualTime] = useState("11:00 AM");
   const [manualGuests, setManualGuests] = useState(1);
   const [manualAmount, setManualAmount] = useState(1);
   const [manualMethod, setManualMethod] = useState("Efectivo");
@@ -67,7 +67,7 @@ export default function AdminPanel({
     6: true, // Saturday
     0: true  // Sunday
   });
-  const [bulkTimeSlot, setBulkTimeSlot] = useState("10:00 AM");
+  const [bulkTimeSlot, setBulkTimeSlot] = useState("11:00 AM");
   const [bulkOccupancyValue, setBulkOccupancyValue] = useState(0);
   const [isSubmittingBulk, setIsSubmittingBulk] = useState(false);
 
@@ -798,8 +798,8 @@ export default function AdminPanel({
                             onChange={(e) => setBulkTimeSlot(e.target.value)}
                             className="bg-white border border-outline-variant p-2 flex-1 text-xs focus:outline-none"
                           >
-                            <option value="10:00 AM">10:00 AM</option>
                             <option value="11:00 AM">11:00 AM</option>
+                            <option value="1:00 PM">1:00 PM</option>
                           </select>
                           <input
                             type="number"
@@ -1119,8 +1119,8 @@ export default function AdminPanel({
                             onChange={(e) => setManualTime(e.target.value)}
                             className="w-full bg-white border border-outline-variant p-2.5 text-xs focus:outline-none text-on-surface"
                           >
-                            <option value="10:00 AM">10:00 AM</option>
                             <option value="11:00 AM">11:00 AM</option>
+                            <option value="1:00 PM">1:00 PM</option>
                           </select>
                         </div>
                       </div>

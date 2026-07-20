@@ -368,7 +368,7 @@ export default function ExperienceDetail({
   };
 
   const areAllSlotsBlockedForDate = (dateStr) => {
-    const slots = ["10:00 AM", "11:00 AM"];
+    const slots = ["11:00 AM", "1:00 PM"];
     return slots.every(time => isSlotBlocked(dateStr, time));
   };
 
@@ -915,7 +915,7 @@ export default function ExperienceDetail({
                     <span className="font-label-caps text-label-caps text-primary text-[10px] uppercase">
                       {activeT.scheduleLabel}
                     </span>
-                    <span className="font-headline-md text-xl font-bold">10:00 AM & 11:00 AM</span>
+                    <span className="font-headline-md text-xl font-bold">11:00 AM & 1:00 PM</span>
                   </div>
                   <div className="w-px h-12 bg-outline-variant/30"></div>
                   <div className="flex flex-col">
@@ -1404,7 +1404,7 @@ export default function ExperienceDetail({
                           {activeT.scheduleLabel}
                         </label>
                         <div className="flex flex-col gap-2">
-                          {["10:00 AM", "11:00 AM"].map((time) => {
+                          {["11:00 AM", "1:00 PM"].map((time) => {
                             const occupied = bookingsCapacity[selectedDateStr]?.[time] || 0;
                             const remaining = maxCapacityLimit - occupied;
                             const isFull = remaining <= 0;
@@ -1779,8 +1779,8 @@ export default function ExperienceDetail({
                   id="admin-occupancy-time"
                   className="bg-stone-50 border border-outline-variant p-2 text-xs font-sans focus:outline-none focus:border-primary col-span-1"
                 >
-                  <option value="10:00 AM">10:00 AM</option>
                   <option value="11:00 AM">11:00 AM</option>
+                  <option value="1:00 PM">1:00 PM</option>
                 </select>
                 <div className="flex gap-1.5 items-center col-span-1">
                   <input

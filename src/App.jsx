@@ -229,8 +229,8 @@ export default function App() {
         const seed1 = ((d * 3) % 10) + 3;
         const seed2 = ((d * 7) % 8) + 5;
         initial[dateStr] = {
-          "10:00 AM": seed1,
-          "11:00 AM": seed2,
+          "11:00 AM": seed1,
+          "1:00 PM": seed2,
         };
       }
       temp.setDate(temp.getDate() + 1);
