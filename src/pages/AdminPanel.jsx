@@ -82,34 +82,27 @@ export default function AdminPanel({
   }, [manualGuests, manualTour]);
 
   const loadData = async () => {
+    // Automatically purge old local test logs if present
+    try {
+      localStorage.removeItem("casa_loy_bookings_log");
+    } catch (e) {
+      console.warn("Could not clear local storage logs", e);
+    }
+
     let apiLogs = [];
     try {
       const res = await fetch("/api/tourism");
       if (res.ok) {
         const data = await res.json();
         if (data.bookingsLog && Array.isArray(data.bookingsLog)) {
-          apiLogs = data.bookingsLog.map(item => ({ ...item, isRealSupabase: true }));
+          apiLogs = data.bookingsLog;
         }
       }
     } catch (e) {
       console.error("Could not fetch reservations log from API.", e);
     }
 
-    // Merge with localStorage logs
-    let localLogs = [];
-    try {
-      const saved = localStorage.getItem("casa_loy_bookings_log");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          localLogs = parsed.map(item => ({ ...item, isLocalOnly: true }));
-        }
-      }
-    } catch (e) {
-      console.error("Error reading local bookings log", e);
-    }
-
-    // Known backup reservations (such as July 17th sale from Supabase)
+    // Known real reservations from Supabase (such as July 17th sale)
     const backupReservations = [
       {
         code: "CL-PLATINO-202607254775",
@@ -123,14 +116,25 @@ export default function AdminPanel({
         amount: 4500,
         method: "PayPal",
         timestamp: "2026-07-17 19:09:43",
-        used_at: null,
-        isRealSupabase: true
+        used_at: null
       }
     ];
 
-    // Combine logs without duplicates by code (Supabase records take priority)
+    // Combine and filter out any test/demo entries
+    const combined = [...apiLogs, ...backupReservations];
+    const filtered = combined.filter(item => {
+      if (!item) return false;
+      const email = (item.email || "").toLowerCase();
+      const name = (item.name || "").toLowerCase();
+      if (email.includes("jc.gomez") || email.includes("mafer.ortiz") || name.includes("juan carlos") || name.includes("maría fernanda")) {
+        return false;
+      }
+      return true;
+    });
+
+    // Deduplicate by code
     const map = new Map();
-    [...apiLogs, ...backupReservations, ...localLogs].forEach(item => {
+    filtered.forEach(item => {
       if (item && item.code && !map.has(item.code)) {
         map.set(item.code, item);
       }
