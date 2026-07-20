@@ -320,7 +320,7 @@ export default function App() {
   const shouldShowAgeGate = !ageVerified && page !== "privacy";
 
   return (
-    <PayPalScriptProvider options={{ "client-id": "ATvqpIUvCDHFIHEAzauNdAX4o2qPqT-971MgriMfcpZFNQV9_af-WWa0kHCZHwiGFGnnSe2bhK33JPsL", currency: "MXN" }}>
+    <PayPalScriptProvider options={{ "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID || "ATvqpIUvCDHFIHEAzauNdAX4o2qPqT-971MgriMfcpZFNQV9_af-WWa0kHCZHwiGFGnnSe2bhK33JPsL", currency: "MXN" }}>
       <div className="bg-[#fcf9f3] text-[#1c1c18] font-body-md overflow-x-hidden antialiased select-none relative">
         {/* Dynamic SEO Injector for Meta Tags and JSON-LD microdata */}
         <SEO page={page} lang={lang} />
