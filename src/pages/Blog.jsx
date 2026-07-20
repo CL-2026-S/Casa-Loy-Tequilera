@@ -150,15 +150,15 @@ export default function Blog({ setPage, lang = "es" }) {
       <section className="relative h-[85vh] w-full flex items-end overflow-hidden bg-zinc-950">
         <div className="absolute inset-0 z-0">
           <picture>
-            <source media="(max-width: 768px)" srcSet="/Banner Restaurante 1937 Nativo-movil.webp" />
+            <source media="(max-width: 768px)" srcSet="/Restaurante 1937 Nativo.webp" />
             <source 
               media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
-              srcSet="/Banner Restaurante 1937 Nativo-retina.webp" 
+              srcSet="/Restaurante 1937 Nativo.webp" 
             />
             <img
               alt="La Nueva Era de la Destilería"
               className="w-full h-full object-cover scale-105 brightness-[0.82]"
-              src="/Banner Restaurante 1937 Nativo-escritorio.webp"
+              src="/Restaurante 1937 Nativo.webp"
             />
           </picture>
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/45"></div>
