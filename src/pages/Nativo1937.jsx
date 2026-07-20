@@ -749,33 +749,7 @@ export default function Nativo1937({ lang = "es", t }) {
 
           </div>
 
-          {/* Inviting Scroll Bridge CTA (Scroll to Menu) */}
-          <div className="mt-16 bg-gradient-to-r from-[#8C4723]/10 via-[#8C4723]/5 to-[#8C4723]/10 rounded-3xl p-8 md:p-10 border border-[#8C4723]/20 text-center flex flex-col items-center justify-center gap-6 shadow-sm">
-            <div className="space-y-2 max-w-xl">
-              <span className="font-navigation text-[10px] uppercase tracking-[0.3em] font-bold text-[#8C4723]">
-                {lang === "es" ? "Experiencia Gastronómica Completa" : "Complete Gastronomic Experience"}
-              </span>
-              <h3 className="font-sans text-2xl md:text-3xl font-bold text-[#1D1D1F]">
-                {lang === "es" 
-                  ? "¿Listo para saborear nuestra propuesta?" 
-                  : "Ready to savor our menu proposal?"}
-              </h3>
-              <p className="font-sans text-sm text-[#1D1D1F]/70 font-normal">
-                {lang === "es"
-                  ? "Descubre la selección de cortes premium a las brasas, mariscos y la mixología de autor de Restaurante 1937 Nativo."
-                  : "Discover our selection of wood-fired premium cuts, fresh seafood, and signature mixology."}
-              </p>
-            </div>
-            <a
-              href="#menu"
-              className="bg-[#8C4723] hover:bg-[#a6562b] text-white font-navigation text-[11px] uppercase tracking-[0.25em] font-bold py-4 px-10 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center gap-3"
-            >
-              <span>{lang === "es" ? "Explorar la Carta (Menú)" : "Explore the Menu"}</span>
-              <svg className="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7-7-7" />
-              </svg>
-            </a>
-          </div>
+
 
         </div>
       </section>
