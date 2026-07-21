@@ -1,5 +1,6 @@
 import { supabase, authorizeInternal } from './_utils/clients.js';
 import { sendBookingEmail } from './_utils/emails.js';
+import { getAuthUser, auditLog } from './_utils/auth.js';
 
 const getCurrentGuadalajaraTime = () => {
   try {
@@ -140,7 +141,8 @@ export default async function handler(req, res) {
         amount: r.total_paid,
         method: r.payment_method,
         timestamp: r.created_at ? new Date(r.created_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) : '',
-        used_at: r.used_at ? new Date(r.used_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) : null
+        used_at: r.used_at ? new Date(r.used_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) : null,
+        status: r.status || 'Confirmada'
       })) || [];
 
       return res.status(200).json({
@@ -165,12 +167,20 @@ export default async function handler(req, res) {
     }
 
     // Security Check: Enforce authorization for all admin mutations (actions other than create_booking and resend_email)
+    let activeUser = { email: 'system', role: 'admin' };
     if (action !== 'create_booking' && action !== 'resend_email') {
-      if (!authorizeInternal(req)) {
+      const isInternal = authorizeInternal(req);
+      const staffUser = getAuthUser(req);
+      
+      if (!isInternal && !staffUser) {
         return res.status(401).json({ 
           error: 'UNAUTHORIZED', 
           message: 'No tienes autorización para realizar esta acción administrativa.' 
         });
+      }
+      
+      if (staffUser) {
+        activeUser = staffUser;
       }
     }
 
@@ -299,6 +309,8 @@ export default async function handler(req, res) {
           });
         if (capErr) throw capErr;
 
+        await auditLog(activeUser.userId, activeUser.email, activeUser.role, 'set_capacity', `Aforo general cambiado a ${capacity}`);
+
         return res.status(200).json({ success: true });
       }
 
@@ -315,6 +327,8 @@ export default async function handler(req, res) {
           .upsert(rows);
         if (blockErr) throw blockErr;
 
+        await auditLog(activeUser.userId, activeUser.email, activeUser.role, 'block_dates', `Bloqueo de fechas: ${dates.join(', ')}`);
+
         return res.status(200).json({ success: true });
       }
 
@@ -330,6 +344,8 @@ export default async function handler(req, res) {
           .delete()
           .in('date_str', dates);
         if (unblockErr) throw unblockErr;
+
+        await auditLog(activeUser.userId, activeUser.email, activeUser.role, 'unblock_dates', `Desbloqueo de fechas: ${dates.join(', ')}`);
 
         return res.status(200).json({ success: true });
       }
@@ -351,6 +367,8 @@ export default async function handler(req, res) {
           });
         if (occErr) throw occErr;
 
+        await auditLog(activeUser.userId, activeUser.email, activeUser.role, 'set_occupancy', `Ocupación para ${date_str} a las ${time_str} fijada en ${occupied_count}`);
+
         return res.status(200).json({ success: true });
       }
 
@@ -364,7 +382,7 @@ export default async function handler(req, res) {
         const nowStr = new Date().toISOString();
         const { data, error: valErr } = await supabase
           .from('reservations')
-          .update({ used_at: nowStr })
+          .update({ used_at: nowStr, status: 'Completada' })
           .eq('code', code.trim().toUpperCase())
           .select();
 
@@ -372,6 +390,8 @@ export default async function handler(req, res) {
         if (!data || data.length === 0) {
           return res.status(404).json({ error: 'TICKET_NOT_FOUND', message: 'Ticket no encontrado.' });
         }
+
+        await auditLog(activeUser.userId, activeUser.email, activeUser.role, 'validate_ticket', `Entrada registrada para boleto ${code}`);
 
         return res.status(200).json({ success: true, used_at: new Date(nowStr).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) });
       }
@@ -387,6 +407,8 @@ export default async function handler(req, res) {
           .from('slot_occupancy_overrides')
           .upsert(slotOverrides);
         if (bulkErr) throw bulkErr;
+
+        await auditLog(activeUser.userId, activeUser.email, activeUser.role, 'bulk_set_occupancy', `Ocupación masiva establecida en ${slotOverrides.length} turnos`);
 
         return res.status(200).json({ success: true });
       }
@@ -422,6 +444,38 @@ export default async function handler(req, res) {
         if (!emailRes.success) {
           return res.status(500).json({ error: 'EMAIL_SEND_FAILED', message: emailRes.error });
         }
+
+        return res.status(200).json({ success: true });
+      }
+
+      // Action 9: Update Booking Status
+      if (action === 'update_status') {
+        const { code, status } = req.body || {};
+        if (!code || !status) {
+          return res.status(400).json({ error: 'Code and status are required.' });
+        }
+
+        const updateData = { status };
+        if (status === 'Completada') {
+          updateData.used_at = new Date().toISOString();
+        } else if (status === 'Confirmada') {
+          updateData.used_at = null;
+        }
+
+        const { error } = await supabase
+          .from('reservations')
+          .update(updateData)
+          .eq('code', code.trim().toUpperCase());
+
+        if (error) throw error;
+
+        await auditLog(
+          activeUser.userId,
+          activeUser.email,
+          activeUser.role,
+          'update_status',
+          `Cambio de estado de reserva ${code} a: ${status}`
+        );
 
         return res.status(200).json({ success: true });
       }

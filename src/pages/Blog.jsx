@@ -1,10 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Blog({ setPage, lang = "es" }) {
+  const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState("Noticias");
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [dynamicArticles, setDynamicArticles] = useState([]);
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const res = await fetch("/api/cms?type=blog");
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.length > 0) {
+            const mapped = data.map(b => ({
+              id: b.slug,
+              category: b.category,
+              label: b.label || "PROCESOS",
+              title: b.title,
+              desc: b.description,
+              img: b.image_url,
+              clickable: true,
+            }));
+            setDynamicArticles(mapped);
+          }
+        }
+      } catch (e) {
+        console.error("Error fetching dynamic blog articles:", e);
+      }
+    };
+    fetchArticles();
+  }, []);
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
@@ -46,7 +75,7 @@ export default function Blog({ setPage, lang = "es" }) {
     { id: "Noticias", label: lang === "es" ? "Noticias" : "News" },
     { id: "Lanzamientos", label: lang === "es" ? "Lanzamientos" : "Launches" },
     { id: "Datos Relevantes", label: lang === "es" ? "Datos Relevantes" : "Key Facts" },
-    { id: "Festividades", label: lang === "es" ? "Festivities" : "Festivities" },
+    { id: "Festividades", label: lang === "es" ? "Festividades" : "Festivities" },
     { id: "Mixología", label: lang === "es" ? "Mixología" : "Mixology" },
     { id: "Sustentabilidad", label: lang === "es" ? "Sustentabilidad" : "Sustainability" },
   ];
@@ -139,8 +168,11 @@ export default function Blog({ setPage, lang = "es" }) {
   };
 
   const currentT = content[lang] || content.es;
+  const activeArticles = dynamicArticles.length > 0 ? dynamicArticles : currentT.articles;
+  const heroArticle = dynamicArticles.length > 0 ? activeArticles[0] : null;
+  const displayArticles = dynamicArticles.length > 0 ? activeArticles.slice(1) : activeArticles;
 
-  const filteredArticles = currentT.articles.filter(
+  const filteredArticles = displayArticles.filter(
     (art) => activeFilter === "Noticias" || art.category === activeFilter
   );
 
@@ -150,32 +182,38 @@ export default function Blog({ setPage, lang = "es" }) {
       <section className="relative h-[85vh] w-full flex items-end overflow-hidden bg-zinc-950">
         <div className="absolute inset-0 z-0">
           <picture>
-            <source media="(max-width: 768px)" srcSet="/Restaurante 1937 Nativo.webp" />
+            <source media="(max-width: 768px)" srcSet={heroArticle ? heroArticle.img : "/Restaurante 1937 Nativo.webp"} />
             <source 
               media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
-              srcSet="/Restaurante 1937 Nativo.webp" 
+              srcSet={heroArticle ? heroArticle.img : "/Restaurante 1937 Nativo.webp"} 
             />
             <img
-              alt="La Nueva Era de la Destilería"
+              alt={heroArticle ? heroArticle.title : "La Nueva Era de la Destilería"}
               className="w-full h-full object-cover scale-105 brightness-[0.82]"
-              src="/Restaurante 1937 Nativo.webp"
+              src={heroArticle ? heroArticle.img : "/Restaurante 1937 Nativo.webp"}
             />
           </picture>
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/45"></div>
         </div>
         <div className="relative z-10 max-w-container-max mx-auto px-margin-desktop pb-24 w-full text-white space-y-6">
           <span className="font-label-caps text-label-caps text-secondary-fixed tracking-[0.2em] block uppercase animate-pulse">
-            {currentT.heroOvertitle}
+            {heroArticle ? (heroArticle.label || currentT.heroOvertitle) : currentT.heroOvertitle}
           </span>
           <h1 className="font-display-hero text-headline-lg-mobile md:text-headline-lg text-white mb-6 leading-tight max-w-3xl">
-            {currentT.heroTitle}
+            {heroArticle ? heroArticle.title : currentT.heroTitle}
           </h1>
           <p className="font-body-lg text-body-lg text-surface-variant/90 mb-8 max-w-2xl font-light">
-            {currentT.heroDesc}
+            {heroArticle ? heroArticle.desc : currentT.heroDesc}
           </p>
           <button
-            onClick={() => setPage("blog-post")}
-            className="group flex items-center gap-3 font-navigation text-navigation text-white border-b border-white/30 pb-2 w-fit hover:border-white transition-all duration-300"
+            onClick={() => {
+              if (heroArticle) {
+                navigate(`/blog/${heroArticle.id}`);
+              } else {
+                navigate(`/blog/arte-del-silencio`);
+              }
+            }}
+            className="group flex items-center gap-3 font-navigation text-navigation text-white border-b border-white/30 pb-2 w-fit hover:border-white transition-all duration-300 cursor-pointer"
           >
             {currentT.readMore}
             <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform duration-300">
@@ -212,7 +250,7 @@ export default function Blog({ setPage, lang = "es" }) {
           {filteredArticles.map((art) => (
             <article
               key={art.id}
-              onClick={() => art.clickable && setPage("blog-post")}
+              onClick={() => art.clickable && navigate(`/blog/${art.id}`)}
               className="group cursor-pointer space-y-6 text-left"
             >
               <div className="aspect-[3/4] overflow-hidden bg-surface-container relative shadow-sm border border-outline-variant/10">

@@ -1,7 +1,33 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 export default function BlogPost({ lang = "es", setPage }) {
+  const { slug } = useParams();
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const fetchBlogPost = async () => {
+      try {
+        const res = await fetch("/api/cms?type=blog");
+        if (res.ok) {
+          const data = await res.json();
+          const found = data.find(p => p.slug === slug);
+          if (found) {
+            setPost(found);
+          }
+        }
+      } catch (e) {
+        console.error("Error loading blog post:", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (slug) {
+      fetchBlogPost();
+    }
+  }, [slug]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -81,6 +107,66 @@ export default function BlogPost({ lang = "es", setPage }) {
   };
 
   const t = content[lang];
+
+  if (post) {
+    const postTitle = post.title;
+    const postCategory = post.category || "Noticias";
+    const postAuthor = lang === "es" ? post.author_es : (post.author_en || post.author_es);
+    const postDate = new Date(post.published_at || post.created_at).toLocaleDateString(
+      lang === "es" ? "es-MX" : "en-US",
+      { day: "numeric", month: "long", year: "numeric" }
+    );
+    const postBody = lang === "es" ? post.body_es : (post.body_en || post.body_es);
+
+    return (
+      <div className="bg-background text-on-surface text-left">
+        {/* Hero Section */}
+        <header className="relative w-full h-[60vh] md:h-screen min-h-[500px] overflow-hidden">
+          <img
+            alt={postTitle}
+            className="w-full h-full object-cover"
+            src={post.image_url || "/Barra Casa Loy Experiencias.webp"}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+          <div className="absolute bottom-margin-desktop left-gutter md:left-margin-desktop right-gutter md:right-margin-desktop max-w-container-max mx-auto">
+            <span className="font-label-caps text-label-caps text-primary tracking-[0.2em] mb-4 block uppercase font-semibold">
+              {postCategory}
+            </span>
+            <h1 className="font-serif text-4xl md:text-7xl lg:text-[84px] text-on-surface leading-tight max-w-4xl tracking-tight">
+              {postTitle}
+            </h1>
+          </div>
+        </header>
+
+        <main className="max-w-container-max mx-auto px-gutter md:px-margin-desktop mt-20 pb-24">
+          {/* Author & Date */}
+          <div className="flex items-center justify-between border-b border-outline-variant/30 pb-8 mb-20">
+            <p className="font-body-md text-body-md text-on-surface-variant italic">
+              {lang === "es" ? "Por: " : "By: "}
+              <span className="font-bold text-on-surface uppercase not-italic tracking-wider">
+                {postAuthor}
+              </span>{" "}
+              • {postDate}
+            </p>
+            <div className="flex gap-4">
+              <span
+                onClick={handleShare}
+                className="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors select-none font-bold"
+                title="Copy link"
+              >
+                {copied ? "check" : "share"}
+              </span>
+            </div>
+          </div>
+
+          {/* Body Content */}
+          <article className="max-w-3xl mx-auto space-y-8 text-lg md:text-xl text-on-surface-variant leading-relaxed font-light font-sans dynamic-blog-body">
+            <div dangerouslySetInnerHTML={{ __html: postBody }} />
+          </article>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-background text-on-surface text-left">

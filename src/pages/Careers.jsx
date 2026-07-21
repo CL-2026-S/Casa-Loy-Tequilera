@@ -6,10 +6,53 @@ export default function Careers({ lang = "es", setPage, setSelectedJobId }) {
   const [formData, setFormData] = useState({ name: "", phone: "", email: "" });
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [dynamicJobs, setDynamicJobs] = useState([]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const res = await fetch("/api/cms?type=jobs");
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.length > 0) {
+            const mapped = data.map(j => ({
+              id: j.id,
+              categoryLabel: {
+                es: j.category === 'comercial' ? 'Comercial y Ventas' : j.category === 'produccion' ? 'Producción e Ingeniería' : 'Administración',
+                en: j.category === 'comercial' ? 'Sales & Commercial' : j.category === 'produccion' ? 'Production & Engineering' : 'Administration'
+              },
+              title: {
+                es: j.title_es,
+                en: j.title_en || j.title_es
+              },
+              location: {
+                es: j.location_es,
+                en: j.location_en || j.location_es
+              },
+              type: {
+                es: j.type_es,
+                en: j.type_en || j.type_es
+              },
+              time: {
+                es: j.time_es,
+                en: j.time_en || j.time_es
+              }
+            }));
+            setDynamicJobs(mapped);
+          }
+        }
+      } catch (e) {
+        console.error("Error fetching jobs from CMS:", e);
+      }
+    };
+    fetchJobs();
+  }, []);
+
+  const activeJobs = dynamicJobs.length > 0 ? dynamicJobs : jobsData;
 
   const handleUpload = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -136,9 +179,8 @@ export default function Careers({ lang = "es", setPage, setSelectedJobId }) {
           </h2>
         </div>
 
-        {/* Job Listings Container */}
         <div className="space-y-6">
-          {jobsData.map((job) => (
+          {activeJobs.map((job) => (
             <div
               key={job.id}
               className="bg-background/40 backdrop-blur-md border border-outline-variant/20 p-8 hover:bg-surface-container-low transition-all duration-500 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm group hover:shadow-md"

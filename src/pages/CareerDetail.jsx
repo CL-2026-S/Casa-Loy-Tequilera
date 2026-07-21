@@ -6,9 +6,131 @@ export default function CareerDetail({ lang = "es", setPage, jobId }) {
   const [formData, setFormData] = useState({ name: "", phone: "", email: "" });
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [dynamicJob, setDynamicJob] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, [jobId]);
+
+  useEffect(() => {
+    const fetchJob = async () => {
+      try {
+        const res = await fetch("/api/cms?type=jobs");
+        if (res.ok) {
+          const data = await res.json();
+          const j = data.find((item) => item.id === jobId);
+          if (j) {
+            const mapped = {
+              id: j.id,
+              category: j.category,
+              categoryLabel: {
+                es: j.category === 'comercial' ? 'Ventas y Comercial' : j.category === 'produccion' ? 'Producción e Ingeniería' : 'Administración',
+                en: j.category === 'comercial' ? 'Sales & Commercial' : j.category === 'produccion' ? 'Production & Engineering' : 'Administration'
+              },
+              title: {
+                es: j.title_es,
+                en: j.title_en || j.title_es
+              },
+              location: {
+                es: j.location_es,
+                en: j.location_en || j.location_es
+              },
+              type: {
+                es: j.type_es,
+                en: j.type_en || j.type_es
+              },
+              time: {
+                es: j.time_es,
+                en: j.time_en || j.time_es
+              },
+              breadcrumbProduction: {
+                es: j.category === 'comercial' ? 'Comercial' : j.category === 'produccion' ? 'Producción' : 'Administración',
+                en: j.category === 'comercial' ? 'Commercial' : j.category === 'produccion' ? 'Production' : 'Administration'
+              },
+              breadcrumbRole: {
+                es: j.title_es,
+                en: j.title_en || j.title_es
+              },
+              title1: {
+                es: j.title_es.split(' ').slice(0, 2).join(' '),
+                en: (j.title_en || j.title_es).split(' ').slice(0, 2).join(' ')
+              },
+              title2: {
+                es: j.title_es.split(' ').slice(2).join(' '),
+                en: (j.title_en || j.title_es).split(' ').slice(2).join(' ')
+              },
+              heroDesc: {
+                es: j.hero_desc_es || '',
+                en: j.hero_desc_en || j.hero_desc_es || ''
+              },
+              roleTitle: {
+                es: "Objetivo",
+                en: "Objective"
+              },
+              locLabel: {
+                es: "Zona de trabajo",
+                en: "Work Zone"
+              },
+              locVal: {
+                es: j.location_es,
+                en: j.location_en || j.location_es
+              },
+              typeLabel: {
+                es: "Tipo de puesto",
+                en: "Job Type"
+              },
+              typeVal: {
+                es: j.type_es,
+                en: j.type_en || j.type_es
+              },
+              compLabel: {
+                es: "Ofrecemos",
+                en: "We Offer"
+              },
+              compVal: {
+                es: j.compensation_es || '',
+                en: j.compensation_en || j.compensation_es || ''
+              },
+              sectionTitle: {
+                es: "Objetivo",
+                en: "Objective"
+              },
+              sectionDesc: {
+                es: j.hero_desc_es || '',
+                en: j.hero_desc_en || j.hero_desc_es || ''
+              },
+              responsibilities: (j.responsibilities || []).map(r => ({
+                num: r.num || '01',
+                title: { es: r.title_es || r.title, en: r.title_en || r.title_es || r.title },
+                desc: { es: r.desc_es || r.desc, en: r.desc_en || r.desc_es || r.desc }
+              })),
+              requirements: (j.requirements || []).map(r => ({
+                icon: r.icon || 'school',
+                title: { es: r.title_es || r.title, en: r.title_en || r.title_es || r.title },
+                desc: { es: r.desc_es || r.desc, en: r.desc_en || r.desc_es || r.desc }
+              })),
+              knowledge: (j.knowledge || []).map(k => ({
+                es: k.es || k,
+                en: k.en || k.es || k
+              })),
+              benefits: (j.benefits || []).map(b => ({
+                es: b.es || b,
+                en: b.en || b.es || b
+              }))
+            };
+            setDynamicJob(mapped);
+          }
+        }
+      } catch (e) {
+        console.error("Error loading job detail:", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (jobId) {
+      fetchJob();
+    }
   }, [jobId]);
 
   const handleUpload = (e) => {
@@ -54,7 +176,7 @@ export default function CareerDetail({ lang = "es", setPage, jobId }) {
   };
 
   // Find job details, fallback to first job if not found
-  const job = jobsData.find((j) => j.id === jobId) || jobsData[0];
+  const job = dynamicJob || jobsData.find((j) => j.id === jobId) || jobsData[0];
 
   const labels = {
     es: {

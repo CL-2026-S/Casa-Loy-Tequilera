@@ -380,6 +380,34 @@ export default function Nativo1937({ lang = "es", t }) {
 
   const currentT = content[lang] || content.es;
 
+  const [dynamicDishes, setDynamicDishes] = useState([]);
+
+  useEffect(() => {
+    const fetchDishes = async () => {
+      try {
+        const res = await fetch("/api/cms?type=dishes");
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.length > 0) {
+            const mapped = data.map((d, index) => ({
+              id: d.dish_index,
+              title: lang === "es" ? d.name_es : (d.name_en || d.name_es),
+              desc: lang === "es" ? d.description_es : (d.description_en || d.description_es),
+              img: d.image_url,
+              shifted: index % 2 === 1,
+            }));
+            setDynamicDishes(mapped);
+          }
+        }
+      } catch (e) {
+        console.error("Error fetching dynamic featured dishes:", e);
+      }
+    };
+    fetchDishes();
+  }, [lang]);
+
+  const activeMenuItems = dynamicDishes.length > 0 ? dynamicDishes : currentT.menuItems;
+
   const validateForm = () => {
     const newErrors = {};
     const tVal = currentT.booking.validation;
@@ -766,7 +794,7 @@ export default function Nativo1937({ lang = "es", t }) {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter items-start">
-            {currentT.menuItems.map((item) => (
+            {activeMenuItems.map((item) => (
               <div
                 key={item.id}
                 className={`group space-y-6 ${item.shifted ? "lg:pt-20" : ""}`}

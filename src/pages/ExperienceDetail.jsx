@@ -1222,7 +1222,10 @@ export default function ExperienceDetail({
                                               value: totalPrice.toString(),
                                               currency_code: "MXN"
                                             },
-                                            description: `${activeData.title} - ${numAdults} Ad, ${numTeens} Jv, ${numChildren} Nñ`
+                                            description: `${activeData.title} - ${numAdults} Ad, ${numTeens} Jv, ${numChildren} Nñ`,
+                                            payee: {
+                                              email_address: "cuentasporcobrar@casaloy.com"
+                                            }
                                           }
                                         ]
                                       });

@@ -510,6 +510,28 @@ export async function sendBookingEmail(email, bookingDetails) {
       html: html,
     });
 
+    // Send admin notification automatically to turismo@casaloy.com
+    try {
+      await resend.emails.send({
+        from: fromEmail,
+        to: ['turismo@casaloy.com'],
+        subject: `Nueva Reserva Tour: ${code} - ${customer_name}`,
+        html: `
+          <h3>Nueva Reserva de Tour Registrada</h3>
+          <p><strong>ID de Reserva:</strong> ${code}</p>
+          <p><strong>Cliente:</strong> ${customer_name}</p>
+          <p><strong>Correo:</strong> ${email}</p>
+          <p><strong>Experiencia:</strong> ${tourName}</p>
+          <p><strong>Fecha:</strong> ${date_str}</p>
+          <p><strong>Hora:</strong> ${time_str}</p>
+          <p><strong>Visitantes:</strong> ${guests} personas</p>
+          <p><strong>Monto pagado:</strong> $${total_paid} MXN</p>
+        `
+      });
+    } catch (adminMailErr) {
+      console.error("Error sending notification copy to turismo@casaloy.com:", adminMailErr);
+    }
+
     if (error) {
       console.error("Resend API error sending booking email:", error);
       return { success: false, error };
@@ -517,6 +539,91 @@ export async function sendBookingEmail(email, bookingDetails) {
     return { success: true, messageId: data.id };
   } catch (err) {
     console.error("Exception sending booking email:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Sends a notification email for a restaurant booking.
+ * @param {object} bookingDetails 
+ */
+export async function sendRestaurantBookingEmail(bookingDetails) {
+  if (!resend) {
+    console.warn("Resend client not configured. Skipping restaurant email.");
+    return { success: false, error: "Resend not initialized" };
+  }
+
+  const { code, customer_name, customer_phone, guests, date_str, time_str, reason } = bookingDetails;
+  const fromEmail = getFromEmail();
+
+  const html = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        body { font-family: sans-serif; background-color: #fcf9f3; color: #1c1c18; padding: 20px; }
+        .card { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e2dc; padding: 30px; }
+        h2 { color: #8C4723; border-bottom: 2px solid #8C4723; padding-bottom: 10px; margin-top: 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { text-align: left; padding: 10px; border-bottom: 1px solid #f0eee8; }
+        th { color: #8C4723; }
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <h2>Nueva Reserva - Restaurante 1937 Nativo</h2>
+        <p>Se ha registrado una nueva reservación para el restaurante desde el sitio web.</p>
+        <table>
+          <tr>
+            <th>ID de Reserva:</th>
+            <td><strong>${code}</strong></td>
+          </tr>
+          <tr>
+            <th>Cliente:</th>
+            <td>${customer_name}</td>
+          </tr>
+          <tr>
+            <th>Teléfono:</th>
+            <td>${customer_phone}</td>
+          </tr>
+          <tr>
+            <th>Fecha de Visita:</th>
+            <td>${date_str}</td>
+          </tr>
+          <tr>
+            <th>Hora de Visita:</th>
+            <td>${time_str} hrs</td>
+          </tr>
+          <tr>
+            <th>Invitados:</th>
+            <td>${guests} personas</td>
+          </tr>
+          <tr>
+            <th>Motivo:</th>
+            <td>${reason}</td>
+          </tr>
+        </table>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: fromEmail,
+      to: ['1937nativo@casaloy.com'],
+      subject: `Nueva Reserva Restaurante: ${code} - ${customer_name}`,
+      html: html,
+    });
+
+    if (error) {
+      console.error("Resend API error sending restaurant booking email:", error);
+      return { success: false, error };
+    }
+    return { success: true, messageId: data.id };
+  } catch (err) {
+    console.error("Exception sending restaurant email:", err);
     return { success: false, error: err.message };
   }
 }

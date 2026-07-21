@@ -219,6 +219,45 @@ export default function Home({ lang = "es", setPage, setLang }) {
 
   const [activeSlide, setActiveSlide] = useState(0);
   const autoplayTimerRef = useRef(null);
+  const [dynamicSlides, setDynamicSlides] = useState([]);
+
+  useEffect(() => {
+    const fetchBanners = async () => {
+      try {
+        const res = await fetch("/api/cms?type=banners");
+        if (res.ok) {
+          const data = await res.json();
+          const homeBanners = data.filter(b => b.page === 'home');
+          if (homeBanners.length > 0) {
+            const mapped = homeBanners.map(b => ({
+              id: String(b.id),
+              overtitle: currentLang === 'es' ? (b.subtitle_es || "CASA LOY") : (b.subtitle_en || b.subtitle_es || "CASA LOY"),
+              titleEs: b.title_es,
+              titleEn: b.title_en || b.title_es,
+              descEs: b.subtitle_es || "",
+              descEn: b.subtitle_en || b.subtitle_es || "",
+              btn1Es: currentLang === 'es' ? "DESCUBRIR MÁS" : "DISCOVER MORE",
+              btn1En: "DISCOVER MORE",
+              btn1Route: b.link_url || "turismo",
+              btn2Es: "",
+              btn2En: "",
+              microcopyEs: b.subtitle_es || "",
+              microcopyEn: b.subtitle_en || b.subtitle_es || "",
+              bg: b.image_url,
+              bgMobile: b.image_url,
+              bgRetina: b.image_url,
+              brightness: "brightness-[0.82]",
+              overlay: "from-black/30 via-transparent to-black/45",
+            }));
+            setDynamicSlides(mapped);
+          }
+        }
+      } catch (e) {
+        console.error("Error fetching dynamic home banners:", e);
+      }
+    };
+    fetchBanners();
+  }, [currentLang]);
 
   const slides = [
     {
@@ -306,10 +345,12 @@ export default function Home({ lang = "es", setPage, setLang }) {
     }
   ];
 
+  const activeSlides = dynamicSlides.length > 0 ? dynamicSlides : slides;
+
   const startAutoplay = () => {
     stopAutoplay();
     autoplayTimerRef.current = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % slides.length);
+      setActiveSlide((prev) => (prev + 1) % activeSlides.length);
     }, 7500);
   };
 
@@ -322,7 +363,7 @@ export default function Home({ lang = "es", setPage, setLang }) {
   useEffect(() => {
     startAutoplay();
     return () => stopAutoplay();
-  }, [currentLang]);
+  }, [currentLang, activeSlides]);
 
   const handleManualSelect = (idx) => {
     setActiveSlide(idx);
@@ -424,7 +465,7 @@ export default function Home({ lang = "es", setPage, setLang }) {
       {/* 01. HERO SLIDESHOW SECTION (Full Screen) */}
       <section className="relative h-screen w-full bg-zinc-950 overflow-hidden">
         {/* Render Background Images */}
-        {slides.map((slide, idx) => (
+        {activeSlides.map((slide, idx) => (
           <div 
             key={slide.id} 
             className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
@@ -464,7 +505,7 @@ export default function Home({ lang = "es", setPage, setLang }) {
 
         {/* Content Container (Crossfading slides content) */}
         <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center h-full pt-16 pb-28">
-          {slides.map((slide, idx) => {
+          {activeSlides.map((slide, idx) => {
             const isActive = idx === activeSlide;
 
             return (
@@ -536,7 +577,7 @@ export default function Home({ lang = "es", setPage, setLang }) {
 
         {/* Slide Indicators (Dots) */}
         <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-20 flex gap-4">
-          {slides.map((_, idx) => (
+          {activeSlides.map((_, idx) => (
             <button
               key={idx}
               onClick={() => handleManualSelect(idx)}

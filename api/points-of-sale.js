@@ -1,4 +1,5 @@
 import { supabase } from './_utils/clients.js';
+import { getAuthUser, auditLog } from './_utils/auth.js';
 
 // Helper to map DB row (or mock data) to include brands and categories arrays for frontend compatibility
 function mapStoreForFrontend(store) {
@@ -79,7 +80,7 @@ export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST,PUT,DELETE');
   res.setHeader(
     'Access-Control-Allow-Headers',
     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
@@ -90,96 +91,225 @@ export default async function handler(req, res) {
     return;
   }
 
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method Not Allowed. Use GET.' });
+  // --- 1. GET Handler (Publicly accessible) ---
+  if (req.method === 'GET') {
+    // Fallback mock data for local development if Supabase is not configured
+    const mockStores = [
+      {
+        id: "mock-1",
+        retailer: "La Playa",
+        name: "Sucursal Providencia",
+        address: "Av. Providencia 2345, Guadalajara, Jalisco, MX",
+        region: "mx",
+        postal_code: "44630",
+        latitude: 20.6908,
+        longitude: -103.3815,
+        maps_url: "https://maps.google.com/?q=Av.+Providencia+2345,+Guadalajara,+Jalisco",
+        fase: "Juan Pérez",
+        pdv: true,
+        cdc: false,
+        casa_loy_blanco: true,
+        casa_loy_reposado: true,
+        casa_loy_cristalino: false,
+        casa_loy_anejo: true,
+        casa_loy_piedra_y_agave_blanco: false,
+        casa_loy_piedra_y_agave_reposado: false,
+        taddel_plata: true,
+        taddel_reposado: true,
+        taddel_cristalino: false,
+        tierra_zafiro_blanco: false,
+        tierra_zafiro_blanco_100_pure: false,
+        tierra_zafiro_reposado: false,
+        tierra_zafiro_cristalino: false
+      },
+      {
+        id: "mock-2",
+        retailer: "Vinos America",
+        name: "Sucursal Landmark",
+        address: "Paseo de los Virreyes 45, Zapopan, Jalisco, MX",
+        region: "mx",
+        postal_code: "45116",
+        latitude: 20.7015,
+        longitude: -103.4147,
+        maps_url: "https://maps.google.com/?q=Paseo+de+los+Virreyes+45,+Zapopan,+Jalisco",
+        fase: "María López",
+        pdv: true,
+        cdc: false,
+        casa_loy_blanco: true,
+        casa_loy_reposado: true,
+        casa_loy_cristalino: false,
+        casa_loy_anejo: false,
+        casa_loy_piedra_y_agave_blanco: false,
+        casa_loy_piedra_y_agave_reposado: false,
+        taddel_plata: false,
+        taddel_reposado: false,
+        taddel_cristalino: false,
+        tierra_zafiro_blanco: true,
+        tierra_zafiro_blanco_100_pure: true,
+        tierra_zafiro_reposado: true,
+        tierra_zafiro_cristalino: true
+      }
+    ];
+
+    if (!supabase) {
+      if (process.env.NODE_ENV === 'development' || !process.env.VERCEL) {
+        console.warn("Supabase client is not initialized. Using fallback mock response in local development.");
+        return res.status(200).json(mockStores.map(mapStoreForFrontend));
+      }
+      console.error("Supabase client is not initialized.");
+      return res.status(500).json({ error: 'Database client not initialized.' });
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('points_of_sale')
+        .select('*')
+        .eq('is_active', true)
+        .order('creado_en', { ascending: true });
+
+      if (error) {
+        throw error;
+      }
+
+      const mappedData = data.map(mapStoreForFrontend);
+      return res.status(200).json(mappedData);
+    } catch (error) {
+      console.error("Error fetching points of sale:", error);
+      if (process.env.NODE_ENV === 'development' || !process.env.VERCEL) {
+        return res.status(200).json(mockStores.map(mapStoreForFrontend));
+      }
+      return res.status(500).json({ error: 'Failed to fetch points of sale.' });
+    }
   }
 
-  // Fallback mock data for local development if Supabase is not configured
-  const mockStores = [
-    {
-      id: "mock-1",
-      retailer: "La Cava",
-      name: "Sucursal Providencia",
-      address: "Av. Providencia 2345, Guadalajara, Jalisco, MX",
-      region: "mx",
-      postal_code: "44630",
-      latitude: 20.6908,
-      longitude: -103.3815,
-      maps_url: "https://maps.google.com/?q=Av.+Providencia+2345,+Guadalajara,+Jalisco",
-      fase: "Juan Pérez",
-      pdv: true,
-      cdc: false,
-      casa_loy_blanco: true,
-      casa_loy_reposado: true,
-      casa_loy_cristalino: false,
-      casa_loy_anejo: true,
-      casa_loy_piedra_y_agave_blanco: false,
-      casa_loy_piedra_y_agave_reposado: false,
-      taddel_plata: true,
-      taddel_reposado: true,
-      taddel_cristalino: false,
-      tierra_zafiro_blanco: false,
-      tierra_zafiro_blanco_100_pure: false,
-      tierra_zafiro_reposado: false,
-      tierra_zafiro_cristalino: false
-    },
-    {
-      id: "mock-2",
-      retailer: "Vinos America",
-      name: "Sucursal Landmark",
-      address: "Paseo de los Virreyes 45, Zapopan, Jalisco, MX",
-      region: "mx",
-      postal_code: "45116",
-      latitude: 20.7015,
-      longitude: -103.4147,
-      maps_url: "https://maps.google.com/?q=Paseo+de+los+Virreyes+45,+Zapopan,+Jalisco",
-      fase: "María López",
-      pdv: true,
-      cdc: false,
-      casa_loy_blanco: true,
-      casa_loy_reposado: true,
-      casa_loy_cristalino: false,
-      casa_loy_anejo: false,
-      casa_loy_piedra_y_agave_blanco: false,
-      casa_loy_piedra_y_agave_reposado: false,
-      taddel_plata: false,
-      taddel_reposado: false,
-      taddel_cristalino: false,
-      tierra_zafiro_blanco: true,
-      tierra_zafiro_blanco_100_pure: true,
-      tierra_zafiro_reposado: true,
-      tierra_zafiro_cristalino: true
+  // --- 2. POST / PUT / DELETE Handlers (Protected: Editor / Admin roles only) ---
+  if (req.method === 'POST' || req.method === 'PUT' || req.method === 'DELETE') {
+    const currentUser = getAuthUser(req);
+    if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'editor')) {
+      return res.status(401).json({ error: 'UNAUTHORIZED', message: 'No tienes autorización para realizar modificaciones en los puntos de venta.' });
     }
-  ];
 
-  if (!supabase) {
-    if (process.env.NODE_ENV === 'development' || !process.env.VERCEL) {
-      console.warn("Supabase client is not initialized. Using fallback mock response in local development.");
-      return res.status(200).json(mockStores.map(mapStoreForFrontend));
+    try {
+      // Action: DELETE Point of Sale
+      if (req.method === 'DELETE') {
+        const { id } = req.body || {};
+        if (!id) {
+          return res.status(400).json({ error: 'El ID es obligatorio para eliminar.' });
+        }
+
+        const { error } = await supabase
+          .from('points_of_sale')
+          .delete()
+          .eq('id', id);
+
+        if (error) throw error;
+
+        await auditLog(
+          currentUser.userId,
+          currentUser.email,
+          currentUser.role,
+          'delete_points_of_sale',
+          `Eliminación de punto de venta ID: ${id}`
+        );
+
+        return res.status(200).json({ success: true });
+      }
+
+      // Action: CREATE (POST) or UPDATE (PUT) Point of Sale
+      const {
+        id,
+        retailer,
+        name,
+        address,
+        phone,
+        region,
+        postal_code,
+        latitude,
+        longitude,
+        maps_url,
+        is_active,
+        fase,
+        pdv,
+        cdc,
+        casa_loy_blanco,
+        casa_loy_reposado,
+        casa_loy_cristalino,
+        casa_loy_anejo,
+        casa_loy_piedra_y_agave_blanco,
+        casa_loy_piedra_y_agave_reposado,
+        taddel_plata,
+        taddel_reposado,
+        taddel_cristalino,
+        tierra_zafiro_blanco,
+        tierra_zafiro_blanco_100_pure,
+        tierra_zafiro_reposado,
+        tierra_zafiro_cristalino
+      } = req.body || {};
+
+      if (!retailer || !name || !address || !region) {
+        return res.status(400).json({ error: 'Faltan campos obligatorios: distribuidor, nombre, dirección y región.' });
+      }
+
+      const storeData = {
+        retailer,
+        name,
+        address,
+        phone: phone || '',
+        region,
+        postal_code: postal_code || '',
+        latitude: latitude ? parseFloat(latitude) : null,
+        longitude: longitude ? parseFloat(longitude) : null,
+        maps_url: maps_url || '',
+        is_active: is_active === undefined ? true : is_active,
+        fase: fase || currentUser.name || 'KAM', // fase represents Key Account Manager
+        pdv: pdv || false,
+        cdc: cdc || false,
+        casa_loy_blanco: casa_loy_blanco || false,
+        casa_loy_reposado: casa_loy_reposado || false,
+        casa_loy_cristalino: casa_loy_cristalino || false,
+        casa_loy_anejo: casa_loy_anejo || false,
+        casa_loy_piedra_y_agave_blanco: casa_loy_piedra_y_agave_blanco || false,
+        casa_loy_piedra_y_agave_reposado: casa_loy_piedra_y_agave_reposado || false,
+        taddel_plata: taddel_plata || false,
+        taddel_reposado: taddel_reposado || false,
+        taddel_cristalino: taddel_cristalino || false,
+        tierra_zafiro_blanco: tierra_zafiro_blanco || false,
+        tierra_zafiro_blanco_100_pure: tierra_zafiro_blanco_100_pure || false,
+        tierra_zafiro_reposado: tierra_zafiro_reposado || false,
+        tierra_zafiro_cristalino: tierra_zafiro_cristalino || false
+      };
+
+      let dbError;
+      if (req.method === 'PUT' || id) {
+        const { error } = await supabase
+          .from('points_of_sale')
+          .update(storeData)
+          .eq('id', id);
+        dbError = error;
+      } else {
+        const { error } = await supabase
+          .from('points_of_sale')
+          .insert(storeData);
+        dbError = error;
+      }
+
+      if (dbError) throw dbError;
+
+      await auditLog(
+        currentUser.userId,
+        currentUser.email,
+        currentUser.role,
+        id ? 'update_points_of_sale' : 'create_points_of_sale',
+        `${id ? 'Actualización' : 'Creación'} de punto de venta: ${name} (${retailer}), KAM: ${storeData.fase}`
+      );
+
+      return res.status(200).json({ success: true });
+
+    } catch (err) {
+      console.error("Points of sale write exception:", err);
+      return res.status(500).json({ error: err.message || 'Error processing points of sale.' });
     }
-    console.error("Supabase client is not initialized.");
-    return res.status(500).json({ error: 'Database client not initialized.' });
   }
 
-  try {
-    const { data, error } = await supabase
-      .from('points_of_sale')
-      .select('*')
-      .eq('is_active', true)
-      .order('creado_en', { ascending: true });
-
-    if (error) {
-      throw error;
-    }
-
-    const mappedData = data.map(mapStoreForFrontend);
-    return res.status(200).json(mappedData);
-  } catch (error) {
-    console.error("Error fetching points of sale:", error);
-    if (process.env.NODE_ENV === 'development' || !process.env.VERCEL) {
-      return res.status(200).json(mockStores.map(mapStoreForFrontend));
-    }
-    return res.status(500).json({ error: 'Failed to fetch points of sale.' });
-  }
+  return res.status(405).json({ error: 'Method Not Allowed.' });
 }
-
