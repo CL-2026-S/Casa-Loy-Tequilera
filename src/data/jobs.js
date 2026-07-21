@@ -11,8 +11,8 @@ export const jobsData = [
       en: "KAM (KEY ACCOUNT MANAGER)"
     },
     location: {
-      es: "CDMX, Estado de México, Puebla y Veracruz",
-      en: "CDMX, State of Mexico, Puebla, and Veracruz"
+      es: "Guadalajara, Jalisco",
+      en: "Guadalajara, Jalisco"
     },
     type: {
       es: "Tiempo completo, Por tiempo indeterminado",
@@ -52,8 +52,8 @@ export const jobsData = [
       en: "Work Zone"
     },
     locVal: {
-      es: "CDMX, Estado de México, Puebla y Veracruz",
-      en: "CDMX, State of Mexico, Puebla, and Veracruz"
+      es: "Guadalajara, Jalisco",
+      en: "Guadalajara, Jalisco"
     },
     typeLabel: {
       es: "Tipo de puesto",
@@ -137,8 +137,8 @@ export const jobsData = [
           en: "Work Zone"
         },
         desc: {
-          es: "Disponibilidad para CDMX, Estado de México, Puebla y Veracruz.",
-          en: "Availability to cover CDMX, State of Mexico, Puebla, and Veracruz."
+          es: "Disponibilidad para Guadalajara, Jalisco.",
+          en: "Availability to cover Guadalajara, Jalisco."
         }
       }
     ],
