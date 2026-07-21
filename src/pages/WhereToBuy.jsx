@@ -305,9 +305,14 @@ export default function WhereToBuy({ lang }) {
         const res = await fetch("/api/points-of-sale");
         if (!res.ok) throw new Error("Error loading stores");
         const data = await res.json();
-        setStores(data);
+        const parsed = data.map((s) => ({
+          ...s,
+          latitude: s.latitude ? parseFloat(s.latitude) : null,
+          longitude: s.longitude ? parseFloat(s.longitude) : null,
+        }));
+        setStores(parsed);
 
-        const initialStore = data.find((s) => s.region === "mx");
+        const initialStore = parsed.find((s) => s.region === "mx");
         if (initialStore) {
           setActiveStore(initialStore);
         }
