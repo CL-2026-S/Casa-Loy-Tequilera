@@ -1,5 +1,6 @@
 import { supabase } from './_utils/clients.js';
 import { hashPassword, signToken, verifyToken, getAuthUser, auditLog } from './_utils/auth.js';
+import { sendPasswordResetEmail } from './_utils/emails.js';
 
 export default async function handler(req, res) {
   // CORS Headers
@@ -91,6 +92,78 @@ export default async function handler(req, res) {
           role: decoded.role
         }
       });
+    }
+
+    // 3. Action: Forgot password (Public)
+    if (req.method === 'POST' && action === 'forgot_password') {
+      const { email } = req.body || {};
+      if (!email) {
+        return res.status(400).json({ error: 'Email is required.' });
+      }
+
+      // Check if user exists
+      const { data: user, error } = await supabase
+        .from('admin_users')
+        .select('*')
+        .eq('email', email.trim().toLowerCase())
+        .maybeSingle();
+
+      if (error) throw error;
+      if (!user) {
+        // Return 200 for security to avoid email enumeration
+        return res.status(200).json({
+          success: true,
+          message: 'Si el correo está registrado, recibirás una nueva contraseña temporal.'
+        });
+      }
+
+      // Generate a temporary random password
+      const tempPass = 'CL-' + Math.floor(100000 + Math.random() * 900000);
+      const pHash = hashPassword(tempPass);
+
+      // Update in DB
+      const { error: updateErr } = await supabase
+        .from('admin_users')
+        .update({ password_hash: pHash })
+        .eq('id', user.id);
+
+      if (updateErr) throw updateErr;
+
+      // Log action
+      await auditLog(user.id, user.email, user.role, 'reset_password_request', 'Solicitud de restablecimiento de contraseña (temporal enviada)');
+
+      // Send email
+      const emailRes = await sendPasswordResetEmail(user.email, tempPass);
+      if (!emailRes.success) {
+        return res.status(500).json({ error: 'EMAIL_SEND_FAILED', message: 'No se pudo enviar el correo de restablecimiento.' });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: 'Se ha enviado una nueva contraseña temporal a tu correo electrónico.'
+      });
+    }
+
+    // 4. Action: List audit logs (Restricted to admin & visor)
+    if (req.method === 'GET' && action === 'audit_logs') {
+      const currentUser = getAuthUser(req);
+      if (!currentUser) {
+        return res.status(401).json({ error: 'UNAUTHORIZED', message: 'Inicia sesión para continuar.' });
+      }
+
+      if (currentUser.role !== 'admin' && currentUser.role !== 'visor') {
+        return res.status(403).json({ error: 'FORBIDDEN', message: 'Acceso restringido.' });
+      }
+
+      const { data: logs, error } = await supabase
+        .from('audit_logs')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(100);
+
+      if (error) throw error;
+
+      return res.status(200).json({ success: true, logs });
     }
 
     // --- SECURE ACTIONS (Require authentication) ---

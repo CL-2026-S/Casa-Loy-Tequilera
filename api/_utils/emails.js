@@ -874,4 +874,56 @@ export async function sendAlliancesLeadEmail(leadDetails) {
   }
 }
 
+/**
+ * Sends a temporary password reset email.
+ */
+export async function sendPasswordResetEmail(email, tempPassword) {
+  if (!resend) {
+    console.warn("Resend client not configured.");
+    return { success: false, error: "Resend not initialized" };
+  }
+  const fromEmail = getFromEmail();
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body { font-family: sans-serif; background-color: #fcf9f3; color: #1c1c18; padding: 20px; }
+        .card { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e2dc; padding: 30px; }
+        h2 { color: #8C4723; border-bottom: 2px solid #8C4723; padding-bottom: 10px; margin-top: 0; }
+        .pass-box { background: #fdfbf8; border: 1px dashed #8C4723; padding: 15px; text-align: center; font-size: 20px; font-family: monospace; letter-spacing: 2px; font-weight: bold; color: #8C4723; margin: 20px 0; }
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <h2>Restablecimiento de Contraseña - Casa Loy</h2>
+        <p>Se ha solicitado un restablecimiento de contraseña para tu cuenta de personal en el Panel Administrador.</p>
+        <p>Tu contraseña temporal de acceso es:</p>
+        <div class="pass-box">${tempPassword}</div>
+        <p>Te recomendamos iniciar sesión con esta contraseña y cambiarla inmediatamente desde la pestaña <strong>Personal</strong> del Panel.</p>
+        <p style="color: #a09d95; font-size: 11px; margin-top: 20px;">Si no solicitaste este cambio, por favor notifícalo al Administrador del sistema.</p>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: fromEmail,
+      to: [email],
+      subject: 'Nueva Contraseña Temporal - Panel Casa Loy',
+      html: html,
+    });
+    if (error) {
+      console.error("Resend error sending reset email:", error);
+      return { success: false, error };
+    }
+    return { success: true };
+  } catch (err) {
+    console.error("Exception in sendPasswordResetEmail:", err);
+    return { success: false, error: err.message };
+  }
+}
+
 

@@ -26,6 +26,12 @@ export default function AdminPanel({
   const [errorMsg, setErrorMsg] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
+  // Password Reset states
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetSuccessMsg, setResetSuccessMsg] = useState("");
+  const [isResetting, setIsResetting] = useState(false);
+
   // Layout tabs (adaptable by role)
   // Roles: admin | editor | experience_manager | restaurant_manager | viewer
   const [activeTab, setActiveTab] = useState("calendar");
@@ -199,6 +205,34 @@ export default function AdminPanel({
     setIsLoggedIn(false);
   };
 
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setErrorMsg("");
+    setResetSuccessMsg("");
+    setIsResetting(true);
+
+    try {
+      const res = await fetch("/api/auth?action=forgot_password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: resetEmail })
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setResetSuccessMsg(data.message || "Se ha enviado una contraseña temporal a tu correo.");
+        setResetEmail("");
+      } else {
+        setErrorMsg(data.message || "Error al procesar la solicitud.");
+      }
+    } catch (err) {
+      console.error(err);
+      setErrorMsg("Error de conexión con el servidor.");
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
   // Load dynamic data depending on the current tab
   const loadTabData = async () => {
     const headers = { "Authorization": `Bearer ${token}` };
@@ -230,7 +264,7 @@ export default function AdminPanel({
 
     if (activeTab === "audit" && user?.role === "admin") {
       try {
-        const res = await fetch("/api/audit-logs", { headers });
+        const res = await fetch("/api/auth?action=audit_logs", { headers });
         if (res.ok) {
           const data = await res.json();
           setAuditLogs(data.logs || []);
@@ -990,47 +1024,108 @@ export default function AdminPanel({
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-5 text-left">
-            <div>
-              <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1.5">
-                Correo Electrónico
-              </label>
-              <input
-                type="email"
-                required
-                value={emailInput}
-                onChange={(e) => setEmailInput(e.target.value)}
-                placeholder="ejemplo@casaloy.com"
-                className="w-full bg-stone-50 border border-stone-200 p-3.5 text-xs focus:outline-none focus:border-[#8C4723] text-[#1c1c18] focus:bg-white transition-all"
-              />
+          {resetSuccessMsg && (
+            <div className="bg-green-50 border border-green-200/50 text-green-700 p-3.5 text-xs text-left leading-normal">
+              ✅ {resetSuccessMsg}
             </div>
+          )}
 
-            <div>
-              <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1.5">
-                Contraseña
-              </label>
-              <input
-                type="password"
-                required
-                value={passwordInput}
-                onChange={(e) => setPasswordInput(e.target.value)}
-                placeholder="••••••••"
-                className="w-full bg-stone-50 border border-stone-200 p-3.5 text-xs focus:outline-none focus:border-[#8C4723] text-[#1c1c18] focus:bg-white transition-all"
-              />
-            </div>
+          {showForgotPassword ? (
+            <form onSubmit={handleForgotPassword} className="space-y-5 text-left">
+              <p className="text-xs text-stone-500 leading-relaxed">
+                Ingresa tu correo institucional registrado. Si existe en el sistema, te enviaremos una contraseña temporal de un solo uso.
+              </p>
 
-            <button
-              type="submit"
-              disabled={isLoggingIn}
-              className="w-full bg-[#2F403E] hover:bg-[#8C4723] text-white py-4 text-xs font-semibold uppercase tracking-widest transition-all shadow-md cursor-pointer"
-            >
-              {isLoggingIn ? "Autenticando..." : "Iniciar Sesión"}
-            </button>
+              <div>
+                <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1.5">
+                  Correo Electrónico
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
+                  placeholder="ejemplo@casaloy.com"
+                  className="w-full bg-stone-50 border border-stone-200 p-3.5 text-xs focus:outline-none focus:border-[#8C4723] text-[#1c1c18] focus:bg-white transition-all"
+                />
+              </div>
 
-            <p className="text-[10px] text-stone-400 text-center leading-relaxed">
-              Acceso restringido para personal autorizado de Hacienda Casa Loy.
-            </p>
-          </form>
+              <button
+                type="submit"
+                disabled={isResetting}
+                className="w-full bg-[#2F403E] hover:bg-[#8C4723] text-white py-4 text-xs font-semibold uppercase tracking-widest transition-all shadow-md cursor-pointer"
+              >
+                {isResetting ? "Enviando..." : "Enviar Contraseña Temporal"}
+              </button>
+
+              <div className="text-center pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowForgotPassword(false);
+                    setErrorMsg("");
+                    setResetSuccessMsg("");
+                  }}
+                  className="text-xs text-[#8C4723] hover:underline bg-transparent border-none cursor-pointer focus:outline-none font-medium"
+                >
+                  Volver al inicio de sesión
+                </button>
+              </div>
+            </form>
+          ) : (
+            <form onSubmit={handleLogin} className="space-y-5 text-left">
+              <div>
+                <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1.5">
+                  Correo Electrónico
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={emailInput}
+                  onChange={(e) => setEmailInput(e.target.value)}
+                  placeholder="ejemplo@casaloy.com"
+                  className="w-full bg-stone-50 border border-stone-200 p-3.5 text-xs focus:outline-none focus:border-[#8C4723] text-[#1c1c18] focus:bg-white transition-all"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1.5">
+                  Contraseña
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={passwordInput}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full bg-stone-50 border border-stone-200 p-3.5 text-xs focus:outline-none focus:border-[#8C4723] text-[#1c1c18] focus:bg-white transition-all"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoggingIn}
+                className="w-full bg-[#2F403E] hover:bg-[#8C4723] text-white py-4 text-xs font-semibold uppercase tracking-widest transition-all shadow-md cursor-pointer"
+              >
+                {isLoggingIn ? "Autenticando..." : "Iniciar Sesión"}
+              </button>
+
+              <div className="flex justify-between items-center pt-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowForgotPassword(true);
+                    setErrorMsg("");
+                    setResetSuccessMsg("");
+                  }}
+                  className="text-[10px] text-[#8C4723] hover:underline bg-transparent border-none cursor-pointer focus:outline-none font-medium"
+                >
+                  ¿Olvidaste tu contraseña?
+                </button>
+                <span className="text-[10px] text-stone-400">Acceso Restringido</span>
+              </div>
+            </form>
+          )}
         </div>
       </div>
     );
