@@ -354,20 +354,33 @@ export default function WhereToBuy({ lang, country }) {
     markersLayerRef.current = markersLayer;
 
     const updateBounds = () => {
-      setMapBounds(map.getBounds());
+      try {
+        if (mapRef.current) {
+          setMapBounds(mapRef.current.getBounds());
+        }
+      } catch (err) {
+        // Safe catch during map unmount/transitions
+      }
     };
 
     map.on("moveend", updateBounds);
     map.on("zoomend", updateBounds);
 
-    // Initial bounds capture
-    setTimeout(() => {
-      updateBounds();
-      map.invalidateSize();
+    // Initial bounds capture with cleanup
+    const timer = setTimeout(() => {
+      try {
+        if (mapRef.current) {
+          updateBounds();
+          mapRef.current.invalidateSize();
+        }
+      } catch (err) {}
     }, 250);
 
     return () => {
-      map.remove();
+      clearTimeout(timer);
+      try {
+        map.remove();
+      } catch (err) {}
       mapRef.current = null;
     };
   }, []);
@@ -381,12 +394,6 @@ export default function WhereToBuy({ lang, country }) {
     const firstInRegion = stores.find((s) => s.region === newRegion);
     if (firstInRegion) {
       setActiveStore(firstInRegion);
-      if (mapRef.current && firstInRegion.latitude && firstInRegion.longitude) {
-        mapRef.current.setView(
-          [firstInRegion.latitude, firstInRegion.longitude],
-          11
-        );
-      }
     } else {
       setActiveStore(null);
     }
