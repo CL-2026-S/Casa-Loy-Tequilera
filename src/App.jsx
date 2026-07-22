@@ -88,6 +88,9 @@ const getPageInfoFromPath = (pathname) => {
 
 export default function App() {
   const [hasBypass, setHasBypass] = useState(true); // Teaser retirado - sitio activo
+  const [country, setCountry] = useState(() => {
+    return localStorage.getItem("casa_loy_user_country") || "";
+  });
   const [lang, setLangState] = useState(() => {
     // 1. Check if user has a saved language preference in localStorage
     const savedLang = localStorage.getItem("casa_loy_pref_lang");
@@ -121,6 +124,33 @@ export default function App() {
     }
   }, [location.pathname, lang, pageInfo.lang]);
 
+  // Detect country on mount (runs regardless of saved language preference)
+  useEffect(() => {
+    const detectCountry = async () => {
+      const savedCountry = localStorage.getItem("casa_loy_user_country");
+      if (savedCountry) {
+        setCountry(savedCountry);
+        return;
+      }
+      try {
+        const response = await fetch("/api/cms?type=detect-location");
+        if (response.ok) {
+          const data = await response.json();
+          const countryCode = data.country;
+          if (countryCode) {
+            const upperCountry = countryCode.toUpperCase();
+            setCountry(upperCountry);
+            localStorage.setItem("casa_loy_user_country", upperCountry);
+            return;
+          }
+        }
+      } catch (error) {
+        console.warn("Error detecting country:", error);
+      }
+    };
+    detectCountry();
+  }, []);
+
   // Detect location and set language on mount if no preference is saved
   useEffect(() => {
     const detectLocation = async () => {
@@ -135,27 +165,18 @@ export default function App() {
         return;
       }
 
-      try {
-        const response = await fetch("/api/cms?type=detect-location");
-        if (response.ok) {
-          const data = await response.json();
-          const countryCode = data.country;
-          if (countryCode) {
-            const spanishSpeakingCountries = ["MX", "ES", "AR", "CO", "PE", "VE", "CL", "EC", "GT", "CU", "BO", "DO", "HN", "PY", "SV", "NI", "CR", "PA", "UY", "PR"];
-            let detectedLang = "en";
-            if (spanishSpeakingCountries.includes(countryCode.toUpperCase())) {
-              detectedLang = "es";
-            }
-            setLangState(detectedLang);
-            localStorage.setItem("casa_loy_pref_lang", detectedLang);
-            return;
-          }
+      if (country) {
+        const spanishSpeakingCountries = ["MX", "ES", "AR", "CO", "PE", "VE", "CL", "EC", "GT", "CU", "BO", "DO", "HN", "PY", "SV", "NI", "CR", "PA", "UY", "PR"];
+        let detectedLang = "en";
+        if (spanishSpeakingCountries.includes(country.toUpperCase())) {
+          detectedLang = "es";
         }
-      } catch (error) {
-        console.warn("Error calling location API, using browser fallback:", error);
+        setLangState(detectedLang);
+        localStorage.setItem("casa_loy_pref_lang", detectedLang);
+        return;
       }
 
-      // Browser language fallback
+      // Browser language fallback as initial guess before country finishes loading
       const browserLang = navigator.language || navigator.userLanguage || "";
       const detectedLang = browserLang.toLowerCase().includes("es") ? "es" : "en";
       setLangState(detectedLang);
@@ -163,7 +184,7 @@ export default function App() {
     };
 
     detectLocation();
-  }, [location.pathname]);
+  }, [location.pathname, country]);
 
   // Wrapper setLang to handle URL switching when user clicks the ES/EN toggle in Header/Footer
   const setLang = (targetLang) => {
@@ -414,8 +435,8 @@ export default function App() {
             <Route path="/maquilas" element={<Maquilas t={t} lang={lang} />} />
             <Route path="/bottling" element={<Maquilas t={t} lang={lang} />} />
             
-            <Route path="/marcas" element={<Brands t={t} lang={lang} />} />
-            <Route path="/brands" element={<Brands t={t} lang={lang} />} />
+            <Route path="/marcas" element={<Brands t={t} lang={lang} country={country} />} />
+            <Route path="/brands" element={<Brands t={t} lang={lang} country={country} />} />
             
             <Route path="/turismo" element={<Turismo lang={lang} setPage={setPage} selectedTour={selectedTour} setSelectedTour={setSelectedTour} />} />
             <Route path="/tourism" element={<Turismo lang={lang} setPage={setPage} selectedTour={selectedTour} setSelectedTour={setSelectedTour} />} />

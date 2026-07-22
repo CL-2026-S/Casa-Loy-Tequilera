@@ -127,12 +127,27 @@ function BrandCard({ brand, lang, index }) {
   );
 }
 
-export default function Brands({ t, lang }) {
+export default function Brands({ t, lang, country }) {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     setLoaded(true);
   }, []);
+
+  const userCountry = country || localStorage.getItem("casa_loy_user_country") || "";
+  const isUsa = userCountry.toUpperCase() === "US";
+
+  const resolvedBrands = brands.map(b => {
+    if (b.id === "taddel" && isUsa) {
+      return {
+        ...b,
+        logo: "/TADDEL_1937_Tequila_USA_Logotipo.png",
+        nameEs: "TADDEL 1937",
+        nameEn: "TADDEL 1937",
+      };
+    }
+    return b;
+  });
 
   const heroTitle = lang === "es" ? "Nuestras Marcas" : "Our Brands";
   const heroSub =
@@ -191,11 +206,10 @@ export default function Brands({ t, lang }) {
         </motion.div>
       </section>
 
-
       {/* Brand Grid */}
       <section className="px-6 md:px-16 py-20 md:py-28">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
-          {brands.map((brand, i) => (
+          {resolvedBrands.map((brand, i) => (
             <BrandCard key={brand.id} brand={brand} lang={lang} index={i} />
           ))}
         </div>
