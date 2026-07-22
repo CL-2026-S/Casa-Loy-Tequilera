@@ -16,11 +16,21 @@ export default async function handler(req, res) {
     return;
   }
 
+  const { type, action } = req.query || {};
+
+  // 0. Detect Location handler (independent of Supabase database connection)
+  if (req.method === 'GET' && type === 'detect-location') {
+    const country = req.headers['x-vercel-ip-country'] || null;
+    const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || null;
+    return res.status(200).json({
+      country: country ? country.toUpperCase() : null,
+      ip
+    });
+  }
+
   if (!supabase) {
     return res.status(500).json({ error: 'Database client not initialized.' });
   }
-
-  const { type, action } = req.query || {};
 
   try {
     // --- 1. GET Handlers (Publicly readable) ---

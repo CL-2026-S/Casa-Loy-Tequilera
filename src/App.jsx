@@ -136,7 +136,7 @@ export default function App() {
       }
 
       try {
-        const response = await fetch("/api/detect-location");
+        const response = await fetch("/api/cms?type=detect-location");
         if (response.ok) {
           const data = await response.json();
           const countryCode = data.country;

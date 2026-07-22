@@ -50,7 +50,7 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
   useEffect(() => {
     const detectIP = async () => {
       try {
-        const response = await fetch("/api/detect-location");
+        const response = await fetch("/api/cms?type=detect-location");
         if (response.ok) {
           const data = await response.json();
           const countryCode = data.country ? data.country.toUpperCase() : null;
