@@ -75,8 +75,11 @@ function getHaversineDistance(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-export default function WhereToBuy({ lang }) {
-  const [region, setRegion] = useState("mx");
+export default function WhereToBuy({ lang, country }) {
+  const [region, setRegion] = useState(() => {
+    const userCountry = country || localStorage.getItem("casa_loy_user_country") || "";
+    return userCountry.toUpperCase() === "US" ? "usa" : "mx";
+  });
   const [stores, setStores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -312,7 +315,7 @@ export default function WhereToBuy({ lang }) {
         }));
         setStores(parsed);
 
-        const initialStore = parsed.find((s) => s.region === "mx");
+        const initialStore = parsed.find((s) => s.region === region);
         if (initialStore) {
           setActiveStore(initialStore);
         }
@@ -330,9 +333,12 @@ export default function WhereToBuy({ lang }) {
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
+    const initialCenter = region === "usa" ? [37.0902, -95.7129] : [20.6597, -103.3496];
+    const initialZoom = region === "usa" ? 4 : 6;
+
     const map = L.map(mapContainerRef.current, {
-      center: [20.6597, -103.3496], // Guadalajara center default
-      zoom: 6,
+      center: initialCenter,
+      zoom: initialZoom,
       zoomControl: false,
     });
 
@@ -757,13 +763,13 @@ export default function WhereToBuy({ lang }) {
       </header>
 
       {/* Online Retailers */}
-      <section className="max-w-container-max mx-auto px-margin-desktop mb-20">
-        <h2 className="font-headline-md text-headline-md text-2xl md:text-3xl font-bold mb-6 text-center">
-          {activeT.buyOnline}
-        </h2>
+      {region === "mx" && (
+        <section className="max-w-container-max mx-auto px-margin-desktop mb-20 animate-fade-in">
+          <h2 className="font-headline-md text-headline-md text-2xl md:text-3xl font-bold mb-6 text-center">
+            {activeT.buyOnline}
+          </h2>
 
-        {region === "mx" ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center justify-items-center animate-fade-in">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center justify-items-center">
             <a
               className="group relative w-full h-44 flex items-center justify-center bg-white/50 border border-outline-variant/20 hover:bg-white hover:border-primary transition-all duration-500 overflow-hidden shadow-sm px-6"
               href="https://www.mercadolibre.com.mx/tienda/casa-loy"
@@ -801,24 +807,8 @@ export default function WhereToBuy({ lang }) {
               />
             </a>
           </div>
-        ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 items-center justify-items-center animate-fade-in">
-            {["REMEDY LIQUOR", "HIPROOF", "OLD TOWN TEQUILA", "HIGH END LIQUOR"].map(
-              (usOpt) => (
-                <a
-                  key={usOpt}
-                  className="group h-44 w-full flex items-center justify-center bg-white/50 border border-outline-variant/20 hover:bg-white hover:border-primary transition-all duration-500 shadow-sm"
-                  href="#"
-                >
-                  <span className="font-label-caps text-navigation text-on-surface-variant group-hover:text-primary tracking-widest text-[11px] font-bold">
-                    {usOpt}
-                  </span>
-                </a>
-              )
-            )}
-          </div>
-        )}
-      </section>
+        </section>
+      )}
 
       {/* Physical Store Locations & Map */}
       <section className="max-w-container-max mx-auto px-margin-desktop mb-20 animate-fade-in">

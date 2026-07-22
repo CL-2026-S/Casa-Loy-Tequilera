@@ -531,8 +531,8 @@ export default function App() {
             <Route path="/nativo" element={<Nativo1937 t={t} lang={lang} />} />
             <Route path="/restaurant-nativo" element={<Nativo1937 t={t} lang={lang} />} />
             
-            <Route path="/donde-comprar" element={<WhereToBuy t={t} lang={lang} />} />
-            <Route path="/where-to-buy" element={<WhereToBuy t={t} lang={lang} />} />
+            <Route path="/donde-comprar" element={<WhereToBuy t={t} lang={lang} country={country} />} />
+            <Route path="/where-to-buy" element={<WhereToBuy t={t} lang={lang} country={country} />} />
             
             <Route path="/blog" element={<Blog setPage={setPage} t={t} lang={lang} />} />
             <Route path="/blog/:slug" element={<BlogPost lang={lang} setPage={setPage} />} />
