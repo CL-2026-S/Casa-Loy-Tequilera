@@ -777,7 +777,7 @@ export default function WhereToBuy({ lang, country }) {
               rel="noopener noreferrer"
             >
               <img
-                src="/Mercado_Libre_Logotipo.png"
+                src="/Mercado_Libre_Logotipo.webp"
                 alt="Mercado Libre"
                 className="w-[70%] max-h-[65%] object-contain opacity-60 group-hover:opacity-100 transition-all duration-500"
               />
@@ -789,7 +789,7 @@ export default function WhereToBuy({ lang, country }) {
               rel="noopener noreferrer"
             >
               <img
-                src="/Liverpool_Logotipo.png"
+                src="/Liverpool_Logotipo.webp"
                 alt="Liverpool"
                 className="w-[70%] max-h-[65%] object-contain opacity-60 group-hover:opacity-100 transition-all duration-500"
               />
@@ -801,7 +801,7 @@ export default function WhereToBuy({ lang, country }) {
               rel="noopener noreferrer"
             >
               <img
-                src="/Amazon_Logotipo.png"
+                src="/Amazon_Logotipo.webp"
                 alt="Amazon"
                 className="w-[70%] max-h-[65%] object-contain opacity-60 group-hover:opacity-100 transition-all duration-500"
               />

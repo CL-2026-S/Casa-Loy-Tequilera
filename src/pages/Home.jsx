@@ -878,7 +878,7 @@ export default function Home({ lang = "es", setPage, setLang }) {
               {
                 title: currentLang === "es" ? "VIVE EL ORIGEN" : "LIVE THE ORIGIN",
                 desc: currentLang === "es" ? "Recorra los campos donde nace la leyenda y descubra los secretos de nuestra destilación." : "Walk the fields where the legend is born and discover the secrets of our distillation.",
-                img: "/Terraza.jpg",
+                img: "/Terraza.webp",
                 route: "turismo",
                 cta: currentLang === "es" ? "Reservar Experiencia" : "Book Experience"
               },
@@ -900,6 +900,7 @@ export default function Home({ lang = "es", setPage, setLang }) {
                     alt={sol.title}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2000ms] ease-out group-hover:scale-105"
                     src={sol.img}
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent transition-opacity duration-500"></div>
                   

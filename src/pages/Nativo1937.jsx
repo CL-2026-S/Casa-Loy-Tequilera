@@ -9,7 +9,7 @@ export default function Nativo1937({ lang = "es", t }) {
   const nativoGallery = [
     {
       id: "01",
-      img: "/Vive la Experiencia.jpg",
+      img: "/Vive la Experiencia.webp",
       categoryKey: "espacios",
       title: {
         es: "Terrazas & Paisaje Agavero",
@@ -191,7 +191,7 @@ export default function Nativo1937({ lang = "es", t }) {
           id: 1,
           title: "Guacamole con Chicharrón Norteño",
           desc: "Aguacate criollo machacado al momento, coronado con crujiente chicharrón de cerdo norteño y brotes orgánicos.",
-          img: "/guacamole-chicharron.jpeg",
+          img: "/guacamole-chicharron.webp",
         },
         {
           id: 2,
@@ -204,13 +204,13 @@ export default function Nativo1937({ lang = "es", t }) {
           id: 3,
           title: "Cortes a la leña",
           desc: "Selección de cortes premium asados a fuego directo con leña de encino y mezquite, acompañados de cebollitas cambray asadas.",
-          img: "/new-york-corte.jpg",
+          img: "/new-york-corte.webp",
         },
         {
           id: 4,
           title: "Tarta de Limón",
           desc: "Cremoso de limón amarillo sobre base crocante de mantequilla, merengue italiano flameado y ralladura de lima fresca.",
-          img: "/tarta-de-limon.jpeg",
+          img: "/tarta-de-limon.webp",
           shifted: true,
         },
       ],
@@ -306,7 +306,7 @@ export default function Nativo1937({ lang = "es", t }) {
           id: 1,
           title: "Guacamole with Northern Pork Belly",
           desc: "Freshly mashed Creole avocado, topped with crispy Northern-style pork rind and organic microgreens.",
-          img: "/guacamole-chicharron.jpeg",
+          img: "/guacamole-chicharron.webp",
         },
         {
           id: 2,
@@ -319,13 +319,13 @@ export default function Nativo1937({ lang = "es", t }) {
           id: 3,
           title: "Wood-fired Cuts",
           desc: "Selection of premium cuts grilled over live oak and mesquite wood fire, served with grilled cambray onions.",
-          img: "/new-york-corte.jpg",
+          img: "/new-york-corte.webp",
         },
         {
           id: 4,
           title: "Lemon Tart",
           desc: "Smooth lemon curd on a buttery crust, topped with toasted Italian meringue and fresh lime zest.",
-          img: "/tarta-de-limon.jpeg",
+          img: "/tarta-de-limon.webp",
           shifted: true,
         },
       ],
@@ -558,7 +558,7 @@ export default function Nativo1937({ lang = "es", t }) {
         </div>
         <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center h-full pt-16 pb-28 animate-slide-left-right">
           <img
-            src="/logo-nativo-1937-white.png"
+            src="/logo-nativo-1937-white.webp"
             alt="1937 Nativo"
             className="w-auto h-48 sm:h-56 md:h-64 object-contain mb-12 select-none pointer-events-none"
           />
@@ -751,6 +751,7 @@ export default function Nativo1937({ lang = "es", t }) {
                       src={item.img}
                       alt={item.title[lang === "es" ? "es" : "en"]}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                      loading="lazy"
                     />
                     <div className="absolute top-3 left-3">
                       <span className="px-2.5 py-0.5 bg-white/90 backdrop-blur-md text-[#8C4723] font-navigation text-[9px] uppercase tracking-wider font-bold rounded-full shadow-sm">
@@ -804,6 +805,7 @@ export default function Nativo1937({ lang = "es", t }) {
                     alt={item.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
                     src={item.img}
+                    loading="lazy"
                   />
                 </div>
                 <h3 className="font-headline-md text-xl font-bold min-h-[56px] flex items-end">{item.title}</h3>
@@ -952,9 +954,10 @@ export default function Nativo1937({ lang = "es", t }) {
             <div className="lg:col-span-7 relative flex items-center justify-center">
               <div className="relative w-full aspect-[16/10] overflow-hidden shadow-2xl border border-outline-variant/10">
                 <img
-                  src="/Boutique Restaurante.jpg"
+                  src="/Boutique Restaurante.webp"
                   alt="Casa Loy Tequila Boutique"
                   className="w-full h-full object-cover brightness-[0.95] hover:scale-102 transition-transform duration-[3000ms]"
+                  loading="lazy"
                 />
               </div>
             </div>

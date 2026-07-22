@@ -97,7 +97,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
                   ? "drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.4)]"
                   : ""
               }`}
-              src={isDarkHeroPage && !scrolled ? "/Logotipo Casa Loy Tequilera Color Blanco.png" : "/Logotipo Casa Loy Tequilera.png"}
+              src={isDarkHeroPage && !scrolled ? "/Logotipo Casa Loy Tequilera Color Blanco.webp" : "/Logotipo Casa Loy Tequilera.webp"}
             />
           </Link>
 
@@ -142,7 +142,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
                   ? "drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.4)]"
                   : ""
               } ${scrolled ? "h-[58px]" : "h-[68px]"}`}
-              src={isDarkHeroPage && !scrolled ? "/Logotipo Casa Loy Tequilera Color Blanco.png" : "/Logotipo Casa Loy Tequilera.png"}
+              src={isDarkHeroPage && !scrolled ? "/Logotipo Casa Loy Tequilera Color Blanco.webp" : "/Logotipo Casa Loy Tequilera.webp"}
             />
           </Link>
 
@@ -260,7 +260,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
                 <img
                   alt="Logo Casa Loy"
                   className="h-10 w-auto object-contain"
-                  src="/Logotipo Casa Loy Tequilera.png"
+                  src="/Logotipo Casa Loy Tequilera.webp"
                 />
               </Link>
               <button

@@ -198,7 +198,7 @@ export default function Turismo({ lang, setPage }) {
             <img
               alt="Agave fields experience background"
               className="w-full h-full object-cover brightness-[0.82]"
-              src="/Columpio Experiencias.jpg"
+              src="/Columpio Experiencias.webp"
             />
           </picture>
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/45"></div>
@@ -281,7 +281,7 @@ export default function Turismo({ lang, setPage }) {
                 activeT.tourOroBullet6,
               ],
               btnText: activeT.tourOroBtn,
-              img: "/Cata Experiencias.jpg"
+              img: "/Cata Experiencias.webp"
             },
             {
               id: "platino",
@@ -297,7 +297,7 @@ export default function Turismo({ lang, setPage }) {
                 activeT.tourPlatinoBullet7,
               ],
               btnText: activeT.tourPlatinoBtn,
-              img: "/Recorrido Platino.jpg"
+              img: "/Recorrido Platino.webp"
             },
             {
               id: "diamante",
@@ -313,7 +313,7 @@ export default function Turismo({ lang, setPage }) {
                 activeT.tourDiamanteBullet7,
               ],
               btnText: activeT.tourDiamanteBtn,
-              img: "/Diamante Experiencias.jpg"
+              img: "/Diamante Experiencias.webp"
             }
           ].map((exp) => (
             <div key={exp.id} className="group relative overflow-hidden shadow-lg h-[620px] cursor-pointer">
@@ -321,6 +321,7 @@ export default function Turismo({ lang, setPage }) {
                 alt={exp.title}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 src={exp.img}
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent"></div>
 
@@ -378,7 +379,8 @@ export default function Turismo({ lang, setPage }) {
           <img
             alt="Luxurious dims banquet hall inside a traditional Mexican hacienda"
             className="w-full h-full object-cover opacity-45"
-            src="/Vive la Experiencia.jpg"
+            src="/Vive la Experiencia.webp"
+            loading="lazy"
           />
           <div className="absolute inset-0 bg-primary/30 mix-blend-multiply"></div>
         </div>

@@ -326,7 +326,7 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
                   <img
                     alt="Logo Casa Loy Tequilera"
                     className="h-[80px] sm:h-[90px] md:h-[100px] w-auto object-contain age-gate-logo animate-fade-in"
-                    src="/Logotipo Casa Loy Tequilera Color Blanco.png"
+                    src="/Logotipo Casa Loy Tequilera Color Blanco.webp"
                   />
                 </div>
 

@@ -16,7 +16,7 @@ const seoData = {
             "@id": "https://casaloy.com/#distillery",
             "name": "Casa Loy Tequilera",
             "description": "Destilería premium de tequila 100% agave en los Altos de Jalisco ofreciendo servicios de Maquila B2B, Tours Agaveros y Gastronomía de Autor.",
-            "image": "https://casaloy.com/Logotipo%20Casa%20Loy%20Tequilera.png",
+            "image": "https://casaloy.com/Logotipo%20Casa%20Loy%20Tequilera.webp",
             "address": {
               "@type": "PostalAddress",
               "streetAddress": "Carretera Ayotlán–Atotonilco km 6.5, Las Villas",
@@ -38,7 +38,7 @@ const seoData = {
             "@id": "https://casaloy.com/#organization",
             "name": "Casa Loy Tequilera",
             "url": "https://casaloy.com",
-            "logo": "https://casaloy.com/Logotipo%20Casa%20Loy%20Tequilera.png",
+            "logo": "https://casaloy.com/Logotipo%20Casa%20Loy%20Tequilera.webp",
             "sameAs": [
               "https://www.linkedin.com/company/casaloy",
               "https://www.youtube.com/@casaloytequilera"
@@ -96,7 +96,7 @@ const seoData = {
       description: "Descubre nuestro selecto portafolio de tequilas: Casa Loy Tequila, Reserva Casa Loy, TADDEL Tequila y Tierra Zafiro Tequila.",
       ogTitle: "Portafolio de Marcas - Casa Loy Tequilera",
       ogDesc: "Explora tequilas con carácter, herencia y diseño destilados en los Altos de Jalisco.",
-      ogImage: "/taddel_200ml_bottle.png",
+      ogImage: "/taddel_200ml_bottle.webp",
       schema: {
         "@context": "https://schema.org",
         "@graph": [
@@ -240,7 +240,7 @@ const seoData = {
       description: "Encuentra dónde comprar nuestros tequilas en México y el mundo. Puntos de venta autorizados, Liverpool, Amazon, Mercado Libre y licorerías premium.",
       ogTitle: "Puntos de Venta de Tequila Casa Loy - Dónde Comprar",
       ogDesc: "Localiza tiendas físicas y plataformas digitales oficiales para adquirir nuestro portafolio de tequilas.",
-      ogImage: "/Amazon_Logotipo.png"
+      ogImage: "/Amazon_Logotipo.webp"
     },
     blog: {
       title: "Bitácora Tequilera | Blog de Casa Loy",
@@ -317,7 +317,7 @@ const seoData = {
             "@type": "Distillery",
             "name": "Casa Loy Tequilera",
             "description": "100% Agave Premium Tequila Distillery in Jalisco Highlands, Mexico.",
-            "image": "https://casaloy.com/Logotipo%20Casa%20Loy%20Tequilera.png",
+            "image": "https://casaloy.com/Logotipo%20Casa%20Loy%20Tequilera.webp",
             "address": {
               "@type": "PostalAddress",
               "streetAddress": "Ayotlán–Atotonilco Highway km 6.5, Las Villas",
@@ -350,7 +350,7 @@ const seoData = {
       description: "Discover our select portfolio of tequilas: Casa Loy Tequila, Reserva Casa Loy, TADDEL Tequila, and Tierra Zafiro Tequila.",
       ogTitle: "Tequila Portfolio - Casa Loy Tequilera",
       ogDesc: "Explore premium tequilas with unique character and heritage distilled in Jalisco.",
-      ogImage: "/taddel_200ml_bottle.png"
+      ogImage: "/taddel_200ml_bottle.webp"
     },
     turismo: {
       title: "Tequila Distillery Tours in Jalisco | Casa Loy Experiences",

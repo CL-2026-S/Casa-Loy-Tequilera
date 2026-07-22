@@ -157,7 +157,7 @@ export default function Footer({ lang = "es", setPage }) {
               <img
                 alt="Logo Casa Loy Tequilera"
                 className="h-11 w-auto object-contain brightness-0 transition-opacity duration-300 hover:opacity-80 mx-auto"
-                src="/Logotipo Casa Loy Tequilera.png"
+                src="/Logotipo Casa Loy Tequilera.webp"
               />
             </button>
             <p className="font-navigation text-[13px] text-[#1A1615]/75 leading-relaxed font-normal max-w-sm">

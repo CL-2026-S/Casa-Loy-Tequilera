@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 const brands = [
   {
     id: "casa-loy",
-    logo: "/Casa_Loy_Tequila_Logotipo.png",
+    logo: "/Casa_Loy_Tequila_Logotipo.webp",
     nameEs: "Casa Loy Tequilera",
     nameEn: "Casa Loy Tequilera",
     taglineEs: "Origen · Tradición · Jalisco",
@@ -17,7 +17,7 @@ const brands = [
   },
   {
     id: "taddel",
-    logo: "/TADDEL_Tequila_MX_Logotipo.png",
+    logo: "/TADDEL_Tequila_MX_Logotipo.webp",
     nameEs: "TADDEL Tequila",
     nameEn: "TADDEL Tequila",
     taglineEs: "Diseño · Pureza · Vanguardia",
@@ -30,7 +30,7 @@ const brands = [
   },
   {
     id: "tierra-zafiro",
-    logo: "/Tierra_Zafiro_Tequila_Logotipo.png",
+    logo: "/Tierra_Zafiro_Tequila_Logotipo.webp",
     nameEs: "Tierra Zafiro",
     nameEn: "Tierra Zafiro",
     taglineEs: "Misticismo · Agave · Cosmos",
@@ -141,7 +141,7 @@ export default function Brands({ t, lang, country }) {
     if (b.id === "taddel" && isUsa) {
       return {
         ...b,
-        logo: "/TADDEL_1937_Tequila_USA_Logotipo.png",
+        logo: "/TADDEL_1937_Tequila_USA_Logotipo.webp",
         nameEs: "TADDEL 1937",
         nameEn: "TADDEL 1937",
       };

@@ -407,7 +407,8 @@ export default function Maquilas({ lang = "es" }) {
           <img
             alt="Maquila Tequila Production"
             className="w-full h-full object-cover brightness-[0.82]"
-            src="/Naves Industriales Casa Loy Tequilera.jpg"
+            src="/Naves Industriales Casa Loy Tequilera.webp"
+            fetchPriority="high"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/45"></div>
         </div>
@@ -898,7 +899,8 @@ export default function Maquilas({ lang = "es" }) {
                 <img
                   alt="Fernanda Quintana"
                   className="w-full h-full object-cover"
-                  src="/Ejecutiva.jpeg"
+                  src="/Ejecutiva.webp"
+                  loading="lazy"
                 />
               </div>
               <div className="space-y-1.5 min-w-0">

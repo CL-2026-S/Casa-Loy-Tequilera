@@ -122,7 +122,7 @@ export default function TeaserPage({ onUnlock, lang = "es", setLang }) {
           <div className="absolute -inset-6 bg-[#8C4723]/3 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-all duration-1000"></div>
           
           <img
-            src="/Logotipo Casa Loy Tequilera.png"
+            src="/Logotipo Casa Loy Tequilera.webp"
             alt="Logotipo Casa Loy Tequilera"
             className="h-[140px] sm:h-[180px] md:h-[200px] w-auto object-contain transition-all duration-500"
             draggable="false"
