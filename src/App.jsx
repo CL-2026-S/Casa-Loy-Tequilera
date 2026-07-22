@@ -30,68 +30,85 @@ import TeaserPage from "./pages/TeaserPage";
 import ValidateTicket from "./pages/ValidateTicket";
 import AdminPanel from "./pages/AdminPanel";
 
+// Bilingual routing map
+const routesMap = {
+  // Spanish Paths (uniquely Spanish or shared with lang: null)
+  "/": { page: "home", lang: null }, // Shared
+  "/interactivo": { page: "home-interactive", lang: null }, // Shared
+  "/quienes-somos": { page: "about", lang: "es" },
+  "/maquilas": { page: "maquilas", lang: "es" },
+  "/marcas": { page: "brands", lang: "es" },
+  "/turismo": { page: "turismo", lang: "es" },
+  "/turismo/oro": { page: "experience-oro", lang: "es" },
+  "/turismo/platino": { page: "experience-platino", lang: "es" },
+  "/turismo/diamante": { page: "experience-diamante", lang: "es" },
+  "/nativo": { page: "nativo", lang: "es" },
+  "/donde-comprar": { page: "where-to-buy", lang: "es" },
+  "/blog": { page: "blog", lang: null }, // Shared
+  "/bolsa-de-trabajo": { page: "careers", lang: "es" },
+  "/politica-de-privacidad": { page: "privacy", lang: "es" },
+  "/politica-de-cookies": { page: "cookies", lang: "es" },
+  "/terminos-y-condiciones": { page: "terms", lang: "es" },
+  "/validar-ticket": { page: "validate-ticket", lang: null }, // Shared
+  "/panel": { page: "panel", lang: null }, // Shared
+  "/editorial-preview": { page: "editorial-preview", lang: null }, // Shared
+
+  // English Paths
+  "/about": { page: "about", lang: "en" },
+  "/about-us": { page: "about", lang: "en" },
+  "/bottling": { page: "maquilas", lang: "en" },
+  "/brands": { page: "brands", lang: "en" },
+  "/tourism": { page: "turismo", lang: "en" },
+  "/tourism/gold": { page: "experience-oro", lang: "en" },
+  "/tourism/platinum": { page: "experience-platino", lang: "en" },
+  "/tourism/diamond": { page: "experience-diamante", lang: "en" },
+  "/restaurant-nativo": { page: "nativo", lang: "en" },
+  "/where-to-buy": { page: "where-to-buy", lang: "en" },
+  "/careers": { page: "careers", lang: "en" },
+  "/privacy-policy": { page: "privacy", lang: "en" },
+  "/cookie-policy": { page: "cookies", lang: "en" },
+  "/terms-and-conditions": { page: "terms", lang: "en" }
+};
+
+const getPageInfoFromPath = (pathname) => {
+  if (routesMap[pathname]) {
+    return routesMap[pathname];
+  }
+  if (pathname.startsWith("/blog/")) {
+    return { page: "blog-post", lang: null }; // Shared
+  }
+  if (pathname.startsWith("/bolsa-de-trabajo/")) {
+    return { page: "career-detail", lang: "es" };
+  }
+  if (pathname.startsWith("/careers/")) {
+    return { page: "career-detail", lang: "en" };
+  }
+  return { page: "home", lang: null }; // Shared fallback
+};
+
 export default function App() {
   const [hasBypass, setHasBypass] = useState(true); // Teaser retirado - sitio activo
-  const [lang, setLangState] = useState("es"); // Default language set to Spanish (ES)
+  const [lang, setLangState] = useState(() => {
+    // 1. Check if user has a saved language preference in localStorage
+    const savedLang = localStorage.getItem("casa_loy_pref_lang");
+    if (savedLang === "es" || savedLang === "en") {
+      return savedLang;
+    }
+    // 2. If no preference, check if current path determines a specific language
+    const tempPageInfo = getPageInfoFromPath(window.location.pathname);
+    if (tempPageInfo && (tempPageInfo.lang === "es" || tempPageInfo.lang === "en")) {
+      return tempPageInfo.lang;
+    }
+    // 3. Fallback based on browser language
+    const browserLang = navigator.language || navigator.userLanguage || "";
+    if (browserLang.toLowerCase().includes("es")) {
+      return "es";
+    }
+    return "es"; // Default to Spanish (will be updated by geolocation if needed)
+  });
 
   const location = useLocation();
   const navigate = useNavigate();
-
-  // Bilingual routing map
-  const routesMap = {
-    // Spanish Paths
-    "/": { page: "home", lang: "es" },
-    "/interactivo": { page: "home-interactive", lang: "es" },
-    "/quienes-somos": { page: "about", lang: "es" },
-    "/maquilas": { page: "maquilas", lang: "es" },
-    "/marcas": { page: "brands", lang: "es" },
-    "/turismo": { page: "turismo", lang: "es" },
-    "/turismo/oro": { page: "experience-oro", lang: "es" },
-    "/turismo/platino": { page: "experience-platino", lang: "es" },
-    "/turismo/diamante": { page: "experience-diamante", lang: "es" },
-    "/nativo": { page: "nativo", lang: "es" },
-    "/donde-comprar": { page: "where-to-buy", lang: "es" },
-    "/blog": { page: "blog", lang: "es" },
-    "/bolsa-de-trabajo": { page: "careers", lang: "es" },
-    "/politica-de-privacidad": { page: "privacy", lang: "es" },
-    "/politica-de-cookies": { page: "cookies", lang: "es" },
-    "/terminos-y-condiciones": { page: "terms", lang: "es" },
-    "/validar-ticket": { page: "validate-ticket", lang: "es" },
-    "/panel": { page: "panel", lang: "es" },
-    "/editorial-preview": { page: "editorial-preview", lang: "es" },
-
-    // English Paths
-    "/about": { page: "about", lang: "en" },
-    "/about-us": { page: "about", lang: "en" },
-    "/bottling": { page: "maquilas", lang: "en" },
-    "/brands": { page: "brands", lang: "en" },
-    "/tourism": { page: "turismo", lang: "en" },
-    "/tourism/gold": { page: "experience-oro", lang: "en" },
-    "/tourism/platinum": { page: "experience-platino", lang: "en" },
-    "/tourism/diamond": { page: "experience-diamante", lang: "en" },
-    "/restaurant-nativo": { page: "nativo", lang: "en" },
-    "/where-to-buy": { page: "where-to-buy", lang: "en" },
-    "/careers": { page: "careers", lang: "en" },
-    "/privacy-policy": { page: "privacy", lang: "en" },
-    "/cookie-policy": { page: "cookies", lang: "en" },
-    "/terms-and-conditions": { page: "terms", lang: "en" }
-  };
-
-  const getPageInfoFromPath = (pathname) => {
-    if (routesMap[pathname]) {
-      return routesMap[pathname];
-    }
-    if (pathname.startsWith("/blog/")) {
-      return { page: "blog-post", lang: "es" };
-    }
-    if (pathname.startsWith("/bolsa-de-trabajo/")) {
-      return { page: "career-detail", lang: "es" };
-    }
-    if (pathname.startsWith("/careers/")) {
-      return { page: "career-detail", lang: "en" };
-    }
-    return { page: "home", lang: "es" };
-  };
 
   const pageInfo = getPageInfoFromPath(location.pathname);
   const page = pageInfo.page;
@@ -100,8 +117,53 @@ export default function App() {
   useEffect(() => {
     if (pageInfo.lang && pageInfo.lang !== lang) {
       setLangState(pageInfo.lang);
+      localStorage.setItem("casa_loy_pref_lang", pageInfo.lang);
     }
   }, [location.pathname, lang, pageInfo.lang]);
+
+  // Detect location and set language on mount if no preference is saved
+  useEffect(() => {
+    const detectLocation = async () => {
+      const savedLang = localStorage.getItem("casa_loy_pref_lang");
+      if (savedLang) return; // User already has a preference, don't override
+
+      // If they landed on a language-specific path, save and respect it
+      const currentPathInfo = getPageInfoFromPath(location.pathname);
+      if (currentPathInfo && currentPathInfo.lang) {
+        localStorage.setItem("casa_loy_pref_lang", currentPathInfo.lang);
+        setLangState(currentPathInfo.lang);
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/detect-location");
+        if (response.ok) {
+          const data = await response.json();
+          const countryCode = data.country;
+          if (countryCode) {
+            const spanishSpeakingCountries = ["MX", "ES", "AR", "CO", "PE", "VE", "CL", "EC", "GT", "CU", "BO", "DO", "HN", "PY", "SV", "NI", "CR", "PA", "UY", "PR"];
+            let detectedLang = "en";
+            if (spanishSpeakingCountries.includes(countryCode.toUpperCase())) {
+              detectedLang = "es";
+            }
+            setLangState(detectedLang);
+            localStorage.setItem("casa_loy_pref_lang", detectedLang);
+            return;
+          }
+        }
+      } catch (error) {
+        console.warn("Error calling location API, using browser fallback:", error);
+      }
+
+      // Browser language fallback
+      const browserLang = navigator.language || navigator.userLanguage || "";
+      const detectedLang = browserLang.toLowerCase().includes("es") ? "es" : "en";
+      setLangState(detectedLang);
+      localStorage.setItem("casa_loy_pref_lang", detectedLang);
+    };
+
+    detectLocation();
+  }, [location.pathname]);
 
   // Wrapper setLang to handle URL switching when user clicks the ES/EN toggle in Header/Footer
   const setLang = (targetLang) => {
@@ -151,6 +213,7 @@ export default function App() {
       navigate(targetPath);
     }
     setLangState(targetLang);
+    localStorage.setItem("casa_loy_pref_lang", targetLang);
   };
 
   // setPage wrapper to push state changes using react-router navigation, respecting the active language

@@ -50,21 +50,34 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
   useEffect(() => {
     const detectIP = async () => {
       try {
-        const response = await fetch("https://ipapi.co/json/");
+        const response = await fetch("/api/detect-location");
         if (response.ok) {
           const data = await response.json();
-          const countryCode = data.country_code;
-          if (countryCode && countryData[countryCode]) {
-            setSelectedCountry(countryCode);
-            if (countryCode === "MX") {
+          const countryCode = data.country ? data.country.toUpperCase() : null;
+          
+          if (countryCode) {
+            const spanishSpeakingCountries = ["MX", "ES", "AR", "CO", "PE", "VE", "CL", "EC", "GT", "CU", "BO", "DO", "HN", "PY", "SV", "NI", "CR", "PA", "UY", "PR"];
+            const isSpanishSpeaking = spanishSpeakingCountries.includes(countryCode);
+            
+            // Set language based on country region/language list
+            if (isSpanishSpeaking) {
               setLang("es");
             } else {
               setLang("en");
+            }
+
+            // Set age gate region matching countryData or fallback to ROW
+            if (countryData[countryCode]) {
+              setSelectedCountry(countryCode);
+            } else {
+              setSelectedCountry("ROW");
             }
           } else {
             setSelectedCountry("ROW");
             setLang("en");
           }
+        } else {
+          throw new Error("Location API response not OK");
         }
       } catch (err) {
         // Fallback to browser language
