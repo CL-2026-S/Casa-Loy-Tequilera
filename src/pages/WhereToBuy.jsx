@@ -76,10 +76,7 @@ function getHaversineDistance(lat1, lon1, lat2, lon2) {
 }
 
 export default function WhereToBuy({ lang, country }) {
-  const [region, setRegion] = useState(() => {
-    const userCountry = country || localStorage.getItem("casa_loy_user_country") || "";
-    return userCountry.toUpperCase() === "US" ? "usa" : "mx";
-  });
+  const [region, setRegion] = useState("all");
   const [stores, setStores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -315,7 +312,7 @@ export default function WhereToBuy({ lang, country }) {
         }));
         setStores(parsed);
 
-        const initialStore = parsed.find((s) => s.region === region);
+        const initialStore = parsed.find((s) => region === "all" ? true : s.region === region);
         if (initialStore) {
           setActiveStore(initialStore);
         }
@@ -333,8 +330,10 @@ export default function WhereToBuy({ lang, country }) {
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
-    const initialCenter = region === "usa" ? [37.0902, -95.7129] : [20.6597, -103.3496];
-    const initialZoom = region === "usa" ? 4 : 6;
+    const initialCenter = region === "usa"
+      ? [37.0902, -95.7129]
+      : (region === "mx" ? [20.6597, -103.3496] : [28.0, -98.0]);
+    const initialZoom = region === "usa" ? 4 : (region === "mx" ? 6 : 4);
 
     const map = L.map(mapContainerRef.current, {
       center: initialCenter,
@@ -387,11 +386,13 @@ export default function WhereToBuy({ lang, country }) {
 
   const handleRegionChange = (newRegion) => {
     setRegion(newRegion);
+    setUserLocation(null); // Clear geolocation focus to zoom out to the new region
+    setDistanceSorted(false);
     setSearchQuery("");
     setSelectedTypes([]);
     setSelectedBrands([]);
     setSelectedCategories([]);
-    const firstInRegion = stores.find((s) => s.region === newRegion);
+    const firstInRegion = stores.find((s) => newRegion === "all" ? true : s.region === newRegion);
     if (firstInRegion) {
       setActiveStore(firstInRegion);
     } else {
@@ -478,7 +479,7 @@ export default function WhereToBuy({ lang, country }) {
   // Filter criteria before viewport mapping - MEMOIZED to prevent map scroll bounce loops!
   const storesFilteredByCriteria = useMemo(() => {
     return stores.filter((store) => {
-      const matchesRegion = store.region === region;
+      const matchesRegion = region === "all" ? true : store.region === region;
 
       const matchesTypes =
         selectedTypes.length > 0
@@ -682,10 +683,31 @@ export default function WhereToBuy({ lang, country }) {
       hasCoords = true;
     }
 
-    if (hasCoords && storesFilteredByCriteria.length > 0) {
+    if (userLocation) {
+      map.setView([userLocation.latitude, userLocation.longitude], 10);
+    } else if (hasCoords && storesFilteredByCriteria.length > 0) {
       map.fitBounds(bounds, { padding: [40, 40], maxZoom: 11 });
     }
   }, [storesFilteredByCriteria, userLocation]);
+
+  // Attempt automatic geolocation on mount once stores are loaded
+  useEffect(() => {
+    if (stores.length === 0) return;
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserLocation({ latitude, longitude });
+          setDistanceSorted(true);
+        },
+        (err) => {
+          console.log("Auto-geolocation declined or failed on load:", err);
+        }
+      );
+    }
+  }, [stores]);
+
 
   const handleStoreClick = (store) => {
     setActiveStore(store);
@@ -729,6 +751,34 @@ export default function WhereToBuy({ lang, country }) {
 
         {/* Region Toggle Tab */}
         <div className="flex justify-center items-center gap-8 w-fit mx-auto select-none pb-2">
+          {/* Todos / All */}
+          <button
+            type="button"
+            onClick={() => handleRegionChange("all")}
+            className="flex flex-col items-center gap-2 group focus:outline-none transition-transform active:scale-95 cursor-pointer"
+            aria-label={lang === "es" ? "Todos" : "All"}
+          >
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${
+              region === "all"
+                ? "bg-primary border-primary text-white shadow-sm"
+                : "border-outline-variant/30 group-hover:border-primary/50 text-on-surface-variant/40 group-hover:text-primary bg-white"
+            }`}>
+              <span className="material-symbols-outlined text-[18px]">public</span>
+            </div>
+            <span
+              className={`font-navigation text-[9px] uppercase tracking-[0.25em] transition-all duration-300 ${
+                region === "all"
+                  ? "text-primary font-bold"
+                  : "text-on-surface-variant/40 group-hover:text-primary"
+              }`}
+            >
+              {lang === "es" ? "Todos" : "All"}
+            </span>
+          </button>
+
+          <div className="h-10 w-[0.5px] bg-outline-variant/30 self-start mt-1"></div>
+
+          {/* México */}
           <button
             type="button"
             onClick={() => handleRegionChange("mx")}
@@ -749,6 +799,7 @@ export default function WhereToBuy({ lang, country }) {
 
           <div className="h-10 w-[0.5px] bg-outline-variant/30 self-start mt-1"></div>
 
+          {/* USA */}
           <button
             type="button"
             onClick={() => handleRegionChange("usa")}
@@ -770,7 +821,8 @@ export default function WhereToBuy({ lang, country }) {
       </header>
 
       {/* Online Retailers */}
-      {region === "mx" && (
+      {(region === "mx" || region === "all") && (
+
         <section className="max-w-container-max mx-auto px-margin-desktop mb-20 animate-fade-in">
           <h2 className="font-headline-md text-headline-md text-2xl md:text-3xl font-bold mb-6 text-center">
             {activeT.buyOnline}
