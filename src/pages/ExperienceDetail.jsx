@@ -5,6 +5,33 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 // Para pruebas de desarrollo o sandbox, puedes usar "test".
 const PAYPAL_CLIENT_ID = "ATvqpIUvCDHFIHEAzauNdAX4o2qPqT-971MgriMfcpZFNQV9_af-WWa0kHCZHwiGFGnnSe2bhK33JPsL";
 
+const REGIMENES_FISCALES = [
+  { code: "601", label: "601 - General de Ley Personas Morales" },
+  { code: "603", label: "603 - Personas Morales con Fines no Lucrativos" },
+  { code: "605", label: "605 - Sueldos y Salarios e Ingresos Asimilados a Salarios" },
+  { code: "606", label: "606 - Arrendamiento" },
+  { code: "607", label: "607 - Régimen de Enajenación o Adquisición de Bienes" },
+  { code: "608", label: "608 - Demás ingresos" },
+  { code: "609", label: "609 - Consolidación" },
+  { code: "610", label: "610 - Residentes en el Extranjero sin Establecimiento Permanente en México" },
+  { code: "611", label: "611 - Ingresos por Dividendos (socios y accionistas)" },
+  { code: "612", label: "612 - Personas Físicas con Actividades Empresariales y Profesionales" },
+  { code: "614", label: "614 - Ingresos por intereses" },
+  { code: "615", label: "615 - Régimen de los ingresos por obtención de premios" },
+  { code: "616", label: "616 - Sin obligaciones fiscales" },
+  { code: "620", label: "620 - Sociedades Cooperativas de Producción que optan por diferir sus ingresos" },
+  { code: "621", label: "621 - Incorporación Fiscal" },
+  { code: "622", label: "622 - Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras" },
+  { code: "623", label: "623 - Opcional para Grupos de Sociedades" },
+  { code: "624", label: "624 - Coordinados" },
+  { code: "625", label: "625 - Régimen de las Actividades Empresariales con ingresos a través de Plataformas Tecnológicas" },
+  { code: "626", label: "626 - Régimen Simplificado de Confianza" },
+  { code: "628", label: "628 - Hidrocarburos" },
+  { code: "629", label: "629 - De los Regímenes Fiscales Preferentes y de las Empresas Multinacionales" },
+  { code: "630", label: "630 - Enajenación de acciones en bolsa de valores" }
+];
+
+
 const packagesData = {
   oro: {
     es: {
@@ -413,6 +440,38 @@ export default function ExperienceDetail({
   const [clientEmail, setClientEmail] = useState("");
   const [clientPhone, setClientPhone] = useState("");
 
+  // Experience and Billing States
+  const [allergies, setAllergies] = useState("");
+  const [celebration, setCelebration] = useState("");
+  const [comments, setComments] = useState("");
+  const [requiresInvoice, setRequiresInvoice] = useState(false);
+  const [rfc, setRfc] = useState("");
+  const [razonSocial, setRazonSocial] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [regimenFiscal, setRegimenFiscal] = useState("");
+  const [cfdiUse, setCfdiUse] = useState("");
+
+  const isPersonaFisica = rfc.trim().length === 13;
+
+  useEffect(() => {
+    if (requiresInvoice && rfc) {
+      if (!isPersonaFisica && cfdiUse === "S01") {
+        setCfdiUse("G03");
+      }
+    }
+  }, [rfc, requiresInvoice, isPersonaFisica, cfdiUse]);
+
+  const isInvoiceValid = !requiresInvoice || (
+    rfc.trim().length >= 12 && rfc.trim().length <= 13 &&
+    razonSocial.trim().length > 0 &&
+    postalCode.trim().length === 5 &&
+    regimenFiscal.length > 0 &&
+    cfdiUse.length > 0
+  );
+  const isContactInfoValid = clientName.trim() !== "" && clientEmail.trim() !== "" && clientPhone.trim() !== "";
+  const isFormValid = isContactInfoValid && isInvoiceValid;
+
+
   // Staff Controls State
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [activeStepIdx, setActiveStepIdx] = useState(0);
@@ -597,7 +656,16 @@ export default function ExperienceDetail({
       time_str: selectedTime,
       guests: numGuests,
       total_paid: totalPrice,
-      payment_method: paymentMethodName
+      payment_method: paymentMethodName,
+      allergies,
+      celebration,
+      comments,
+      requires_invoice: requiresInvoice,
+      rfc,
+      razon_social: razonSocial,
+      postal_code: postalCode,
+      regimen_fiscal: regimenFiscal,
+      cfdi_use: cfdiUse
     };
 
     try {
@@ -640,7 +708,16 @@ export default function ExperienceDetail({
           guests: numGuests,
           amount: totalPrice,
           method: paymentMethodName,
-          timestamp: new Date().toLocaleString()
+          timestamp: new Date().toLocaleString(),
+          allergies,
+          celebration,
+          comments,
+          requires_invoice: requiresInvoice,
+          rfc,
+          razon_social: razonSocial,
+          postal_code: postalCode,
+          regimen_fiscal: regimenFiscal,
+          cfdi_use: cfdiUse
         };
         list.unshift(newBooking);
         localStorage.setItem("casa_loy_bookings_log", JSON.stringify(list));
@@ -1149,6 +1226,158 @@ export default function ExperienceDetail({
                                 />
                               </div>
                             </div>
+
+                            {/* Experience Fields */}
+                            <div className="space-y-3 pt-2">
+                              <div>
+                                <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">
+                                  {lang === "es" ? "Alergias o Restricciones Alimenticias" : "Allergies or Dietary Restrictions"}
+                                </label>
+                                <input
+                                  type="text"
+                                  value={allergies}
+                                  onChange={(e) => setAllergies(e.target.value)}
+                                  className="w-full bg-stone-50/50 border border-outline-variant p-3 font-sans text-xs focus:outline-none focus:border-primary text-on-surface focus:bg-white"
+                                  placeholder={lang === "es" ? "Ej. Nueces, gluten, ninguna..." : "e.g. Nuts, gluten, none..."}
+                                />
+                              </div>
+
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                  <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">
+                                    {lang === "es" ? "¿Celebras algo especial?" : "Are you celebrating something?"}
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={celebration}
+                                    onChange={(e) => setCelebration(e.target.value)}
+                                    className="w-full bg-stone-50/50 border border-outline-variant p-3 font-sans text-xs focus:outline-none focus:border-primary text-on-surface focus:bg-white"
+                                    placeholder={lang === "es" ? "Ej. Cumpleaños, aniversario..." : "e.g. Birthday, anniversary..."}
+                                  />
+                                </div>
+                                <div>
+                                  <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">
+                                    {lang === "es" ? "Comentarios / Notas" : "Comments / Notes"}
+                                  </label>
+                                  <textarea
+                                    value={comments}
+                                    onChange={(e) => setComments(e.target.value)}
+                                    rows={1}
+                                    className="w-full bg-stone-50/50 border border-outline-variant p-3 font-sans text-xs focus:outline-none focus:border-primary text-on-surface focus:bg-white resize-none"
+                                    placeholder={lang === "es" ? "Instrucciones o solicitudes especiales..." : "Special instructions or requests..."}
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="flex items-center gap-2 pt-2 pb-1">
+                                <input
+                                  type="checkbox"
+                                  id="requiresInvoice"
+                                  checked={requiresInvoice}
+                                  onChange={(e) => {
+                                    setRequiresInvoice(e.target.checked);
+                                    if (e.target.checked && !cfdiUse) {
+                                      setCfdiUse("G03");
+                                    }
+                                  }}
+                                  className="w-4 h-4 text-primary border-outline-variant rounded focus:ring-primary accent-[#8C4723]"
+                                />
+                                <label htmlFor="requiresInvoice" className="text-xs font-semibold text-stone-700 select-none cursor-pointer uppercase tracking-wider text-[10px]">
+                                  {lang === "es" ? "¿Requieres factura fiscal mexicana?" : "Do you require a Mexican tax invoice?"}
+                                </label>
+                              </div>
+
+                              {requiresInvoice && (
+                                <div className="bg-stone-50/70 p-4 border border-outline-variant/30 space-y-3 transition-all duration-300">
+                                  <h6 className="text-[10px] font-bold text-primary uppercase tracking-wider">
+                                    {lang === "es" ? "Datos de Facturación (CFDI 4.0)" : "Billing Information (CFDI 4.0)"}
+                                  </h6>
+                                  
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                      <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">
+                                        RFC *
+                                      </label>
+                                      <input
+                                        type="text"
+                                        required
+                                        value={rfc}
+                                        onChange={(e) => setRfc(e.target.value.toUpperCase().replace(/[^A-Z0-9&]/gi, '').slice(0, 13))}
+                                        placeholder="XAXX010101000"
+                                        className="w-full bg-white border border-outline-variant p-3 font-sans text-xs focus:outline-none focus:border-primary text-on-surface"
+                                      />
+                                      <span className="text-[9px] text-stone-400 block mt-0.5">
+                                        {rfc.trim().length === 12 ? (lang === "es" ? "Persona Moral (12 carac.)" : "Moral Person (12 char.)") : 
+                                         rfc.trim().length === 13 ? (lang === "es" ? "Persona Física (13 carac.)" : "Physical Person (13 char.)") : 
+                                         (lang === "es" ? "12 o 13 caracteres" : "12 or 13 characters")}
+                                      </span>
+                                    </div>
+                                    <div>
+                                      <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">
+                                        {lang === "es" ? "Código Postal (CP) *" : "Postal Code (CP) *"}
+                                      </label>
+                                      <input
+                                        type="text"
+                                        required
+                                        value={postalCode}
+                                        onChange={(e) => setPostalCode(e.target.value.replace(/\D/g, '').slice(0, 5))}
+                                        placeholder="e.g. 44100"
+                                        className="w-full bg-white border border-outline-variant p-3 font-sans text-xs focus:outline-none focus:border-primary text-on-surface"
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div>
+                                    <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">
+                                      {lang === "es" ? "Razón Social *" : "Business Name / Razón Social *"}
+                                    </label>
+                                    <input
+                                      type="text"
+                                      required
+                                      value={razonSocial}
+                                      onChange={(e) => setRazonSocial(e.target.value)}
+                                      placeholder={lang === "es" ? "Ej. CASA LOY SA DE CV o JUAN PEREZ" : "e.g. COMPANY NAME or JOHN DOE"}
+                                      className="w-full bg-white border border-outline-variant p-3 font-sans text-xs focus:outline-none focus:border-primary text-on-surface"
+                                    />
+                                  </div>
+
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <div>
+                                      <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">
+                                        {lang === "es" ? "Régimen Fiscal *" : "Fiscal Regime *"}
+                                      </label>
+                                      <select
+                                        required
+                                        value={regimenFiscal}
+                                        onChange={(e) => setRegimenFiscal(e.target.value)}
+                                        className="w-full bg-white border border-outline-variant p-3 font-sans text-xs focus:outline-none focus:border-primary text-on-surface"
+                                      >
+                                        <option value="">{lang === "es" ? "-- Seleccionar Régimen --" : "-- Select Regime --"}</option>
+                                        {REGIMENES_FISCALES.map((reg) => (
+                                          <option key={reg.code} value={reg.code}>{reg.label}</option>
+                                        ))}
+                                      </select>
+                                    </div>
+                                    <div>
+                                      <label className="block text-[10px] font-medium text-stone-500 uppercase mb-1">
+                                        {lang === "es" ? "Uso de CFDI *" : "CFDI Use *"}
+                                      </label>
+                                      <select
+                                        required
+                                        value={cfdiUse}
+                                        onChange={(e) => setCfdiUse(e.target.value)}
+                                        className="w-full bg-white border border-outline-variant p-3 font-sans text-xs focus:outline-none focus:border-primary text-on-surface"
+                                      >
+                                        <option value="G03">{lang === "es" ? "G03 - Gastos en general" : "G03 - General expenses"}</option>
+                                        {isPersonaFisica && (
+                                          <option value="S01">{lang === "es" ? "S01 - Sin efectos fiscales" : "S01 - No fiscal effects"}</option>
+                                        )}
+                                      </select>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
 
@@ -1159,18 +1388,18 @@ export default function ExperienceDetail({
                           </h5>
                           
                           <div className="space-y-3">
-                            {(!clientName || !clientEmail || !clientPhone) ? (
+                            {!isFormValid ? (
                               <div className="bg-stone-50 border border-dashed border-stone-200 p-4 text-center text-xs text-stone-400">
                                 {lang === "es"
-                                  ? "Por favor, completa tus datos de contacto para habilitar los métodos de pago."
-                                  : "Please complete your contact details to enable payment methods."}
+                                  ? "Por favor, completa tus datos de contacto y facturación (si aplica) para habilitar los métodos de pago."
+                                  : "Please complete your contact details and billing info (if applicable) to enable payment methods."}
                               </div>
                             ) : (
                               <div className="space-y-3">
                                 {/* PayPal Real Checkout Button */}
                                 <div className="w-full">
                                   <PayPalButtons
-                                    forceReRender={[numGuests, totalPrice, selectedDateStr, selectedTime, clientName, clientEmail, clientPhone]}
+                                    forceReRender={[numGuests, totalPrice, selectedDateStr, selectedTime, clientName, clientEmail, clientPhone, allergies, celebration, comments, requiresInvoice, rfc, razonSocial, postalCode, regimenFiscal, cfdiUse]}
                                     style={{ layout: "vertical", color: "gold", shape: "rect", label: "paypal", height: 40 }}
                                     createOrder={async (data, actions) => {
                                       if (isSlotBlocked(selectedDateStr, selectedTime)) {

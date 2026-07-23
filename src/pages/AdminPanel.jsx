@@ -2874,11 +2874,58 @@ export default function AdminPanel({
                 <span className="text-stone-500">Visitantes:</span>
                 <span className="font-bold text-stone-900">{selectedQrTicket.guests} pax</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between border-b border-stone-100 pb-1.5">
                 <span className="text-stone-500">Monto Cobrado:</span>
                 <span className="font-bold text-stone-900">${selectedQrTicket.amount} MXN ({selectedQrTicket.method})</span>
               </div>
+              {selectedQrTicket.allergies && (
+                <div className="flex justify-between border-b border-stone-100 pb-1.5">
+                  <span className="text-stone-500">Alergias:</span>
+                  <span className="font-semibold text-red-600">{selectedQrTicket.allergies}</span>
+                </div>
+              )}
+              {selectedQrTicket.celebration && (
+                <div className="flex justify-between border-b border-stone-100 pb-1.5">
+                  <span className="text-stone-500">¿Celebra algo?:</span>
+                  <span className="font-semibold text-[#8C4723]">{selectedQrTicket.celebration}</span>
+                </div>
+              )}
+              {selectedQrTicket.comments && (
+                <div className="border-b border-stone-100 pb-1.5">
+                  <span className="text-stone-500 block mb-0.5">Comentarios:</span>
+                  <span className="font-normal text-stone-600 italic block leading-snug">{selectedQrTicket.comments}</span>
+                </div>
+              )}
             </div>
+
+            {selectedQrTicket.requires_invoice && (
+              <div className="bg-stone-50 p-3 border border-[#d9c2b6]/40 space-y-1.5 text-xs">
+                <div className="text-[10px] font-bold text-primary uppercase tracking-wider border-b border-stone-200 pb-1">
+                  Datos de Facturación SAT
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-stone-500">RFC:</span>
+                  <span className="font-bold text-stone-900">{selectedQrTicket.rfc}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-stone-500">Razón Social:</span>
+                  <span className="font-semibold text-stone-800 text-right">{selectedQrTicket.razon_social}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-stone-500">Código Postal (CP):</span>
+                  <span className="font-semibold text-stone-900">{selectedQrTicket.postal_code}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-stone-500">Régimen Fiscal:</span>
+                  <span className="font-normal text-stone-700 text-right text-[10px]">{selectedQrTicket.regimen_fiscal}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-stone-500">Uso de CFDI:</span>
+                  <span className="font-normal text-stone-700 text-right text-[10px]">{selectedQrTicket.cfdi_use}</span>
+                </div>
+              </div>
+            )}
+
 
             <div className="pt-2 flex gap-2">
               <button

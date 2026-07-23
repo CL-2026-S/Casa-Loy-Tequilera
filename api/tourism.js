@@ -142,7 +142,16 @@ export default async function handler(req, res) {
         method: r.payment_method,
         timestamp: r.created_at ? new Date(r.created_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) : '',
         used_at: r.used_at ? new Date(r.used_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) : null,
-        status: r.status || 'Confirmada'
+        status: r.status || 'Confirmada',
+        allergies: r.allergies || '',
+        celebration: r.celebration || '',
+        comments: r.comments || '',
+        requires_invoice: r.requires_invoice || false,
+        rfc: r.rfc || '',
+        razon_social: r.razon_social || '',
+        postal_code: r.postal_code || '',
+        regimen_fiscal: r.regimen_fiscal || '',
+        cfdi_use: r.cfdi_use || ''
       })) || [];
 
       return res.status(200).json({
@@ -197,7 +206,16 @@ export default async function handler(req, res) {
           time_str,
           guests,
           total_paid,
-          payment_method
+          payment_method,
+          allergies,
+          celebration,
+          comments,
+          requires_invoice,
+          rfc,
+          razon_social,
+          postal_code,
+          regimen_fiscal,
+          cfdi_use
         } = req.body;
 
         if (!code || !customer_name || !customer_email || !date_str || !time_str || !guests) {
@@ -253,7 +271,16 @@ export default async function handler(req, res) {
             time_str,
             guests: requestedGuests,
             total_paid: parseFloat(total_paid || '0'),
-            payment_method
+            payment_method,
+            allergies: allergies || '',
+            celebration: celebration || '',
+            comments: comments || '',
+            requires_invoice: requires_invoice || false,
+            rfc: rfc || '',
+            razon_social: razon_social || '',
+            postal_code: postal_code || '',
+            regimen_fiscal: regimen_fiscal || '',
+            cfdi_use: cfdi_use || ''
           });
 
         if (insErr) {
@@ -284,7 +311,16 @@ export default async function handler(req, res) {
             date_str,
             time_str,
             guests: requestedGuests,
-            total_paid
+            total_paid,
+            allergies: allergies || '',
+            celebration: celebration || '',
+            comments: comments || '',
+            requires_invoice: requires_invoice || false,
+            rfc: rfc || '',
+            razon_social: razon_social || '',
+            postal_code: postal_code || '',
+            regimen_fiscal: regimen_fiscal || '',
+            cfdi_use: cfdi_use || ''
           });
         } catch (mailErr) {
           console.error("Resend automatic welcome mail failed:", mailErr);
@@ -438,7 +474,16 @@ export default async function handler(req, res) {
           date_str: ticket.date_str,
           time_str: ticket.time_str,
           guests: ticket.guests,
-          total_paid: ticket.total_paid
+          total_paid: ticket.total_paid,
+          allergies: ticket.allergies || '',
+          celebration: ticket.celebration || '',
+          comments: ticket.comments || '',
+          requires_invoice: ticket.requires_invoice || false,
+          rfc: ticket.rfc || '',
+          razon_social: ticket.razon_social || '',
+          postal_code: ticket.postal_code || '',
+          regimen_fiscal: ticket.regimen_fiscal || '',
+          cfdi_use: ticket.cfdi_use || ''
         });
 
         if (!emailRes.success) {

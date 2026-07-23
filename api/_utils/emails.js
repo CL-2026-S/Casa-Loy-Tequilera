@@ -343,7 +343,24 @@ export async function sendBookingEmail(email, bookingDetails) {
     return { success: false, error: "Resend not initialized" };
   }
 
-  const { code, customer_name, tour_id, date_str, time_str, guests, total_paid } = bookingDetails;
+  const { 
+    code, 
+    customer_name, 
+    tour_id, 
+    date_str, 
+    time_str, 
+    guests, 
+    total_paid,
+    allergies,
+    celebration,
+    comments,
+    requires_invoice,
+    rfc,
+    razon_social,
+    postal_code,
+    regimen_fiscal,
+    cfdi_use
+  } = bookingDetails;
   
   const tourName = tour_id === 'diamante' ? 'Experiencia Casa Loy Diamante' : tour_id === 'platino' ? 'Experiencia Casa Loy Platino' : 'Experiencia Casa Loy Oro';
   const qrLink = `https://casaloy.com/?code=${code}&package=${encodeURIComponent(tourName)}&date=${date_str}&time=${encodeURIComponent(time_str)}&guests=${guests}`;
@@ -486,7 +503,53 @@ export async function sendBookingEmail(email, bookingDetails) {
                   <td class="details-row details-label">Total pagado:</td>
                   <td class="details-row details-value"><strong>$${total_paid} MXN</strong></td>
                 </tr>
+                ${allergies ? `
+                <tr>
+                  <td class="details-row details-label">Alergias:</td>
+                  <td class="details-row details-value">${allergies}</td>
+                </tr>
+                ` : ''}
+                ${celebration ? `
+                <tr>
+                  <td class="details-row details-label">¿Celebras algo?:</td>
+                  <td class="details-row details-value">${celebration}</td>
+                </tr>
+                ` : ''}
+                ${comments ? `
+                <tr>
+                  <td class="details-row details-label">Comentarios:</td>
+                  <td class="details-row details-value">${comments}</td>
+                </tr>
+                ` : ''}
               </table>
+
+              ${requires_invoice ? `
+              <div style="margin-top: 24px; border-top: 1px solid #f0eee8; padding-top: 20px; text-align: left; font-size: 13px;">
+                <h4 style="color: #7d3f0f; font-family: 'Georgia', serif; font-size: 15px; margin: 0 0 10px 0; font-weight: normal; text-transform: uppercase; letter-spacing: 0.05em;">Datos de Facturación Fiscal</h4>
+                <table width="100%">
+                  <tr>
+                    <td style="padding: 4px 0; color: #867369; font-weight: bold; width: 40%;">RFC:</td>
+                    <td style="padding: 4px 0; color: #1c1c18; text-align: right;">${rfc}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 0; color: #867369; font-weight: bold;">Razón Social:</td>
+                    <td style="padding: 4px 0; color: #1c1c18; text-align: right;">${razon_social}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 0; color: #867369; font-weight: bold;">Código Postal (CP):</td>
+                    <td style="padding: 4px 0; color: #1c1c18; text-align: right;">${postal_code}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 0; color: #867369; font-weight: bold;">Régimen Fiscal:</td>
+                    <td style="padding: 4px 0; color: #1c1c18; text-align: right; font-size: 11px;">${regimen_fiscal}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 0; color: #867369; font-weight: bold;">Uso de CFDI:</td>
+                    <td style="padding: 4px 0; color: #1c1c18; text-align: right; font-size: 11px;">${cfdi_use}</td>
+                  </tr>
+                </table>
+              </div>
+              ` : ''}
               
               <div class="footer">
                 <p>Ubicación: Carretera Ayotlán–Atotonilco km 6.5, Las Villas, Jalisco.</p>
@@ -526,6 +589,19 @@ export async function sendBookingEmail(email, bookingDetails) {
           <p><strong>Hora:</strong> ${time_str}</p>
           <p><strong>Visitantes:</strong> ${guests} personas</p>
           <p><strong>Monto pagado:</strong> $${total_paid} MXN</p>
+          ${allergies ? `<p><strong>Alergias:</strong> ${allergies}</p>` : ''}
+          ${celebration ? `<p><strong>¿Celebras algo?:</strong> ${celebration}</p>` : ''}
+          ${comments ? `<p><strong>Comentarios:</strong> ${comments}</p>` : ''}
+          ${requires_invoice ? `
+            <div style="margin-top: 15px; padding: 10px; border: 1px solid #d9c2b6; background-color: #fcf9f3;">
+              <h4 style="margin: 0 0 5px 0; color: #8C4723;">Datos de Facturación</h4>
+              <p style="margin: 3px 0;"><strong>RFC:</strong> ${rfc}</p>
+              <p style="margin: 3px 0;"><strong>Razón Social:</strong> ${razon_social}</p>
+              <p style="margin: 3px 0;"><strong>CP:</strong> ${postal_code}</p>
+              <p style="margin: 3px 0;"><strong>Régimen Fiscal:</strong> ${regimen_fiscal}</p>
+              <p style="margin: 3px 0;"><strong>Uso de CFDI:</strong> ${cfdi_use}</p>
+            </div>
+          ` : ''}
         `
       });
     } catch (adminMailErr) {
