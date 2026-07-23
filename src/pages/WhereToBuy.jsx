@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+// Google Maps loaded dynamically
 
 const MexicoFlag = ({ active }) => (
   <svg
@@ -90,6 +89,8 @@ export default function WhereToBuy({ lang, country }) {
   const [showFilters, setShowFilters] = useState(false);
 
   // Geolocator and map states
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const markersRef = useRef([]);
   const [userLocation, setUserLocation] = useState(null);
   const [distanceSorted, setDistanceSorted] = useState(false);
   const [filterByMap, setFilterByMap] = useState(true);
@@ -147,7 +148,7 @@ export default function WhereToBuy({ lang, country }) {
 
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
-  const markersLayerRef = useRef(null);
+  const infoWindowRef = useRef(null);
   const userMarkerRef = useRef(null);
 
   const typeOptions = [
@@ -297,6 +298,41 @@ export default function WhereToBuy({ lang, country }) {
 
   const activeT = localT[lang] || localT["es"];
 
+  // Load Google Maps API script
+  useEffect(() => {
+    if (window.google && window.google.maps) {
+      setMapLoaded(true);
+      return;
+    }
+
+    const existingScript = document.getElementById("google-maps-script");
+    if (existingScript) {
+      window.initGoogleMap = () => {
+        setMapLoaded(true);
+      };
+      return;
+    }
+
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "";
+    const script = document.createElement("script");
+    script.id = "google-maps-script";
+    script.src = apiKey
+      ? `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initGoogleMap`
+      : `https://maps.googleapis.com/maps/api/js?callback=initGoogleMap`;
+    script.async = true;
+    script.defer = true;
+
+    window.initGoogleMap = () => {
+      setMapLoaded(true);
+    };
+
+    document.head.appendChild(script);
+
+    return () => {
+      delete window.initGoogleMap;
+    };
+  }, []);
+
   // Fetch stores
   useEffect(() => {
     const fetchStores = async () => {
@@ -326,63 +362,119 @@ export default function WhereToBuy({ lang, country }) {
     fetchStores();
   }, []);
 
-  // Initialize Leaflet Map
+  // Initialize Google Maps Map
   useEffect(() => {
-    if (!mapContainerRef.current) return;
+    if (!mapLoaded || !mapContainerRef.current) return;
 
     const initialCenter = region === "usa"
-      ? [37.0902, -95.7129]
-      : (region === "mx" ? [20.6597, -103.3496] : [28.0, -98.0]);
+      ? { lat: 37.0902, lng: -95.7129 }
+      : (region === "mx" ? { lat: 20.6597, lng: -103.3496 } : { lat: 28.0, lng: -98.0 });
     const initialZoom = region === "usa" ? 4 : (region === "mx" ? 6 : 4);
 
-    const map = L.map(mapContainerRef.current, {
+    const minimalistStyles = [
+      {
+        elementType: "geometry",
+        stylers: [{ color: "#f7f5f0" }]
+      },
+      {
+        elementType: "labels.icon",
+        stylers: [{ visibility: "off" }]
+      },
+      {
+        elementType: "labels.text.fill",
+        stylers: [{ color: "#7d6f5d" }]
+      },
+      {
+        elementType: "labels.text.stroke",
+        stylers: [{ color: "#f7f5f0" }]
+      },
+      {
+        featureType: "administrative.land_parcel",
+        elementType: "labels.text.fill",
+        stylers: [{ color: "#bdbdbd" }]
+      },
+      {
+        featureType: "poi",
+        elementType: "geometry",
+        stylers: [{ color: "#eeebe3" }]
+      },
+      {
+        featureType: "poi",
+        elementType: "labels.text.fill",
+        stylers: [{ color: "#7d6f5d" }]
+      },
+      {
+        featureType: "road",
+        elementType: "geometry",
+        stylers: [{ color: "#ffffff" }]
+      },
+      {
+        featureType: "road.arterial",
+        elementType: "labels.text.fill",
+        stylers: [{ color: "#7d6f5d" }]
+      },
+      {
+        featureType: "road.highway",
+        elementType: "geometry",
+        stylers: [{ color: "#e8e3d7" }]
+      },
+      {
+        featureType: "road.highway",
+        elementType: "labels.text.fill",
+        stylers: [{ color: "#616161" }]
+      },
+      {
+        featureType: "water",
+        elementType: "geometry",
+        stylers: [{ color: "#d2cbc0" }]
+      },
+      {
+        featureType: "water",
+        elementType: "labels.text.fill",
+        stylers: [{ color: "#9e9e9e" }]
+      }
+    ];
+
+    const map = new google.maps.Map(mapContainerRef.current, {
       center: initialCenter,
       zoom: initialZoom,
+      styles: minimalistStyles,
       zoomControl: false,
+      mapTypeControl: false,
+      scaleControl: false,
+      streetViewControl: false,
+      rotateControl: false,
+      fullscreenControl: false,
+      gestureHandling: "cooperative" // Friendly scroll zoom handling
     });
 
-    // Quiet luxury style minimalist light map tiles
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: 'abcd',
-      maxZoom: 20
-    }).addTo(map);
-
     mapRef.current = map;
-    const markersLayer = L.layerGroup().addTo(map);
-    markersLayerRef.current = markersLayer;
 
     const updateBounds = () => {
       try {
         if (mapRef.current) {
-          setMapBounds(mapRef.current.getBounds());
-        }
-      } catch (err) {
-        // Safe catch during map unmount/transitions
-      }
-    };
-
-    map.on("moveend", updateBounds);
-    map.on("zoomend", updateBounds);
-
-    // Initial bounds capture with cleanup
-    const timer = setTimeout(() => {
-      try {
-        if (mapRef.current) {
-          updateBounds();
-          mapRef.current.invalidateSize();
+          const bounds = mapRef.current.getBounds();
+          if (bounds) {
+            setMapBounds(bounds);
+          }
         }
       } catch (err) {}
+    };
+
+    const idleListener = map.addListener("idle", updateBounds);
+
+    const timer = setTimeout(() => {
+      updateBounds();
     }, 250);
 
     return () => {
       clearTimeout(timer);
-      try {
-        map.remove();
-      } catch (err) {}
+      if (window.google && google.maps && idleListener) {
+        google.maps.event.removeListener(idleListener);
+      }
       mapRef.current = null;
     };
-  }, []);
+  }, [mapLoaded]);
 
   const handleRegionChange = (newRegion) => {
     setRegion(newRegion);
@@ -450,7 +542,8 @@ export default function WhereToBuy({ lang, country }) {
         setUserLocation({ latitude, longitude });
         setDistanceSorted(true);
         if (mapRef.current) {
-          mapRef.current.setView([latitude, longitude], 11);
+          mapRef.current.setCenter({ lat: latitude, lng: longitude });
+          mapRef.current.setZoom(11);
         }
       },
       (err) => {
@@ -466,13 +559,19 @@ export default function WhereToBuy({ lang, country }) {
 
   const handleZoomIn = () => {
     if (mapRef.current) {
-      mapRef.current.zoomIn();
+      const zoom = mapRef.current.getZoom();
+      if (zoom !== undefined) {
+        mapRef.current.setZoom(zoom + 1);
+      }
     }
   };
 
   const handleZoomOut = () => {
     if (mapRef.current) {
-      mapRef.current.zoomOut();
+      const zoom = mapRef.current.getZoom();
+      if (zoom !== undefined) {
+        mapRef.current.setZoom(zoom - 1);
+      }
     }
   };
 
@@ -542,7 +641,7 @@ export default function WhereToBuy({ lang, country }) {
   const finalSidebarStores = useMemo(() => {
     return sortedStores.filter((store) => {
       if (filterByMap && mapBounds && store.latitude && store.longitude) {
-        return mapBounds.contains([store.latitude, store.longitude]);
+        return mapBounds.contains({ lat: store.latitude, lng: store.longitude });
       }
       return true;
     });
@@ -561,70 +660,50 @@ export default function WhereToBuy({ lang, country }) {
   // Update map markers when criteria or user location changes
   useEffect(() => {
     const map = mapRef.current;
-    const markersLayer = markersLayerRef.current;
-    if (!map || !markersLayer) return;
+    if (!map) return;
 
-    markersLayer.clearLayers();
-    const bounds = L.latLngBounds();
+    // Clear old markers
+    markersRef.current.forEach((m) => m.setMap(null));
+    markersRef.current = [];
+
+    const bounds = new google.maps.LatLngBounds();
     let hasCoords = false;
 
     // Quiet luxury copper color for points of sale (PDV)
     const copperColor = "#C58B58";
-    const pdvIcon = L.divIcon({
-      className: "custom-leaflet-icon",
-      html: `
-        <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 32px; height: 36px;">
-          <div style="background-color: ${copperColor}; color: white; width: 28px; height: 28px; border-radius: 50%; border: 2px solid white; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(197,139,88,0.3);">
-            <span class="material-symbols-outlined" style="font-size: 14px; font-weight: bold;">storefront</span>
-          </div>
-          <div style="position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid ${copperColor}; z-index: -1;"></div>
-        </div>
-      `,
-      iconSize: [32, 36],
-      iconAnchor: [16, 34],
-      popupAnchor: [0, -34]
-    });
-
-    // Elegant dark forest green/slate for centers of consumption (CDC) with a shot glass (caballito)
+    // Elegant dark forest green/slate for centers of consumption (CDC)
     const cdcColor = "#2F403E";
-    const cdcIcon = L.divIcon({
-      className: "custom-leaflet-icon",
-      html: `
-        <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 32px; height: 36px;">
-          <div style="background-color: ${cdcColor}; color: white; width: 28px; height: 28px; border-radius: 50%; border: 2px solid white; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(47,64,62,0.3);">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="color: white;">
-              <path d="M6 2h12l-1.8 15H7.8L6 2zm2.2 2l1 9h5.6l1-9H8.2z"/>
-            </svg>
-          </div>
-          <div style="position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid ${cdcColor}; z-index: -1;"></div>
-        </div>
-      `,
-      iconSize: [32, 36],
-      iconAnchor: [16, 34],
-      popupAnchor: [0, -34]
-    });
 
-    // Minimal user radar blue dot
-    const userIcon = L.divIcon({
-      className: "custom-leaflet-user-icon",
-      html: `
-        <div style="position: relative; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px;">
-          <div style="background-color: #3b82f6; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px rgba(59,130,246,0.6); position: relative; z-index: 2;"></div>
-          <div style="background-color: #3b82f6; width: 24px; height: 24px; border-radius: 50%; opacity: 0.3; position: absolute; animation: leaflet-pulsate 1.8s ease-out infinite; z-index: 1;"></div>
-        </div>
-      `,
-      iconSize: [32, 32],
-      iconAnchor: [16, 16]
-    });
+    if (!infoWindowRef.current && window.google) {
+      infoWindowRef.current = new google.maps.InfoWindow();
+    }
+
+    // Teardrop pin path
+    const pinSvgPath = "M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z";
 
     // Plot stores
     storesFilteredByCriteria.forEach((store) => {
       if (store.latitude && store.longitude) {
         hasCoords = true;
-        bounds.extend([store.latitude, store.longitude]);
+        const position = { lat: store.latitude, lng: store.longitude };
+        bounds.extend(position);
 
-        const marker = L.marker([store.latitude, store.longitude], {
-          icon: store.cdc ? cdcIcon : pdvIcon,
+        const markerColor = store.cdc ? cdcColor : copperColor;
+        const pinIcon = {
+          path: pinSvgPath,
+          fillColor: markerColor,
+          fillOpacity: 1.0,
+          strokeColor: "#FFFFFF",
+          strokeWeight: 1.5,
+          scale: 1.3,
+          anchor: new google.maps.Point(12, 22)
+        };
+
+        const marker = new google.maps.Marker({
+          position,
+          map,
+          icon: pinIcon,
+          title: store.retailer
         });
 
         // Compute distance label if user is geolocated
@@ -649,44 +728,65 @@ export default function WhereToBuy({ lang, country }) {
             ${distHtml}
           </div>
         `;
-        marker.bindPopup(popupContent);
 
-        marker.on("click", () => {
+        marker.addListener("click", () => {
           setActiveStore(store);
-          map.setView(
-            [store.latitude, store.longitude],
-            11
-          );
+          map.setCenter(position);
+          map.setZoom(11);
+          if (infoWindowRef.current) {
+            infoWindowRef.current.setContent(popupContent);
+            infoWindowRef.current.open(map, marker);
+          }
         });
 
-        markersLayer.addLayer(marker);
+        markersRef.current.push(marker);
       }
     });
 
     // Plot user
     if (userLocation) {
       if (userMarkerRef.current) {
-        userMarkerRef.current.remove();
+        userMarkerRef.current.setMap(null);
       }
-      const userMarker = L.marker(
-        [userLocation.latitude, userLocation.longitude],
-        { icon: userIcon }
-      )
-        .bindPopup(
-          `<strong style="font-family: sans-serif;">${
-            lang === "es" ? "Tu ubicación" : "Your location"
-          }</strong>`
-        )
-        .addTo(map);
+      const userPosition = { lat: userLocation.latitude, lng: userLocation.longitude };
+      
+      const userIcon = {
+        path: google.maps.SymbolPath.CIRCLE,
+        fillColor: "#3b82f6",
+        fillOpacity: 1.0,
+        strokeColor: "#FFFFFF",
+        strokeWeight: 2,
+        scale: 7
+      };
+
+      const userMarker = new google.maps.Marker({
+        position: userPosition,
+        map,
+        icon: userIcon,
+        title: lang === "es" ? "Tu ubicación" : "Your location"
+      });
+
+      const userPopupContent = `<strong style="font-family: sans-serif;">${
+        lang === "es" ? "Tu ubicación" : "Your location"
+      }</strong>`;
+
+      userMarker.addListener("click", () => {
+        if (infoWindowRef.current) {
+          infoWindowRef.current.setContent(userPopupContent);
+          infoWindowRef.current.open(map, userMarker);
+        }
+      });
+
       userMarkerRef.current = userMarker;
-      bounds.extend([userLocation.latitude, userLocation.longitude]);
+      bounds.extend(userPosition);
       hasCoords = true;
     }
 
     if (userLocation) {
-      map.setView([userLocation.latitude, userLocation.longitude], 10);
+      map.setCenter({ lat: userLocation.latitude, lng: userLocation.longitude });
+      map.setZoom(10);
     } else if (hasCoords && storesFilteredByCriteria.length > 0) {
-      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 11 });
+      map.fitBounds(bounds);
     }
   }, [storesFilteredByCriteria, userLocation]);
 
@@ -712,27 +812,57 @@ export default function WhereToBuy({ lang, country }) {
   const handleStoreClick = (store) => {
     setActiveStore(store);
     if (mapRef.current && store.latitude && store.longitude) {
-      mapRef.current.setView([store.latitude, store.longitude], 11);
+      const position = { lat: store.latitude, lng: store.longitude };
+      mapRef.current.setCenter(position);
+      mapRef.current.setZoom(12);
+
+      // Find the corresponding marker and open its infoWindow
+      const marker = markersRef.current.find(
+        (m) =>
+          Math.abs(m.getPosition().lat() - store.latitude) < 0.0001 &&
+          Math.abs(m.getPosition().lng() - store.longitude) < 0.0001
+      );
+      if (marker && infoWindowRef.current) {
+        const copperColor = "#C58B58";
+        const cdcColor = "#2F403E";
+        let distHtml = "";
+        if (userLocation) {
+          const d = getHaversineDistance(
+            userLocation.latitude,
+            userLocation.longitude,
+            store.latitude,
+            store.longitude
+          );
+          distHtml = `<p style="margin: 0; font-size: 11px; font-weight: bold; color: ${copperColor};">${d.toFixed(
+            1
+          )} km ${activeT.distanceLabel}</p>`;
+        }
+        const popupContent = `
+          <div style="font-family: sans-serif; padding: 4px; text-align: left; min-width: 160px;">
+            <h4 style="margin: 0 0 2px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: ${store.cdc ? cdcColor : copperColor}; font-weight: bold;">${store.retailer}</h4>
+            <h3 style="margin: 0 0 4px 0; font-size: 13px; font-weight: 600; color: #1f2937;">${store.name}</h3>
+            <p style="margin: 0 0 6px 0; font-size: 11px; color: #4b5563; line-height: 1.3;">${store.address}</p>
+            ${distHtml}
+          </div>
+        `;
+        infoWindowRef.current.setContent(popupContent);
+        infoWindowRef.current.open(mapRef.current, marker);
+      }
     }
   };
 
   const pulseStyle = `
-    @keyframes leaflet-pulsate {
-      0% { transform: scale(0.1); opacity: 0.0; }
-      50% { opacity: 0.4; }
-      100% { transform: scale(1.2); opacity: 0.0; }
-    }
-    .custom-leaflet-icon, .custom-leaflet-user-icon {
-      background: none !important;
-      border: none !important;
-    }
-    .leaflet-popup-content-wrapper {
+    .gm-style-iw-c {
       border-radius: 0px !important;
+      padding: 12px !important;
       box-shadow: 0 4px 20px rgba(0,0,0,0.08) !important;
     }
-    .leaflet-bar {
-      border: none !important;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.05) !important;
+    .gm-style-iw-d {
+      overflow: hidden !important;
+      max-height: none !important;
+    }
+    .gm-style-iw-tc::after {
+      background: #ffffff !important;
     }
   `;
 
