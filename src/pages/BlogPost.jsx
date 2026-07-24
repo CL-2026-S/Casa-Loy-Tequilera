@@ -33,6 +33,70 @@ export default function BlogPost({ lang = "es", setPage }) {
     window.scrollTo(0, 0);
   }, []);
 
+  useEffect(() => {
+    if (post) {
+      const postTitle = lang === "es" ? (post.title_es || post.title) : (post.title_en || post.title_es || post.title);
+      const postDesc = post.description || "";
+      const postKeywords = post.seo_keywords || "";
+
+      // 1. Update Title
+      document.title = `${postTitle} | Blog Casa Loy`;
+
+      // 2. Update Description Meta Tag
+      let metaDesc = document.querySelector('meta[name="description"]');
+      if (!metaDesc) {
+        metaDesc = document.createElement("meta");
+        metaDesc.name = "description";
+        document.head.appendChild(metaDesc);
+      }
+      metaDesc.content = postDesc;
+
+      // 3. Update Keywords Meta Tag
+      let metaKeywords = document.querySelector('meta[name="keywords"]');
+      if (!metaKeywords) {
+        metaKeywords = document.createElement("meta");
+        metaKeywords.name = "keywords";
+        document.head.appendChild(metaKeywords);
+      }
+      metaKeywords.content = postKeywords;
+
+      // 4. Update OpenGraph Tags
+      const updateMeta = (prop, val) => {
+        let tag = document.querySelector(`meta[property="${prop}"]`);
+        if (!tag) {
+          tag = document.createElement("meta");
+          tag.setAttribute("property", prop);
+          document.head.appendChild(tag);
+        }
+        tag.content = val;
+      };
+
+      updateMeta("og:title", postTitle);
+      updateMeta("og:description", postDesc);
+      if (post.image_url) {
+        updateMeta("og:image", post.image_url);
+      }
+      updateMeta("og:url", window.location.href);
+    } else if (!loading) {
+      // Fallback static post SEO
+      const staticTitle = lang === "es"
+        ? "El Arte de la Cata: Una Inmersión en los Sentidos | Blog Casa Loy"
+        : "The Art of Tasting: An Immersion in the Senses | Blog Casa Loy";
+      const staticDesc = lang === "es"
+        ? "Guía paso a paso para catar tequila de ultra-lujo: vista, olfato y retrogusto."
+        : "Step-by-step guide to tasting ultra-luxury tequila: sight, smell, and aftertaste.";
+      const staticKeywords = "Día Internacional del Tequila, Tequila, Casa Loy, Agave azul, Origen, Tradición tequilera, Jimadores, Denominación de Origen";
+
+      document.title = staticTitle;
+
+      let metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) metaDesc.content = staticDesc;
+
+      let metaKeywords = document.querySelector('meta[name="keywords"]');
+      if (metaKeywords) metaKeywords.content = staticKeywords;
+    }
+  }, [post, lang, loading]);
+
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
@@ -107,6 +171,9 @@ export default function BlogPost({ lang = "es", setPage }) {
   };
 
   const t = content[lang];
+  const staticKeywordsArray = lang === "es"
+    ? ["Cata de Tequila", "Tradición Agavera", "Casa Loy", "Los Altos de Jalisco", "El Origen"]
+    : ["Tequila Tasting", "Agave Tradition", "Casa Loy", "Los Altos de Jalisco", "The Origin"];
 
   if (post) {
     const postTitle = lang === "es" ? (post.title_es || post.title) : (post.title_en || post.title_es || post.title);
@@ -117,6 +184,7 @@ export default function BlogPost({ lang = "es", setPage }) {
       { day: "numeric", month: "long", year: "numeric" }
     );
     const postBody = lang === "es" ? post.body_es : (post.body_en || post.body_es);
+    const postKeywordsArray = post.seo_keywords ? post.seo_keywords.split(",").map(k => k.trim()).filter(Boolean) : [];
 
     return (
       <div className="bg-background text-on-surface text-left min-h-screen">
@@ -152,6 +220,20 @@ export default function BlogPost({ lang = "es", setPage }) {
           <article className="max-w-3xl mx-auto space-y-8 text-lg md:text-xl text-on-surface-variant leading-relaxed font-light font-serif dynamic-blog-body">
             <div dangerouslySetInnerHTML={{ __html: postBody }} />
           </article>
+
+          {/* Article Tags / Keywords */}
+          {postKeywordsArray.length > 0 && (
+            <div className="max-w-3xl mx-auto flex flex-wrap gap-2 mt-12 pb-6 border-b border-outline-variant/10">
+              {postKeywordsArray.map((tag, idx) => (
+                <span
+                  key={idx}
+                  className="font-navigation text-[10px] uppercase tracking-wider bg-secondary/5 text-secondary border border-secondary/20 px-3 py-1 font-semibold rounded-sm select-none"
+                >
+                  #{tag.trim()}
+                </span>
+              ))}
+            </div>
+          )}
 
           {/* Author & Date + Social Share moved to the bottom */}
           <div className="max-w-3xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between border-t border-outline-variant/30 pt-8 mt-12 gap-6">
@@ -349,6 +431,20 @@ export default function BlogPost({ lang = "es", setPage }) {
             <p className="text-base opacity-90 font-light leading-relaxed">{t.terroirText}</p>
           </div>
         </div>
+
+        {/* Article Tags / Keywords */}
+        {staticKeywordsArray.length > 0 && (
+          <div className="max-w-4xl mx-auto flex flex-wrap gap-2 mt-12 pb-6 border-b border-outline-variant/10">
+            {staticKeywordsArray.map((tag, idx) => (
+              <span
+                key={idx}
+                className="font-navigation text-[10px] uppercase tracking-wider bg-secondary/5 text-secondary border border-secondary/20 px-3 py-1 font-semibold rounded-sm select-none"
+              >
+                #{tag.trim()}
+              </span>
+            ))}
+          </div>
+        )}
 
         {/* Author & Date + Social Share moved to the bottom */}
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between border-t border-outline-variant/30 pt-8 mt-12 mb-20 gap-6">

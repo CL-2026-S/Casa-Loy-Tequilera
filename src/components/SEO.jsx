@@ -410,6 +410,9 @@ const seoData = {
 
 export default function SEO({ page, lang = "es" }) {
   useEffect(() => {
+    if (page === "blog-post") {
+      return;
+    }
     // 1. Get current language pack or fallback to Spanish
     const langData = seoData[lang] || seoData.es;
     const pageData = langData[page] || langData.home || seoData.es.home;
