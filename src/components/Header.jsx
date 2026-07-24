@@ -47,7 +47,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isDarkHeroPage = ["home", "home-interactive", "maquilas", "turismo", "nativo", "blog", "blog-post", "careers", "editorial-preview"].includes(page);
+  const isDarkHeroPage = ["home", "home-interactive", "maquilas", "turismo", "nativo", "blog", "careers", "editorial-preview"].includes(page);
 
   const getLinkClass = (targetPage) => {
     const isActive = page === targetPage;

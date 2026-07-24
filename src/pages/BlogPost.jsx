@@ -34,6 +34,8 @@ export default function BlogPost({ lang = "es", setPage }) {
   }, []);
 
   useEffect(() => {
+    let scriptTag = null;
+    
     if (post) {
       const postTitle = lang === "es" ? (post.title_es || post.title) : (post.title_en || post.title_es || post.title);
       const postDesc = post.description || "";
@@ -77,6 +79,37 @@ export default function BlogPost({ lang = "es", setPage }) {
         updateMeta("og:image", post.image_url);
       }
       updateMeta("og:url", window.location.href);
+
+      // 5. Inject JSON-LD Structured Data
+      const schema = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": postTitle,
+        "description": postDesc,
+        "image": post.image_url || "https://casaloy.com/Barra%20Casa%20Loy%20Experiencias.webp",
+        "datePublished": post.published_at || post.created_at,
+        "dateModified": post.published_at || post.created_at,
+        "author": {
+          "@type": "Organization",
+          "name": "Casa Loy Tequilera",
+          "url": "https://casaloy.com"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Casa Loy Tequilera",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://casaloy.com/Logotipo%20Casa%20Loy%20Tequilera.webp"
+          }
+        },
+        "keywords": postKeywords
+      };
+
+      scriptTag = document.createElement("script");
+      scriptTag.id = "blog-post-jsonld";
+      scriptTag.type = "application/ld+json";
+      scriptTag.innerHTML = JSON.stringify(schema);
+      document.head.appendChild(scriptTag);
     } else if (!loading) {
       // Fallback static post SEO
       const staticTitle = lang === "es"
@@ -94,7 +127,42 @@ export default function BlogPost({ lang = "es", setPage }) {
 
       let metaKeywords = document.querySelector('meta[name="keywords"]');
       if (metaKeywords) metaKeywords.content = staticKeywords;
+
+      const schema = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": staticTitle,
+        "description": staticDesc,
+        "image": "https://casaloy.com/Barra%20Casa%20Loy%20Experiencias.webp",
+        "datePublished": "2024-10-24T08:00:00Z",
+        "author": {
+          "@type": "Organization",
+          "name": "Casa Loy Tequilera",
+          "url": "https://casaloy.com"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Casa Loy Tequilera",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://casaloy.com/Logotipo%20Casa%20Loy%20Tequilera.webp"
+          }
+        },
+        "keywords": staticKeywords
+      };
+
+      scriptTag = document.createElement("script");
+      scriptTag.id = "blog-post-jsonld";
+      scriptTag.type = "application/ld+json";
+      scriptTag.innerHTML = JSON.stringify(schema);
+      document.head.appendChild(scriptTag);
     }
+
+    return () => {
+      if (scriptTag) {
+        scriptTag.remove();
+      }
+    };
   }, [post, lang, loading]);
 
   const handleShare = () => {
@@ -217,22 +285,23 @@ export default function BlogPost({ lang = "es", setPage }) {
 
         <main className="max-w-container-max mx-auto px-gutter md:px-margin-desktop mt-8 pb-24">
           {/* Body Content */}
-          <article className="max-w-3xl mx-auto space-y-8 text-lg md:text-xl text-on-surface-variant leading-relaxed font-light font-serif dynamic-blog-body">
+          <article className="max-w-3xl mx-auto space-y-8 text-base md:text-lg text-on-surface leading-[1.8] font-light font-sans dynamic-blog-body">
             <div dangerouslySetInnerHTML={{ __html: postBody }} />
           </article>
 
-          {/* Article Tags / Keywords */}
+          {/* Article Tags / Keywords (Semantic markup for search engine crawlers) */}
           {postKeywordsArray.length > 0 && (
-            <div className="max-w-3xl mx-auto flex flex-wrap gap-2 mt-12 pb-6 border-b border-outline-variant/10">
-              {postKeywordsArray.map((tag, idx) => (
-                <span
-                  key={idx}
-                  className="font-navigation text-[10px] uppercase tracking-wider bg-secondary/5 text-secondary border border-secondary/20 px-3 py-1 font-semibold rounded-sm select-none"
-                >
-                  #{tag.trim()}
-                </span>
-              ))}
-            </div>
+            <section aria-label="Tags" className="max-w-3xl mx-auto mt-12 pb-6 border-b border-outline-variant/10">
+              <ul className="flex flex-wrap gap-2" itemProp="keywords">
+                {postKeywordsArray.map((tag, idx) => (
+                  <li key={idx}>
+                    <span className="font-navigation text-[10px] uppercase tracking-wider bg-secondary/5 text-secondary border border-secondary/20 px-3 py-1 font-semibold rounded-sm select-none inline-block">
+                      #{tag.trim()}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </section>
           )}
 
           {/* Author & Date + Social Share moved to the bottom */}
@@ -340,7 +409,7 @@ export default function BlogPost({ lang = "es", setPage }) {
 
         {/* Body Content */}
         <article className="grid grid-cols-1 lg:grid-cols-12 gap-gutter mb-32">
-          <div className="col-span-12 lg:col-span-8 space-y-8 text-lg md:text-xl text-on-surface-variant leading-relaxed font-light font-serif">
+          <div className="col-span-12 lg:col-span-8 space-y-8 text-base md:text-lg text-on-surface leading-[1.8] font-light font-sans">
             <p className="first-letter:float-left first-letter:font-serif first-letter:text-[5rem] first-letter:leading-[0.8] first-letter:pr-3 first-letter:pt-1 first-letter:text-primary first-letter:font-semibold">
               {t.p1}
             </p>
@@ -408,7 +477,7 @@ export default function BlogPost({ lang = "es", setPage }) {
           <h2 className="font-serif text-3xl md:text-5xl text-center tracking-tight font-medium">
             {t.section2Title}
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-lg text-on-surface-variant leading-relaxed font-light">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-base md:text-lg text-on-surface leading-[1.8] font-light font-sans">
             <p>{t.section2Text1}</p>
             <p>{t.section2Text2}</p>
           </div>
@@ -432,18 +501,19 @@ export default function BlogPost({ lang = "es", setPage }) {
           </div>
         </div>
 
-        {/* Article Tags / Keywords */}
+        {/* Article Tags / Keywords (Semantic markup for search engine crawlers) */}
         {staticKeywordsArray.length > 0 && (
-          <div className="max-w-4xl mx-auto flex flex-wrap gap-2 mt-12 pb-6 border-b border-outline-variant/10">
-            {staticKeywordsArray.map((tag, idx) => (
-              <span
-                key={idx}
-                className="font-navigation text-[10px] uppercase tracking-wider bg-secondary/5 text-secondary border border-secondary/20 px-3 py-1 font-semibold rounded-sm select-none"
-              >
-                #{tag.trim()}
-              </span>
-            ))}
-          </div>
+          <section aria-label="Tags" className="max-w-4xl mx-auto mt-12 pb-6 border-b border-outline-variant/10">
+            <ul className="flex flex-wrap gap-2" itemProp="keywords">
+              {staticKeywordsArray.map((tag, idx) => (
+                <li key={idx}>
+                  <span className="font-navigation text-[10px] uppercase tracking-wider bg-secondary/5 text-secondary border border-secondary/20 px-3 py-1 font-semibold rounded-sm select-none inline-block">
+                    #{tag.trim()}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
 
         {/* Author & Date + Social Share moved to the bottom */}
