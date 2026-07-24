@@ -109,7 +109,7 @@ export default function BlogPost({ lang = "es", setPage }) {
   const t = content[lang];
 
   if (post) {
-    const postTitle = post.title;
+    const postTitle = lang === "es" ? (post.title_es || post.title) : (post.title_en || post.title_es || post.title);
     const postCategory = post.category || "Noticias";
     const postAuthor = lang === "es" ? post.author_es : (post.author_en || post.author_es);
     const postDate = new Date(post.published_at || post.created_at).toLocaleDateString(
@@ -121,26 +121,31 @@ export default function BlogPost({ lang = "es", setPage }) {
     return (
       <div className="bg-background text-on-surface text-left">
         {/* Hero Section */}
-        <header className="relative w-full h-[60vh] md:h-screen min-h-[500px] overflow-hidden">
+        <header className="relative w-full h-[65vh] md:h-[80vh] min-h-[500px] overflow-hidden bg-zinc-950">
           <img
             alt={postTitle}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover brightness-[0.7] contrast-[1.02]"
             src={post.image_url || "/Barra Casa Loy Experiencias.webp"}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
-          <div className="absolute bottom-margin-desktop left-gutter md:left-margin-desktop right-gutter md:right-margin-desktop max-w-container-max mx-auto">
-            <span className="font-label-caps text-label-caps text-primary tracking-[0.2em] mb-4 block uppercase font-semibold">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/35"></div>
+          <div className="absolute bottom-16 left-gutter md:left-margin-desktop right-gutter md:right-margin-desktop max-w-container-max mx-auto w-full px-4">
+            <span className="font-label-caps text-label-caps text-secondary-fixed tracking-[0.2em] mb-4 block uppercase font-semibold">
               {postCategory}
             </span>
-            <h1 className="font-serif text-4xl md:text-7xl lg:text-[84px] text-on-surface leading-tight max-w-4xl tracking-tight">
+            <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl text-white leading-tight max-w-4xl tracking-tight font-medium">
               {postTitle}
             </h1>
           </div>
         </header>
 
         <main className="max-w-container-max mx-auto px-gutter md:px-margin-desktop mt-20 pb-24">
-          {/* Author & Date */}
-          <div className="flex items-center justify-between border-b border-outline-variant/30 pb-8 mb-20">
+          {/* Body Content */}
+          <article className="max-w-3xl mx-auto space-y-8 text-lg md:text-xl text-on-surface-variant leading-relaxed font-light font-sans dynamic-blog-body">
+            <div dangerouslySetInnerHTML={{ __html: postBody }} />
+          </article>
+
+          {/* Author & Date + Social Share moved to the bottom */}
+          <div className="max-w-3xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between border-t border-outline-variant/30 pt-8 mt-12 gap-6">
             <p className="font-body-md text-body-md text-on-surface-variant italic">
               {lang === "es" ? "Por: " : "By: "}
               <span className="font-bold text-on-surface uppercase not-italic tracking-wider">
@@ -148,21 +153,64 @@ export default function BlogPost({ lang = "es", setPage }) {
               </span>{" "}
               • {postDate}
             </p>
-            <div className="flex gap-4">
-              <span
-                onClick={handleShare}
-                className="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors select-none font-bold"
-                title="Copy link"
-              >
-                {copied ? "check" : "share"}
+            
+            {/* Social Share buttons */}
+            <div className="flex items-center gap-3">
+              <span className="font-navigation text-xs text-on-surface-variant/70 uppercase tracking-widest font-semibold mr-1">
+                {lang === "es" ? "Compartir:" : "Share:"}
               </span>
+              
+              {/* WhatsApp */}
+              <a
+                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(postTitle + " " + window.location.href)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-full border border-outline-variant/30 flex items-center justify-center hover:bg-[#25D366] hover:text-white hover:border-[#25D366] transition-all duration-300 text-on-surface-variant"
+                title="WhatsApp"
+              >
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.805-9.805.001-2.621-1.013-5.086-2.86-6.936C16.37 1.947 13.907 1.01 11.996 1.01c-5.41 0-9.813 4.402-9.815 9.813-.001 1.638.455 3.236 1.32 4.654L2.46 19.95l4.187-1.096L6.647 19.16zM17.15 14.5c-.282-.141-1.664-.822-1.921-.916-.257-.094-.445-.141-.631.141-.188.281-.727.916-.891 1.101-.164.186-.328.21-.61.07-2.8-.14-4.88-1.22-6.52-3.08-.282-.482.282-.447.805-1.492.083-.164.041-.309-.021-.45-.062-.141-.563-1.36-.77-1.859-.203-.489-.407-.423-.563-.431-.145-.007-.312-.009-.48-.009-.168 0-.441.063-.672.312-.23.25-1.012.988-1.012 2.41 0 1.42 1.031 2.793 1.17 2.98.14.188 2.03 3.102 4.921 4.35.688.297 1.224.474 1.644.607.69.219 1.319.188 1.816.114.553-.082 1.664-.68 1.898-1.336.234-.656.234-1.219.164-1.336-.07-.117-.258-.188-.54-.328z"/>
+                </svg>
+              </a>
+
+              {/* Facebook */}
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-full border border-outline-variant/30 flex items-center justify-center hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] transition-all duration-300 text-on-surface-variant"
+                title="Facebook"
+              >
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
+                </svg>
+              </a>
+
+              {/* Twitter / X */}
+              <a
+                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(postTitle)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-full border border-outline-variant/30 flex items-center justify-center hover:bg-black hover:text-white hover:border-black transition-all duration-300 text-on-surface-variant"
+                title="Twitter / X"
+              >
+                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+
+              {/* Copy Link */}
+              <button
+                onClick={handleShare}
+                className="w-8 h-8 rounded-full border border-outline-variant/30 flex items-center justify-center hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 text-on-surface-variant cursor-pointer"
+                title={lang === "es" ? "Copiar enlace" : "Copy link"}
+              >
+                <span className="material-symbols-outlined text-[16px] font-bold">
+                  {copied ? "check" : "link"}
+                </span>
+              </button>
             </div>
           </div>
-
-          {/* Body Content */}
-          <article className="max-w-3xl mx-auto space-y-8 text-lg md:text-xl text-on-surface-variant leading-relaxed font-light font-sans dynamic-blog-body">
-            <div dangerouslySetInnerHTML={{ __html: postBody }} />
-          </article>
         </main>
       </div>
     );
@@ -171,46 +219,24 @@ export default function BlogPost({ lang = "es", setPage }) {
   return (
     <div className="bg-background text-on-surface text-left">
       {/* Hero Section */}
-      <header className="relative w-full h-[60vh] md:h-screen min-h-[500px] overflow-hidden">
+      <header className="relative w-full h-[65vh] md:h-[80vh] min-h-[500px] overflow-hidden bg-zinc-950">
         <img
           alt="Cata de Tequila en Casa Loy"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover brightness-[0.7] contrast-[1.02]"
           src="/Barra Casa Loy Experiencias.webp"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
-        <div className="absolute bottom-margin-desktop left-gutter md:left-margin-desktop right-gutter md:right-margin-desktop max-w-container-max mx-auto">
-          <span className="font-label-caps text-label-caps text-primary tracking-[0.2em] mb-4 block">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/35"></div>
+        <div className="absolute bottom-16 left-gutter md:left-margin-desktop right-gutter md:right-margin-desktop max-w-container-max mx-auto w-full px-4">
+          <span className="font-label-caps text-label-caps text-secondary-fixed tracking-[0.2em] mb-4 block uppercase font-semibold">
             {t.category}
           </span>
-          <h1 className="font-serif text-4xl md:text-7xl lg:text-[84px] text-on-surface leading-tight max-w-4xl tracking-tight">
+          <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl text-white leading-tight max-w-4xl tracking-tight font-medium">
             {t.title}
           </h1>
         </div>
       </header>
 
       <main className="max-w-container-max mx-auto px-gutter md:px-margin-desktop mt-20">
-        {/* Author & Date */}
-        <div className="flex items-center justify-between border-b border-outline-variant/30 pb-8 mb-20">
-          <p className="font-body-md text-body-md text-on-surface-variant italic">
-            {lang === "es" ? "Por: " : "By: "}
-            <span className="font-bold text-on-surface uppercase not-italic tracking-wider">
-              {t.author}
-            </span>{" "}
-            • {t.date}
-          </p>
-          <div className="flex gap-4">
-            <span
-              onClick={handleShare}
-              className="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors select-none"
-              title="Copy link"
-            >
-              {copied ? "check" : "share"}
-            </span>
-            <span className="material-symbols-outlined text-outline cursor-pointer hover:text-primary transition-colors select-none">
-              bookmark
-            </span>
-          </div>
-        </div>
 
         {/* Article Intro Quote */}
         <section className="max-w-3xl mx-auto mb-24">
@@ -310,6 +336,74 @@ export default function BlogPost({ lang = "es", setPage }) {
               {t.terroirTitle}
             </h3>
             <p className="text-base opacity-90 font-light leading-relaxed">{t.terroirText}</p>
+          </div>
+        </div>
+
+        {/* Author & Date + Social Share moved to the bottom */}
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between border-t border-outline-variant/30 pt-8 mt-12 mb-20 gap-6">
+          <p className="font-body-md text-body-md text-on-surface-variant italic">
+            {lang === "es" ? "Por: " : "By: "}
+            <span className="font-bold text-on-surface uppercase not-italic tracking-wider">
+              {t.author}
+            </span>{" "}
+            • {t.date}
+          </p>
+          
+          {/* Social Share buttons */}
+          <div className="flex items-center gap-3">
+            <span className="font-navigation text-xs text-on-surface-variant/70 uppercase tracking-widest font-semibold mr-1">
+              {lang === "es" ? "Compartir:" : "Share:"}
+            </span>
+            
+            {/* WhatsApp */}
+            <a
+              href={`https://api.whatsapp.com/send?text=${encodeURIComponent(t.title + " " + window.location.href)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-8 h-8 rounded-full border border-outline-variant/30 flex items-center justify-center hover:bg-[#25D366] hover:text-white hover:border-[#25D366] transition-all duration-300 text-on-surface-variant"
+              title="WhatsApp"
+            >
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.805-9.805.001-2.621-1.013-5.086-2.86-6.936C16.37 1.947 13.907 1.01 11.996 1.01c-5.41 0-9.813 4.402-9.815 9.813-.001 1.638.455 3.236 1.32 4.654L2.46 19.95l4.187-1.096L6.647 19.16zM17.15 14.5c-.282-.141-1.664-.822-1.921-.916-.257-.094-.445-.141-.631.141-.188.281-.727.916-.891 1.101-.164.186-.328.21-.61.07-2.8-.14-4.88-1.22-6.52-3.08-.282-.482.282-.447.805-1.492.083-.164.041-.309-.021-.45-.062-.141-.563-1.36-.77-1.859-.203-.489-.407-.423-.563-.431-.145-.007-.312-.009-.48-.009-.168 0-.441.063-.672.312-.23.25-1.012.988-1.012 2.41 0 1.42 1.031 2.793 1.17 2.98.14.188 2.03 3.102 4.921 4.35.688.297 1.224.474 1.644.607.69.219 1.319.188 1.816.114.553-.082 1.664-.68 1.898-1.336.234-.656.234-1.219.164-1.336-.07-.117-.258-.188-.54-.328z"/>
+              </svg>
+            </a>
+
+            {/* Facebook */}
+            <a
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-8 h-8 rounded-full border border-outline-variant/30 flex items-center justify-center hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] transition-all duration-300 text-on-surface-variant"
+              title="Facebook"
+            >
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
+              </svg>
+            </a>
+
+            {/* Twitter / X */}
+            <a
+              href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(t.title)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-8 h-8 rounded-full border border-outline-variant/30 flex items-center justify-center hover:bg-black hover:text-white hover:border-black transition-all duration-300 text-on-surface-variant"
+              title="Twitter / X"
+            >
+              <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+
+            {/* Copy Link */}
+            <button
+              onClick={handleShare}
+              className="w-8 h-8 rounded-full border border-outline-variant/30 flex items-center justify-center hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 text-on-surface-variant cursor-pointer"
+              title={lang === "es" ? "Copiar enlace" : "Copy link"}
+            >
+              <span className="material-symbols-outlined text-[16px] font-bold">
+                {copied ? "check" : "link"}
+              </span>
+            </button>
           </div>
         </div>
 
