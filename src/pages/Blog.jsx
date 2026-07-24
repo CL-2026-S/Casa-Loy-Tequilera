@@ -78,6 +78,8 @@ export default function Blog({ setPage, lang = "es" }) {
     { id: "Festividades", label: lang === "es" ? "Festividades" : "Festivities" },
     { id: "Mixología", label: lang === "es" ? "Mixología" : "Mixology" },
     { id: "Sustentabilidad", label: lang === "es" ? "Sustentabilidad" : "Sustainability" },
+    { id: "Tendencias", label: lang === "es" ? "Tendencias" : "Trends" },
+    { id: "Premios", label: lang === "es" ? "Premios" : "Awards" },
   ];
 
   const content = {
