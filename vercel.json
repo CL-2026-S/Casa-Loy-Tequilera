@@ -7,6 +7,14 @@
   ],
   "rewrites": [
     {
+      "source": "/api/newsletter/subscribe",
+      "destination": "/api/newsletter?action=subscribe"
+    },
+    {
+      "source": "/api/newsletter/unsubscribe",
+      "destination": "/api/newsletter?action=unsubscribe"
+    },
+    {
       "source": "/blog/:slug",
       "destination": "/api/blog-share?slug=:slug"
     },
