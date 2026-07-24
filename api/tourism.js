@@ -99,13 +99,14 @@ export default async function handler(req, res) {
 
       const maxCapacity = parseInt(settings?.find(s => s.key === 'max_capacity_limit')?.value || '50');
 
-      // 2. Fetch blocked dates
+      // 2. Fetch blocked dates and slots
       const { data: blocked, error: bErr } = await supabase
         .from('blocked_dates')
-        .select('date_str');
+        .select('date_str, time_str');
       if (bErr) throw bErr;
 
-      const blockedList = blocked?.map(d => d.date_str) || [];
+      const blockedList = blocked?.filter(d => d.time_str === 'ALL').map(d => d.date_str) || [];
+      const blockedSlots = blocked?.filter(d => d.time_str !== 'ALL').map(d => ({ date_str: d.date_str, time_str: d.time_str })) || [];
 
       // 3. Fetch overrides
       const { data: overrides, error: oErr } = await supabase
@@ -157,6 +158,7 @@ export default async function handler(req, res) {
       return res.status(200).json({
         maxCapacityLimit: maxCapacity,
         blockedDates: blockedList,
+        blockedSlots: blockedSlots,
         bookingsCapacity,
         bookingsLog
       });
@@ -227,6 +229,20 @@ export default async function handler(req, res) {
           return res.status(409).json({
             error: 'SOLD_OUT',
             message: 'Este horario ya no está disponible por políticas de anticipación (mínimo 3 horas de antelación).'
+          });
+        }
+
+        // Check if date or specific slot is blocked in database
+        const { data: blockedCheck } = await supabase
+          .from('blocked_dates')
+          .select('time_str')
+          .eq('date_str', date_str)
+          .in('time_str', ['ALL', time_str]);
+
+        if (blockedCheck && blockedCheck.length > 0) {
+          return res.status(409).json({
+            error: 'SOLD_OUT',
+            message: 'Este horario o día ha sido bloqueado por la administración.'
           });
         }
 
@@ -352,36 +368,39 @@ export default async function handler(req, res) {
 
       // Action 3: Block multiple dates
       if (action === 'block_dates') {
-        const { dates } = req.body;
+        const { dates, time_str } = req.body;
+        const targetTime = time_str || 'ALL';
         if (!Array.isArray(dates) || dates.length === 0) {
           return res.status(400).json({ error: 'Dates array is required.' });
         }
 
-        const rows = dates.map(d => ({ date_str: d, reason: 'Bloqueo masivo CMS' }));
+        const rows = dates.map(d => ({ date_str: d, time_str: targetTime, reason: 'Bloqueo masivo CMS' }));
         const { error: blockErr } = await supabase
           .from('blocked_dates')
           .upsert(rows);
         if (blockErr) throw blockErr;
 
-        await auditLog(activeUser.userId, activeUser.email, activeUser.role, 'block_dates', `Bloqueo de fechas: ${dates.join(', ')}`);
+        await auditLog(activeUser.userId, activeUser.email, activeUser.role, 'block_dates', `Bloqueo de fechas: ${dates.join(', ')} para ${targetTime}`);
 
         return res.status(200).json({ success: true });
       }
 
       // Action 4: Unblock multiple dates
       if (action === 'unblock_dates') {
-        const { dates } = req.body;
+        const { dates, time_str } = req.body;
         if (!Array.isArray(dates) || dates.length === 0) {
           return res.status(400).json({ error: 'Dates array is required.' });
         }
 
-        const { error: unblockErr } = await supabase
-          .from('blocked_dates')
-          .delete()
-          .in('date_str', dates);
+        let query = supabase.from('blocked_dates').delete().in('date_str', dates);
+        if (time_str) {
+          query = query.eq('time_str', time_str);
+        }
+
+        const { error: unblockErr } = await query;
         if (unblockErr) throw unblockErr;
 
-        await auditLog(activeUser.userId, activeUser.email, activeUser.role, 'unblock_dates', `Desbloqueo de fechas: ${dates.join(', ')}`);
+        await auditLog(activeUser.userId, activeUser.email, activeUser.role, 'unblock_dates', `Desbloqueo de fechas: ${dates.join(', ')}${time_str ? ` para ${time_str}` : ''}`);
 
         return res.status(200).json({ success: true });
       }

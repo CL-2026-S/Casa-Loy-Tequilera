@@ -8,6 +8,8 @@ export default function AdminPanel({
   setMaxCapacityLimit,
   blockedDates,
   setBlockedDates,
+  blockedSlots = [],
+  setBlockedSlots,
   bookingsCapacity,
   setBookingsCapacity,
   refreshData
@@ -106,6 +108,7 @@ export default function AdminPanel({
   const [bulkTimeSlot, setBulkTimeSlot] = useState("11:00 AM");
   const [bulkOccupancyValue, setBulkOccupancyValue] = useState(0);
   const [isSubmittingBulk, setIsSubmittingBulk] = useState(false);
+  const [blockScope, setBlockScope] = useState("ALL");
 
   const [selectedQrTicket, setSelectedQrTicket] = useState(null);
 
@@ -330,7 +333,8 @@ export default function AdminPanel({
       alert("Selecciona un rango de fechas válido y al menos un día de la semana.");
       return;
     }
-    if (!confirm(`¿Confirmas que deseas ${shouldBlock ? "BLOQUEAR" : "DESBLOQUEAR"} los ${dates.length} días seleccionados?`)) {
+    const scopeLabel = blockScope === "ALL" ? "todo el día" : `el horario ${blockScope}`;
+    if (!confirm(`¿Confirmas que deseas ${shouldBlock ? "BLOQUEAR" : "DESBLOQUEAR"} ${scopeLabel} en los ${dates.length} días seleccionados?`)) {
       return;
     }
 
@@ -344,7 +348,8 @@ export default function AdminPanel({
         },
         body: JSON.stringify({
           action: shouldBlock ? "block_dates" : "unblock_dates",
-          dates
+          dates,
+          time_str: blockScope
         })
       });
       if (res.ok) {
@@ -1334,7 +1339,21 @@ export default function AdminPanel({
                       <p className="text-[10px] text-stone-500 leading-normal">
                         Cierra la hacienda para tours en el rango de fechas seleccionado (mantenimiento o eventos privados).
                       </p>
-                      <div className="flex gap-2">
+                      <div className="space-y-1">
+                        <label className="block text-[9px] font-bold text-stone-500 uppercase">
+                          Alcance del bloqueo:
+                        </label>
+                        <select
+                          value={blockScope}
+                          onChange={(e) => setBlockScope(e.target.value)}
+                          className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none"
+                        >
+                          <option value="ALL">Todo el día</option>
+                          <option value="11:00 AM">11:00 AM</option>
+                          <option value="1:00 PM">1:00 PM</option>
+                        </select>
+                      </div>
+                      <div className="flex gap-2 pt-1">
                         <button
                           onClick={() => handleBulkBlock(true)}
                           disabled={isSubmittingBulk || !bulkStartDate || !bulkEndDate}
@@ -1393,21 +1412,25 @@ export default function AdminPanel({
               {/* Sidebar list of blocked dates */}
               <div className="lg:col-span-4 space-y-4 lg:pl-6 lg:border-l border-stone-200">
                 <h5 className="text-xs uppercase tracking-wider text-[#8C4723] font-bold border-b border-stone-100 pb-2">
-                  Fechas Bloqueadas ({blockedDates.length})
+                  Bloqueos Activos ({blockedDates.length + blockedSlots.length})
                 </h5>
-                {blockedDates.length === 0 ? (
-                  <p className="text-xs text-stone-400 italic">No hay fechas bloqueadas actualmente.</p>
+                {blockedDates.length === 0 && blockedSlots.length === 0 ? (
+                  <p className="text-xs text-stone-400 italic">No hay bloqueos activos actualmente.</p>
                 ) : (
                   <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1">
+                    {/* Render Full Day Blocks */}
                     {blockedDates.map((dateStr) => {
                       const parts = dateStr.split("-");
                       const formatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
                       return (
-                        <div key={dateStr} className="flex justify-between items-center bg-stone-50 border border-stone-200/50 p-2.5">
-                          <span className="text-[10px] font-bold text-stone-700">🔒 Cerrado {formatted}</span>
+                        <div key={`all-${dateStr}`} className="flex justify-between items-center bg-stone-50 border border-stone-200/50 p-2.5">
+                          <div className="flex flex-col">
+                            <span className="text-[10px] font-bold text-stone-700">🔒 Cerrado {formatted}</span>
+                            <span className="text-[9px] text-[#8C4723] font-medium">Día Completo</span>
+                          </div>
                           <button
                             onClick={async () => {
-                              if (!confirm(`¿Desbloquear la fecha ${formatted}?`)) return;
+                              if (!confirm(`¿Desbloquear la fecha ${formatted} (Día Completo)?`)) return;
                               try {
                                 const res = await fetch("/api/tourism", {
                                   method: "POST",
@@ -1415,7 +1438,42 @@ export default function AdminPanel({
                                     "Content-Type": "application/json",
                                     "Authorization": `Bearer ${token}`
                                   },
-                                  body: JSON.stringify({ action: "unblock_dates", dates: [dateStr] })
+                                  body: JSON.stringify({ action: "unblock_dates", dates: [dateStr], time_str: "ALL" })
+                                });
+                                if (res.ok) loadTabData();
+                              } catch (e) {
+                                console.error(e);
+                              }
+                            }}
+                            className="text-[10px] text-red-700 hover:text-red-950 font-bold uppercase cursor-pointer"
+                          >
+                            Abrir
+                          </button>
+                        </div>
+                      );
+                    })}
+
+                    {/* Render Specific Slot Blocks */}
+                    {blockedSlots.map((slot) => {
+                      const parts = slot.date_str.split("-");
+                      const formatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
+                      return (
+                        <div key={`slot-${slot.date_str}-${slot.time_str}`} className="flex justify-between items-center bg-stone-50 border border-stone-200/50 p-2.5">
+                          <div className="flex flex-col">
+                            <span className="text-[10px] font-bold text-stone-700">🔒 Cerrado {formatted}</span>
+                            <span className="text-[9px] text-stone-500 font-medium">Horario: {slot.time_str}</span>
+                          </div>
+                          <button
+                            onClick={async () => {
+                              if (!confirm(`¿Desbloquear el horario ${slot.time_str} para la fecha ${formatted}?`)) return;
+                              try {
+                                const res = await fetch("/api/tourism", {
+                                  method: "POST",
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                    "Authorization": `Bearer ${token}`
+                                  },
+                                  body: JSON.stringify({ action: "unblock_dates", dates: [slot.date_str], time_str: slot.time_str })
                                 });
                                 if (res.ok) loadTabData();
                               } catch (e) {

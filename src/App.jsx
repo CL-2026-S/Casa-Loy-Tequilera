@@ -299,6 +299,7 @@ export default function App() {
   // Global Tourism Scheduling States (Shared between clients and CMS panel)
   const [maxCapacityLimit, setMaxCapacityLimit] = useState(50);
   const [blockedDates, setBlockedDates] = useState([]);
+  const [blockedSlots, setBlockedSlots] = useState([]);
   const [bookingsCapacity, setBookingsCapacity] = useState(() => {
     const initial = {};
     const today = new Date();
@@ -357,6 +358,9 @@ export default function App() {
         }
         if (data.blockedDates !== undefined) {
           setBlockedDates(data.blockedDates);
+        }
+        if (data.blockedSlots !== undefined) {
+          setBlockedSlots(data.blockedSlots);
         }
         if (data.bookingsCapacity !== undefined) {
           setBookingsCapacity(data.bookingsCapacity);
@@ -451,6 +455,8 @@ export default function App() {
                 setMaxCapacityLimit={setMaxCapacityLimit}
                 blockedDates={blockedDates}
                 setBlockedDates={setBlockedDates}
+                blockedSlots={blockedSlots}
+                setBlockedSlots={setBlockedSlots}
                 bookingsCapacity={bookingsCapacity}
                 setBookingsCapacity={setBookingsCapacity}
               />
@@ -465,6 +471,8 @@ export default function App() {
                 setMaxCapacityLimit={setMaxCapacityLimit}
                 blockedDates={blockedDates}
                 setBlockedDates={setBlockedDates}
+                blockedSlots={blockedSlots}
+                setBlockedSlots={setBlockedSlots}
                 bookingsCapacity={bookingsCapacity}
                 setBookingsCapacity={setBookingsCapacity}
               />
@@ -480,6 +488,8 @@ export default function App() {
                 setMaxCapacityLimit={setMaxCapacityLimit}
                 blockedDates={blockedDates}
                 setBlockedDates={setBlockedDates}
+                blockedSlots={blockedSlots}
+                setBlockedSlots={setBlockedSlots}
                 bookingsCapacity={bookingsCapacity}
                 setBookingsCapacity={setBookingsCapacity}
               />
@@ -494,6 +504,8 @@ export default function App() {
                 setMaxCapacityLimit={setMaxCapacityLimit}
                 blockedDates={blockedDates}
                 setBlockedDates={setBlockedDates}
+                blockedSlots={blockedSlots}
+                setBlockedSlots={setBlockedSlots}
                 bookingsCapacity={bookingsCapacity}
                 setBookingsCapacity={setBookingsCapacity}
               />
@@ -509,6 +521,8 @@ export default function App() {
                 setMaxCapacityLimit={setMaxCapacityLimit}
                 blockedDates={blockedDates}
                 setBlockedDates={setBlockedDates}
+                blockedSlots={blockedSlots}
+                setBlockedSlots={setBlockedSlots}
                 bookingsCapacity={bookingsCapacity}
                 setBookingsCapacity={setBookingsCapacity}
               />
@@ -523,6 +537,8 @@ export default function App() {
                 setMaxCapacityLimit={setMaxCapacityLimit}
                 blockedDates={blockedDates}
                 setBlockedDates={setBlockedDates}
+                blockedSlots={blockedSlots}
+                setBlockedSlots={setBlockedSlots}
                 bookingsCapacity={bookingsCapacity}
                 setBookingsCapacity={setBookingsCapacity}
               />
@@ -561,6 +577,8 @@ export default function App() {
                 setMaxCapacityLimit={setMaxCapacityLimit}
                 blockedDates={blockedDates}
                 setBlockedDates={setBlockedDates}
+                blockedSlots={blockedSlots}
+                setBlockedSlots={setBlockedSlots}
                 bookingsCapacity={bookingsCapacity}
                 setBookingsCapacity={setBookingsCapacity}
                 refreshData={fetchTourismData}

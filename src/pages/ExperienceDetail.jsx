@@ -309,6 +309,8 @@ export default function ExperienceDetail({
   setMaxCapacityLimit,
   blockedDates,
   setBlockedDates,
+  blockedSlots = [],
+  setBlockedSlots,
   bookingsCapacity,
   setBookingsCapacity
 }) {
@@ -363,6 +365,15 @@ export default function ExperienceDetail({
   
   const isSlotBlocked = (dateStr, timeStr) => {
     if (!dateStr || !timeStr) return true;
+    
+    // Check if the entire date is blocked
+    if (blockedDates.includes(dateStr)) return true;
+
+    // Check if the specific slot is blocked
+    const slotIsBlocked = blockedSlots.some(
+      (slot) => slot.date_str === dateStr && slot.time_str === timeStr
+    );
+    if (slotIsBlocked) return true;
     
     const dateParts = dateStr.split('-');
     if (dateParts.length !== 3) return true;
