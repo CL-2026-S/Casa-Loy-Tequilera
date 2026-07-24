@@ -43,7 +43,7 @@ export default function BlogPost({ lang = "es", setPage }) {
     es: {
       category: "CULTURA & GASTRONOMÍA",
       title: "El Arte de la Cata: Una Inmersión en los Sentidos",
-      author: "Maestro Tequilero",
+      author: "Casa Loy Tequilera",
       date: "24 de Octubre, 2024",
       quote: `"La cata no es simplemente el acto de beber; es un diálogo silencioso entre la tierra, el fuego y el alma humana, donde cada gota cuenta la historia de una herencia milenaria."`,
       p1: "Degustar un tequila de ultra-lujo como Casa Loy requiere de una disposición particular del espíritu. No buscamos el impacto inmediato del alcohol, sino la sutileza de los terpenos, la danza de los ésteres y la herencia del suelo volcánico que nutrió al agave durante años. En esta exploración sensorial, dividimos la experiencia en tres momentos fundamentales que definen el carácter de nuestro destilado.",
@@ -75,7 +75,7 @@ export default function BlogPost({ lang = "es", setPage }) {
     en: {
       category: "CULTURE & GASTRONOMY",
       title: "The Art of Tasting: An Immersion in the Senses",
-      author: "Master Tequilero",
+      author: "Casa Loy Tequilera",
       date: "October 24, 2024",
       quote: `"Tasting is not merely the act of drinking; it is a silent dialogue between earth, fire, and the human soul, where every drop tells the story of a millennial heritage."`,
       p1: "Tasting an ultra-luxury tequila like Casa Loy requires a specific disposition of the spirit. We do not seek the immediate impact of alcohol, but the subtlety of terpenes, the dance of esters, and the heritage of the volcanic soil that nourished the agave for years. In this sensory exploration, we divide the experience into three fundamental stages that define the character of our distillate.",
@@ -119,26 +119,29 @@ export default function BlogPost({ lang = "es", setPage }) {
     const postBody = lang === "es" ? post.body_es : (post.body_en || post.body_es);
 
     return (
-      <div className="bg-background text-on-surface text-left">
-        {/* Hero Section */}
-        <header className="relative w-full h-[65vh] md:h-[80vh] min-h-[500px] overflow-hidden bg-zinc-950">
-          <img
-            alt={postTitle}
-            className="w-full h-full object-cover brightness-[0.7] contrast-[1.02]"
-            src={post.image_url || "/Barra Casa Loy Experiencias.webp"}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/35"></div>
-          <div className="absolute bottom-16 left-gutter md:left-margin-desktop right-gutter md:right-margin-desktop max-w-container-max mx-auto w-full px-4">
-            <span className="font-label-caps text-label-caps text-secondary-fixed tracking-[0.2em] mb-4 block uppercase font-semibold">
-              {postCategory}
-            </span>
-            <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl text-white leading-tight max-w-4xl tracking-tight font-medium">
-              {postTitle}
-            </h1>
-          </div>
+      <div className="bg-background text-on-surface text-left min-h-screen">
+        {/* Editorial Header (Title on clean background for silent luxury) */}
+        <header className="max-w-3xl mx-auto px-gutter pt-32 md:pt-40 pb-12 text-center">
+          <span className="font-label-caps text-label-caps text-secondary tracking-[0.3em] mb-4 block uppercase font-bold text-xs">
+            {postCategory}
+          </span>
+          <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl text-on-surface leading-tight tracking-tight font-medium">
+            {postTitle}
+          </h1>
         </header>
 
-        <main className="max-w-container-max mx-auto px-gutter md:px-margin-desktop mt-20 pb-24">
+        {/* Featured Image (No cropping, original aspect ratio, full brightness) */}
+        <div className="max-w-4xl mx-auto px-gutter mb-16">
+          <div className="overflow-hidden shadow-sm border border-outline-variant/10 bg-white">
+            <img
+              alt={postTitle}
+              className="w-full h-auto object-contain max-h-[75vh] mx-auto"
+              src={post.image_url || "/Barra Casa Loy Experiencias.webp"}
+            />
+          </div>
+        </div>
+
+        <main className="max-w-container-max mx-auto px-gutter md:px-margin-desktop mt-8 pb-24">
           {/* Body Content */}
           <article className="max-w-3xl mx-auto space-y-8 text-lg md:text-xl text-on-surface-variant leading-relaxed font-light font-sans dynamic-blog-body">
             <div dangerouslySetInnerHTML={{ __html: postBody }} />
@@ -217,26 +220,29 @@ export default function BlogPost({ lang = "es", setPage }) {
   }
 
   return (
-    <div className="bg-background text-on-surface text-left">
-      {/* Hero Section */}
-      <header className="relative w-full h-[65vh] md:h-[80vh] min-h-[500px] overflow-hidden bg-zinc-950">
-        <img
-          alt="Cata de Tequila en Casa Loy"
-          className="w-full h-full object-cover brightness-[0.7] contrast-[1.02]"
-          src="/Barra Casa Loy Experiencias.webp"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/35"></div>
-        <div className="absolute bottom-16 left-gutter md:left-margin-desktop right-gutter md:right-margin-desktop max-w-container-max mx-auto w-full px-4">
-          <span className="font-label-caps text-label-caps text-secondary-fixed tracking-[0.2em] mb-4 block uppercase font-semibold">
-            {t.category}
-          </span>
-          <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl text-white leading-tight max-w-4xl tracking-tight font-medium">
-            {t.title}
-          </h1>
-        </div>
+    <div className="bg-background text-on-surface text-left min-h-screen">
+      {/* Editorial Header (Title on clean background for silent luxury) */}
+      <header className="max-w-3xl mx-auto px-gutter pt-32 md:pt-40 pb-12 text-center">
+        <span className="font-label-caps text-label-caps text-secondary tracking-[0.3em] mb-4 block uppercase font-bold text-xs">
+          {t.category}
+        </span>
+        <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl text-on-surface leading-tight tracking-tight font-medium">
+          {t.title}
+        </h1>
       </header>
 
-      <main className="max-w-container-max mx-auto px-gutter md:px-margin-desktop mt-20">
+      {/* Featured Image (No cropping, original aspect ratio, full brightness) */}
+      <div className="max-w-4xl mx-auto px-gutter mb-16">
+        <div className="overflow-hidden shadow-sm border border-outline-variant/10 bg-white">
+          <img
+            alt={t.title}
+            className="w-full h-auto object-contain max-h-[75vh] mx-auto"
+            src="/Barra Casa Loy Experiencias.webp"
+          />
+        </div>
+      </div>
+
+      <main className="max-w-container-max mx-auto px-gutter md:px-margin-desktop mt-8">
 
         {/* Article Intro Quote */}
         <section className="max-w-3xl mx-auto mb-24">

@@ -8,6 +8,7 @@ export default function Blog({ setPage, lang = "es" }) {
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [dynamicArticles, setDynamicArticles] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -30,6 +31,8 @@ export default function Blog({ setPage, lang = "es" }) {
         }
       } catch (e) {
         console.error("Error fetching dynamic blog articles:", e);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchArticles();
@@ -129,7 +132,7 @@ export default function Blog({ setPage, lang = "es" }) {
   return (
     <div className="bg-surface text-on-surface text-left">
       {/* Hero Section */}
-      <section className="relative h-[45vh] md:h-[55vh] w-full flex items-end overflow-hidden bg-zinc-950">
+      <section className="relative h-[45vh] md:h-[55vh] w-full flex items-center justify-center overflow-hidden bg-zinc-950">
         <div className="absolute inset-0 z-0">
           <picture>
             <source media="(max-width: 768px)" srcSet="/Campo de Agave Ayotlán Casa Loy Tequilera.webp" />
@@ -139,16 +142,26 @@ export default function Blog({ setPage, lang = "es" }) {
             />
             <img
               alt="Campos de Agave Casa Loy - El Origen"
-              className="w-full h-full object-cover scale-105 brightness-[0.85]"
+              className="w-full h-full object-cover scale-105 brightness-[0.7]"
               src="/Campo de Agave Ayotlán Casa Loy Tequilera.webp"
             />
           </picture>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/50"></div>
+        </div>
+
+        {/* Elegant Silent Luxury Journal Title Overlay */}
+        <div className="relative z-10 text-center text-white px-4 select-none">
+          <span className="font-label-caps text-label-caps text-white/70 tracking-[0.4em] block uppercase text-[10px] md:text-xs mb-3">
+            {lang === "es" ? "CRÓNICAS Y ORIGEN" : "CHRONICLES & ORIGIN"}
+          </span>
+          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-white tracking-[0.25em] uppercase font-light mr-[-0.25em]">
+            JOURNAL
+          </h1>
         </div>
       </section>
 
       {/* Filter Bar */}
-      {activeArticles.length > 0 && (
+      {filters.length > 0 && (
         <section className="bg-surface sticky top-16 z-40 border-b-[0.5px] border-outline-variant/20 shadow-sm">
           <div className="max-w-container-max mx-auto px-margin-desktop">
             <div className="flex items-center gap-12 h-16 overflow-x-auto select-none no-scrollbar whitespace-nowrap">
@@ -171,38 +184,61 @@ export default function Blog({ setPage, lang = "es" }) {
       )}
 
       {/* Blog Feed Grid */}
-      {activeArticles.length > 0 && (
-        <section className="py-section-gap max-w-container-max mx-auto px-margin-desktop">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-            {filteredArticles.map((art) => (
-              <article
-                key={art.id}
-                onClick={() => art.clickable && navigate(`/blog/${art.id}`)}
-                className="group cursor-pointer space-y-6 text-left"
-              >
-                <div className="aspect-[3/4] overflow-hidden bg-surface-container relative shadow-sm border border-outline-variant/10">
-                  <img
-                    alt={art.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    src={art.img}
-                  />
-                </div>
-                <span className="font-label-caps text-label-caps text-primary block text-xs">
-                  {art.label}
-                </span>
-                <h3 className="font-headline-md text-2xl font-bold leading-tight group-hover:text-primary transition-colors">
-                  {art.title}
-                </h3>
-                <p className="font-body-md text-on-surface-variant text-sm leading-relaxed font-light line-clamp-3">
-                  {art.desc}
-                </p>
-                <button className="inline-flex items-center gap-2 font-navigation text-navigation text-primary group-hover:tracking-widest transition-all duration-500 font-semibold uppercase text-xs">
-                  {currentT.readMore}
-                  <span className="material-symbols-outlined text-[16px]">north_east</span>
-                </button>
-              </article>
-            ))}
-          </div>
+      {isLoading ? (
+        <section className="py-24 max-w-container-max mx-auto px-margin-desktop text-center">
+          <div className="inline-block w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+        </section>
+      ) : (
+        <section className="py-20 max-w-container-max mx-auto px-margin-desktop">
+          {filteredArticles.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter animate-fade-in-slide">
+              {filteredArticles.map((art) => (
+                <article
+                  key={art.id}
+                  onClick={() => art.clickable && navigate(`/blog/${art.id}`)}
+                  className="group cursor-pointer space-y-6 text-left"
+                >
+                  <div className="aspect-[16/10] overflow-hidden bg-surface-container relative shadow-sm border border-outline-variant/10">
+                    <img
+                      alt={art.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      src={art.img}
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="space-y-3">
+                    <span className="font-label-caps text-label-caps text-secondary block text-xs tracking-wider font-semibold uppercase">
+                      {art.category}
+                    </span>
+                    <h3 className="font-serif text-2xl font-bold leading-tight group-hover:text-primary transition-colors text-on-surface">
+                      {art.title}
+                    </h3>
+                    <p className="font-body-md text-on-surface-variant text-sm leading-relaxed font-light line-clamp-3">
+                      {art.desc}
+                    </p>
+                    <button className="inline-flex items-center gap-2 font-navigation text-navigation text-primary group-hover:gap-3 transition-all duration-300 font-semibold uppercase text-xs">
+                      {currentT.readMore}
+                      <span className="material-symbols-outlined text-[16px]">north_east</span>
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-24 max-w-md mx-auto animate-fade-in-slide">
+              <span className="material-symbols-outlined text-4xl text-outline-variant/60 mb-4 font-light select-none">
+                article
+              </span>
+              <p className="font-serif text-2xl text-on-surface mb-2 font-medium">
+                {lang === "es" ? "Próximamente" : "Coming Soon"}
+              </p>
+              <p className="font-body-md text-sm text-on-surface-variant/70 font-light">
+                {lang === "es" 
+                  ? "Estamos preparando nuevas crónicas y artículos sobre esta categoría." 
+                  : "We are preparing new chronicles and articles for this category."}
+              </p>
+            </div>
+          )}
         </section>
       )}
 

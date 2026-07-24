@@ -290,8 +290,8 @@ export default async function handler(req, res) {
           image_url,
           body_es: body_es || description,
           body_en: body_en || body_es || description,
-          author_es: author_es || 'Maestro Tequilero',
-          author_en: author_en || 'Master Tequilero',
+          author_es: author_es || 'Casa Loy Tequilera',
+          author_en: author_en || 'Casa Loy Tequilera',
           seo_title: seo_title || title,
           seo_description: seo_description || description,
           seo_keywords: seo_keywords || category
