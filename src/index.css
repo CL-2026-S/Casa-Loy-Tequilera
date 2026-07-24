@@ -71,6 +71,8 @@
   --font-body-md: "Montserrat", sans-serif;
   --font-body-lg: "Montserrat", sans-serif;
   --font-headline-lg-mobile: "EB Garamond", serif;
+  --font-serif: "Cormorant Garamond", "EB Garamond", serif;
+  --font-sans: "Montserrat", "Inter", sans-serif;
 
   --animate-fade-in-slide: fade-in-slide 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 

@@ -121,21 +121,27 @@ export default function BlogPost({ lang = "es", setPage }) {
     return (
       <div className="bg-background text-on-surface text-left min-h-screen">
         {/* Editorial Header (Title on clean background for silent luxury) */}
-        <header className="max-w-3xl mx-auto px-gutter pt-32 md:pt-40 pb-12 text-center">
-          <span className="font-label-caps text-label-caps text-secondary tracking-[0.3em] mb-4 block uppercase font-bold text-xs">
+        <header className="max-w-4xl mx-auto px-gutter pt-40 md:pt-48 pb-12 text-center select-none animate-fade-in-slide">
+          <span className="font-label-caps text-label-caps text-secondary tracking-[0.4em] mb-6 block uppercase font-bold text-[11px] md:text-xs">
             {postCategory}
           </span>
-          <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl text-on-surface leading-tight tracking-tight font-medium">
+          <h1 className="font-serif text-4xl md:text-6xl lg:text-[72px] text-on-surface leading-[1.1] tracking-tight font-light max-w-4xl mx-auto mb-8">
             {postTitle}
           </h1>
+          {post.description && (
+            <p className="font-serif text-lg md:text-xl text-on-surface-variant/80 italic font-light mt-6 max-w-2xl mx-auto leading-relaxed">
+              {post.description}
+            </p>
+          )}
+          <div className="w-12 h-[1px] bg-secondary/35 mx-auto mt-12"></div>
         </header>
 
-        {/* Featured Image (No cropping, original aspect ratio, full brightness) */}
-        <div className="max-w-4xl mx-auto px-gutter mb-16">
-          <div className="overflow-hidden shadow-sm border border-outline-variant/10 bg-white">
+        {/* Featured Image (No cropping, original aspect ratio, borderless, warm background) */}
+        <div className="max-w-5xl mx-auto px-gutter mb-20 animate-fade-in-slide">
+          <div className="overflow-hidden bg-[#F6F2EA] shadow-sm">
             <img
               alt={postTitle}
-              className="w-full h-auto object-contain max-h-[75vh] mx-auto"
+              className="w-full h-auto object-contain max-h-[80vh] mx-auto hover:scale-101 transition-transform duration-[1.5s]"
               src={post.image_url || "/Barra Casa Loy Experiencias.webp"}
             />
           </div>
@@ -143,7 +149,7 @@ export default function BlogPost({ lang = "es", setPage }) {
 
         <main className="max-w-container-max mx-auto px-gutter md:px-margin-desktop mt-8 pb-24">
           {/* Body Content */}
-          <article className="max-w-3xl mx-auto space-y-8 text-lg md:text-xl text-on-surface-variant leading-relaxed font-light font-sans dynamic-blog-body">
+          <article className="max-w-3xl mx-auto space-y-8 text-lg md:text-xl text-on-surface-variant leading-relaxed font-light font-serif dynamic-blog-body">
             <div dangerouslySetInnerHTML={{ __html: postBody }} />
           </article>
 
@@ -222,21 +228,27 @@ export default function BlogPost({ lang = "es", setPage }) {
   return (
     <div className="bg-background text-on-surface text-left min-h-screen">
       {/* Editorial Header (Title on clean background for silent luxury) */}
-      <header className="max-w-3xl mx-auto px-gutter pt-32 md:pt-40 pb-12 text-center">
-        <span className="font-label-caps text-label-caps text-secondary tracking-[0.3em] mb-4 block uppercase font-bold text-xs">
+      <header className="max-w-4xl mx-auto px-gutter pt-40 md:pt-48 pb-12 text-center select-none animate-fade-in-slide">
+        <span className="font-label-caps text-label-caps text-secondary tracking-[0.4em] mb-6 block uppercase font-bold text-[11px] md:text-xs">
           {t.category}
         </span>
-        <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl text-on-surface leading-tight tracking-tight font-medium">
+        <h1 className="font-serif text-4xl md:text-6xl lg:text-[72px] text-on-surface leading-[1.1] tracking-tight font-light max-w-4xl mx-auto mb-8">
           {t.title}
         </h1>
+        {t.quote && (
+          <p className="font-serif text-lg md:text-xl text-on-surface-variant/80 italic font-light mt-6 max-w-2xl mx-auto leading-relaxed">
+            {t.quote}
+          </p>
+        )}
+        <div className="w-12 h-[1px] bg-secondary/35 mx-auto mt-12"></div>
       </header>
 
-      {/* Featured Image (No cropping, original aspect ratio, full brightness) */}
-      <div className="max-w-4xl mx-auto px-gutter mb-16">
-        <div className="overflow-hidden shadow-sm border border-outline-variant/10 bg-white">
+      {/* Featured Image (No cropping, original aspect ratio, borderless, warm background) */}
+      <div className="max-w-5xl mx-auto px-gutter mb-20 animate-fade-in-slide">
+        <div className="overflow-hidden bg-[#F6F2EA] shadow-sm">
           <img
             alt={t.title}
-            className="w-full h-auto object-contain max-h-[75vh] mx-auto"
+            className="w-full h-auto object-contain max-h-[80vh] mx-auto hover:scale-101 transition-transform duration-[1.5s]"
             src="/Barra Casa Loy Experiencias.webp"
           />
         </div>
@@ -244,16 +256,9 @@ export default function BlogPost({ lang = "es", setPage }) {
 
       <main className="max-w-container-max mx-auto px-gutter md:px-margin-desktop mt-8">
 
-        {/* Article Intro Quote */}
-        <section className="max-w-3xl mx-auto mb-24">
-          <p className="font-serif text-2xl md:text-3xl text-on-surface-variant leading-relaxed text-center italic font-light">
-            {t.quote}
-          </p>
-        </section>
-
         {/* Body Content */}
         <article className="grid grid-cols-1 lg:grid-cols-12 gap-gutter mb-32">
-          <div className="col-span-12 lg:col-span-8 space-y-8 text-lg md:text-xl text-on-surface-variant leading-relaxed font-light font-sans">
+          <div className="col-span-12 lg:col-span-8 space-y-8 text-lg md:text-xl text-on-surface-variant leading-relaxed font-light font-serif">
             <p className="first-letter:float-left first-letter:font-serif first-letter:text-[5rem] first-letter:leading-[0.8] first-letter:pr-3 first-letter:pt-1 first-letter:text-primary first-letter:font-semibold">
               {t.p1}
             </p>
