@@ -84,7 +84,7 @@ export default function Maquilas({ lang = "es" }) {
     window.Cal("init", { origin: "https://cal.com" });
     window.Cal("inline", {
       elementOrSelector: "#cal-inline",
-      calLink: "internacionalmarketers",
+      calLink: "internacionalcasaloy.com",
       config: { 
         layout: "month_view",
         theme: "light",
