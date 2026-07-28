@@ -1193,7 +1193,7 @@ export default function AdminPanel({
             </button>
           )}
 
-          {(user?.role === "admin" || user?.role === "experience_manager" || user?.role === "viewer") && (
+          {(user?.role === "admin" || user?.role === "experience_manager" || user?.role === "viewer" || user?.role === "cuentas_por_cobrar") && (
             <button
               onClick={() => setActiveTab("log")}
               className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
@@ -1645,7 +1645,7 @@ export default function AdminPanel({
                   <p className="text-xs text-stone-400">Listado general de reservas y control de estado.</p>
                 </div>
                 
-                {user?.role !== "viewer" && (
+                {user?.role !== "viewer" && user?.role !== "cuentas_por_cobrar" && (
                   <button
                     onClick={() => setShowManualForm(!showManualForm)}
                     className="text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white font-semibold uppercase tracking-wider px-4 py-2.5 flex items-center gap-1.5 cursor-pointer"
@@ -1811,7 +1811,14 @@ export default function AdminPanel({
                           <tr key={log.code} className="hover:bg-stone-50/40 text-stone-700">
                             <td className="p-3 font-mono font-bold text-[#8C4723]">{log.code}</td>
                             <td className="p-3">
-                              <div className="font-semibold text-stone-900">{log.name}</div>
+                              <div className="font-semibold text-stone-900 flex items-center gap-1.5 flex-wrap">
+                                <span>{log.name}</span>
+                                {log.requires_invoice && (
+                                  <span className="inline-block bg-orange-50 text-orange-700 border border-orange-200 text-[9px] font-bold px-1.5 py-0.2 rounded-sm" title="Requiere Factura">
+                                    🧾 FACTURA
+                                  </span>
+                                )}
+                              </div>
                               <div className="text-[10px] text-stone-500">{log.email}</div>
                               <div className="text-[10px] text-stone-500">{log.phone}</div>
                             </td>
@@ -1838,7 +1845,7 @@ export default function AdminPanel({
                               </div>
                             </td>
                             <td className="p-3 text-center">
-                              {user?.role === "viewer" ? (
+                              {(user?.role === "viewer" || user?.role === "cuentas_por_cobrar") ? (
                                 <span className={`inline-block px-2.5 py-1 text-[9px] uppercase tracking-wider font-bold border ${
                                   isCompleted 
                                     ? "bg-red-50 text-red-700 border-red-200" 
@@ -2834,6 +2841,7 @@ export default function AdminPanel({
                         <option value="editor">Editor (CMS, Blog, Banners, KAMs)</option>
                         <option value="experience_manager">Gestor de Experiencias (Tours, QR)</option>
                         <option value="restaurant_manager">Gestor de Restaurante (Reservas Mesa)</option>
+                        <option value="cuentas_por_cobrar">Cuentas por Cobrar (Solo lectura de reservas y facturas)</option>
                         <option value="viewer">Visor (Lectura de Reservas & Logs)</option>
                       </select>
                     </div>
@@ -2875,6 +2883,7 @@ export default function AdminPanel({
                             staff.role === 'editor' ? 'bg-blue-100 text-blue-800' :
                             staff.role === 'experience_manager' ? 'bg-amber-100 text-amber-800' :
                             staff.role === 'restaurant_manager' ? 'bg-purple-100 text-purple-800' :
+                            staff.role === 'cuentas_por_cobrar' ? 'bg-emerald-100 text-emerald-800' :
                             'bg-stone-100 text-stone-600'
                           }`}>
                             {staff.role}

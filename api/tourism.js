@@ -193,6 +193,12 @@ export default async function handler(req, res) {
       }
       
       if (staffUser) {
+        if (staffUser.role === 'viewer' || staffUser.role === 'visor' || staffUser.role === 'cuentas_por_cobrar') {
+          return res.status(403).json({ 
+            error: 'FORBIDDEN', 
+            message: 'No tienes permisos para realizar modificaciones (solo lectura).' 
+          });
+        }
         activeUser = staffUser;
       }
     }
