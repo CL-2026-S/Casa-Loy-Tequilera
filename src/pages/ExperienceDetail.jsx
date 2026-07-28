@@ -3,7 +3,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 // CONFIGURACIÓN DE PAGO: Inserta aquí tu Client ID de PayPal comercial (Live)
 // Para pruebas de desarrollo o sandbox, puedes usar "test".
-const PAYPAL_CLIENT_ID = "ATvqpIUvCDHFIHEAzauNdAX4o2qPqT-971MgriMfcpZFNQV9_af-WWa0kHCZHwiGFGnnSe2bhK33JPsL";
+const PAYPAL_CLIENT_ID = "AbyKuzlmnXXLw8pF1BR0SDFXDwlqRhxPdlysrAbffLKsbZdggzNOpHAEBLbA8bu1cSYLgEpHDpXkpJ6C";
 
 const REGIMENES_FISCALES = [
   { code: "601", label: "601 - General de Ley Personas Morales" },
