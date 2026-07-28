@@ -2014,7 +2014,9 @@ export default function AdminPanel({
                                     ? "bg-red-50 text-red-700 border-red-200" 
                                     : log.status === "Cancelada"
                                       ? "bg-stone-100 text-stone-500 border-stone-300"
-                                      : "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                      : log.status === "Intento de Pago"
+                                        ? "bg-amber-50 text-amber-700 border-amber-200"
+                                        : "bg-emerald-50 text-emerald-700 border-emerald-200"
                                 }`}>
                                   {log.status}
                                 </span>
@@ -2027,12 +2029,15 @@ export default function AdminPanel({
                                       ? "bg-red-50 text-red-700 border-red-200" 
                                       : log.status === "Cancelada"
                                         ? "bg-stone-100 text-stone-500 border-stone-300"
-                                        : "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                        : log.status === "Intento de Pago"
+                                          ? "bg-amber-50 text-amber-700 border-amber-200"
+                                          : "bg-emerald-50 text-emerald-700 border-emerald-200"
                                   }`}
                                 >
                                   <option value="Confirmada">Confirmada (Vigente)</option>
                                   <option value="Cancelada">Cancelada</option>
                                   <option value="Completada">Completada (Usada)</option>
+                                  <option value="Intento de Pago">Intento de Pago (Pendiente)</option>
                                 </select>
                               )}
                             </td>
