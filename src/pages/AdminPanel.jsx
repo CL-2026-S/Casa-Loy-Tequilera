@@ -135,7 +135,7 @@ export default function AdminPanel({
         setActiveTab("cms");
       } else if (user.role === "restaurant_manager") {
         setActiveTab("restaurant");
-      } else if (user.role === "viewer") {
+      } else if (user.role === "viewer" || user.role === "cuentas_por_cobrar") {
         setActiveTab("log");
       } else {
         setActiveTab("calendar");
@@ -1370,7 +1370,7 @@ export default function AdminPanel({
         <div className="bg-white border border-stone-200/60 p-8 shadow-sm">
           
           {/* TAB: Calendar & Capacity (Tours) */}
-          {activeTab === "calendar" && (
+          {(user?.role === "admin" || user?.role === "experience_manager") && activeTab === "calendar" && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 text-left">
               <div className="lg:col-span-8 space-y-6">
                 <div className="bg-stone-50 p-4 border border-stone-200/50">
@@ -1611,7 +1611,7 @@ export default function AdminPanel({
           )}
 
           {/* TAB: Ticket Validation (QR & Manual search) */}
-          {activeTab === "validate" && (
+          {(user?.role === "admin" || user?.role === "experience_manager") && activeTab === "validate" && (
             <div className="max-w-xl mx-auto space-y-6 text-left py-4">
               <div className="space-y-2">
                 <h5 className="text-sm uppercase tracking-wider text-[#8C4723] font-bold">
@@ -1752,7 +1752,7 @@ export default function AdminPanel({
           )}
 
           {/* TAB: Bookings Log (Tours) */}
-          {activeTab === "log" && (
+          {(user?.role === "admin" || user?.role === "experience_manager" || user?.role === "viewer" || user?.role === "cuentas_por_cobrar") && activeTab === "log" && (
             <div className="space-y-6 text-left">
               <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-stone-100 pb-4">
                 <div>
@@ -2061,7 +2061,7 @@ export default function AdminPanel({
           )}
 
           {/* TAB: Restaurant Reservations (Nativo 1937) */}
-          {activeTab === "restaurant" && (
+          {(user?.role === "admin" || user?.role === "restaurant_manager" || user?.role === "viewer") && activeTab === "restaurant" && (
             <div className="space-y-6 text-left">
               <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-stone-100 pb-4">
                 <div>
@@ -2244,7 +2244,7 @@ export default function AdminPanel({
           )}
 
           {/* TAB: CMS modules (Banners, Dishes, Blog with IA, Jobs, POS CRUD) */}
-          {activeTab === "cms" && (
+          {(user?.role === "admin" || user?.role === "editor") && activeTab === "cms" && (
             <div className="space-y-6 text-left">
               
               {/* CMS Sub navigation bar */}
