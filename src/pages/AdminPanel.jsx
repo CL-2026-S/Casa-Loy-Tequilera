@@ -1997,13 +1997,11 @@ export default function AdminPanel({
                             </td>
                             <td className="p-3 text-center">
                               <span className={`inline-block px-2 py-0.5 text-[9px] uppercase tracking-wider font-bold rounded-sm border ${
-                                log.status === "Intento de Pago"
-                                  ? "bg-rose-50 text-rose-800 border-rose-200"
-                                  : log.creation_mode === "manual"
-                                    ? "bg-amber-50 text-amber-800 border-amber-200"
-                                    : "bg-blue-50 text-blue-800 border-blue-200"
+                                log.creation_mode === "manual"
+                                  ? "bg-amber-50 text-amber-800 border-amber-200"
+                                  : "bg-blue-50 text-blue-800 border-blue-200"
                               }`}>
-                                {log.status === "Intento de Pago" ? "Intento de Pago" : log.creation_mode === "manual" ? "Manual" : "Pago Online"}
+                                {log.creation_mode === "manual" ? "Manual" : "Pago Online"}
                               </span>
                               <div className="text-[9px] text-stone-400 mt-0.5 truncate max-w-[120px] mx-auto" title={log.created_by}>
                                 {log.created_by === "customer" ? "Cliente" : log.created_by}
