@@ -114,21 +114,35 @@ export default async function handler(req, res) {
         .select('*');
       if (oErr) throw oErr;
 
-      const bookingsCapacity = {};
-      overrides?.forEach(item => {
-        const d = item.date_str;
-        const t = item.time_str;
-        const count = item.occupied_count;
-        if (!bookingsCapacity[d]) bookingsCapacity[d] = {};
-        bookingsCapacity[d][t] = count;
-      });
-
       // 4. Fetch reservations log
       const { data: reservations, error: rErr } = await supabase
         .from('reservations')
         .select('*')
         .order('created_at', { ascending: false });
       if (rErr) throw rErr;
+
+      const bookingsCapacity = {};
+      // Calculate capacity dynamically from active reservations
+      reservations?.forEach(r => {
+        if (r.status === 'Confirmada' || r.status === 'Completada') {
+          const d = r.date_str;
+          const t = r.time_str;
+          const guests = parseInt(r.guests || '0');
+          if (!bookingsCapacity[d]) bookingsCapacity[d] = {};
+          bookingsCapacity[d][t] = (bookingsCapacity[d][t] || 0) + guests;
+        }
+      });
+
+      // Merge with overrides if the overrides have higher counts (e.g. manual adjustments)
+      overrides?.forEach(item => {
+        const d = item.date_str;
+        const t = item.time_str;
+        const count = item.occupied_count;
+        if (!bookingsCapacity[d]) bookingsCapacity[d] = {};
+        if (count > (bookingsCapacity[d][t] || 0)) {
+          bookingsCapacity[d][t] = count;
+        }
+      });
 
       const bookingsLog = reservations?.map(r => ({
         code: r.code,
@@ -273,14 +287,28 @@ export default async function handler(req, res) {
           .maybeSingle();
         const maxCapacity = parseInt(limitData?.value || '50');
 
-        // 2. Fetch current occupancy for this slot
+        // 2. Fetch current occupancy for this slot dynamically from active reservations
+        const { data: activeBookings } = await supabase
+          .from('reservations')
+          .select('guests')
+          .eq('date_str', date_str)
+          .eq('time_str', time_str)
+          .in('status', ['Confirmada', 'Completada']);
+        
+        let occupiedCount = activeBookings?.reduce((sum, r) => sum + parseInt(r.guests || '0'), 0) || 0;
+
+        // Fetch overrides for manual blocks
         const { data: overrideData } = await supabase
           .from('slot_occupancy_overrides')
           .select('occupied_count')
           .eq('date_str', date_str)
           .eq('time_str', time_str)
           .maybeSingle();
-        const occupiedCount = parseInt(overrideData?.occupied_count || '0');
+        const overrideCount = parseInt(overrideData?.occupied_count || '0');
+
+        if (overrideCount > occupiedCount) {
+          occupiedCount = overrideCount;
+        }
 
         const remainingSpots = maxCapacity - occupiedCount;
         const requestedGuests = parseInt(guests);
