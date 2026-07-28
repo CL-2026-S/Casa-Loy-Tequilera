@@ -111,6 +111,8 @@ export default function AdminPanel({
   const [blockScope, setBlockScope] = useState("ALL");
 
   const [selectedQrTicket, setSelectedQrTicket] = useState(null);
+  const [downloadStartDate, setDownloadStartDate] = useState("");
+  const [downloadEndDate, setDownloadEndDate] = useState("");
 
   // Verify session on mount and when token changes
   useEffect(() => {
@@ -491,6 +493,90 @@ export default function AdminPanel({
       console.error(e);
       alert("Error al actualizar el estado de la factura.");
     }
+  };
+
+  const handleDownloadCsv = () => {
+    if (!downloadStartDate || !downloadEndDate) {
+      alert("Por favor selecciona una fecha de inicio y una fecha de fin.");
+      return;
+    }
+
+    if (downloadStartDate > downloadEndDate) {
+      alert("La fecha de inicio no puede ser posterior a la fecha de fin.");
+      return;
+    }
+
+    const filtered = bookingsLog.filter(log => {
+      return log.date >= downloadStartDate && log.date <= downloadEndDate;
+    });
+
+    if (filtered.length === 0) {
+      alert("No se encontraron reservaciones en el periodo seleccionado.");
+      return;
+    }
+
+    const headers = [
+      "Código",
+      "Cliente",
+      "Email",
+      "Teléfono",
+      "Tour",
+      "Fecha",
+      "Hora",
+      "Pax",
+      "Monto (MXN)",
+      "Método Pago",
+      "Origen",
+      "Creado Por",
+      "Estado",
+      "Requiere Factura",
+      "RFC",
+      "Razón Social",
+      "Código Postal",
+      "Régimen Fiscal",
+      "Uso CFDI",
+      "Factura Enviada"
+    ];
+
+    const rows = filtered.map(log => [
+      log.code,
+      log.name,
+      log.email,
+      log.phone,
+      log.packageName,
+      log.date,
+      log.time,
+      log.guests,
+      log.amount,
+      log.method,
+      log.creation_mode === "manual" ? "Manual" : "Automático (Pago Online)",
+      log.created_by === "customer" ? "Cliente" : log.created_by,
+      log.status,
+      log.requires_invoice ? "Sí" : "No",
+      log.rfc || "",
+      log.razon_social || "",
+      log.postal_code || "",
+      log.regimen_fiscal || "",
+      log.cfdi_use || "",
+      log.invoice_sent ? "Sí" : "No"
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(row => row.map(val => {
+        const str = String(val).replace(/"/g, '""');
+        return str.includes(",") || str.includes("\n") || str.includes('"') ? `"${str}"` : str;
+      }).join(","))
+    ].join("\n");
+
+    const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `reservaciones_casa_loy_${downloadStartDate}_a_${downloadEndDate}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const triggerSearchByCode = (code) => {
@@ -1684,6 +1770,37 @@ export default function AdminPanel({
                   </button>
                 )}
               </div>
+
+              {/* Descargar Periodos Form */}
+              {(user?.role === "admin" || user?.role === "experience_manager" || user?.role === "cuentas_por_cobrar") && (
+                <div className="bg-stone-50 border border-stone-200/60 p-4 flex flex-col md:flex-row md:items-end gap-4 mb-4">
+                  <div className="flex-1 min-w-[150px]">
+                    <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Descargar Periodos - Fecha Inicio</label>
+                    <input
+                      type="date"
+                      value={downloadStartDate}
+                      onChange={(e) => setDownloadStartDate(e.target.value)}
+                      className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18]"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-[150px]">
+                    <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Descargar Periodos - Fecha Fin</label>
+                    <input
+                      type="date"
+                      value={downloadEndDate}
+                      onChange={(e) => setDownloadEndDate(e.target.value)}
+                      className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18]"
+                    />
+                  </div>
+                  <button
+                    onClick={handleDownloadCsv}
+                    className="bg-[#8C4723] hover:bg-[#70381b] text-white font-semibold uppercase tracking-wider text-xs px-5 py-2.5 flex items-center gap-1.5 cursor-pointer h-[38px] transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-xs">download</span>
+                    Descargar Reservas (CSV)
+                  </button>
+                </div>
+              )}
 
               {/* Tour Manual Registration Form */}
               {showManualForm && (
