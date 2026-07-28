@@ -154,7 +154,8 @@ export default async function handler(req, res) {
         regimen_fiscal: r.regimen_fiscal || '',
         cfdi_use: r.cfdi_use || '',
         creation_mode: r.creation_mode || 'automatic',
-        created_by: r.created_by || 'customer'
+        created_by: r.created_by || 'customer',
+        invoice_sent: r.invoice_sent || false
       })) || [];
 
       return res.status(200).json({
@@ -193,7 +194,13 @@ export default async function handler(req, res) {
       }
       
       if (staffUser) {
-        if (staffUser.role === 'viewer' || staffUser.role === 'visor' || staffUser.role === 'cuentas_por_cobrar') {
+        if (staffUser.role === 'cuentas_por_cobrar' && action !== 'update_invoice_sent') {
+          return res.status(403).json({ 
+            error: 'FORBIDDEN', 
+            message: 'No tienes permisos para realizar esta acción (solo lectura de reservas).' 
+          });
+        }
+        if (staffUser.role === 'viewer' || staffUser.role === 'visor') {
           return res.status(403).json({ 
             error: 'FORBIDDEN', 
             message: 'No tienes permisos para realizar modificaciones (solo lectura).' 
@@ -553,6 +560,31 @@ export default async function handler(req, res) {
           activeUser.role,
           'update_status',
           `Cambio de estado de reserva ${code} a: ${status}`
+        );
+
+        return res.status(200).json({ success: true });
+      }
+
+      // Action 10: Update Invoice Sent Status
+      if (action === 'update_invoice_sent') {
+        const { code, invoice_sent } = req.body || {};
+        if (!code) {
+          return res.status(400).json({ error: 'Code is required.' });
+        }
+
+        const { error } = await supabase
+          .from('reservations')
+          .update({ invoice_sent: !!invoice_sent })
+          .eq('code', code.trim().toUpperCase());
+
+        if (error) throw error;
+
+        await auditLog(
+          activeUser.userId,
+          activeUser.email,
+          activeUser.role,
+          'update_invoice_sent',
+          `Cambio de estado de factura para reserva ${code} a: ${invoice_sent ? 'Enviada' : 'Pendiente'}`
         );
 
         return res.status(200).json({ success: true });

@@ -464,6 +464,35 @@ export default function AdminPanel({
     }
   };
 
+  const handleToggleInvoiceSent = async (code, isSent) => {
+    try {
+      const res = await fetch("/api/tourism", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          action: "update_invoice_sent",
+          code,
+          invoice_sent: isSent
+        })
+      });
+      if (res.ok) {
+        setBookingsLog(prev => prev.map(b => b.code === code ? { ...b, invoice_sent: isSent } : b));
+        if (selectedQrTicket && selectedQrTicket.code === code) {
+          setSelectedQrTicket(prev => ({ ...prev, invoice_sent: isSent }));
+        }
+      } else {
+        const data = await res.json();
+        alert(`Error: ${data.message || 'Error del servidor'}`);
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error al actualizar el estado de la factura.");
+    }
+  };
+
   const triggerSearchByCode = (code) => {
     const cleanCode = code.trim().toUpperCase();
     const ticket = bookingsLog.find((b) => b.code.trim().toUpperCase() === cleanCode);
@@ -1821,6 +1850,21 @@ export default function AdminPanel({
                               </div>
                               <div className="text-[10px] text-stone-500">{log.email}</div>
                               <div className="text-[10px] text-stone-500">{log.phone}</div>
+                              {log.requires_invoice && (
+                                <div className="mt-1 flex items-center gap-1">
+                                  <input
+                                    type="checkbox"
+                                    id={`invoice-check-${log.code}`}
+                                    checked={log.invoice_sent || false}
+                                    disabled={user?.role === "viewer"}
+                                    onChange={(e) => handleToggleInvoiceSent(log.code, e.target.checked)}
+                                    className="w-3.5 h-3.5 rounded border-stone-300 text-[#8C4723] focus:ring-[#8C4723] cursor-pointer"
+                                  />
+                                  <label htmlFor={`invoice-check-${log.code}`} className={`text-[10px] font-semibold cursor-pointer ${log.invoice_sent ? 'text-emerald-700' : 'text-stone-400'}`}>
+                                    {log.invoice_sent ? 'Factura Enviada' : 'Factura Pendiente'}
+                                  </label>
+                                </div>
+                              )}
                             </td>
                             <td className="p-3 font-medium">{log.packageName}</td>
                             <td className="p-3">
@@ -2909,7 +2953,7 @@ export default function AdminPanel({
       {/* QR Ticket Modal for Admin */}
       {selectedQrTicket && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white max-w-md w-full p-6 shadow-2xl relative border border-stone-200 text-stone-800 space-y-4 text-left">
+          <div className="bg-white max-w-md w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl relative border border-stone-200 text-stone-800 space-y-4 text-left scrollbar-thin">
             <button
               onClick={() => setSelectedQrTicket(null)}
               className="absolute top-3 right-3 text-stone-400 hover:text-stone-700 cursor-pointer"
@@ -3000,9 +3044,24 @@ export default function AdminPanel({
                   <span className="font-normal text-stone-700 text-right text-[10px]">{selectedQrTicket.regimen_fiscal}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-stone-500">Uso de CFDI:</span>
-                  <span className="font-normal text-stone-700 text-right text-[10px]">{selectedQrTicket.cfdi_use}</span>
-                </div>
+                   <span className="text-stone-500">Uso de CFDI:</span>
+                   <span className="font-normal text-stone-700 text-right text-[10px]">{selectedQrTicket.cfdi_use}</span>
+                 </div>
+                 <div className="flex justify-between items-center border-t border-stone-200 pt-1.5 mt-1.5">
+                   <span className="text-stone-500 font-bold">Estado de Factura:</span>
+                   <label className="inline-flex items-center gap-1.5 cursor-pointer">
+                     <input
+                       type="checkbox"
+                       checked={selectedQrTicket.invoice_sent || false}
+                       disabled={user?.role === "viewer"}
+                       onChange={(e) => handleToggleInvoiceSent(selectedQrTicket.code, e.target.checked)}
+                       className="w-3.5 h-3.5 rounded border-stone-300 text-[#8C4723] focus:ring-[#8C4723] cursor-pointer"
+                     />
+                     <span className={`text-[10px] font-bold uppercase tracking-wider ${selectedQrTicket.invoice_sent ? 'text-emerald-700' : 'text-stone-500'}`}>
+                       {selectedQrTicket.invoice_sent ? 'Enviada' : 'Pendiente'}
+                     </span>
+                   </label>
+                 </div>
               </div>
             )}
 
