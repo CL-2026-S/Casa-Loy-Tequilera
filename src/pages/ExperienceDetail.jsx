@@ -1761,7 +1761,7 @@ export default function ExperienceDetail({
                                   {lang === "es" ? "Jóvenes (10 a 17 años)" : "Youth (Ages 10-17)"}
                                 </span>
                                 <span className="text-[10px] text-stone-500 font-light block leading-tight">
-                                  {lang === "es" ? "Tarifa $250.00 MXN - No incluye comida" : "Price $250.00 MXN - Meal not included"}
+                                  {lang === "es" ? "Tarifa $250.00 MXN - No incluye alimentos (consumo a la carta)" : "Price $250.00 MXN - Meal not included (a la carte consumption)"}
                                 </span>
                               </div>
                               <div className="flex items-center gap-3">
@@ -1796,7 +1796,7 @@ export default function ExperienceDetail({
                                   {lang === "es" ? "Niños (Menores de 10 años)" : "Children (Under 10)"}
                                 </span>
                                 <span className="text-[10px] text-stone-500 font-light block leading-tight">
-                                  {lang === "es" ? "Gratis - Zonas especiales, no todo el recorrido" : "Free - Special zones only, not full tour"}
+                                  {lang === "es" ? "Gratis (zonas especiales) - No incluye alimentos (consumo a la carta)" : "Free (special zones only) - Meal not included (a la carte consumption)"}
                                 </span>
                               </div>
                               <div className="flex items-center gap-3">
