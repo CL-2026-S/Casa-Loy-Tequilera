@@ -1146,7 +1146,7 @@ export default function AdminPanel({
           <div className="text-left">
             <div className="flex items-center gap-2 text-[#8C4723]">
               <span className="material-symbols-outlined">shield_person</span>
-              <h4 className="font-serif text-xl font-bold uppercase tracking-wider">Hacienda Casa Loy Panel</h4>
+              <h4 className="font-serif text-xl font-bold uppercase tracking-wider">Casa Loy Tequilera Panel</h4>
             </div>
             <p className="text-xs text-stone-500 mt-1">
               Sesión activa: <strong className="text-stone-800">{user?.name}</strong> • Rol: <span className="bg-stone-100 text-stone-700 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider">{user?.role}</span>
