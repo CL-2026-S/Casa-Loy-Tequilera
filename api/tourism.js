@@ -153,6 +153,7 @@ export default async function handler(req, res) {
         postal_code: r.postal_code || '',
         regimen_fiscal: r.regimen_fiscal || '',
         cfdi_use: r.cfdi_use || '',
+        card_type: r.card_type || '',
         creation_mode: r.creation_mode || 'automatic',
         created_by: r.created_by || 'customer',
         invoice_sent: r.invoice_sent || false
@@ -232,7 +233,8 @@ export default async function handler(req, res) {
           razon_social,
           postal_code,
           regimen_fiscal,
-          cfdi_use
+          cfdi_use,
+          card_type
         } = req.body;
 
         if (!code || !customer_name || !customer_email || !date_str || !time_str || !guests) {
@@ -316,6 +318,7 @@ export default async function handler(req, res) {
             postal_code: postal_code || '',
             regimen_fiscal: regimen_fiscal || '',
             cfdi_use: cfdi_use || '',
+            card_type: card_type || null,
             creation_mode: creationMode,
             created_by: createdBy
           });

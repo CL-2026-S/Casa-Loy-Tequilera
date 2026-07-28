@@ -461,23 +461,18 @@ export default function ExperienceDetail({
   const [postalCode, setPostalCode] = useState("");
   const [regimenFiscal, setRegimenFiscal] = useState("");
   const [cfdiUse, setCfdiUse] = useState("");
+  const [cardType, setCardType] = useState("");
 
   const isPersonaFisica = rfc.trim().length === 13;
 
-  useEffect(() => {
-    if (requiresInvoice && rfc) {
-      if (!isPersonaFisica && cfdiUse === "S01") {
-        setCfdiUse("G03");
-      }
-    }
-  }, [rfc, requiresInvoice, isPersonaFisica, cfdiUse]);
 
   const isInvoiceValid = !requiresInvoice || (
     rfc.trim().length >= 12 && rfc.trim().length <= 13 &&
     razonSocial.trim().length > 0 &&
     postalCode.trim().length === 5 &&
     regimenFiscal.length > 0 &&
-    cfdiUse.length > 0
+    cfdiUse.length > 0 &&
+    cardType.length > 0
   );
   const isContactInfoValid = clientName.trim() !== "" && clientEmail.trim() !== "" && clientPhone.trim() !== "";
   const isFormValid = isContactInfoValid && isInvoiceValid;
@@ -512,7 +507,7 @@ export default function ExperienceDetail({
   const isPlatinoOrDiamante = packageId === "platino" || packageId === "diamante";
   const adultPrice = packageId === "oro" ? 550 : packageId === "platino" ? 750 : 1500;
   const teenPrice = 250;
-  const totalPrice = isGroupQuote ? 0 : ((numAdults * adultPrice) + (isPlatinoOrDiamante ? numTeens * teenPrice : 0));
+  const totalPrice = isGroupQuote ? 0 : ((numAdults * adultPrice) + (numTeens * teenPrice));
   const pricePerPerson = isGroupQuote ? 0 : (numGuests > 0 ? Math.round(totalPrice / numGuests) : adultPrice);
   const occupiedSpots = selectedTime ? (bookingsCapacity[selectedDateStr]?.[selectedTime] || 0) : 0;
   const remainingSpots = maxCapacityLimit - occupiedSpots;
@@ -676,7 +671,8 @@ export default function ExperienceDetail({
       razon_social: razonSocial,
       postal_code: postalCode,
       regimen_fiscal: regimenFiscal,
-      cfdi_use: cfdiUse
+      cfdi_use: cfdiUse,
+      card_type: cardType
     };
 
     try {
@@ -728,7 +724,8 @@ export default function ExperienceDetail({
           razon_social: razonSocial,
           postal_code: postalCode,
           regimen_fiscal: regimenFiscal,
-          cfdi_use: cfdiUse
+          cfdi_use: cfdiUse,
+          card_type: cardType
         };
         list.unshift(newBooking);
         localStorage.setItem("casa_loy_bookings_log", JSON.stringify(list));
@@ -1380,10 +1377,37 @@ export default function ExperienceDetail({
                                         className="w-full bg-white border border-outline-variant p-3 font-sans text-xs focus:outline-none focus:border-primary text-on-surface"
                                       >
                                         <option value="G03">{lang === "es" ? "G03 - Gastos en general" : "G03 - General expenses"}</option>
-                                        {isPersonaFisica && (
-                                          <option value="S01">{lang === "es" ? "S01 - Sin efectos fiscales" : "S01 - No fiscal effects"}</option>
-                                        )}
+                                        <option value="S01">{lang === "es" ? "S01 - Sin efectos fiscales" : "S01 - No fiscal effects"}</option>
                                       </select>
+                                    </div>
+                                    <div className="mt-3">
+                                      <span className="block text-[10px] font-bold text-stone-500 uppercase mb-1">
+                                        {lang === "es" ? "Tipo de Tarjeta (Facturación) *" : "Card Type (Billing) *"}
+                                      </span>
+                                      <div className="flex gap-4">
+                                        <label className="inline-flex items-center gap-1.5 cursor-pointer text-xs font-sans text-on-surface">
+                                          <input
+                                            type="radio"
+                                            name="cardType"
+                                            value="Crédito"
+                                            checked={cardType === "Crédito"}
+                                            onChange={(e) => setCardType(e.target.value)}
+                                            className="text-primary focus:ring-primary w-4 h-4 cursor-pointer"
+                                          />
+                                          {lang === "es" ? "Crédito" : "Credit"}
+                                        </label>
+                                        <label className="inline-flex items-center gap-1.5 cursor-pointer text-xs font-sans text-on-surface">
+                                          <input
+                                            type="radio"
+                                            name="cardType"
+                                            value="Débito"
+                                            checked={cardType === "Débito"}
+                                            onChange={(e) => setCardType(e.target.value)}
+                                            className="text-primary focus:ring-primary w-4 h-4 cursor-pointer"
+                                          />
+                                          {lang === "es" ? "Débito" : "Debit"}
+                                        </label>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -1730,42 +1754,40 @@ export default function ExperienceDetail({
                               </div>
                             </div>
 
-                            {/* Teens 10-17 (Only Platino/Diamante) */}
-                            {isPlatinoOrDiamante && (
-                              <div className="flex justify-between items-center border-t border-outline-variant/10 pt-3">
-                                <div>
-                                  <span className="font-sans text-xs font-semibold text-stone-800">
-                                    {lang === "es" ? "Jóvenes (10 a 17 años)" : "Youth (Ages 10-17)"}
-                                  </span>
-                                  <span className="text-[10px] text-stone-500 font-light block leading-tight">
-                                    {lang === "es" ? "Tarifa $250.00 MXN - No incluye comida" : "Price $250.00 MXN - Meal not included"}
-                                  </span>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setNumTeens(Math.max(0, numTeens - 1));
-                                    }}
-                                    className="w-7 h-7 flex items-center justify-center border border-outline-variant bg-white hover:bg-stone-100 text-stone-700 cursor-pointer disabled:opacity-30"
-                                    disabled={numTeens <= 0 || !selectedTime}
-                                  >
-                                    -
-                                  </button>
-                                  <span className="font-serif text-sm font-bold w-6 text-center">{numTeens}</span>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setNumTeens(numTeens + 1);
-                                    }}
-                                    className="w-7 h-7 flex items-center justify-center border border-outline-variant bg-white hover:bg-stone-100 text-stone-700 cursor-pointer disabled:opacity-30"
-                                    disabled={!selectedTime || (numGuests >= remainingSpots && numGuests < 50)}
-                                  >
-                                    +
-                                  </button>
-                                </div>
+                            {/* Teens 10-17 */}
+                            <div className="flex justify-between items-center border-t border-outline-variant/10 pt-3">
+                              <div>
+                                <span className="font-sans text-xs font-semibold text-stone-800">
+                                  {lang === "es" ? "Jóvenes (10 a 17 años)" : "Youth (Ages 10-17)"}
+                                </span>
+                                <span className="text-[10px] text-stone-500 font-light block leading-tight">
+                                  {lang === "es" ? "Tarifa $250.00 MXN - No incluye comida" : "Price $250.00 MXN - Meal not included"}
+                                </span>
                               </div>
-                            )}
+                              <div className="flex items-center gap-3">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setNumTeens(Math.max(0, numTeens - 1));
+                                  }}
+                                  className="w-7 h-7 flex items-center justify-center border border-outline-variant bg-white hover:bg-stone-100 text-stone-700 cursor-pointer disabled:opacity-30"
+                                  disabled={numTeens <= 0 || !selectedTime}
+                                >
+                                  -
+                                </button>
+                                <span className="font-serif text-sm font-bold w-6 text-center">{numTeens}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setNumTeens(numTeens + 1);
+                                  }}
+                                  className="w-7 h-7 flex items-center justify-center border border-outline-variant bg-white hover:bg-stone-100 text-stone-700 cursor-pointer disabled:opacity-30"
+                                  disabled={!selectedTime || (numGuests >= remainingSpots && numGuests < 50)}
+                                >
+                                  +
+                                </button>
+                              </div>
+                            </div>
 
                             {/* Children under 10 */}
                             <div className="flex justify-between items-center border-t border-outline-variant/10 pt-3">

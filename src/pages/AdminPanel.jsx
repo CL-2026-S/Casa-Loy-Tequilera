@@ -535,6 +535,7 @@ export default function AdminPanel({
       "Código Postal",
       "Régimen Fiscal",
       "Uso CFDI",
+      "Tipo de Tarjeta",
       "Factura Enviada"
     ];
 
@@ -558,6 +559,7 @@ export default function AdminPanel({
       log.postal_code || "",
       log.regimen_fiscal || "",
       log.cfdi_use || "",
+      log.card_type || "",
       log.invoice_sent ? "Sí" : "No"
     ]);
 
@@ -3161,9 +3163,15 @@ export default function AdminPanel({
                   <span className="font-normal text-stone-700 text-right text-[10px]">{selectedQrTicket.regimen_fiscal}</span>
                 </div>
                 <div className="flex justify-between">
-                   <span className="text-stone-500">Uso de CFDI:</span>
-                   <span className="font-normal text-stone-700 text-right text-[10px]">{selectedQrTicket.cfdi_use}</span>
-                 </div>
+                  <span className="text-stone-500">Uso de CFDI:</span>
+                  <span className="font-normal text-stone-700 text-right text-[10px]">{selectedQrTicket.cfdi_use}</span>
+                </div>
+                {selectedQrTicket.card_type && (
+                  <div className="flex justify-between">
+                    <span className="text-stone-500">Tipo de Tarjeta:</span>
+                    <span className="font-semibold text-stone-900 text-right">{selectedQrTicket.card_type}</span>
+                  </div>
+                )}
                  <div className="flex justify-between items-center border-t border-stone-200 pt-1.5 mt-1.5">
                    <span className="text-stone-500 font-bold">Estado de Factura:</span>
                    <label className="inline-flex items-center gap-1.5 cursor-pointer">
