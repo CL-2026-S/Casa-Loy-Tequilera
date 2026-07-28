@@ -462,6 +462,7 @@ export default function ExperienceDetail({
   const [regimenFiscal, setRegimenFiscal] = useState("");
   const [cfdiUse, setCfdiUse] = useState("");
   const [cardType, setCardType] = useState("");
+  const [paypalPendingCode, setPaypalPendingCode] = useState(null);
 
   const isPersonaFisica = rfc.trim().length === 13;
 
@@ -649,7 +650,7 @@ export default function ExperienceDetail({
     }
   };
 
-  const saveBookingToLog = async (code, method) => {
+  const saveBookingToLog = async (code, method, status = "Confirmada") => {
     const paymentMethodName = method === "paypal" ? "PayPal" : "Mercado Pago";
     const bookingPayload = {
       action: 'create_booking',
@@ -672,7 +673,8 @@ export default function ExperienceDetail({
       postal_code: postalCode,
       regimen_fiscal: regimenFiscal,
       cfdi_use: cfdiUse,
-      card_type: cardType
+      card_type: cardType,
+      status: status
     };
 
     try {
@@ -1481,6 +1483,14 @@ export default function ExperienceDetail({
                                         }
                                       }
 
+                                      const code = `CL-${packageId.toUpperCase()}-${selectedDateStr.replace(/-/g, '')}${Math.floor(1000 + Math.random() * 9000)}`;
+                                      try {
+                                        await saveBookingToLog(code, "paypal", "Intento de Pago");
+                                        setPaypalPendingCode(code);
+                                      } catch (saveErr) {
+                                        console.error("Failed to pre-save booking attempt:", saveErr);
+                                      }
+
                                       return actions.order.create({
                                         purchase_units: [
                                           {
@@ -1489,6 +1499,7 @@ export default function ExperienceDetail({
                                               currency_code: "MXN"
                                             },
                                             description: `${activeData.title} - ${numAdults} Ad, ${numTeens} Jv, ${numChildren} Nñ`,
+                                            custom_id: code,
                                             payee: {
                                               email_address: "cuentasporcobrar@casaloy.com"
                                             }
@@ -1497,8 +1508,8 @@ export default function ExperienceDetail({
                                       });
                                     }}
                                     onApprove={(data, actions) => {
-                                      return actions.order.capture().then((details) => {
-                                        const code = `CL-${packageId.toUpperCase()}-${selectedDateStr.replace(/-/g, '')}${Math.floor(1000 + Math.random() * 9000)}`;
+                                      return actions.order.capture().then(async (details) => {
+                                        const codeToConfirm = paypalPendingCode || (details.purchase_units && details.purchase_units[0]?.custom_id) || `CL-${packageId.toUpperCase()}-${selectedDateStr.replace(/-/g, '')}${Math.floor(1000 + Math.random() * 9000)}`;
                                         
                                         setBookingsCapacity((prev) => ({
                                           ...prev,
@@ -1508,15 +1519,27 @@ export default function ExperienceDetail({
                                           },
                                         }));
                                         
-                                        saveBookingToLog(code, "paypal");
-                                        setReservationCode(code);
+                                        try {
+                                          await fetch('/api/tourism', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({
+                                              action: 'confirm_booking',
+                                              code: codeToConfirm
+                                            })
+                                          });
+                                        } catch (confirmErr) {
+                                          console.error("Failed to confirm booking after payment capture:", confirmErr);
+                                        }
+
+                                        setReservationCode(codeToConfirm);
                                         setBookingConfirmed(true);
                                         setPaymentStep(false);
                                       });
                                     }}
                                     onError={(err) => {
                                       console.error("PayPal Error:", err);
-                                      alert(lang === "es" ? "Error procesando el pago con PayPal." : "Error processing payment with PayPal.");
+                                      alert(lang === "es" ? "Error al procesar el pago con PayPal." : "Error processing payment with PayPal.");
                                     }}
                                   />
                                 </div>

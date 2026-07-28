@@ -183,7 +183,7 @@ export default async function handler(req, res) {
 
     // Security Check: Enforce authorization for all admin mutations (actions other than create_booking and resend_email)
     let activeUser = { email: 'system', role: 'admin' };
-    if (action !== 'create_booking' && action !== 'resend_email') {
+    if (action !== 'create_booking' && action !== 'resend_email' && action !== 'confirm_booking') {
       const isInternal = authorizeInternal(req);
       const staffUser = getAuthUser(req);
       
@@ -234,7 +234,8 @@ export default async function handler(req, res) {
           postal_code,
           regimen_fiscal,
           cfdi_use,
-          card_type
+          card_type,
+          status
         } = req.body;
 
         if (!code || !customer_name || !customer_email || !date_str || !time_str || !guests) {
@@ -294,6 +295,7 @@ export default async function handler(req, res) {
         const staffUser = getAuthUser(req);
         const creationMode = staffUser ? 'manual' : 'automatic';
         const createdBy = staffUser ? (staffUser.email || staffUser.name || 'admin') : 'customer';
+        const finalStatus = status || 'Confirmada';
 
         // 3. Insert reservation
         const { error: insErr } = await supabase
@@ -320,7 +322,8 @@ export default async function handler(req, res) {
             cfdi_use: cfdi_use || '',
             card_type: card_type || null,
             creation_mode: creationMode,
-            created_by: createdBy
+            created_by: createdBy,
+            status: finalStatus
           });
 
         if (insErr) {
@@ -343,27 +346,29 @@ export default async function handler(req, res) {
         if (upsErr) throw upsErr;
 
         // 5. Send automated confirmation email using Resend
-        try {
-          await sendBookingEmail(customer_email, {
-            code,
-            customer_name,
-            tour_id,
-            date_str,
-            time_str,
-            guests: requestedGuests,
-            total_paid,
-            allergies: allergies || '',
-            celebration: celebration || '',
-            comments: comments || '',
-            requires_invoice: requires_invoice || false,
-            rfc: rfc || '',
-            razon_social: razon_social || '',
-            postal_code: postal_code || '',
-            regimen_fiscal: regimen_fiscal || '',
-            cfdi_use: cfdi_use || ''
-          });
-        } catch (mailErr) {
-          console.error("Resend automatic welcome mail failed:", mailErr);
+        if (finalStatus === 'Confirmada') {
+          try {
+            await sendBookingEmail(customer_email, {
+              code,
+              customer_name,
+              tour_id,
+              date_str,
+              time_str,
+              guests: requestedGuests,
+              total_paid,
+              allergies: allergies || '',
+              celebration: celebration || '',
+              comments: comments || '',
+              requires_invoice: requires_invoice || false,
+              rfc: rfc || '',
+              razon_social: razon_social || '',
+              postal_code: postal_code || '',
+              regimen_fiscal: regimen_fiscal || '',
+              cfdi_use: cfdi_use || ''
+            });
+          } catch (mailErr) {
+            console.error("Resend automatic welcome mail failed:", mailErr);
+          }
         }
 
         return res.status(200).json({ success: true, code });
@@ -589,6 +594,60 @@ export default async function handler(req, res) {
           'update_invoice_sent',
           `Cambio de estado de factura para reserva ${code} a: ${invoice_sent ? 'Enviada' : 'Pendiente'}`
         );
+
+        return res.status(200).json({ success: true });
+      }
+
+      // Action 11: Confirm Booking (transitions from 'Intento de Pago' to 'Confirmada')
+      if (action === 'confirm_booking') {
+        const { code } = req.body || {};
+        if (!code) {
+          return res.status(400).json({ error: 'Code is required.' });
+        }
+
+        const { data: booking, error: getErr } = await supabase
+          .from('reservations')
+          .select('*')
+          .eq('code', code.trim().toUpperCase())
+          .single();
+
+        if (getErr || !booking) {
+          return res.status(404).json({ error: 'Booking not found.' });
+        }
+
+        if (booking.status === 'Confirmada') {
+          return res.status(200).json({ success: true });
+        }
+
+        const { error: updErr } = await supabase
+          .from('reservations')
+          .update({ status: 'Confirmada' })
+          .eq('code', code.trim().toUpperCase());
+
+        if (updErr) throw updErr;
+
+        try {
+          await sendBookingEmail(booking.customer_email, {
+            code: booking.code,
+            customer_name: booking.customer_name,
+            tour_id: booking.tour_id,
+            date_str: booking.date_str,
+            time_str: booking.time_str,
+            guests: booking.guests,
+            total_paid: booking.total_paid,
+            allergies: booking.allergies || '',
+            celebration: booking.celebration || '',
+            comments: booking.comments || '',
+            requires_invoice: booking.requires_invoice || false,
+            rfc: booking.rfc || '',
+            razon_social: booking.razon_social || '',
+            postal_code: booking.postal_code || '',
+            regimen_fiscal: booking.regimen_fiscal || '',
+            cfdi_use: booking.cfdi_use || ''
+          });
+        } catch (mailErr) {
+          console.error("Resend welcome email failed during confirm_booking:", mailErr);
+        }
 
         return res.status(200).json({ success: true });
       }
