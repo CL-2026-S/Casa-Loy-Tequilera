@@ -152,7 +152,9 @@ export default async function handler(req, res) {
         razon_social: r.razon_social || '',
         postal_code: r.postal_code || '',
         regimen_fiscal: r.regimen_fiscal || '',
-        cfdi_use: r.cfdi_use || ''
+        cfdi_use: r.cfdi_use || '',
+        creation_mode: r.creation_mode || 'automatic',
+        created_by: r.created_by || 'customer'
       })) || [];
 
       return res.status(200).json({
@@ -274,6 +276,10 @@ export default async function handler(req, res) {
           });
         }
 
+        const staffUser = getAuthUser(req);
+        const creationMode = staffUser ? 'manual' : 'automatic';
+        const createdBy = staffUser ? (staffUser.email || staffUser.name || 'admin') : 'customer';
+
         // 3. Insert reservation
         const { error: insErr } = await supabase
           .from('reservations')
@@ -296,7 +302,9 @@ export default async function handler(req, res) {
             razon_social: razon_social || '',
             postal_code: postal_code || '',
             regimen_fiscal: regimen_fiscal || '',
-            cfdi_use: cfdi_use || ''
+            cfdi_use: cfdi_use || '',
+            creation_mode: creationMode,
+            created_by: createdBy
           });
 
         if (insErr) {

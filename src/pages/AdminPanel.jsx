@@ -1794,6 +1794,7 @@ export default function AdminPanel({
                       <th className="p-3">Fecha y Hora</th>
                       <th className="p-3 text-center">Pax</th>
                       <th className="p-3 text-right">Monto</th>
+                      <th className="p-3 text-center">Origen/Creador</th>
                       <th className="p-3 text-center">Estado</th>
                       <th className="p-3 text-center">Acciones</th>
                     </tr>
@@ -1801,7 +1802,7 @@ export default function AdminPanel({
                   <tbody className="divide-y divide-stone-100">
                     {bookingsLog.length === 0 ? (
                       <tr>
-                        <td colSpan="8" className="p-8 text-center text-stone-400 italic">No hay registros de reservaciones en la base de datos.</td>
+                        <td colSpan="9" className="p-8 text-center text-stone-400 italic">No hay registros de reservaciones en la base de datos.</td>
                       </tr>
                     ) : (
                       bookingsLog.map((log) => {
@@ -1823,6 +1824,18 @@ export default function AdminPanel({
                             <td className="p-3 text-right font-medium">
                               <div className="text-stone-900 font-bold">${log.amount} MXN</div>
                               <div className="text-[9px] text-stone-400 uppercase tracking-wider">{log.method}</div>
+                            </td>
+                            <td className="p-3 text-center">
+                              <span className={`inline-block px-2 py-0.5 text-[9px] uppercase tracking-wider font-bold rounded-sm border ${
+                                log.creation_mode === "manual"
+                                  ? "bg-amber-50 text-amber-800 border-amber-200"
+                                  : "bg-blue-50 text-blue-800 border-blue-200"
+                              }`}>
+                                {log.creation_mode === "manual" ? "Manual" : "Pago Online"}
+                              </span>
+                              <div className="text-[9px] text-stone-400 mt-0.5 truncate max-w-[120px] mx-auto" title={log.created_by}>
+                                {log.created_by === "customer" ? "Cliente" : log.created_by}
+                              </div>
                             </td>
                             <td className="p-3 text-center">
                               {user?.role === "viewer" ? (
