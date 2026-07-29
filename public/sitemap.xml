@@ -1,130 +1,290 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <!-- Home Page -->
+  
+  <!-- Home Page (Shared) -->
   <url>
     <loc>https://casaloy.com/</loc>
-    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/" />
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   
-  <!-- Quiénes Somos -->
+  <!-- Quiénes Somos / About Us -->
   <url>
     <loc>https://casaloy.com/quienes-somos</loc>
-    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/quienes-somos" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/quienes-somos" />
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://casaloy.com/about</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/quienes-somos" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/quienes-somos" />
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Desarrolla tu Marca (Maquilas) -->
+  <!-- Desarrolla tu Marca (Maquilas) / Contract Bottling -->
   <url>
     <loc>https://casaloy.com/maquilas</loc>
-    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/maquilas" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/bottling" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/maquilas" />
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://casaloy.com/bottling</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/maquilas" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/bottling" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/maquilas" />
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Nuestras Marcas -->
+  <!-- Nuestras Marcas / Our Brands -->
   <url>
     <loc>https://casaloy.com/marcas</loc>
-    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/marcas" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/brands" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/marcas" />
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://casaloy.com/brands</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/marcas" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/brands" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/marcas" />
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Turismo y Experiencias -->
+  <!-- Turismo y Experiencias / Tequila Tours -->
   <url>
     <loc>https://casaloy.com/turismo</loc>
-    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/turismo" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/tourism" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/turismo" />
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://casaloy.com/tourism</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/turismo" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/tourism" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/turismo" />
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- Experiencia Oro -->
+  <!-- Experiencia Oro / Gold Experience -->
   <url>
     <loc>https://casaloy.com/turismo/oro</loc>
-    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/turismo/oro" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/tourism/gold" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/turismo/oro" />
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://casaloy.com/tourism/gold</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/turismo/oro" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/tourism/gold" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/turismo/oro" />
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Experiencia Platino -->
+  <!-- Experiencia Platino / Platinum Experience -->
   <url>
     <loc>https://casaloy.com/turismo/platino</loc>
-    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/turismo/platino" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/tourism/platinum" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/turismo/platino" />
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://casaloy.com/tourism/platinum</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/turismo/platino" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/tourism/platinum" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/turismo/platino" />
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Experiencia Diamante -->
+  <!-- Experiencia Diamante / Diamond Experience -->
   <url>
     <loc>https://casaloy.com/turismo/diamante</loc>
-    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/turismo/diamante" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/tourism/diamond" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/turismo/diamante" />
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://casaloy.com/tourism/diamond</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/turismo/diamante" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/tourism/diamond" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/turismo/diamante" />
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Restaurante 1937 Nativo -->
+  <!-- Restaurante 1937 Nativo / 1937 Nativo Restaurant -->
   <url>
     <loc>https://casaloy.com/nativo</loc>
-    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/nativo" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/restaurant-nativo" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/nativo" />
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://casaloy.com/restaurant-nativo</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/nativo" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/restaurant-nativo" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/nativo" />
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Dónde Comprar -->
+  <!-- Dónde Comprar / Where to Buy -->
   <url>
     <loc>https://casaloy.com/donde-comprar</loc>
-    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/donde-comprar" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/where-to-buy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/donde-comprar" />
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://casaloy.com/where-to-buy</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/donde-comprar" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/where-to-buy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/donde-comprar" />
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Blog -->
+  <!-- Blog (Shared URL) -->
   <url>
     <loc>https://casaloy.com/blog</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
-  <!-- Blog Post (El Arte de la Cata) -->
+  <!-- Blog Post (El Arte de la Cata - ES) -->
   <url>
     <loc>https://casaloy.com/blog/el-arte-de-la-cata</loc>
-    <lastmod>2026-07-18</lastmod>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
-  <!-- Bolsa de Trabajo -->
+  <!-- Bolsa de Trabajo / Careers -->
   <url>
     <loc>https://casaloy.com/bolsa-de-trabajo</loc>
-    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/bolsa-de-trabajo" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/careers" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/bolsa-de-trabajo" />
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://casaloy.com/careers</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/bolsa-de-trabajo" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/careers" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/bolsa-de-trabajo" />
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
-  <!-- Aviso de Privacidad -->
+  <!-- Aviso de Privacidad / Privacy Policy -->
   <url>
     <loc>https://casaloy.com/politica-de-privacidad</loc>
-    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/politica-de-privacidad" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/politica-de-privacidad" />
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://casaloy.com/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/politica-de-privacidad" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/privacy-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/politica-de-privacidad" />
+    <lastmod>2026-07-28</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
 
-  <!-- Política de Cookies -->
+  <!-- Política de Cookies / Cookie Policy -->
   <url>
     <loc>https://casaloy.com/politica-de-cookies</loc>
-    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/politica-de-cookies" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/cookie-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/politica-de-cookies" />
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://casaloy.com/cookie-policy</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/politica-de-cookies" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/cookie-policy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/politica-de-cookies" />
+    <lastmod>2026-07-28</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
 
-  <!-- Términos y Condiciones -->
+  <!-- Términos y Condiciones / Terms and Conditions -->
   <url>
     <loc>https://casaloy.com/terminos-y-condiciones</loc>
-    <lastmod>2026-07-18</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/terminos-y-condiciones" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/terms-and-conditions" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/terminos-y-condiciones" />
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://casaloy.com/terms-and-conditions</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/terminos-y-condiciones" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/terms-and-conditions" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/terminos-y-condiciones" />
+    <lastmod>2026-07-28</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

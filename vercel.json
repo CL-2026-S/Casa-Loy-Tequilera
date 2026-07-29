@@ -1,4 +1,28 @@
 {
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "casa-loy-tequilera.vercel.app"
+        }
+      ],
+      "destination": "https://casaloy.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.casaloy.com"
+        }
+      ],
+      "destination": "https://casaloy.com/:path*",
+      "permanent": true
+    }
+  ],
   "crons": [
     {
       "path": "/api/email/monthly-newsletter",

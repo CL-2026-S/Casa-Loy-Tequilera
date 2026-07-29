@@ -6,38 +6,62 @@ export default function Turismo({ lang, setPage }) {
   const faqList = {
     es: [
       {
-        q: "¿Dónde está ubicada la destilería de Casa Loy Tequilera?",
-        a: "Nuestra destilería se encuentra en el km 6.5 de la carretera Ayotlán–Atotonilco, en el corazón de los Altos de Jalisco. Es un entorno de hacienda rodeado de majestuosos campos de agave azul."
+        q: "¿Dónde está ubicada la destilería de Casa Loy y cómo llegar desde Guadalajara o Atotonilco?",
+        a: "Casa Loy Tequilera se ubica en el km 6.5 de la carretera Ayotlán–Atotonilco, en Las Villas, Jalisco. Se encuentra a aproximadamente 1.5 horas de Guadalajara y a sólo 10 minutos de Atotonilco el Alto, posicionándose como un destino clave dentro de la ruta del tequila de los Altos de Jalisco."
       },
       {
-        q: "¿Cuáles son los días y horarios disponibles para los tours?",
-        a: "Los tours y experiencias gastronómicas están disponibles de Martes a Domingo en diversos horarios. Es indispensable reservar con antelación a través del portal para asegurar el cupo."
+        q: "¿Cuáles son los días y horarios disponibles para los tours y catas de tequila?",
+        a: "Nuestros tours guiados por la destilería, el recorrido por los campos de agave azul y las experiencias culinarias están disponibles de Martes a Domingo en diversos horarios. Para garantizar una atención exclusiva y de primer nivel, es obligatorio reservar tu lugar con antelación a través de nuestro portal."
       },
       {
-        q: "¿Cómo reservar una Experiencia Platino o Diamante?",
-        a: "Puedes seleccionar la experiencia desde el listado anterior, dar click en 'Ver Detalles' y luego elegir el día, hora y cantidad de personas para efectuar tu pago de forma segura por PayPal."
+        q: "¿Qué incluye la Experiencia Casa Loy Diamante y su cata en cava?",
+        a: "La Experiencia Diamante es nuestro tour de ultra-lujo. Incluye recorrido guiado por campos de agave y destilería, cata profesional de tequila dirigida por experto en nuestra cava subterránea de piedra, una clase interactiva de mixología, un kit de souvenirs de la marca y un banquete gastronómico de tres tiempos en el Restaurante 1937 Nativo."
       },
       {
-        q: "¿Cuál es la política de cancelación o cambios de fecha?",
-        a: "Aceptamos cancelaciones y cambios de fecha sin costo hasta 48 horas antes de tu experiencia programada. Contáctanos por WhatsApp al +52 1 33 3250 4359 para cualquier ajuste."
+        q: "¿Se puede visitar el Restaurante 1937 Nativo sin realizar un tour de tequila?",
+        a: "¡Sí, por supuesto! Aunque recomendamos vivir la experiencia tequilera completa, nuestro Restaurante 1937 Nativo está abierto al público general para disfrutar de alta cocina tradicional mexicana inspirada en el terroir de los Altos de Jalisco. Recomendamos hacer reserva previa para asegurar tu mesa."
+      },
+      {
+        q: "¿Los tours de tequila en Casa Loy son adecuados para familias y niños?",
+        a: "Sí, Casa Loy es un espacio 100% familiar. Los menores de edad son bienvenidos en los recorridos por los campos de agave y la destilería artesanal, y disponemos de menús infantiles en nuestro restaurante. No obstante, las catas y degustaciones de alcohol son exclusivas para mayores de 18 años con identificación oficial."
+      },
+      {
+        q: "¿Qué métodos de pago aceptan para reservar experiencias y qué tan seguros son?",
+        a: "Aceptamos pagos en línea totalmente seguros con tarjeta de crédito y débito a través de PayPal y Stripe, garantizando la encriptación y protección de tus datos bancarios. También puedes gestionar tu reserva mediante transferencia bancaria contactando a nuestro equipo de atención por WhatsApp."
+      },
+      {
+        q: "¿Cuál es la política de cancelación o cambios de fecha de los tours?",
+        a: "Entendemos que tus planes pueden cambiar. Aceptamos cancelaciones con reembolso completo o reprogramaciones de fecha sin cargo adicional si nos avisas con al menos 48 horas de anticipación. Puedes solicitar cualquier ajuste de forma rápida contactando a nuestro WhatsApp al +52 1 33 3250 4359."
       }
     ],
     en: [
       {
-        q: "Where is the Casa Loy Tequilera distillery located?",
-        a: "Our distillery is located at km 6.5 of the Ayotlán–Atotonilco Highway, in Las Villas, Jalisco. It is a traditional hacienda setting surrounded by blue agave fields."
+        q: "Where is Casa Loy Tequilera located and how do I get there from Guadalajara?",
+        a: "Casa Loy Tequilera is located at km 6.5 of the Ayotlán–Atotonilco Highway in Las Villas, Jalisco. It is about a 1.5-hour drive from Guadalajara and 10 minutes from Atotonilco el Alto, making it a premier destination along the Altos de Jalisco tequila route."
       },
       {
-        q: "What days and times are available for the tours?",
-        a: "Tours and culinary experiences are available from Tuesday to Sunday at various scheduled times. Booking in advance through our website is required to secure your spots."
+        q: "What days and times are available for the tequila tours and tastings?",
+        a: "Guided tours through our boutique distillery, blue agave field walks, and culinary experiences run from Tuesday to Sunday at various scheduled hours. Booking in advance via our website is required to secure your reservation and guarantee first-class service."
       },
       {
-        q: "How can I book a Platinum or Diamond Experience?",
-        a: "Simply select your desired experience above, click 'View Details', and choose the date, time, and number of guests to pay securely via PayPal."
+        q: "What is included in the VIP Casa Loy Diamond Experience and cellar tasting?",
+        a: "The Diamond Experience is our ultimate luxury package. It includes a private tour of our agave fields and distillery, a professional tasting led by an expert inside our underground stone cellar, an interactive mixology class, an exclusive souvenir kit, and a 3-course gastronomic banquet at 1937 Nativo Restaurant."
       },
       {
-        q: "What is the cancellation or rescheduling policy?",
-        a: "We accept cancellations and date changes free of charge up to 48 hours prior to your scheduled tour. Contact us via WhatsApp at +52 1 33 3250 4359 for assistance."
+        q: "Can I visit the 1937 Nativo Restaurant without booking a tequila tour?",
+        a: "Absolutely! While we highly recommend the complete tequila and food experience, 1937 Nativo Restaurant is open to the public, offering contemporary Mexican cuisine inspired by local Altos de Jalisco ingredients. We advise booking in advance to guarantee a table."
+      },
+      {
+        q: "Are tequila tours at Casa Loy suitable for families and children?",
+        a: "Yes, Casa Loy is a 100% family-friendly estate. Children are welcome to join the tours through our agave fields and craft distillery, and we offer kids' menus at 1937 Nativo. However, tequila tastings and alcoholic beverage service are strictly reserved for guests aged 18 and older with valid ID."
+      },
+      {
+        q: "What payment methods are accepted and are they secure?",
+        a: "We accept secure online payments with credit and debit cards via PayPal and Stripe, ensuring full encryption of your financial details. Bank wire transfers can also be arranged by contacting our support team via WhatsApp."
+      },
+      {
+        q: "What is the cancellation or rescheduling policy for the experiences?",
+        a: "We offer free cancellations with a full refund or rescheduling with no extra fee if requested at least 48 hours prior to your scheduled tour. You can request changes by contacting us via WhatsApp at +52 1 33 3250 4359."
       }
     ]
   };
@@ -316,7 +340,11 @@ export default function Turismo({ lang, setPage }) {
               img: "/Diamante Experiencias.webp"
             }
           ].map((exp) => (
-            <div key={exp.id} className="group relative overflow-hidden shadow-lg h-[620px] cursor-pointer">
+            <div 
+              key={exp.id} 
+              onClick={() => setPage(`experience-${exp.id}`)}
+              className="group relative overflow-hidden shadow-lg h-[620px] cursor-pointer"
+            >
               <img
                 alt={exp.title}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -346,13 +374,17 @@ export default function Turismo({ lang, setPage }) {
                   </ul>
                   <div className="flex flex-col gap-3">
                     <button
-                      onClick={() => setPage(`experience-${exp.id}`)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setPage(`experience-${exp.id}`);
+                      }}
                       className="w-full bg-white text-primary py-3.5 font-label-caps text-xs text-center uppercase tracking-widest hover:bg-[#8C4723] hover:text-white transition-all block shadow-md font-semibold cursor-pointer"
                     >
                       {lang === "es" ? "Ver Detalles" : "View Details"}
                     </button>
                     <button
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         setPage(`experience-${exp.id}`);
                         setTimeout(() => {
                           const element = document.getElementById("booking");

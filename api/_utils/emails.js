@@ -351,6 +351,7 @@ export async function sendBookingEmail(email, bookingDetails) {
     time_str, 
     guests, 
     total_paid,
+    payment_method,
     allergies,
     celebration,
     comments,
@@ -503,6 +504,10 @@ export async function sendBookingEmail(email, bookingDetails) {
                   <td class="details-row details-label">Total pagado:</td>
                   <td class="details-row details-value"><strong>$${total_paid} MXN</strong></td>
                 </tr>
+                <tr>
+                  <td class="details-row details-label">Método de Pago:</td>
+                  <td class="details-row details-value">${payment_method || 'No especificado'}</td>
+                </tr>
                 ${allergies ? `
                 <tr>
                   <td class="details-row details-label">Alergias:</td>
@@ -573,39 +578,81 @@ export async function sendBookingEmail(email, bookingDetails) {
       html: html,
     });
 
-    // Send admin notification automatically to turismo@casaloy.com
+    // Send admin notification automatically to tour and invoicing departments
     try {
+      const adminEmails = ['turismo@casaloy.com', 'turismo2@casaloy.com', 'turismo3@casaloy.com'];
+      if (requires_invoice) {
+        adminEmails.push('cuentasporcobrar@casaloy.com');
+      }
+
+      const adminHtml = `
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #fcf9f3; color: #1c1c18; padding: 20px; }
+            .container { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e2dc; padding: 40px; box-sizing: border-box; }
+            .logo { max-height: 40px; width: auto; margin-bottom: 20px; display: block; }
+            h2 { font-family: Georgia, serif; font-size: 20px; color: #8C4723; font-weight: normal; margin-top: 0; border-bottom: 1px solid #e5e2dc; padding-bottom: 15px; }
+            .info-table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+            .info-table th { text-align: left; padding: 12px 8px; border-bottom: 1px solid #f0eee8; color: #8C4723; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; width: 35%; }
+            .info-table td { padding: 12px 8px; border-bottom: 1px solid #f0eee8; font-size: 14px; color: #1c1c18; }
+            .invoice-box { margin-top: 25px; padding: 20px; border: 1px dashed #d9c2b6; background-color: #fcf9f3; }
+            .invoice-box h4 { margin: 0 0 12px 0; color: #8C4723; font-family: Georgia, serif; font-size: 15px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #e5e2dc; padding-bottom: 5px; }
+            .footer { font-size: 11px; color: #8a8a82; margin-top: 30px; border-top: 1px solid #e5e2dc; padding-top: 20px; text-align: center; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsI1CK1zDTaSkEhtFNd7gFs0Br7ZXW2rKE6mtXNlOgTpveNdFqRSK2aREIwDEFz2pNbAMxdM8OBUebW2gToScRYF1Q-TmhbHUos5e3w1fOey3coasOccOtVC4bzvDGydMpNF2wf6Q6Mt3FsJZRCihsNaG2kM2hluZ5hkMnIRqzGfCNnIgQCUk8l3pxlAgWZcH9ZqrbWcx3BD1-oHbu3TuTW9SKgwmqAzXcaSv6qTNhx6pJvTmykqnAVLEaPpvw8UHbNpl7z0SLcNA7" alt="Casa Loy Tequilera" class="logo">
+            <h2>Nueva Reserva de Tour Registrada</h2>
+            <p>Se ha confirmado una nueva compra de tour a través de la plataforma web:</p>
+            
+            <table class="info-table">
+              <tr><th>Código</th><td><strong>${code}</strong></td></tr>
+              <tr><th>Cliente</th><td>${customer_name}</td></tr>
+              <tr><th>Correo</th><td>${email}</td></tr>
+              <tr><th>Experiencia</th><td>${tourName}</td></tr>
+              <tr><th>Fecha</th><td>${date_str}</td></tr>
+              <tr><th>Hora</th><td>${time_str}</td></tr>
+              <tr><th>Visitantes</th><td>${guests} personas</td></tr>
+              <tr><th>Monto pagado</th><td><strong>$${total_paid} MXN</strong></td></tr>
+              <tr><th>Método de pago</th><td>${payment_method || 'No especificado'}</td></tr>
+              ${allergies ? `<tr><th>Alergias</th><td>${allergies}</td></tr>` : ''}
+              ${celebration ? `<tr><th>¿Celebra algo?</th><td>${celebration}</td></tr>` : ''}
+              ${comments ? `<tr><th>Comentarios</th><td>${comments}</td></tr>` : ''}
+            </table>
+
+            ${requires_invoice ? `
+              <div class="invoice-box">
+                <h4>Datos de Facturación Solicitada</h4>
+                <table width="100%" class="info-table" style="margin: 0;">
+                  <tr><th style="padding: 6px 0; border: none; width: 35%;">RFC</th><td style="padding: 6px 0; border: none;">${rfc}</td></tr>
+                  <tr><th style="padding: 6px 0; border: none; width: 35%;">Razón Social</th><td style="padding: 6px 0; border: none;">${razon_social}</td></tr>
+                  <tr><th style="padding: 6px 0; border: none; width: 35%;">CP</th><td style="padding: 6px 0; border: none;">${postal_code}</td></tr>
+                  <tr><th style="padding: 6px 0; border: none; width: 35%;">Régimen Fiscal</th><td style="padding: 6px 0; border: none; font-size: 12px;">${regimen_fiscal}</td></tr>
+                  <tr><th style="padding: 6px 0; border: none; width: 35%;">Uso de CFDI</th><td style="padding: 6px 0; border: none; font-size: 12px;">${cfdi_use}</td></tr>
+                </table>
+              </div>
+            ` : ''}
+            
+            <div class="footer">
+              <p>Este correo ha sido generado automáticamente por el sistema de Casa Loy Tequilera.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
       await resend.emails.send({
         from: fromEmail,
-        to: ['turismo@casaloy.com'],
+        to: adminEmails,
         subject: `Nueva Reserva Tour: ${code} - ${customer_name}`,
-        html: `
-          <h3>Nueva Reserva de Tour Registrada</h3>
-          <p><strong>ID de Reserva:</strong> ${code}</p>
-          <p><strong>Cliente:</strong> ${customer_name}</p>
-          <p><strong>Correo:</strong> ${email}</p>
-          <p><strong>Experiencia:</strong> ${tourName}</p>
-          <p><strong>Fecha:</strong> ${date_str}</p>
-          <p><strong>Hora:</strong> ${time_str}</p>
-          <p><strong>Visitantes:</strong> ${guests} personas</p>
-          <p><strong>Monto pagado:</strong> $${total_paid} MXN</p>
-          ${allergies ? `<p><strong>Alergias:</strong> ${allergies}</p>` : ''}
-          ${celebration ? `<p><strong>¿Celebras algo?:</strong> ${celebration}</p>` : ''}
-          ${comments ? `<p><strong>Comentarios:</strong> ${comments}</p>` : ''}
-          ${requires_invoice ? `
-            <div style="margin-top: 15px; padding: 10px; border: 1px solid #d9c2b6; background-color: #fcf9f3;">
-              <h4 style="margin: 0 0 5px 0; color: #8C4723;">Datos de Facturación</h4>
-              <p style="margin: 3px 0;"><strong>RFC:</strong> ${rfc}</p>
-              <p style="margin: 3px 0;"><strong>Razón Social:</strong> ${razon_social}</p>
-              <p style="margin: 3px 0;"><strong>CP:</strong> ${postal_code}</p>
-              <p style="margin: 3px 0;"><strong>Régimen Fiscal:</strong> ${regimen_fiscal}</p>
-              <p style="margin: 3px 0;"><strong>Uso de CFDI:</strong> ${cfdi_use}</p>
-            </div>
-          ` : ''}
-        `
+        html: adminHtml
       });
     } catch (adminMailErr) {
-      console.error("Error sending notification copy to turismo@casaloy.com:", adminMailErr);
+      console.error("Error sending notification copy to tour admin emails:", adminMailErr);
     }
 
     if (error) {
@@ -772,7 +819,7 @@ export async function sendMaquilaLeadEmail(leadDetails) {
         <h2>¡Gracias por realizar nuestro diagnóstico, ${name}!</h2>
         <p>Hemos recibido tus respuestas sobre el proyecto para <strong>${company}</strong>.</p>
         
-        <p>Un miembro de nuestro equipo de desarrollo de marcas revisará tus especificaciones para <strong>${solution}</strong> y se pondrá en contacto contigo a la brevedad al teléfono <strong>+${lada} ${phone}</strong> o por este medio para platicar sobre la viabilidad operativa y los siguientes pasos.</p>
+        <p>Un miembro de nuestro equipo de desarrollo de marcas revisará tus especificaciones para <strong>${solution}</strong> y se pondrá en contacto contigo a la brevedad al correo <strong>${email}</strong> para platicar sobre la viabilidad operativa y los siguientes pasos.</p>
         
         <div class="details-box">
           <div class="details-title">Resumen de tu diagnóstico:</div>
@@ -793,12 +840,11 @@ export async function sendMaquilaLeadEmail(leadDetails) {
 
   try {
     const fromEmail = getFromEmail();
-    const adminEmail = process.env.MAQUILA_LEADS_EMAIL || 'contacto@casaloy.com';
-
     // Send to admin
     await resend.emails.send({
       from: fromEmail,
-      to: adminEmail,
+      to: ['fquintana@casaloy.com'],
+      cc: ['luisloyb@casaloy.com'],
       subject: `Nuevo Diagnóstico de Maquila - ${company}`,
       html: adminHtml,
     });

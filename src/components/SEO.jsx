@@ -165,26 +165,58 @@ const seoData = {
             "mainEntity": [
               {
                 "@type": "Question",
-                "name": "¿Dónde está ubicada Casa Loy Tequilera?",
+                "name": "¿Dónde está ubicada la destilería de Casa Loy y cómo llegar desde Guadalajara o Atotonilco?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Casa Loy Tequilera se ubica en la Carretera Ayotlán–Atotonilco km 6.5, Las Villas, Jalisco, México."
+                  "text": "Casa Loy Tequilera se ubica en el km 6.5 de la carretera Ayotlán–Atotonilco, en Las Villas, Jalisco. Se encuentra a aproximadamente 1.5 horas de Guadalajara y a sólo 10 minutos de Atotonilco el Alto, posicionándose como un destino clave dentro de la ruta del tequila de los Altos de Jalisco."
                 }
               },
               {
                 "@type": "Question",
-                "name": "¿Qué días están abiertas las experiencias de turismo?",
+                "name": "¿Cuáles son los días y horarios disponibles para los tours y catas de tequila?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Nuestras puertas están abiertas para visitas guiadas de Martes a Domingo con reservación previa."
+                  "text": "Nuestros tours guiados por la destilería, el recorrido por los campos de agave azul y las experiencias culinarias están disponibles de Martes a Domingo en diversos horarios. Reservar tu lugar con antelación a través de nuestro portal es indispensable para asegurar disponibilidad."
                 }
               },
               {
                 "@type": "Question",
-                "name": "¿Cuáles son los paquetes o tours disponibles?",
+                "name": "¿Qué incluye la Experiencia Casa Loy Diamante y su cata en cava?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Contamos con tres experiencias: Experiencia Oro (MXN 550), Experiencia Platino (MXN 750, incluye comida de 3 tiempos) y Experiencia Diamante (MXN 1,500, incluye clase de mixología, kit de souvenirs y banquete de lujo en Restaurante 1937 Nativo)."
+                  "text": "La Experiencia Diamante incluye recorrido guiado por campos de agave y destilería, cata profesional de tequila dirigida por experto en nuestra cava subterránea de piedra, una clase interactiva de mixología, un kit de souvenirs de la marca y un banquete gastronómico de tres tiempos en el Restaurante 1937 Nativo."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "¿Se puede visitar el Restaurante 1937 Nativo sin realizar un tour de tequila?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Sí. Nuestro Restaurante 1937 Nativo está abierto al público general para disfrutar de alta cocina tradicional mexicana inspirada en el terroir de los Altos de Jalisco. Recomendamos hacer reserva previa."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "¿Los tours de tequila en Casa Loy son adecuados para familias y niños?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Sí. Los menores de edad son bienvenidos en los recorridos por los campos de agave y la destilería artesanal, y disponemos de menús infantiles en el restaurante. Las catas y degustaciones de alcohol son exclusivas para mayores de 18 años con identificación oficial."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "¿Qué métodos de pago aceptan para reservar experiencias y qué tan seguros son?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Aceptamos pagos seguros en línea mediante tarjeta de crédito y débito a través de PayPal y Stripe. También es posible realizar el pago por transferencia bancaria contactando a atención a clientes por WhatsApp."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "¿Cuál es la política de cancelación o cambios de fecha de los tours?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Aceptamos cancelaciones con reembolso completo o reprogramaciones de fecha sin cargo adicional si nos avisas con al menos 48 horas de anticipación a tu reserva por WhatsApp."
                 }
               }
             ]
@@ -379,18 +411,58 @@ const seoData = {
             "mainEntity": [
               {
                 "@type": "Question",
-                "name": "Where is Casa Loy Tequilera located?",
+                "name": "Where is Casa Loy Tequilera located and how do I get there from Guadalajara?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Casa Loy Tequilera is located at Ayotlán–Atotonilco Highway km 6.5, Las Villas, Jalisco, Mexico."
+                  "text": "Casa Loy Tequilera is located at km 6.5 of the Ayotlán–Atotonilco Highway in Las Villas, Jalisco. It is about a 1.5-hour drive from Guadalajara and 10 minutes from Atotonilco el Alto, making it a premier destination along the Altos de Jalisco tequila route."
                 }
               },
               {
                 "@type": "Question",
-                "name": "What days are distillery tours available?",
+                "name": "What days and times are available for the tequila tours and tastings?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "We are open for guided tours from Tuesday to Sunday. Prior booking is required."
+                  "text": "Guided tours through our boutique distillery, blue agave field walks, and culinary experiences run from Tuesday to Sunday at various scheduled hours. Booking in advance via our website is required."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is included in the VIP Casa Loy Diamond Experience and cellar tasting?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The Diamond Experience includes a private tour of our agave fields and distillery, a professional tasting led by an expert inside our underground stone cellar, an interactive mixology class, an exclusive souvenir kit, and a 3-course gastronomic banquet at 1937 Nativo Restaurant."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I visit the 1937 Nativo Restaurant without booking a tequila tour?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. 1937 Nativo Restaurant is open to the public, offering contemporary Mexican cuisine inspired by local Altos de Jalisco ingredients. We advise booking in advance to guarantee a table."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Are tequila tours at Casa Loy suitable for families and children?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. Children are welcome to join the tours through our agave fields and craft distillery, and we offer kids' menus at 1937 Nativo. However, tequila tastings are strictly reserved for guests aged 18 and older."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What payment methods are accepted and are they secure?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "We accept secure online payments with credit and debit cards via PayPal and Stripe, ensuring full encryption of your details. Bank wire transfers can also be arranged via WhatsApp."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What is the cancellation or rescheduling policy for the experiences?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "We offer free cancellations with a full refund or rescheduling with no extra fee if requested at least 48 hours prior to your scheduled tour."
                 }
               }
             ]
@@ -408,61 +480,48 @@ const seoData = {
   }
 };
 
+const pathMap = {
+  home: { es: "/", en: "/" },
+  "home-interactive": { es: "/interactivo", en: "/interactivo" },
+  about: { es: "/quienes-somos", en: "/about" },
+  maquilas: { es: "/maquilas", en: "/bottling" },
+  brands: { es: "/marcas", en: "/brands" },
+  turismo: { es: "/turismo", en: "/tourism" },
+  "experience-oro": { es: "/turismo/oro", en: "/tourism/gold" },
+  "experience-platino": { es: "/turismo/platino", en: "/tourism/platinum" },
+  "experience-diamante": { es: "/turismo/diamante", en: "/tourism/diamond" },
+  nativo: { es: "/nativo", en: "/restaurant-nativo" },
+  "where-to-buy": { es: "/donde-comprar", en: "/where-to-buy" },
+  blog: { es: "/blog", en: "/blog" },
+  careers: { es: "/bolsa-de-trabajo", en: "/careers" },
+  privacy: { es: "/politica-de-privacidad", en: "/privacy-policy" },
+  cookies: { es: "/politica-de-cookies", en: "/cookie-policy" },
+  terms: { es: "/terminos-y-condiciones", en: "/terms-and-conditions" }
+};
+
 export default function SEO({ page, lang = "es" }) {
   useEffect(() => {
-    if (page === "blog-post") {
-      return;
-    }
-    // 1. Get current language pack or fallback to Spanish
-    const langData = seoData[lang] || seoData.es;
-    const pageData = langData[page] || langData.home || seoData.es.home;
-
-    // 2. Update Title
-    document.title = pageData.title;
-
-    // 3. Update Description Meta Tag
-    let metaDesc = document.querySelector('meta[name="description"]');
-    if (!metaDesc) {
-      metaDesc = document.createElement("meta");
-      metaDesc.name = "description";
-      document.head.appendChild(metaDesc);
-    }
-    metaDesc.content = pageData.description;
-
-    // 4. Update OpenGraph Tags
-    const updateMetaTag = (property, content) => {
-      let tag = document.querySelector(`meta[property="${property}"]`);
-      if (!tag) {
-        tag = document.createElement("meta");
-        tag.setAttribute("property", property);
-        document.head.appendChild(tag);
+    // 1. Determine hostname and path details
+    const currentPath = window.location.pathname;
+    const isProdDomain = window.location.hostname === "casaloy.com";
+    const noIndexPages = ["panel", "validate-ticket", "editorial-preview"];
+    
+    // 2. Update Robots Meta Tag
+    let robotsMeta = document.querySelector('meta[name="robots"]');
+    if (noIndexPages.includes(page) || !isProdDomain) {
+      if (!robotsMeta) {
+        robotsMeta = document.createElement("meta");
+        robotsMeta.name = "robots";
+        document.head.appendChild(robotsMeta);
       }
-      tag.content = content;
-    };
-
-    updateMetaTag("og:title", pageData.ogTitle || pageData.title);
-    updateMetaTag("og:description", pageData.ogDesc || pageData.description);
-    updateMetaTag("og:image", pageData.ogImage || "/Casa Loy Tequilera.webp");
-    updateMetaTag("og:url", window.location.href);
-    updateMetaTag("og:type", page === "blog-post" ? "article" : "website");
-    updateMetaTag("og:site_name", "Casa Loy Tequilera");
-
-    // Update Twitter Cards tags
-    const updateTwitterTag = (name, content) => {
-      let tag = document.querySelector(`meta[name="${name}"]`);
-      if (!tag) {
-        tag = document.createElement("meta");
-        tag.name = name;
-        document.head.appendChild(tag);
+      robotsMeta.content = "noindex, nofollow";
+    } else {
+      if (robotsMeta) {
+        robotsMeta.content = "index, follow";
       }
-      tag.content = content;
-    };
-    updateTwitterTag("twitter:card", "summary_large_image");
-    updateTwitterTag("twitter:title", pageData.ogTitle || pageData.title);
-    updateTwitterTag("twitter:description", pageData.ogDesc || pageData.description);
-    updateTwitterTag("twitter:image", pageData.ogImage || "/Casa Loy Tequilera.webp");
+    }
 
-    // 5. Inyectar Canonical y Hreflang de manera dinámica
+    // 3. Update Canonical and Hreflang Alternate Links
     const updateLinkTag = (rel, hreflang, href) => {
       let selector = `link[rel="${rel}"]`;
       if (hreflang) {
@@ -478,15 +537,96 @@ export default function SEO({ page, lang = "es" }) {
       tag.href = href;
     };
 
-    const currentPath = window.location.pathname;
-    const canonicalUrl = `https://casaloy.com${currentPath}`;
+    let esPath = currentPath;
+    let enPath = currentPath;
+    
+    if (pathMap[page]) {
+      esPath = pathMap[page].es;
+      enPath = pathMap[page].en;
+    } else if (page === "career-detail") {
+      let jobId = "";
+      if (currentPath.startsWith("/bolsa-de-trabajo/")) {
+        jobId = currentPath.substring("/bolsa-de-trabajo/".length);
+      } else if (currentPath.startsWith("/careers/")) {
+        jobId = currentPath.substring("/careers/".length);
+      }
+      if (jobId) {
+        esPath = `/bolsa-de-trabajo/${jobId}`;
+        enPath = `/careers/${jobId}`;
+      }
+    } else if (page === "blog-post") {
+      let slug = "";
+      if (currentPath.startsWith("/blog/")) {
+        slug = currentPath.substring("/blog/".length);
+      }
+      if (slug) {
+        esPath = `/blog/${slug}`;
+        enPath = `/blog/${slug}`;
+      }
+    }
+
+    const canonicalUrl = `https://casaloy.com${lang === "en" ? enPath : esPath}`;
     
     updateLinkTag("canonical", null, canonicalUrl);
-    updateLinkTag("alternate", "es", canonicalUrl);
-    updateLinkTag("alternate", "en", canonicalUrl);
-    updateLinkTag("alternate", "x-default", canonicalUrl);
+    updateLinkTag("alternate", "es", `https://casaloy.com${esPath}`);
+    updateLinkTag("alternate", "en", `https://casaloy.com${enPath}`);
+    updateLinkTag("alternate", "x-default", `https://casaloy.com${esPath}`);
 
-    // 6. Inject/Update JSON-LD Structured Data
+    // If it's a blog-post, dynamic SEO title/desc/JSON-LD are handled directly inside BlogPost.jsx
+    if (page === "blog-post") {
+      return;
+    }
+
+    // 4. Get current language pack or fallback to Spanish for standard pages
+    const langData = seoData[lang] || seoData.es;
+    const pageData = langData[page] || langData.home || seoData.es.home;
+
+    // 5. Update Title
+    document.title = pageData.title;
+
+    // 6. Update Description Meta Tag
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (!metaDesc) {
+      metaDesc = document.createElement("meta");
+      metaDesc.name = "description";
+      document.head.appendChild(metaDesc);
+    }
+    metaDesc.content = pageData.description;
+
+    // 7. Update OpenGraph Tags
+    const updateMetaTag = (property, content) => {
+      let tag = document.querySelector(`meta[property="${property}"]`);
+      if (!tag) {
+        tag = document.createElement("meta");
+        tag.setAttribute("property", property);
+        document.head.appendChild(tag);
+      }
+      tag.content = content;
+    };
+
+    updateMetaTag("og:title", pageData.ogTitle || pageData.title);
+    updateMetaTag("og:description", pageData.ogDesc || pageData.description);
+    updateMetaTag("og:image", pageData.ogImage || "/Casa Loy Tequilera.webp");
+    updateMetaTag("og:url", window.location.href);
+    updateMetaTag("og:type", "website");
+    updateMetaTag("og:site_name", "Casa Loy Tequilera");
+
+    // 8. Update Twitter Cards tags
+    const updateTwitterTag = (name, content) => {
+      let tag = document.querySelector(`meta[name="${name}"]`);
+      if (!tag) {
+        tag = document.createElement("meta");
+        tag.name = name;
+        document.head.appendChild(tag);
+      }
+      tag.content = content;
+    };
+    updateTwitterTag("twitter:card", "summary_large_image");
+    updateTwitterTag("twitter:title", pageData.ogTitle || pageData.title);
+    updateTwitterTag("twitter:description", pageData.ogDesc || pageData.description);
+    updateTwitterTag("twitter:image", pageData.ogImage || "/Casa Loy Tequilera.webp");
+
+    // 9. Inject/Update JSON-LD Structured Data
     // Remove previous script tag if it exists
     const previousScript = document.getElementById("casa-loy-jsonld");
     if (previousScript) {
