@@ -1002,7 +1002,7 @@ export default function Nativo1937({ lang = "es", t }) {
           </div>
 
           {/* Right Column: Reservation Title, Subtitle, & Interactive Form */}
-          <div className="lg:col-span-7 py-20 px-6 sm:px-12 lg:px-16 flex flex-col justify-center space-y-10 bg-[#f8f5ee]/40 w-full">
+          <div className="lg:col-span-7 py-12 lg:py-14 px-6 sm:px-12 lg:px-16 flex flex-col justify-center space-y-6 bg-[#f8f5ee]/40 w-full">
             
             {/* Header */}
             <div className="space-y-4 max-w-xl">
@@ -1025,7 +1025,7 @@ export default function Nativo1937({ lang = "es", t }) {
                 
                 {/* Steps indicator - Only show if page channel selected */}
                 {bookingChannel === "page" && (
-                  <div className="flex items-center justify-between mb-10 max-w-md mx-auto relative">
+                  <div className="flex items-center justify-between mb-6 max-w-md mx-auto relative">
                     {/* Background line */}
                     <div className="absolute top-1/2 left-0 w-full h-[1px] bg-[#1c1c18]/10 -z-10"></div>
                     {/* Active progress line */}
@@ -1080,14 +1080,14 @@ export default function Nativo1937({ lang = "es", t }) {
                         href="https://wa.me/5213313334751?text=Hola%2C%20me%20gustar%C3%ADa%20solicitar%20informaci%C3%B3n%20para%20una%20reservaci%C3%B3n%20en%20Restaurante%201937%20Nativo."
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="border border-[#8C4723]/10 bg-[#fdfbf9] hover:border-[#8C4723]/35 hover:bg-[#8C4723]/5 p-5 flex flex-col items-center text-center gap-4 group transition-all duration-500 rounded-[2px]"
+                        className="border border-[#8C4723]/10 bg-[#fdfbf9] hover:border-[#8C4723]/35 hover:bg-[#8C4723]/5 p-4 flex flex-col items-center text-center gap-2 group transition-all duration-500 rounded-[2px]"
                       >
-                        <div className="w-10 h-10 rounded-full bg-[#25D366]/8 flex items-center justify-center text-[#25D366] group-hover:scale-105 transition-transform duration-500">
-                          <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                        <div className="w-8 h-8 rounded-full bg-[#25D366]/8 flex items-center justify-center text-[#25D366] group-hover:scale-105 transition-transform duration-500">
+                          <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
                             <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.805-9.805.001-2.621-1.013-5.086-2.86-6.936C16.37 1.947 13.907 1.01 11.996 1.01c-5.41 0-9.813 4.402-9.815 9.813-.001 1.638.455 3.236 1.32 4.654L2.46 19.95l4.187-1.096L6.647 19.16zM17.15 14.5c-.282-.141-1.664-.822-1.921-.916-.257-.094-.445-.141-.631.141-.188.281-.727.916-.891 1.101-.164.186-.328.21-.61.07-2.8-.14-4.88-1.22-6.52-3.08-.282-.482.282-.447.805-1.492.083-.164.041-.309-.021-.45-.062-.141-.563-1.36-.77-1.859-.203-.489-.407-.423-.563-.431-.145-.007-.312-.009-.48-.009-.168 0-.441.063-.672.312-.23.25-1.012.988-1.012 2.41 0 1.42 1.031 2.793 1.17 2.98.14.188 2.03 3.102 4.921 4.35.688.297 1.224.474 1.644.607.69.219 1.319.188 1.816.114.553-.082 1.664-.68 1.898-1.336.234-.656.234-1.219.164-1.336-.07-.117-.258-.188-.54-.328z"/>
                           </svg>
                         </div>
-                        <h3 className="font-navigation text-[11px] uppercase tracking-[0.15em] font-bold text-[#1c1c18] group-hover:text-[#8C4723] transition-colors">WhatsApp</h3>
+                        <h3 className="font-navigation text-[10px] uppercase tracking-[0.15em] font-bold text-[#1c1c18] group-hover:text-[#8C4723] transition-colors">WhatsApp</h3>
                         <p className="text-[10px] text-[#1c1c18]/50 font-light leading-relaxed group-hover:text-[#1c1c18]/70 transition-colors">
                           {lang === "es" ? "Reserva rápida y directa." : "Quick and direct booking."}
                         </p>
@@ -1096,12 +1096,12 @@ export default function Nativo1937({ lang = "es", t }) {
                       {/* Phone Call Channel */}
                       <a
                         href="tel:+5213313334751"
-                        className="border border-[#8C4723]/10 bg-[#fdfbf9] hover:border-[#8C4723]/35 hover:bg-[#8C4723]/5 p-5 flex flex-col items-center text-center gap-4 group transition-all duration-500 rounded-[2px]"
+                        className="border border-[#8C4723]/10 bg-[#fdfbf9] hover:border-[#8C4723]/35 hover:bg-[#8C4723]/5 p-4 flex flex-col items-center text-center gap-2 group transition-all duration-500 rounded-[2px]"
                       >
-                        <div className="w-10 h-10 rounded-full bg-[#8C4723]/8 flex items-center justify-center text-[#8C4723] group-hover:scale-105 transition-transform duration-500">
-                          <span className="material-symbols-outlined text-[18px]">call</span>
+                        <div className="w-8 h-8 rounded-full bg-[#8C4723]/8 flex items-center justify-center text-[#8C4723] group-hover:scale-105 transition-transform duration-500">
+                          <span className="material-symbols-outlined text-[14px]">call</span>
                         </div>
-                        <h3 className="font-navigation text-[11px] uppercase tracking-[0.15em] font-bold text-[#1c1c18] group-hover:text-[#8C4723] transition-colors">
+                        <h3 className="font-navigation text-[10px] uppercase tracking-[0.15em] font-bold text-[#1c1c18] group-hover:text-[#8C4723] transition-colors">
                           {lang === "es" ? "Llamada" : "Direct Call"}
                         </h3>
                         <p className="text-[10px] text-[#1c1c18]/50 font-light leading-relaxed group-hover:text-[#1c1c18]/70 transition-colors">
@@ -1115,12 +1115,12 @@ export default function Nativo1937({ lang = "es", t }) {
                           setBookingChannel("page");
                           setBookingStep(1);
                         }}
-                        className="border border-[#8C4723]/10 bg-[#fdfbf9] hover:border-[#8C4723]/35 hover:bg-[#8C4723]/5 p-5 flex flex-col items-center text-center gap-4 group transition-all duration-500 w-full cursor-pointer bg-transparent rounded-[2px]"
+                        className="border border-[#8C4723]/10 bg-[#fdfbf9] hover:border-[#8C4723]/35 hover:bg-[#8C4723]/5 p-4 flex flex-col items-center text-center gap-2 group transition-all duration-500 w-full cursor-pointer bg-transparent rounded-[2px]"
                       >
-                        <div className="w-10 h-10 rounded-full bg-[#8C4723]/8 flex items-center justify-center text-[#8C4723] group-hover:scale-105 transition-transform duration-500">
-                          <span className="material-symbols-outlined text-[18px]">calendar_month</span>
+                        <div className="w-8 h-8 rounded-full bg-[#8C4723]/8 flex items-center justify-center text-[#8C4723] group-hover:scale-105 transition-transform duration-500">
+                          <span className="material-symbols-outlined text-[14px]">calendar_month</span>
                         </div>
-                        <h3 className="font-navigation text-[11px] uppercase tracking-[0.15em] font-bold text-[#1c1c18] group-hover:text-[#8C4723] transition-colors">
+                        <h3 className="font-navigation text-[10px] uppercase tracking-[0.15em] font-bold text-[#1c1c18] group-hover:text-[#8C4723] transition-colors">
                           {lang === "es" ? "En la Página" : "On this Page"}
                         </h3>
                         <p className="text-[10px] text-[#1c1c18]/50 font-light leading-relaxed group-hover:text-[#1c1c18]/70 transition-colors">
@@ -1134,8 +1134,8 @@ export default function Nativo1937({ lang = "es", t }) {
 
                 {/* Step 1: Info Form */}
                 {bookingChannel === "page" && bookingStep === 1 && (
-                  <form onSubmit={handleNextStep} className="space-y-6 text-left">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <form onSubmit={handleNextStep} className="space-y-4 text-left">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       
                       {/* Name Input */}
                       <div className="space-y-1.5">
@@ -1234,7 +1234,7 @@ export default function Nativo1937({ lang = "es", t }) {
 
                     </div>
 
-                    <div className="flex gap-4 pt-6 border-t border-[#1c1c18]/10">
+                    <div className="flex gap-4 pt-4 border-t border-[#1c1c18]/10">
                       <button
                         type="button"
                         onClick={() => {
