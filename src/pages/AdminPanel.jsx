@@ -590,6 +590,10 @@ export default function AdminPanel({
       if (ticket.status === "Completada" || ticket.used_at) {
         setSearchStatus("found_used");
         setScanValidatedTime(ticket.used_at || ticket.timestamp);
+      } else if (ticket.status === "Intento de Pago") {
+        setSearchStatus("found_attempt");
+      } else if (ticket.status === "Cancelada") {
+        setSearchStatus("found_cancelled");
       } else {
         setSearchStatus("found_valid");
       }
@@ -1748,6 +1752,66 @@ export default function AdminPanel({
                   </div>
                 </div>
               )}
+
+              {searchStatus === "found_attempt" && searchedTicket && (
+                <div className="space-y-4">
+                  <div className="bg-amber-50 border border-amber-200 p-4 py-6 flex flex-col items-center gap-2 text-center">
+                    <span className="material-symbols-outlined text-5xl text-amber-600">payment</span>
+                    <h6 className="text-amber-700 font-bold uppercase tracking-wider text-xs">
+                      ACCESO DENEGADO (PAGO PENDIENTE)
+                    </h6>
+                    <span className="font-mono text-xs text-stone-500 font-bold">{searchedTicket.code}</span>
+                  </div>
+
+                  <div className="bg-stone-50 p-4 border border-stone-200/60 space-y-2.5 text-xs">
+                    <p className="text-stone-600 text-center pb-2 border-b border-stone-200/30 font-semibold">
+                      ⚠️ Este boleto no puede ser validado porque la compra quedó pendiente de pago en PayPal (Intento de Pago).
+                    </p>
+                    <div className="flex justify-between border-b border-stone-200/30 pb-2">
+                      <span className="text-stone-500">Visitante:</span>
+                      <span className="font-bold text-stone-800">{searchedTicket.name}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-stone-200/30 pb-2">
+                      <span className="text-stone-500">Experiencia:</span>
+                      <span className="font-bold text-[#8C4723]">{searchedTicket.packageName}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone-500">Fecha y Hora:</span>
+                      <span className="font-bold text-stone-800">{searchedTicket.date} - {searchedTicket.time}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {searchStatus === "found_cancelled" && searchedTicket && (
+                <div className="space-y-4">
+                  <div className="bg-stone-100 border border-stone-300 p-4 py-6 flex flex-col items-center gap-2 text-center">
+                    <span className="material-symbols-outlined text-5xl text-stone-500">cancel</span>
+                    <h6 className="text-stone-700 font-bold uppercase tracking-wider text-xs">
+                      ACCESO DENEGADO (TICKET CANCELADO)
+                    </h6>
+                    <span className="font-mono text-xs text-stone-500 font-bold">{searchedTicket.code}</span>
+                  </div>
+
+                  <div className="bg-stone-50 p-4 border border-stone-200/60 space-y-2.5 text-xs">
+                    <p className="text-stone-600 text-center pb-2 border-b border-stone-200/30 font-semibold">
+                      ❌ Este boleto ha sido cancelado por la administración.
+                    </p>
+                    <div className="flex justify-between border-b border-stone-200/30 pb-2">
+                      <span className="text-stone-500">Visitante:</span>
+                      <span className="font-bold text-stone-800">{searchedTicket.name}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-stone-200/30 pb-2">
+                      <span className="text-stone-500">Experiencia:</span>
+                      <span className="font-bold text-[#8C4723]">{searchedTicket.packageName}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone-500">Fecha y Hora:</span>
+                      <span className="font-bold text-stone-800">{searchedTicket.date} - {searchedTicket.time}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -2042,13 +2106,19 @@ export default function AdminPanel({
                               )}
                             </td>
                             <td className="p-3 text-center">
-                              <button
-                                onClick={() => setSelectedQrTicket(log)}
-                                className="bg-[#8C4723]/10 hover:bg-[#8C4723] hover:text-white text-[#8C4723] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1 mx-auto"
-                              >
-                                <span className="material-symbols-outlined text-xs">qr_code_2</span>
-                                Ver QR
-                              </button>
+                              {log.status === "Intento de Pago" ? (
+                                <span className="inline-block text-[9px] text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 font-bold uppercase tracking-wider">No Pagado</span>
+                              ) : log.status === "Cancelada" ? (
+                                <span className="inline-block text-[9px] text-stone-500 bg-stone-100 border border-stone-200 px-2 py-0.5 font-bold uppercase tracking-wider">Cancelado</span>
+                              ) : (
+                                <button
+                                  onClick={() => setSelectedQrTicket(log)}
+                                  className="bg-[#8C4723]/10 hover:bg-[#8C4723] hover:text-white text-[#8C4723] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-1 mx-auto"
+                                >
+                                  <span className="material-symbols-outlined text-xs">qr_code_2</span>
+                                  Ver QR
+                                </button>
+                              )}
                             </td>
                           </tr>
                         );

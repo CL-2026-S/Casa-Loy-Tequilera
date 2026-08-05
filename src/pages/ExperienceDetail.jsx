@@ -1520,21 +1520,31 @@ export default function ExperienceDetail({
                                         }));
                                         
                                         try {
-                                          await fetch('/api/tourism', {
+                                          const confirmRes = await fetch('/api/tourism', {
                                             method: 'POST',
                                             headers: { 'Content-Type': 'application/json' },
                                             body: JSON.stringify({
                                               action: 'confirm_booking',
-                                              code: codeToConfirm
+                                              code: codeToConfirm,
+                                              paypalOrderId: details.id
                                             })
                                           });
+
+                                          if (!confirmRes.ok) {
+                                            const errData = await confirmRes.json().catch(() => ({}));
+                                            throw new Error(errData.message || 'Server confirmation failed');
+                                          }
+
+                                          setReservationCode(codeToConfirm);
+                                          setBookingConfirmed(true);
+                                          setPaymentStep(false);
                                         } catch (confirmErr) {
                                           console.error("Failed to confirm booking after payment capture:", confirmErr);
+                                          alert(lang === "es"
+                                            ? "El pago fue procesado, pero hubo un problema al registrar tu reservación en nuestro sistema. Por favor, contáctanos por WhatsApp para validarla con tu código de reserva."
+                                            : "Payment was processed, but there was an issue registering your reservation. Please contact us via WhatsApp to validate it with your booking code."
+                                          );
                                         }
-
-                                        setReservationCode(codeToConfirm);
-                                        setBookingConfirmed(true);
-                                        setPaymentStep(false);
                                       });
                                     }}
                                     onError={(err) => {

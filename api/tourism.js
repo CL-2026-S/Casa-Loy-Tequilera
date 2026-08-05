@@ -492,6 +492,25 @@ export default async function handler(req, res) {
           return res.status(400).json({ error: 'Code is required.' });
         }
 
+        // Fetch current ticket details first to check status
+        const { data: ticket, error: checkErr } = await supabase
+          .from('reservations')
+          .select('status')
+          .eq('code', code.trim().toUpperCase())
+          .maybeSingle();
+
+        if (checkErr) throw checkErr;
+        if (!ticket) {
+          return res.status(404).json({ error: 'TICKET_NOT_FOUND', message: 'Ticket no encontrado.' });
+        }
+
+        if (ticket.status === 'Intento de Pago') {
+          return res.status(400).json({ error: 'UNPAID_TICKET', message: 'No se puede validar un boleto con pago pendiente.' });
+        }
+        if (ticket.status === 'Cancelada') {
+          return res.status(400).json({ error: 'CANCELLED_TICKET', message: 'No se puede validar un boleto cancelado.' });
+        }
+
         const nowStr = new Date().toISOString();
         const { data, error: valErr } = await supabase
           .from('reservations')
@@ -630,7 +649,7 @@ export default async function handler(req, res) {
 
       // Action 11: Confirm Booking (transitions from 'Intento de Pago' to 'Confirmada')
       if (action === 'confirm_booking') {
-        const { code } = req.body || {};
+        const { code, paypalOrderId } = req.body || {};
         if (!code) {
           return res.status(400).json({ error: 'Code is required.' });
         }
@@ -647,6 +666,114 @@ export default async function handler(req, res) {
 
         if (booking.status === 'Confirmada') {
           return res.status(200).json({ success: true });
+        }
+
+        // BACKEND VERIFICATION OF PAYPAL TRANSACTION
+        const paypalClientId = process.env.PAYPAL_CLIENT_ID;
+        const paypalClientSecret = process.env.PAYPAL_CLIENT_SECRET;
+
+        if (!paypalClientId || !paypalClientSecret) {
+          console.error("PayPal credentials not configured in environment variables (PAYPAL_CLIENT_ID / PAYPAL_CLIENT_SECRET).");
+          return res.status(500).json({ 
+            error: 'PAYPAL_NOT_CONFIGURED', 
+            message: 'Las credenciales de PayPal no están configuradas en las variables de entorno de producción.' 
+          });
+        }
+
+        if (!paypalOrderId) {
+          return res.status(400).json({ 
+            error: 'MISSING_ORDER_ID', 
+            message: 'No se proporcionó el ID de Orden de PayPal para la verificación.' 
+          });
+        }
+
+        try {
+          const isSandbox = process.env.PAYPAL_MODE === 'sandbox' || process.env.NODE_ENV === 'development';
+          const paypalHost = isSandbox ? 'api-m.sandbox.paypal.com' : 'api-m.paypal.com';
+
+          // 1. Get Access Token from PayPal
+          const authString = Buffer.from(`${paypalClientId}:${paypalClientSecret}`).toString('base64');
+          const tokenResponse = await fetch(`https://${paypalHost}/v1/oauth2/token`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Basic ${authString}`,
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'grant_type=client_credentials'
+          });
+
+          if (!tokenResponse.ok) {
+            const tokenErrText = await tokenResponse.text();
+            console.error("Failed to fetch PayPal OAuth token:", tokenErrText);
+            return res.status(502).json({ 
+              error: 'PAYPAL_AUTH_FAILED', 
+              message: 'Error al autenticarse con el servidor de PayPal.' 
+            });
+          }
+
+          const tokenData = await tokenResponse.json();
+          const accessToken = tokenData.access_token;
+
+          // 2. Fetch Order Details from PayPal
+          const orderResponse = await fetch(`https://${paypalHost}/v2/checkout/orders/${paypalOrderId}`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (!orderResponse.ok) {
+            const orderErrText = await orderResponse.text();
+            console.error(`Failed to fetch PayPal order ${paypalOrderId}:`, orderErrText);
+            return res.status(502).json({ 
+              error: 'PAYPAL_ORDER_FETCH_FAILED', 
+              message: 'No se pudo obtener la información de la orden de PayPal.' 
+            });
+          }
+
+          const orderDetails = await orderResponse.json();
+
+          // 3. Verify Order Status & Integrity
+          const status = orderDetails.status;
+          if (status !== 'COMPLETED' && status !== 'APPROVED') {
+            console.warn(`PayPal order ${paypalOrderId} has invalid status: ${status}`);
+            return res.status(400).json({ 
+              error: 'PAYMENT_NOT_COMPLETED', 
+              message: `El pago de PayPal no se ha completado. Estado: ${status}` 
+            });
+          }
+
+          // Verify amount and currency
+          const purchaseUnit = orderDetails.purchase_units?.[0];
+          const capturedAmount = purchaseUnit?.amount?.value;
+          const capturedCurrency = purchaseUnit?.amount?.currency_code;
+
+          if (capturedCurrency !== 'MXN') {
+            console.warn(`PayPal order currency mismatch: expected MXN, got ${capturedCurrency}`);
+            return res.status(400).json({ 
+              error: 'CURRENCY_MISMATCH', 
+              message: 'La moneda del pago no coincide con la reservación (debe ser MXN).' 
+            });
+          }
+
+          // Compare the amount to prevent payment tampering
+          const expectedAmount = parseFloat(booking.total_paid).toFixed(2);
+          const actualAmount = parseFloat(capturedAmount).toFixed(2);
+
+          if (actualAmount !== expectedAmount) {
+            console.warn(`PayPal payment amount mismatch: expected ${expectedAmount}, got ${actualAmount}`);
+            return res.status(400).json({ 
+              error: 'AMOUNT_MISMATCH', 
+              message: `El monto pagado (${actualAmount} MXN) no coincide con el total de la reserva (${expectedAmount} MXN).` 
+            });
+          }
+        } catch (paypalVerifyError) {
+          console.error("PayPal verification connection error:", paypalVerifyError);
+          return res.status(500).json({ 
+            error: 'PAYPAL_VERIFY_ERROR', 
+            message: 'Error al conectar con el servidor de PayPal para validar el pago.' 
+          });
         }
 
         const { error: updErr } = await supabase
