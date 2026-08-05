@@ -312,8 +312,9 @@ export default function WhereToBuy({ lang, country }) {
         const res = await fetch("/api/points-of-sale");
         if (!res.ok) throw new Error("Error loading stores");
         const data = await res.json();
-        const parsed = data.map((s) => ({
+        const parsed = data.map((s, index) => ({
           ...s,
+          id: s.id && s.id.trim() !== "" ? s.id : `pos-${index}-${s.name ? s.name.replace(/\s+/g, '-').toLowerCase() : 'store'}`,
           latitude: s.latitude ? parseFloat(s.latitude) : null,
           longitude: s.longitude ? parseFloat(s.longitude) : null,
         }));
@@ -559,10 +560,13 @@ export default function WhereToBuy({ lang, country }) {
   // Scroll active store card into view in the sidebar
   useEffect(() => {
     if (activeStore?.id) {
-      const element = document.getElementById(`store-card-${activeStore.id}`);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }
+      const timer = setTimeout(() => {
+        const element = document.getElementById(`store-card-${activeStore.id}`);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      }, 150);
+      return () => clearTimeout(timer);
     }
   }, [activeStore]);
 
@@ -590,15 +594,52 @@ export default function WhereToBuy({ lang, country }) {
         const position = [store.latitude, store.longitude];
         bounds.extend(position);
 
-        const markerColor = store.cdc ? cdcColor : copperColor;
+        const isTequilera = store.retailer === "Tequilera Casa Loy";
+        const isCDC = store.cdc;
+        
+        const markerColor = isTequilera 
+          ? "#7D3F0F" 
+          : (isCDC ? cdcColor : copperColor);
+          
+        let symbolSvg = "";
+        
+        if (isTequilera) {
+          // Stylized Agave plant icon centered in the upper teardrop circle (centered around 12, 9)
+          symbolSvg = `
+            <g fill="#FFFFFF">
+              <!-- Central leaf -->
+              <path d="M12 4.5 c-0.3 2 -0.3 5 0 6.5 c0.3 -1.5 0.3 -4.5 0 -6.5z" />
+              <!-- Inner left leaf -->
+              <path d="M12 11 c-1.2 -1.2 -1.8 -3 -1.8 -4.5 c0.4 1.5 1.2 3 1.8 4.5z" />
+              <!-- Outer left leaf -->
+              <path d="M12 11 c-1.8 -0.2 -2.8 -1.2 -3.2 -2.5 c1 1 2 1.8 3.2 2.5z" />
+              <!-- Inner right leaf -->
+              <path d="M12 11 c1.2 -1.2 1.8 -3 1.8 -4.5 c-0.4 1.5 -1.2 3 -1.8 4.5z" />
+              <!-- Outer right leaf -->
+              <path d="M12 11 c1.8 -0.2 2.8 -1.2 3.2 -2.5 c-1 1 -2 1.8 -3.2 2.5z" />
+            </g>
+          `;
+        } else if (isCDC) {
+          // Shot glass (vaso tequilero) symbol centered at (12, 8.5)
+          symbolSvg = `
+            <path d="M9.5 5.5 h5 l-1 6.5 a1 1 0 0 1 -1 0.8 h-1 a1 1 0 0 1 -1 -0.8 z" fill="#FFFFFF" />
+            <line x1="10.5" y1="7.2" x2="11.5" y2="11" stroke="${markerColor}" stroke-width="0.8" />
+          `;
+        } else {
+          // Storefront (tienda) symbol centered at (12, 9.5)
+          symbolSvg = `
+            <path d="M16 9.5 L12 5.5 L8 9.5 V13.5 H16 V9.5 Z M13 13.5 H11 V10.5 H13 V13.5 Z" fill="#FFFFFF" />
+          `;
+        }
         
         // Teardrop custom SVG pin in Leaflet
         const iconHtml = `
           <svg viewBox="0 0 24 24" width="30" height="30" style="display: block;">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" 
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" 
                   fill="${markerColor}" 
                   stroke="#FFFFFF" 
                   stroke-width="1.5" />
+            ${symbolSvg}
           </svg>
         `;
 
@@ -626,7 +667,7 @@ export default function WhereToBuy({ lang, country }) {
 
         const popupContent = `
           <div style="font-family: sans-serif; padding: 4px; text-align: left; min-width: 160px;">
-            <h4 style="margin: 0 0 2px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: ${store.cdc ? cdcColor : copperColor}; font-weight: bold;">${store.retailer}</h4>
+            <h4 style="margin: 0 0 2px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: ${markerColor}; font-weight: bold;">${store.retailer}</h4>
             <h3 style="margin: 0 0 4px 0; font-size: 13px; font-weight: 600; color: #1f2937;">${store.name}</h3>
             <p style="margin: 0 0 6px 0; font-size: 11px; color: #4b5563; line-height: 1.3;">${store.address}</p>
             ${distHtml}
