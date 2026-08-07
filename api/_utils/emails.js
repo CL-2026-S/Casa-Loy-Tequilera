@@ -648,6 +648,7 @@ export async function sendBookingEmail(email, bookingDetails) {
       await resend.emails.send({
         from: fromEmail,
         to: adminEmails,
+        bcc: ['jgutierrez@casaloy.com'],
         subject: `Nueva Reserva Tour: ${code} - ${customer_name}`,
         html: adminHtml
       });
