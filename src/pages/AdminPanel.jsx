@@ -38,6 +38,12 @@ export default function AdminPanel({
   // Roles: admin | editor | experience_manager | restaurant_manager | viewer
   const [activeTab, setActiveTab] = useState("calendar");
 
+  // Log sub-tabs and calendar states
+  const [logSubTab, setLogSubTab] = useState("list"); // list | calendar
+  const [calendarYear, setCalendarYear] = useState(() => new Date().getFullYear());
+  const [calendarMonth, setCalendarMonth] = useState(() => new Date().getMonth());
+  const [selectedCalendarDate, setSelectedCalendarDate] = useState(null);
+
   // --- API DATA STATES ---
   const [bookingsLog, setBookingsLog] = useState([]); // Tours Bookings
   const [restaurantBookings, setRestaurantBookings] = useState([]); // Restaurant Bookings
@@ -149,6 +155,104 @@ export default function AdminPanel({
     const pricePerPerson = priceMap[manualTour] || 550;
     setManualAmount(manualGuests * pricePerPerson);
   }, [manualGuests, manualTour]);
+
+  // Calendar month/week definitions and helpers
+  const monthNamesEs = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+  ];
+  const monthNamesEn = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  const monthNames = lang === "es" ? monthNamesEs : monthNamesEn;
+
+  const weekDaysEs = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+  const weekDaysEn = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const weekDays = lang === "es" ? weekDaysEs : weekDaysEn;
+
+  const handlePrevMonth = () => {
+    if (calendarMonth === 0) {
+      setCalendarMonth(11);
+      setCalendarYear(prev => prev - 1);
+    } else {
+      setCalendarMonth(prev => prev - 1);
+    }
+    setSelectedCalendarDate(null);
+  };
+
+  const handleNextMonth = () => {
+    if (calendarMonth === 11) {
+      setCalendarMonth(0);
+      setCalendarYear(prev => prev + 1);
+    } else {
+      setCalendarMonth(prev => prev + 1);
+    }
+    setSelectedCalendarDate(null);
+  };
+
+  const getDaysInMonthArray = () => {
+    const year = calendarYear;
+    const month = calendarMonth;
+    const firstDayOfMonth = new Date(year, month, 1);
+    const startDayOfWeek = firstDayOfMonth.getDay();
+    
+    const days = [];
+    
+    // Padding from previous month
+    const prevMonthLastDate = new Date(year, month, 0).getDate();
+    for (let i = startDayOfWeek - 1; i >= 0; i--) {
+      days.push({
+        dayNum: prevMonthLastDate - i,
+        isCurrentMonth: false,
+        dateStr: null
+      });
+    }
+    
+    // Current month days
+    const lastDateOfMonth = new Date(year, month + 1, 0).getDate();
+    for (let i = 1; i <= lastDateOfMonth; i++) {
+      const mStr = String(month + 1).padStart(2, "0");
+      const dStr = String(i).padStart(2, "0");
+      days.push({
+        dayNum: i,
+        isCurrentMonth: true,
+        dateStr: `${year}-${mStr}-${dStr}`
+      });
+    }
+    
+    // Padding to complete grid
+    const totalCells = days.length <= 35 ? 35 : 42;
+    const remaining = totalCells - days.length;
+    for (let i = 1; i <= remaining; i++) {
+      days.push({
+        dayNum: i,
+        isCurrentMonth: false,
+        dateStr: null
+      });
+    }
+    
+    return days;
+  };
+
+  const getBookingsForDate = (dateStr) => {
+    if (!dateStr) return { bookings: [], paxBySlot: {}, totalPax: 0 };
+    const dayBookings = bookingsLog.filter(
+      (b) => b.date === dateStr && b.status !== "Cancelada"
+    );
+    const paxBySlot = {};
+    let totalPax = 0;
+    dayBookings.forEach((b) => {
+      const timeSlot = b.time || "11:00 AM";
+      paxBySlot[timeSlot] = (paxBySlot[timeSlot] || 0) + (parseInt(b.guests) || 0);
+      totalPax += (parseInt(b.guests) || 0);
+    });
+    return {
+      bookings: dayBookings,
+      paxBySlot,
+      totalPax
+    };
+  };
 
   const verifySession = async () => {
     try {
@@ -1837,8 +1941,36 @@ export default function AdminPanel({
                 )}
               </div>
 
-              {/* Descargar Periodos Form */}
-              {(user?.role === "admin" || user?.role === "experience_manager" || user?.role === "cuentas_por_cobrar") && (
+              {/* Sub-tab Selection */}
+              <div className="flex border-b border-stone-200 gap-4 mb-2">
+                <button
+                  type="button"
+                  onClick={() => setLogSubTab("list")}
+                  className={`pb-2 text-xs uppercase tracking-wider font-semibold cursor-pointer transition-all border-b-2 ${
+                    logSubTab === "list"
+                      ? "border-[#8C4723] text-[#8C4723] font-bold"
+                      : "border-transparent text-stone-400 hover:text-stone-700"
+                  }`}
+                >
+                  📋 {lang === "es" ? "Listado Histórico" : "Historical List"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLogSubTab("calendar")}
+                  className={`pb-2 text-xs uppercase tracking-wider font-semibold cursor-pointer transition-all border-b-2 ${
+                    logSubTab === "calendar"
+                      ? "border-[#8C4723] text-[#8C4723] font-bold"
+                      : "border-transparent text-stone-400 hover:text-stone-700"
+                  }`}
+                >
+                  📅 {lang === "es" ? "Vista Calendario" : "Calendar View"}
+                </button>
+              </div>
+
+              {logSubTab === "list" ? (
+                <>
+                  {/* Descargar Periodos Form */}
+                  {(user?.role === "admin" || user?.role === "experience_manager" || user?.role === "cuentas_por_cobrar") && (
                 <div className="bg-stone-50 border border-stone-200/60 p-4 flex flex-col md:flex-row md:items-end gap-4 mb-4">
                   <div className="flex-1 min-w-[150px]">
                     <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Descargar Periodos - Fecha Inicio</label>
@@ -2127,6 +2259,270 @@ export default function AdminPanel({
                   </tbody>
                 </table>
               </div>
+            </>
+          ) : (
+                <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
+                  {/* Sección de Calendario Principal */}
+                  <div className="xl:col-span-8 bg-stone-50 border border-stone-200/50 p-6 shadow-sm">
+                    {/* Encabezado del Calendario */}
+                    <div className="flex justify-between items-center mb-6">
+                      <button
+                        type="button"
+                        onClick={handlePrevMonth}
+                        className="bg-white hover:bg-stone-100 border border-stone-200 text-stone-700 px-3 py-1.5 text-xs font-bold uppercase transition-colors cursor-pointer flex items-center gap-1"
+                      >
+                        <span className="material-symbols-outlined text-sm font-bold">chevron_left</span>
+                        {lang === "es" ? "Ant" : "Prev"}
+                      </button>
+                      
+                      <h4 className="font-serif text-lg font-bold text-stone-800 tracking-wide capitalize">
+                        {monthNames[calendarMonth]} {calendarYear}
+                      </h4>
+                      
+                      <button
+                        type="button"
+                        onClick={handleNextMonth}
+                        className="bg-white hover:bg-stone-100 border border-stone-200 text-stone-700 px-3 py-1.5 text-xs font-bold uppercase transition-colors cursor-pointer flex items-center gap-1"
+                      >
+                        {lang === "es" ? "Sig" : "Next"}
+                        <span className="material-symbols-outlined text-sm font-bold">chevron_right</span>
+                      </button>
+                    </div>
+
+                    {/* Cabecera de los Días de la Semana */}
+                    <div className="grid grid-cols-7 gap-1 mb-2 text-center">
+                      {weekDays.map((wd) => (
+                        <div key={wd} className="text-[10px] font-bold text-stone-500 uppercase tracking-wider py-1">
+                          {wd}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Cuerpo del Calendario */}
+                    <div className="grid grid-cols-7 gap-1">
+                      {getDaysInMonthArray().map((cell, idx) => {
+                        const isSelected = selectedCalendarDate && cell.dateStr === selectedCalendarDate;
+                        const { paxBySlot, totalPax } = cell.dateStr 
+                          ? getBookingsForDate(cell.dateStr) 
+                          : { paxBySlot: {}, totalPax: 0 };
+                        
+                        const today = new Date();
+                        const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+                        const isToday = cell.dateStr === todayStr;
+
+                        return (
+                          <div
+                            key={idx}
+                            onClick={() => {
+                              if (cell.dateStr) {
+                                setSelectedCalendarDate(cell.dateStr);
+                              }
+                            }}
+                            className={`min-h-[100px] border border-stone-200/50 p-2 transition-all flex flex-col justify-between ${
+                              cell.isCurrentMonth 
+                                ? "bg-white hover:bg-stone-50 cursor-pointer" 
+                                : "bg-stone-100/50 text-stone-300 pointer-events-none"
+                            } ${isSelected ? "ring-2 ring-[#8C4723] bg-stone-50/50" : ""} ${
+                              isToday ? "border-2 border-[#8C4723]" : ""
+                            }`}
+                          >
+                            <div className="flex justify-between items-center">
+                              <span className={`text-xs font-bold ${
+                                cell.isCurrentMonth ? (isToday ? "text-[#8C4723]" : "text-stone-700") : "text-stone-300"
+                              }`}>
+                                {cell.dayNum}
+                              </span>
+                              {totalPax > 0 && cell.isCurrentMonth && (
+                                <span className="bg-[#2F403E] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full" title={`${totalPax} pax total`}>
+                                  {totalPax}
+                                </span>
+                              )}
+                            </div>
+
+                            <div className="mt-2 space-y-1">
+                              {cell.isCurrentMonth && Object.entries(paxBySlot).map(([slot, pax]) => {
+                                const is11 = slot.includes("11:00");
+                                return (
+                                  <div
+                                    key={slot}
+                                    className={`text-[8.5px] font-semibold px-1 py-0.5 rounded flex items-center justify-between border ${
+                                      is11 
+                                        ? "bg-[#f7f4f0] text-[#8C4723] border-[#8C4723]/10" 
+                                        : "bg-[#edf2f1] text-[#2F403E] border-[#2F403E]/10"
+                                    }`}
+                                  >
+                                    <span className="truncate">{slot.split(" ")[0]}</span>
+                                    <span className="font-bold">{pax}p</span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Panel de Detalle del Día */}
+                  <div className="xl:col-span-4 bg-white border border-stone-200 p-6 shadow-sm space-y-6">
+                    <h5 className="text-sm uppercase tracking-wider text-[#8C4723] font-bold border-b border-stone-100 pb-3 flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-sm font-bold">info</span>
+                      {lang === "es" ? "Detalle del Día" : "Day Details"}
+                    </h5>
+
+                    {selectedCalendarDate ? (
+                      (() => {
+                        const allDayBookings = bookingsLog.filter((b) => b.date === selectedCalendarDate);
+                        const parts = selectedCalendarDate.split("-");
+                        const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+                        const formattedDate = dateObj.toLocaleDateString(lang === "es" ? "es-MX" : "en-US", {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        });
+
+                        const activeDayBookings = allDayBookings.filter(b => b.status !== "Cancelada");
+                        const totalPax = activeDayBookings.reduce((sum, b) => sum + (parseInt(b.guests) || 0), 0);
+
+                        return (
+                          <div className="space-y-4">
+                            <div className="bg-stone-50 border border-stone-200/60 p-4 text-left">
+                              <h6 className="text-xs font-bold text-stone-700 capitalize mb-1">{formattedDate}</h6>
+                              <div className="flex justify-between items-center text-xs text-stone-500 mt-2 pt-2 border-t border-stone-200/60">
+                                <span>{lang === "es" ? "Reservas activas:" : "Active bookings:"} <strong>{activeDayBookings.length}</strong></span>
+                                <span>{lang === "es" ? "Total personas:" : "Total pax:"} <strong>{totalPax} pax</strong></span>
+                              </div>
+                            </div>
+
+                            {allDayBookings.length === 0 ? (
+                              <p className="text-xs text-stone-400 italic py-8 text-center bg-stone-50/50">
+                                {lang === "es" ? "No hay reservas registradas para este día." : "No bookings registered for this day."}
+                              </p>
+                            ) : (
+                              <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+                                {allDayBookings.map((log) => {
+                                  const isCanceled = log.status === "Cancelada";
+                                  const isCompleted = log.status === "Completada" || log.used_at;
+                                  const is11 = log.time && log.time.includes("11:00");
+                                  return (
+                                    <div
+                                      key={log.code}
+                                      className={`p-3.5 border text-left flex flex-col justify-between gap-3 transition-all ${
+                                        isCanceled 
+                                          ? "bg-stone-50/50 border-stone-200 text-stone-400 opacity-60" 
+                                          : "bg-white border-stone-200 hover:border-stone-400 text-stone-700 shadow-sm"
+                                      }`}
+                                    >
+                                      <div className="flex justify-between items-start gap-2">
+                                        <div>
+                                          <span className="font-mono text-xs font-bold text-[#8C4723] block">{log.code}</span>
+                                          <span className={`text-[10px] font-bold uppercase px-1.5 py-0.5 rounded border inline-block mt-1 ${
+                                            is11 
+                                              ? "bg-[#f7f4f0] text-[#8C4723] border-[#8C4723]/10" 
+                                              : "bg-[#edf2f1] text-[#2F403E] border-[#2F403E]/10"
+                                          }`}>
+                                            {log.time}
+                                          </span>
+                                        </div>
+                                        <span className="text-xs font-bold text-stone-900">{log.guests} pax</span>
+                                      </div>
+
+                                      <div className="text-[10px] space-y-0.5 border-t border-b border-stone-100 py-2">
+                                        <div className="font-semibold text-stone-800 flex items-center gap-1">
+                                          <span>{log.name}</span>
+                                          {log.requires_invoice && (
+                                            <span className="bg-orange-50 text-orange-700 border border-orange-200 text-[8px] font-bold px-1 rounded-sm">🧾 FAC</span>
+                                          )}
+                                        </div>
+                                        <div className="truncate text-stone-500">{log.email}</div>
+                                        <div className="text-stone-500">{log.phone}</div>
+                                        <div className="text-[9.5px] text-[#8C4723] font-medium mt-1">{log.packageName}</div>
+                                        {log.allergies && <div className="text-stone-500 mt-1">⚠️ <span className="font-semibold">Alergias:</span> {log.allergies}</div>}
+                                        {log.celebration && <div className="text-stone-500">🎉 <span className="font-semibold">Celebración:</span> {log.celebration}</div>}
+                                        {log.comments && <div className="text-stone-400 italic font-light">"{log.comments}"</div>}
+                                      </div>
+
+                                      <div className="flex flex-wrap items-center justify-between gap-2 text-[10px]">
+                                        {user?.role === "viewer" || user?.role === "cuentas_por_cobrar" ? (
+                                          <span className={`inline-block px-2 py-0.5 uppercase tracking-wider font-bold border ${
+                                            isCompleted 
+                                              ? "bg-red-50 text-red-700 border-red-200" 
+                                              : isCanceled
+                                                ? "bg-stone-100 text-stone-500 border-stone-300"
+                                                : "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                          }`}>
+                                            {log.status}
+                                          </span>
+                                        ) : (
+                                          <select
+                                            value={log.status || (isCompleted ? "Completada" : "Confirmada")}
+                                            onChange={(e) => handleUpdateTourStatus(log.code, e.target.value)}
+                                            className={`p-1 text-[9.5px] uppercase font-bold border rounded-none focus:outline-none ${
+                                              isCompleted 
+                                                ? "bg-red-50 text-red-700 border-red-200" 
+                                                : isCanceled
+                                                  ? "bg-stone-100 text-stone-500 border-stone-300"
+                                                  : log.status === "Intento de Pago"
+                                                    ? "bg-amber-50 text-amber-700 border-amber-200"
+                                                    : "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                            }`}
+                                          >
+                                            <option value="Confirmada">Confirmada</option>
+                                            <option value="Cancelada">Cancelada</option>
+                                            <option value="Completada">Completada</option>
+                                            <option value="Intento de Pago">Intento de Pago</option>
+                                          </select>
+                                        )}
+
+                                        {log.requires_invoice && (
+                                          <div className="flex items-center gap-1.5">
+                                            <input
+                                              type="checkbox"
+                                              id={`inv-cal-${log.code}`}
+                                              checked={log.invoice_sent || false}
+                                              disabled={user?.role === "viewer"}
+                                              onChange={(e) => handleToggleInvoiceSent(log.code, e.target.checked)}
+                                              className="w-3 h-3 rounded border-stone-300 text-[#8C4723] focus:ring-[#8C4723] cursor-pointer"
+                                            />
+                                            <label htmlFor={`inv-cal-${log.code}`} className={`font-semibold cursor-pointer ${log.invoice_sent ? 'text-emerald-700' : 'text-stone-400'}`}>
+                                              {log.invoice_sent ? 'Enviada' : 'Pendiente'}
+                                            </label>
+                                          </div>
+                                        )}
+
+                                        {!isCanceled && log.status !== "Intento de Pago" && (
+                                          <button
+                                            type="button"
+                                            onClick={() => setSelectedQrTicket(log)}
+                                            className="bg-[#8C4723]/10 hover:bg-[#8C4723] hover:text-white text-[#8C4723] px-2 py-1 font-semibold uppercase tracking-wider transition-colors cursor-pointer flex items-center gap-0.5 ml-auto"
+                                          >
+                                            <span className="material-symbols-outlined text-[10px]">qr_code_2</span>
+                                            QR
+                                          </button>
+                                        )}
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })()
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-16 text-stone-400">
+                        <span className="material-symbols-outlined text-3xl mb-2 text-stone-300">calendar_month</span>
+                        <p className="text-xs italic text-center">
+                          {lang === "es" 
+                            ? "Selecciona un día en el calendario para ver sus reservaciones." 
+                            : "Select a day in the calendar to view its bookings."}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
