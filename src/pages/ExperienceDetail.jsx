@@ -551,7 +551,7 @@ export default function ExperienceDetail({
   };
 
   const handleNextMonth = () => {
-    const limitMonth = new Date(today.getFullYear(), today.getMonth() + 3, 1);
+    const limitMonth = new Date(today.getFullYear(), today.getMonth() + 6, 1);
     if (currentDate.getTime() < limitMonth.getTime()) {
       setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
     }
@@ -1638,7 +1638,7 @@ export default function ExperienceDetail({
                           <button
                             onClick={handleNextMonth}
                             className="p-1.5 hover:bg-stone-100 rounded-full transition-colors cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed text-xs"
-                            disabled={currentDate.getMonth() === (today.getMonth() + 3) % 12 && currentDate.getFullYear() === today.getFullYear() + Math.floor((today.getMonth() + 3) / 12)}
+                            disabled={currentDate.getMonth() === (today.getMonth() + 6) % 12 && currentDate.getFullYear() === today.getFullYear() + Math.floor((today.getMonth() + 6) / 12)}
                           >
                             ▶
                           </button>

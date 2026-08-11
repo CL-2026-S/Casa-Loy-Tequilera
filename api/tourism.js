@@ -115,16 +115,28 @@ export default async function handler(req, res) {
       if (oErr) throw oErr;
 
       // 4. Fetch reservations log
-      const { data: reservations, error: rErr } = await supabase
+      let query = supabase
         .from('reservations')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .select('*');
+      
+      const staffUser = getAuthUser(req);
+      if (!staffUser) {
+        // Public request: only load reservations from 7 days ago to future to optimize performance
+        const sevenDaysAgoStr = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        query = query.gte('date_str', sevenDaysAgoStr);
+      }
+
+      const { data: reservations, error: rErr } = await query.order('created_at', { ascending: false });
       if (rErr) throw rErr;
 
       const bookingsCapacity = {};
-      // Calculate capacity dynamically from active reservations
+      const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
+      // Calculate capacity dynamically from active reservations and recent payment attempts (last 15 minutes)
       reservations?.forEach(r => {
-        if (r.status === 'Confirmada' || r.status === 'Completada') {
+        const isConfirmedOrCompleted = r.status === 'Confirmada' || r.status === 'Completada';
+        const isRecentPaymentAttempt = r.status === 'Intento de Pago' && r.created_at && new Date(r.created_at) > fifteenMinutesAgo;
+        
+        if (isConfirmedOrCompleted || isRecentPaymentAttempt) {
           const d = r.date_str;
           const t = r.time_str;
           const guests = parseInt(r.guests || '0');
@@ -287,15 +299,23 @@ export default async function handler(req, res) {
           .maybeSingle();
         const maxCapacity = parseInt(limitData?.value || '50');
 
-        // 2. Fetch current occupancy for this slot dynamically from active reservations
+        // 2. Fetch current occupancy for this slot dynamically from active reservations (including recent payment attempts < 15 mins)
         const { data: activeBookings } = await supabase
           .from('reservations')
-          .select('guests')
+          .select('guests, status, created_at')
           .eq('date_str', date_str)
           .eq('time_str', time_str)
-          .in('status', ['Confirmada', 'Completada']);
+          .in('status', ['Confirmada', 'Completada', 'Intento de Pago']);
         
-        let occupiedCount = activeBookings?.reduce((sum, r) => sum + parseInt(r.guests || '0'), 0) || 0;
+        const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
+        let occupiedCount = activeBookings?.reduce((sum, r) => {
+          const isConfirmedOrCompleted = r.status === 'Confirmada' || r.status === 'Completada';
+          const isRecentPaymentAttempt = r.status === 'Intento de Pago' && r.created_at && new Date(r.created_at) > fifteenMinutesAgo;
+          if (isConfirmedOrCompleted || isRecentPaymentAttempt) {
+            return sum + parseInt(r.guests || '0');
+          }
+          return sum;
+        }, 0) || 0;
 
         // Fetch overrides for manual blocks
         const { data: overrideData } = await supabase
@@ -361,17 +381,7 @@ export default async function handler(req, res) {
           throw insErr;
         }
 
-        // 4. Update occupancy atomically
-        const newOccupiedCount = occupiedCount + requestedGuests;
-        const { error: upsErr } = await supabase
-          .from('slot_occupancy_overrides')
-          .upsert({
-            date_str,
-            time_str,
-            occupied_count: newOccupiedCount,
-            updated_at: new Date().toISOString()
-          });
-        if (upsErr) throw upsErr;
+        // 4. No need to update slot_occupancy_overrides. Capacity is calculated dynamically from active reservations.
 
         // 5. Send automated confirmation email using Resend
         if (finalStatus === 'Confirmada') {

@@ -254,7 +254,7 @@ export default function AdminPanel({
     };
   };
 
-  const verifySession = async () => {
+  async function verifySession() {
     try {
       const res = await fetch("/api/auth?action=verify", {
         method: "POST",
@@ -343,7 +343,7 @@ export default function AdminPanel({
   };
 
   // Load dynamic data depending on the current tab
-  const loadTabData = async () => {
+  async function loadTabData() {
     const headers = { "Authorization": `Bearer ${token}` };
 
     if (activeTab === "calendar" || activeTab === "log" || activeTab === "validate") {
