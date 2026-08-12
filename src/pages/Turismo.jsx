@@ -81,7 +81,7 @@ export default function Turismo({ lang, setPage }) {
       expDesc: "Cada tour está diseñado para ofrecer una visión íntima de nuestro proceso artesanal, desde el campo hasta la cava subterránea.",
       
       tourOroTitle: "Experiencia Casa Loy Oro",
-      tourOroPrice: "MXN 550.00 / Persona",
+      tourOroPrice: "MXN 1.00 / Persona",
       tourOroBullet1: "✓ Recorrido campo de agaves",
       tourOroBullet2: "✓ Murales e Historia",
       tourOroBullet3: "✓ Recorrido por la fábrica",
@@ -148,7 +148,7 @@ export default function Turismo({ lang, setPage }) {
       expDesc: "Each tour is designed to offer an intimate view of our process, from the field to the underground cellar.",
       
       tourOroTitle: "Casa Loy Gold Experience",
-      tourOroPrice: "MXN 550.00 / Person",
+      tourOroPrice: "MXN 1.00 / Person",
       tourOroBullet1: "✓ Agave fields tour",
       tourOroBullet2: "✓ Murals & History",
       tourOroBullet3: "✓ Tour of the factory",
