@@ -152,8 +152,8 @@ export default function AdminPanel({
 
   // Calculate pricing for manual tour booking
   useEffect(() => {
-    const priceMap = { oro: 1, platino: 750, diamante: 1500 };
-    const pricePerPerson = priceMap[manualTour] || 1;
+    const priceMap = { oro: 550, platino: 750, diamante: 1500 };
+    const pricePerPerson = priceMap[manualTour] || 550;
     setManualAmount(manualGuests * pricePerPerson);
   }, [manualGuests, manualTour]);
 
@@ -2103,7 +2103,7 @@ export default function AdminPanel({
                           onChange={(e) => setManualTour(e.target.value)}
                           className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18]"
                         >
-                          <option value="oro">Casa Loy Oro ($1.00)</option>
+                          <option value="oro">Casa Loy Oro ($550.00)</option>
                           <option value="platino">Casa Loy Platino ($750.00)</option>
                           <option value="diamante">Casa Loy Diamante ($1,500.00)</option>
                         </select>

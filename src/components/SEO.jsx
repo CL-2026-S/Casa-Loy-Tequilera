@@ -226,7 +226,7 @@ const seoData = {
     },
     "experience-oro": {
       title: "Experiencia Casa Loy Oro | Tour de Tequila en Jalisco",
-      description: "Reserva la Experiencia Oro de Casa Loy por MXN $1. Incluye recorrido por campos de agave, destilería, cata en cava subterránea y botella de TADDEL 200ml.",
+      description: "Reserva la Experiencia Oro de Casa Loy por MXN $550. Incluye recorrido por campos de agave, destilería, cata en cava subterránea y botella de TADDEL 200ml.",
       ogTitle: "Experiencia Casa Loy Oro - Tour Premium",
       ogDesc: "Vive el origen del tequila con nuestro recorrido guiado, cata en cava y regalo especial.",
       ogImage: "/Casa Loy Experiencias Oro.webp"

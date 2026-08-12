@@ -36,7 +36,7 @@ const packagesData = {
   oro: {
     es: {
       title: "Experiencia Casa Loy Oro",
-      price: "$1.00",
+      price: "$550.00",
       duration: "2.5 Horas",
       capacity: "Máximo 50 personas",
       desc: "Un viaje de origen a través de nuestro campo de agaves y procesos de destilación artesanal, culminando con una cata privada y nuestro prestigioso obsequio.",
@@ -76,7 +76,7 @@ const packagesData = {
     },
     en: {
       title: "Casa Loy Gold Experience",
-      price: "$1.00",
+      price: "$550.00",
       duration: "2.5 Hours",
       capacity: "Max 50 people",
       desc: "A journey of origin through our agave fields and artisanal distillation processes, culminating with a private tasting and our prestigious gift.",
@@ -506,7 +506,7 @@ export default function ExperienceDetail({
   }, [blockedDates, bookingsCapacity, maxCapacityLimit]);
 
   const isPlatinoOrDiamante = packageId === "platino" || packageId === "diamante";
-  const adultPrice = packageId === "oro" ? 1 : packageId === "platino" ? 750 : 1500;
+  const adultPrice = packageId === "oro" ? 550 : packageId === "platino" ? 750 : 1500;
   const teenPrice = 250;
   const totalPrice = isGroupQuote ? 0 : ((numAdults * adultPrice) + (numTeens * teenPrice));
   const pricePerPerson = isGroupQuote ? 0 : (numGuests > 0 ? Math.round(totalPrice / numGuests) : adultPrice);
@@ -1565,7 +1565,7 @@ export default function ExperienceDetail({
                                       disabled={isPaying}
                                       className="w-full bg-[#1c1c18] hover:bg-[#2c2c26] text-white hover:text-[#f3efe6] py-2.5 font-sans font-bold text-xs transition-colors cursor-pointer text-center uppercase tracking-wider border border-stone-800"
                                     >
-                                      {isPaying ? (lang === "es" ? "Procesando..." : "Processing...") : (lang === "es" ? "Simular Pago y Reservar ($1.00 MXN)" : "Simulate Payment & Book ($1.00 MXN)")}
+                                      {isPaying ? (lang === "es" ? "Procesando..." : "Processing...") : (lang === "es" ? `Simular Pago y Reservar ($${totalPrice}.00 MXN)` : `Simulate Payment & Book ($${totalPrice}.00 MXN)`)}
                                     </button>
                                   </div>
                                 )}
