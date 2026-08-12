@@ -1436,7 +1436,7 @@ export default function ExperienceDetail({
                                 {/* PayPal Real Checkout Button */}
                                 <div className="w-full">
                                   <PayPalButtons
-                                    forceReRender={[numGuests, totalPrice, selectedDateStr, selectedTime, clientName, clientEmail, clientPhone, allergies, celebration, comments, requiresInvoice, rfc, razonSocial, postalCode, regimenFiscal, cfdiUse]}
+                                    forceReRender={[totalPrice, selectedDateStr, selectedTime, numGuests]}
                                     style={{ layout: "vertical", color: "gold", shape: "rect", label: "paypal", height: 40 }}
                                     createOrder={async (data, actions) => {
                                       if (isSlotBlocked(selectedDateStr, selectedTime)) {
