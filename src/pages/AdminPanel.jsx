@@ -1366,6 +1366,16 @@ export default function AdminPanel({
   const filteredBookingsLog = bookingsLog.filter((log) => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase().trim();
+    
+    // Convert YYYY-MM-DD to DD/MM/YYYY for Mexican standard date search
+    let formattedMexDate = "";
+    if (log.date && log.date.includes("-")) {
+      const parts = log.date.split("-");
+      if (parts.length === 3) {
+        formattedMexDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+      }
+    }
+
     return (
       (log.code && log.code.toLowerCase().includes(query)) ||
       (log.name && log.name.toLowerCase().includes(query)) ||
@@ -1373,6 +1383,7 @@ export default function AdminPanel({
       (log.phone && log.phone.toLowerCase().includes(query)) ||
       (log.packageName && log.packageName.toLowerCase().includes(query)) ||
       (log.date && log.date.toLowerCase().includes(query)) ||
+      (formattedMexDate && formattedMexDate.includes(query)) ||
       (log.time && log.time.toLowerCase().includes(query)) ||
       (log.method && log.method.toLowerCase().includes(query)) ||
       (log.status && log.status.toLowerCase().includes(query))
