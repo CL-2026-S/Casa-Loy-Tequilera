@@ -119,6 +119,7 @@ export default function AdminPanel({
   const [selectedQrTicket, setSelectedQrTicket] = useState(null);
   const [downloadStartDate, setDownloadStartDate] = useState("");
   const [downloadEndDate, setDownloadEndDate] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Verify session on mount and when token changes
   useEffect(() => {
@@ -349,7 +350,7 @@ export default function AdminPanel({
     if (activeTab === "calendar" || activeTab === "log" || activeTab === "validate") {
       if (refreshData) await refreshData();
       try {
-        const res = await fetch("/api/tourism");
+        const res = await fetch("/api/tourism", { headers });
         if (res.ok) {
           const data = await res.json();
           if (data.bookingsLog) setBookingsLog(data.bookingsLog);
@@ -1361,6 +1362,23 @@ export default function AdminPanel({
     );
   }
 
+  // Filter bookings log based on search query
+  const filteredBookingsLog = bookingsLog.filter((log) => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase().trim();
+    return (
+      (log.code && log.code.toLowerCase().includes(query)) ||
+      (log.name && log.name.toLowerCase().includes(query)) ||
+      (log.email && log.email.toLowerCase().includes(query)) ||
+      (log.phone && log.phone.toLowerCase().includes(query)) ||
+      (log.packageName && log.packageName.toLowerCase().includes(query)) ||
+      (log.date && log.date.toLowerCase().includes(query)) ||
+      (log.time && log.time.toLowerCase().includes(query)) ||
+      (log.method && log.method.toLowerCase().includes(query)) ||
+      (log.status && log.status.toLowerCase().includes(query))
+    );
+  });
+
   // --- RENDER MAIN ADMIN DASHBOARD (LOGGED IN) ---
   return (
     <div className="bg-[#fcf9f3] min-h-screen text-[#1c1c18] py-24 font-sans select-text">
@@ -1425,7 +1443,7 @@ export default function AdminPanel({
                 activeTab === "log" ? "border-[#8C4723] text-[#8C4723] font-bold" : "border-transparent text-stone-500 hover:text-stone-800"
               }`}
             >
-              📋 Reservas Tours ({bookingsLog.length})
+              📋 Reservas Tours ({filteredBookingsLog.length !== bookingsLog.length ? `${filteredBookingsLog.length}/${bookingsLog.length}` : bookingsLog.length})
             </button>
           )}
 
@@ -1969,6 +1987,28 @@ export default function AdminPanel({
 
               {logSubTab === "list" ? (
                 <>
+                  {/* Buscador de Reservaciones */}
+                  <div className="bg-white border border-stone-200 p-4 mb-4 flex items-center gap-3">
+                    <div className="flex-1 relative">
+                      <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">search</span>
+                      <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Buscar por código, nombre, correo, teléfono, fecha, tour o estado..."
+                        className="w-full bg-stone-50/50 border border-stone-200 pl-10 pr-4 py-2 text-xs focus:outline-none focus:border-[#8C4723] focus:bg-white text-[#1c1c18]"
+                      />
+                    </div>
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery("")}
+                        className="text-xs text-stone-500 hover:text-stone-850 font-semibold cursor-pointer underline underline-offset-2"
+                      >
+                        Limpiar
+                      </button>
+                    )}
+                  </div>
+
                   {/* Descargar Periodos Form */}
                   {(user?.role === "admin" || user?.role === "experience_manager" || user?.role === "cuentas_por_cobrar") && (
                 <div className="bg-stone-50 border border-stone-200/60 p-4 flex flex-col md:flex-row md:items-end gap-4 mb-4">
@@ -2144,12 +2184,14 @@ export default function AdminPanel({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-stone-100">
-                    {bookingsLog.length === 0 ? (
+                    {filteredBookingsLog.length === 0 ? (
                       <tr>
-                        <td colSpan="9" className="p-8 text-center text-stone-400 italic">No hay registros de reservaciones en la base de datos.</td>
+                        <td colSpan="9" className="p-8 text-center text-stone-400 italic">
+                          {searchQuery ? "No se encontraron reservaciones que coincidan con la búsqueda." : "No hay registros de reservaciones en la base de datos."}
+                        </td>
                       </tr>
                     ) : (
-                      bookingsLog.map((log) => {
+                      filteredBookingsLog.map((log) => {
                         const isCompleted = log.status === "Completada" || log.used_at;
                         return (
                           <tr key={log.code} className="hover:bg-stone-50/40 text-stone-700">
