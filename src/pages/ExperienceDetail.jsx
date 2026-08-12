@@ -1554,20 +1554,21 @@ export default function ExperienceDetail({
                                   />
                                 </div>
 
-                                {/* Botón de Simulación para Pruebas */}
-                                <div className="mt-2 text-center">
-                                  <div className="text-[9px] text-stone-400 mb-1 uppercase tracking-wider font-semibold">
-                                    {lang === "es" ? "Área de Pruebas / Modo Sandbox" : "Testing Area / Sandbox Mode"}
+                                {/* Botón de Simulación para Pruebas (Oculto en Producción salvo admin=true) */}
+                                {(showAdminButton || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && (
+                                  <div className="mt-2 text-center">
+                                    <div className="text-[9px] text-stone-400 mb-1 uppercase tracking-wider font-semibold">
+                                      {lang === "es" ? "Área de Pruebas / Modo Sandbox" : "Testing Area / Sandbox Mode"}
+                                    </div>
+                                    <button
+                                      onClick={() => handleSimulatePayment("paypal")}
+                                      disabled={isPaying}
+                                      className="w-full bg-[#1c1c18] hover:bg-[#2c2c26] text-white hover:text-[#f3efe6] py-2.5 font-sans font-bold text-xs transition-colors cursor-pointer text-center uppercase tracking-wider border border-stone-800"
+                                    >
+                                      {isPaying ? (lang === "es" ? "Procesando..." : "Processing...") : (lang === "es" ? "Simular Pago y Reservar ($1.00 MXN)" : "Simulate Payment & Book ($1.00 MXN)")}
+                                    </button>
                                   </div>
-                                  <button
-                                    onClick={() => handleSimulatePayment("paypal")}
-                                    disabled={isPaying}
-                                    className="w-full bg-[#1c1c18] hover:bg-[#2c2c26] text-white hover:text-[#f3efe6] py-2.5 font-sans font-bold text-xs transition-colors cursor-pointer text-center uppercase tracking-wider border border-stone-800"
-                                  >
-                                    {isPaying ? (lang === "es" ? "Procesando..." : "Processing...") : (lang === "es" ? "Simular Pago y Reservar ($1.00 MXN)" : "Simulate Payment & Book ($1.00 MXN)")}
-                                  </button>
-                                </div>
-
+                                )}
                               </div>
                             )}
                           </div>
