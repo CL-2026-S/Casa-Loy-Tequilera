@@ -580,7 +580,7 @@ export async function sendBookingEmail(email, bookingDetails) {
 
     // Send admin notification automatically to tour and invoicing departments
     try {
-      const adminEmails = ['turismo@casaloy.com', 'turismo2@casaloy.com', 'turismo3@casaloy.com'];
+      const adminEmails = ['turismo@casaloy.com', 'turismo2@casaloy.com', 'turismo3@casaloy.com', 'turismocasaloy@gmail.com'];
       if (requires_invoice) {
         adminEmails.push('cuentasporcobrar@casaloy.com');
       }
