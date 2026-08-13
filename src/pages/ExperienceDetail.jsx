@@ -464,6 +464,66 @@ export default function ExperienceDetail({
   const [cardType, setCardType] = useState("");
   const [paypalPendingCode, setPaypalPendingCode] = useState(null);
 
+  // Coupon / Discount states
+  const [couponCodeInput, setCouponCodeInput] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState(null); // { code, discount_type, value }
+  const [couponError, setCouponError] = useState("");
+  const [couponSuccess, setCouponSuccess] = useState("");
+  const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
+
+  const handleApplyCoupon = async () => {
+    if (!couponCodeInput.trim()) {
+      setCouponError(lang === "es" ? "Por favor escribe un código." : "Please enter a code.");
+      setCouponSuccess("");
+      return;
+    }
+
+    setIsValidatingCoupon(true);
+    setCouponError("");
+    setCouponSuccess("");
+
+    try {
+      const res = await fetch("/api/tourism", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "validate_discount_code",
+          code: couponCodeInput
+        })
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.valid) {
+        setAppliedCoupon(data);
+        setCouponSuccess(
+          lang === "es" 
+            ? `¡Código ${data.code} aplicado con éxito!` 
+            : `Code ${data.code} applied successfully!`
+        );
+      } else {
+        setAppliedCoupon(null);
+        setCouponError(
+          data.error || (lang === "es" ? "Código no válido." : "Invalid code.")
+        );
+      }
+    } catch (e) {
+      console.error(e);
+      setCouponError(
+        lang === "es" ? "Error al validar el cupón." : "Error validating coupon."
+      );
+    } finally {
+      setIsValidatingCoupon(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCodeInput("");
+    setCouponError("");
+    setCouponSuccess("");
+  };
+
   const isPersonaFisica = rfc.trim().length === 13;
 
 
@@ -509,7 +569,17 @@ export default function ExperienceDetail({
   const adultPrice = packageId === "oro" ? 550 : packageId === "platino" ? 750 : 1500;
   const teenPrice = 250;
   const totalPrice = isGroupQuote ? 0 : ((numAdults * adultPrice) + (numTeens * teenPrice));
-  const pricePerPerson = isGroupQuote ? 0 : (numGuests > 0 ? Math.round(totalPrice / numGuests) : adultPrice);
+
+  // Calculate discount amount dynamically
+  const discountAmount = appliedCoupon
+    ? (appliedCoupon.discount_type === "percentage"
+        ? totalPrice * (appliedCoupon.value / 100)
+        : appliedCoupon.value)
+    : 0;
+
+  const finalPrice = Math.max(0, totalPrice - Math.min(discountAmount, totalPrice));
+
+  const pricePerPerson = isGroupQuote ? 0 : (numGuests > 0 ? Math.round(finalPrice / numGuests) : adultPrice);
   const occupiedSpots = selectedTime ? (bookingsCapacity[selectedDateStr]?.[selectedTime] || 0) : 0;
   const remainingSpots = maxCapacityLimit - occupiedSpots;
 
@@ -662,7 +732,7 @@ export default function ExperienceDetail({
       date_str: selectedDateStr,
       time_str: selectedTime,
       guests: numGuests,
-      total_paid: totalPrice,
+      total_paid: finalPrice,
       payment_method: paymentMethodName,
       allergies,
       celebration,
@@ -674,7 +744,8 @@ export default function ExperienceDetail({
       regimen_fiscal: regimenFiscal,
       cfdi_use: cfdiUse,
       card_type: cardType,
-      status: status
+      status: status,
+      discount_code: appliedCoupon ? appliedCoupon.code : null
     };
 
     try {
@@ -715,7 +786,7 @@ export default function ExperienceDetail({
           date: selectedDateStr,
           time: selectedTime,
           guests: numGuests,
-          amount: totalPrice,
+          amount: finalPrice,
           method: paymentMethodName,
           timestamp: new Date().toLocaleString(),
           allergies,
@@ -727,7 +798,8 @@ export default function ExperienceDetail({
           postal_code: postalCode,
           regimen_fiscal: regimenFiscal,
           cfdi_use: cfdiUse,
-          card_type: cardType
+          card_type: cardType,
+          discount_code: appliedCoupon ? appliedCoupon.code : null
         };
         list.unshift(newBooking);
         localStorage.setItem("casa_loy_bookings_log", JSON.stringify(list));
@@ -741,24 +813,26 @@ export default function ExperienceDetail({
       if (typeof window.gtag === 'function') {
         window.gtag('event', 'purchase', {
           transaction_id: code,
-          value: totalPrice,
+          value: finalPrice,
           currency: 'MXN',
           items: [{
             item_id: packageId,
             item_name: activeData?.title || `Tour ${packageId}`,
             quantity: numGuests,
-            price: numGuests > 0 ? (totalPrice / numGuests) : totalPrice
+            price: numGuests > 0 ? (finalPrice / numGuests) : finalPrice
           }]
         });
       }
+    } catch (e) {
+      console.error("GA4 Purchase event failed:", e);
+    }
+
+    try {
       if (typeof window.fbq === 'function') {
         window.fbq('track', 'Purchase', {
-          value: totalPrice,
+          value: finalPrice,
           currency: 'MXN',
-          content_name: activeData?.title || `Tour ${packageId}`,
-          content_ids: [packageId],
           content_type: 'product',
-          num_items: numGuests
         });
       }
     } catch (trackError) {
@@ -1078,7 +1152,7 @@ export default function ExperienceDetail({
                         <p><strong>Fecha:</strong> {formatReservationDate(selectedDateStr)}</p>
                         <p><strong>Hora:</strong> {selectedTime}</p>
                         <p><strong>{lang === "es" ? "Visitantes" : "Guests"}:</strong> {numAdults} {lang === "es" ? "Adulto(s)" : "Adult(s)"}{numTeens > 0 ? `, ${numTeens} ${lang === "es" ? "Jóven(es)" : "Youth(s)"}` : ''}{numChildren > 0 ? `, ${numChildren} ${lang === "es" ? "Niño(s)" : "Child(ren)"}` : ''}</p>
-                        <p><strong>{lang === "es" ? "Total pagado" : "Total paid"}:</strong> ${totalPrice} MXN</p>
+                        <p><strong>{lang === "es" ? "Total pagado" : "Total paid"}:</strong> ${finalPrice} MXN</p>
                       </div>
                     </div>
 
@@ -1495,7 +1569,7 @@ export default function ExperienceDetail({
                                         purchase_units: [
                                           {
                                             amount: {
-                                              value: totalPrice.toString(),
+                                              value: finalPrice.toString(),
                                               currency_code: "MXN"
                                             },
                                             description: `${activeData.title} - ${numAdults} Ad, ${numTeens} Jv, ${numChildren} Nñ`,
@@ -1565,7 +1639,7 @@ export default function ExperienceDetail({
                                       disabled={isPaying}
                                       className="w-full bg-[#1c1c18] hover:bg-[#2c2c26] text-white hover:text-[#f3efe6] py-2.5 font-sans font-bold text-xs transition-colors cursor-pointer text-center uppercase tracking-wider border border-stone-800"
                                     >
-                                      {isPaying ? (lang === "es" ? "Procesando..." : "Processing...") : (lang === "es" ? `Simular Pago y Reservar ($${totalPrice}.00 MXN)` : `Simulate Payment & Book ($${totalPrice}.00 MXN)`)}
+                                      {isPaying ? (lang === "es" ? "Procesando..." : "Processing...") : (lang === "es" ? `Simular Pago y Reservar ($${finalPrice}.00 MXN)` : `Simulate Payment & Book ($${finalPrice}.00 MXN)`)}
                                     </button>
                                   </div>
                                 )}
@@ -1626,10 +1700,63 @@ export default function ExperienceDetail({
                           </div>
                         </div>
 
+                        {/* Coupon Code Input */}
+                        <div className="pt-2.5 border-t border-outline-variant/15">
+                          <label className="block text-[9px] font-bold text-stone-500 uppercase tracking-wider mb-1">
+                            {lang === "es" ? "¿Tienes un cupón de descuento?" : "Do you have a coupon?"}
+                          </label>
+                          <div className="flex gap-1.5">
+                            <input
+                              type="text"
+                              disabled={!!appliedCoupon}
+                              value={couponCodeInput}
+                              onChange={(e) => setCouponCodeInput(e.target.value.toUpperCase().replace(/\s/g, ''))}
+                              placeholder="Ej. CASA10"
+                              className="flex-1 bg-white border border-outline-variant p-2 text-xs focus:outline-none focus:border-primary text-on-surface uppercase font-semibold"
+                            />
+                            {appliedCoupon ? (
+                              <button
+                                onClick={handleRemoveCoupon}
+                                className="bg-stone-200 hover:bg-stone-300 text-stone-700 text-xs px-2.5 py-1.5 transition-colors cursor-pointer uppercase font-semibold"
+                              >
+                                {lang === "es" ? "Quitar" : "Remove"}
+                              </button>
+                            ) : (
+                              <button
+                                onClick={handleApplyCoupon}
+                                disabled={isValidatingCoupon}
+                                className="bg-stone-800 hover:bg-stone-900 text-white text-xs px-2.5 py-1.5 transition-colors cursor-pointer uppercase font-semibold disabled:opacity-50"
+                              >
+                                {isValidatingCoupon ? "..." : (lang === "es" ? "Aplicar" : "Apply")}
+                              </button>
+                            )}
+                          </div>
+                          {couponError && (
+                            <span className="text-[9px] text-red-600 block mt-1 font-semibold">{couponError}</span>
+                          )}
+                          {couponSuccess && (
+                            <span className="text-[9px] text-emerald-600 block mt-1 font-semibold">{couponSuccess}</span>
+                          )}
+                        </div>
+
+                        {/* Price details if coupon applied */}
+                        {appliedCoupon && (
+                          <div className="space-y-1 pt-2 border-t border-outline-variant/15 text-[11px] font-sans font-light text-stone-600">
+                            <div className="flex justify-between">
+                              <span>{lang === "es" ? "Precio Base" : "Base Price"}</span>
+                              <span>${totalPrice} MXN</span>
+                            </div>
+                            <div className="flex justify-between text-emerald-600 font-semibold">
+                              <span>{lang === "es" ? `Descuento (${appliedCoupon.code})` : `Discount (${appliedCoupon.code})`}</span>
+                              <span>-${discountAmount} MXN</span>
+                            </div>
+                          </div>
+                        )}
+
                         {/* Grand Total */}
                         <div className="flex justify-between text-base font-serif font-bold pt-3 border-t border-outline-variant/20 text-on-surface">
                           <span>{activeT.payTotal}</span>
-                          <span className="text-primary text-base">${totalPrice} MXN</span>
+                          <span className="text-primary text-base">${finalPrice} MXN</span>
                         </div>
                       </div>
                     </div>

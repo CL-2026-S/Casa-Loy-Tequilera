@@ -207,9 +207,9 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Action parameter is required.' });
     }
 
-    // Security Check: Enforce authorization for all admin mutations (actions other than create_booking and resend_email)
+    // Security Check: Enforce authorization for all admin mutations (actions other than create_booking, resend_email, confirm_booking, and validate_discount_code)
     let activeUser = { email: 'system', role: 'admin' };
-    if (action !== 'create_booking' && action !== 'resend_email' && action !== 'confirm_booking') {
+    if (action !== 'create_booking' && action !== 'resend_email' && action !== 'confirm_booking' && action !== 'validate_discount_code') {
       const isInternal = authorizeInternal(req);
       const staffUser = getAuthUser(req);
       
@@ -261,7 +261,8 @@ export default async function handler(req, res) {
           regimen_fiscal,
           cfdi_use,
           card_type,
-          status
+          status,
+          discount_code
         } = req.body;
 
         if (!code || !customer_name || !customer_email || !date_str || !time_str || !guests) {
@@ -340,6 +341,37 @@ export default async function handler(req, res) {
           });
         }
 
+        let appliedDiscountCode = null;
+        let calculatedDiscountAmount = 0;
+
+        if (discount_code) {
+          const cleanDiscountCode = discount_code.trim().toUpperCase();
+          const { data: discount } = await supabase
+            .from('discount_codes')
+            .select('*')
+            .eq('code', cleanDiscountCode)
+            .maybeSingle();
+
+          if (discount && discount.active) {
+            const notExpired = !discount.expires_at || new Date(discount.expires_at) >= new Date();
+            const notOverused = !discount.max_uses || discount.uses_count < discount.max_uses;
+
+            if (notExpired && notOverused) {
+              appliedDiscountCode = discount.code;
+              const priceMap = { oro: 550, platino: 750, diamante: 1500 };
+              const pricePerPerson = priceMap[tour_id] || 550;
+              const originalTotal = pricePerPerson * requestedGuests;
+
+              if (discount.discount_type === 'percentage') {
+                calculatedDiscountAmount = originalTotal * (parseFloat(discount.value) / 100);
+              } else if (discount.discount_type === 'fixed') {
+                calculatedDiscountAmount = parseFloat(discount.value);
+              }
+              calculatedDiscountAmount = Math.min(calculatedDiscountAmount, originalTotal);
+            }
+          }
+        }
+
         const staffUser = getAuthUser(req);
         const creationMode = staffUser ? 'manual' : 'automatic';
         const createdBy = staffUser ? (staffUser.email || staffUser.name || 'admin') : 'customer';
@@ -371,7 +403,9 @@ export default async function handler(req, res) {
             card_type: card_type || null,
             creation_mode: creationMode,
             created_by: createdBy,
-            status: finalStatus
+            status: finalStatus,
+            discount_code: appliedDiscountCode,
+            discount_amount: calculatedDiscountAmount
           });
 
         if (insErr) {
@@ -379,6 +413,26 @@ export default async function handler(req, res) {
             return res.status(409).json({ error: 'DUPLICATE_CODE', message: 'Esta reserva ya fue registrada.' });
           }
           throw insErr;
+        }
+
+        // Increment coupon uses count if code was applied successfully
+        if (appliedDiscountCode) {
+          try {
+            const { data: couponData } = await supabase
+              .from('discount_codes')
+              .select('uses_count')
+              .eq('code', appliedDiscountCode)
+              .maybeSingle();
+            
+            if (couponData) {
+              await supabase
+                .from('discount_codes')
+                .update({ uses_count: (couponData.uses_count || 0) + 1 })
+                .eq('code', appliedDiscountCode);
+            }
+          } catch (cntErr) {
+            console.error("Error incrementing coupon uses count:", cntErr);
+          }
         }
 
         // 4. No need to update slot_occupancy_overrides. Capacity is calculated dynamically from active reservations.
@@ -816,6 +870,137 @@ export default async function handler(req, res) {
         } catch (mailErr) {
           console.error("Resend welcome email failed during confirm_booking:", mailErr);
         }
+
+        return res.status(200).json({ success: true });
+      }
+
+      // Action 10: Validate discount code (Public)
+      if (action === 'validate_discount_code') {
+        const { code } = req.body;
+        if (!code) {
+          return res.status(400).json({ error: 'Code is required.' });
+        }
+
+        const cleanCode = code.trim().toUpperCase();
+
+        const { data: discount, error: dErr } = await supabase
+          .from('discount_codes')
+          .select('*')
+          .eq('code', cleanCode)
+          .maybeSingle();
+
+        if (dErr) throw dErr;
+
+        if (!discount) {
+          return res.status(404).json({ valid: false, error: 'Código de descuento no encontrado.' });
+        }
+
+        if (!discount.active) {
+          return res.status(400).json({ valid: false, error: 'Este código de descuento está inactivo.' });
+        }
+
+        if (discount.max_uses && discount.uses_count >= discount.max_uses) {
+          return res.status(400).json({ valid: false, error: 'Este código de descuento ha superado su límite de usos.' });
+        }
+
+        if (discount.expires_at && new Date(discount.expires_at) < new Date()) {
+          return res.status(400).json({ valid: false, error: 'Este código de descuento ha expirado.' });
+        }
+
+        return res.status(200).json({
+          valid: true,
+          code: discount.code,
+          discount_type: discount.discount_type,
+          value: parseFloat(discount.value)
+        });
+      }
+
+      // Action 11: List discount codes (Admin)
+      if (action === 'list_discount_codes') {
+        const { data: codes, error: cErr } = await supabase
+          .from('discount_codes')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (cErr) throw cErr;
+
+        return res.status(200).json({ codes });
+      }
+
+      // Action 12: Create discount code (Admin)
+      if (action === 'create_discount_code') {
+        const { code, discount_type, value, max_uses, expires_at } = req.body;
+
+        if (!code || !discount_type || value === undefined) {
+          return res.status(400).json({ error: 'Missing required parameters.' });
+        }
+
+        const cleanCode = code.trim().toUpperCase();
+
+        const { data: existing } = await supabase
+          .from('discount_codes')
+          .select('id')
+          .eq('code', cleanCode)
+          .maybeSingle();
+
+        if (existing) {
+          return res.status(409).json({ error: 'Código de descuento duplicado.' });
+        }
+
+        const { data: newCode, error: insErr } = await supabase
+          .from('discount_codes')
+          .insert({
+            code: cleanCode,
+            discount_type,
+            value: parseFloat(value),
+            max_uses: max_uses ? parseInt(max_uses, 10) : null,
+            expires_at: expires_at || null,
+            active: true
+          })
+          .select()
+          .single();
+
+        if (insErr) throw insErr;
+
+        await auditLog(activeUser.userId, activeUser.email, activeUser.role, 'create_discount_code', `Cupón creado: ${cleanCode}`);
+
+        return res.status(200).json({ success: true, discount_code: newCode });
+      }
+
+      // Action 13: Delete discount code (Admin)
+      if (action === 'delete_discount_code') {
+        const { code_id } = req.body;
+        if (!code_id) {
+          return res.status(400).json({ error: 'Code ID is required.' });
+        }
+
+        const { error: delErr } = await supabase
+          .from('discount_codes')
+          .delete()
+          .eq('id', code_id);
+
+        if (delErr) throw delErr;
+
+        await auditLog(activeUser.userId, activeUser.email, activeUser.role, 'delete_discount_code', `Cupón eliminado ID: ${code_id}`);
+
+        return res.status(200).json({ success: true });
+      }
+
+      // Action 14: Toggle discount code active state (Admin)
+      if (action === 'toggle_discount_code') {
+        const { code_id, active } = req.body;
+        if (!code_id || active === undefined) {
+          return res.status(400).json({ error: 'Code ID and active state are required.' });
+        }
+
+        const { error: updErr } = await supabase
+          .from('discount_codes')
+          .update({ active })
+          .eq('id', code_id);
+
+        if (updErr) throw updErr;
+
+        await auditLog(activeUser.userId, activeUser.email, activeUser.role, 'toggle_discount_code', `Cupón ID ${code_id} activo cambiado a ${active}`);
 
         return res.status(200).json({ success: true });
       }

@@ -131,6 +131,168 @@ export default function AdminPanel({
   const [manualCfdiUse, setManualCfdiUse] = useState("G03");
   const [manualCardType, setManualCardType] = useState("");
 
+  // Manual Tour Discount states
+  const [manualDiscountCodeInput, setManualDiscountCodeInput] = useState("");
+  const [manualAppliedCoupon, setManualAppliedCoupon] = useState(null); // { code, discount_type, value }
+  const [manualCouponError, setManualCouponError] = useState("");
+  const [manualCouponSuccess, setManualCouponSuccess] = useState("");
+  const [manualIsValidatingCoupon, setManualIsValidatingCoupon] = useState(false);
+
+  // Admin Discount Codes list state
+  const [discountCodesList, setDiscountCodesList] = useState([]);
+  const [isCreatingDiscountCode, setIsCreatingDiscountCode] = useState(false);
+
+  const handleManualApplyCoupon = async () => {
+    if (!manualDiscountCodeInput.trim()) {
+      setManualCouponError("Por favor escribe un código.");
+      setManualCouponSuccess("");
+      return;
+    }
+
+    setManualIsValidatingCoupon(true);
+    setManualCouponError("");
+    setManualCouponSuccess("");
+
+    try {
+      const res = await fetch("/api/tourism", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "validate_discount_code",
+          code: manualDiscountCodeInput
+        })
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.valid) {
+        setManualAppliedCoupon(data);
+        setManualCouponSuccess(`¡Código ${data.code} aplicado con éxito!`);
+      } else {
+        setManualAppliedCoupon(null);
+        setManualCouponError(data.error || "Código no válido.");
+      }
+    } catch (e) {
+      console.error(e);
+      setManualCouponError("Error al validar el cupón.");
+    } finally {
+      setManualIsValidatingCoupon(false);
+    }
+  };
+
+  const handleManualRemoveCoupon = () => {
+    setManualAppliedCoupon(null);
+    setManualDiscountCodeInput("");
+    setManualCouponError("");
+    setManualCouponSuccess("");
+  };
+
+  // Coupon management functions (Admin)
+  const handleCreateDiscountCode = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const code = formData.get("code");
+    const discount_type = formData.get("discount_type");
+    const value = formData.get("value");
+    const max_uses = formData.get("max_uses");
+    const expires_at = formData.get("expires_at");
+
+    if (!code || !discount_type || value === undefined) {
+      alert("Por favor completa los campos obligatorios.");
+      return;
+    }
+
+    setIsCreatingDiscountCode(true);
+
+    try {
+      const res = await fetch("/api/tourism", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          action: "create_discount_code",
+          code: code.trim().toUpperCase(),
+          discount_type,
+          value: parseFloat(value),
+          max_uses: max_uses ? parseInt(max_uses, 10) : null,
+          expires_at: expires_at || null
+        })
+      });
+
+      if (res.ok) {
+        alert("¡Cupón de descuento creado con éxito!");
+        e.target.reset();
+        loadTabData();
+      } else {
+        const data = await res.json();
+        alert(`Error: ${data.error || "No se pudo crear el cupón"}`);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error al conectar con la API.");
+    } finally {
+      setIsCreatingDiscountCode(false);
+    }
+  };
+
+  const handleDeleteDiscountCode = async (id, code) => {
+    if (!confirm(`¿Estás seguro de eliminar el cupón "${code}"?`)) {
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/tourism", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          action: "delete_discount_code",
+          code_id: id
+        })
+      });
+
+      if (res.ok) {
+        alert(`Cupón "${code}" eliminado.`);
+        loadTabData();
+      } else {
+        alert("Error al eliminar el cupón.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error de conexión.");
+    }
+  };
+
+  const handleToggleDiscountCode = async (id, currentActive, code) => {
+    try {
+      const res = await fetch("/api/tourism", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          action: "toggle_discount_code",
+          code_id: id,
+          active: !currentActive
+        })
+      });
+
+      if (res.ok) {
+        loadTabData();
+      } else {
+        alert("Error al cambiar estado del cupón.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error de conexión.");
+    }
+  };
+
   // Manual Restaurant Reservation fields
   const [restName, setRestName] = useState("");
   const [restPhone, setRestPhone] = useState("");
@@ -189,8 +351,19 @@ export default function AdminPanel({
   useEffect(() => {
     const priceMap = { oro: 550, platino: 750, diamante: 1500 };
     const pricePerPerson = priceMap[manualTour] || 550;
-    setManualAmount(manualGuests * pricePerPerson);
-  }, [manualGuests, manualTour]);
+    const baseTotal = manualGuests * pricePerPerson;
+    
+    let discount = 0;
+    if (manualAppliedCoupon) {
+      if (manualAppliedCoupon.discount_type === "percentage") {
+        discount = baseTotal * (manualAppliedCoupon.value / 100);
+      } else if (manualAppliedCoupon.discount_type === "fixed") {
+        discount = manualAppliedCoupon.value;
+      }
+    }
+    
+    setManualAmount(Math.max(0, baseTotal - Math.min(discount, baseTotal)));
+  }, [manualGuests, manualTour, manualAppliedCoupon]);
 
   // Calendar month/week definitions and helpers
   const monthNamesEs = [
@@ -444,6 +617,25 @@ export default function AdminPanel({
         }
       } catch (e) {
         console.error(`Error fetching CMS ${cmsTab}:`, e);
+      }
+    }
+
+    if (activeTab === "coupons" && (user?.role === "admin" || user?.role === "experience_manager")) {
+      try {
+        const res = await fetch("/api/tourism", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({ action: "list_discount_codes" })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setDiscountCodesList(data.codes || []);
+        }
+      } catch (e) {
+        console.error("Error fetching discount codes:", e);
       }
     }
   };
@@ -884,7 +1076,8 @@ export default function AdminPanel({
           postal_code: manualRequiresInvoice ? manualPostalCode : '',
           regimen_fiscal: manualRequiresInvoice ? manualRegimenFiscal : '',
           cfdi_use: manualRequiresInvoice ? manualCfdiUse : '',
-          card_type: (manualRequiresInvoice && manualMethod === 'Tarjeta') ? manualCardType : ''
+          card_type: (manualRequiresInvoice && manualMethod === 'Tarjeta') ? manualCardType : '',
+          discount_code: manualAppliedCoupon ? manualAppliedCoupon.code : null
         })
       });
 
@@ -902,6 +1095,10 @@ export default function AdminPanel({
         setManualRegimenFiscal("");
         setManualCfdiUse("G03");
         setManualCardType("");
+        setManualDiscountCodeInput("");
+        setManualAppliedCoupon(null);
+        setManualCouponError("");
+        setManualCouponSuccess("");
         setShowManualForm(false);
         loadTabData();
       } else {
@@ -1565,6 +1762,17 @@ export default function AdminPanel({
               }`}
             >
               👥 Personal
+            </button>
+          )}
+
+          {(user?.role === "admin" || user?.role === "experience_manager") && (
+            <button
+              onClick={() => setActiveTab("coupons")}
+              className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
+                activeTab === "coupons" ? "border-[#8C4723] text-[#8C4723] font-bold" : "border-transparent text-stone-500 hover:text-stone-800"
+              }`}
+            >
+              🏷️ Cupones
             </button>
           )}
 
@@ -2389,6 +2597,47 @@ export default function AdminPanel({
                         )}
                       </div>
                     )}
+
+                    {/* Cupón de Descuento Manual */}
+                    <div className="pt-2 border-t border-stone-200">
+                      <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">
+                        Cupón de Descuento
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          disabled={!!manualAppliedCoupon}
+                          value={manualDiscountCodeInput}
+                          onChange={(e) => setManualDiscountCodeInput(e.target.value.toUpperCase().replace(/\s/g, ''))}
+                          placeholder="Ej. CASA10"
+                          className="flex-1 bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18] uppercase font-semibold"
+                        />
+                        {manualAppliedCoupon ? (
+                          <button
+                            type="button"
+                            onClick={handleManualRemoveCoupon}
+                            className="bg-stone-200 hover:bg-stone-300 text-stone-700 text-xs px-4 py-2 cursor-pointer uppercase font-semibold transition-colors"
+                          >
+                            Quitar
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={handleManualApplyCoupon}
+                            disabled={manualIsValidatingCoupon}
+                            className="bg-stone-850 hover:bg-stone-900 text-white text-xs px-4 py-2 cursor-pointer uppercase font-semibold transition-colors disabled:opacity-50"
+                          >
+                            {manualIsValidatingCoupon ? "..." : "Aplicar"}
+                          </button>
+                        )}
+                      </div>
+                      {manualCouponError && (
+                        <span className="text-[10px] text-red-650 block mt-1 font-semibold">{manualCouponError}</span>
+                      )}
+                      {manualCouponSuccess && (
+                        <span className="text-[10px] text-emerald-650 block mt-1 font-semibold">{manualCouponSuccess}</span>
+                      )}
+                    </div>
                   </div>
 
                   <button
@@ -3808,6 +4057,167 @@ export default function AdminPanel({
                     ))}
                   </tbody>
                 </table>
+              </div>
+            </div>
+          )}
+
+          {/* TAB: Cupones de Descuento (Admin/Experience Manager) */}
+          {(user?.role === "admin" || user?.role === "experience_manager") && activeTab === "coupons" && (
+            <div className="space-y-6 text-left">
+              <div className="flex justify-between items-center border-b border-stone-100 pb-4">
+                <div>
+                  <h5 className="text-sm uppercase tracking-wider text-[#8C4723] font-bold font-sans">
+                    Gestión de Cupones de Descuento
+                  </h5>
+                  <p className="text-xs text-stone-400 font-sans">Administra los códigos promocionales y de descuento de Hacienda Casa Loy.</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Formulario de Creación */}
+                <div className="lg:col-span-1 bg-stone-50 border border-stone-200 p-6 space-y-4 font-sans h-fit">
+                  <h6 className="font-serif text-sm font-bold text-stone-800 border-b border-stone-200 pb-1.5 uppercase">
+                    Crear Nuevo Cupón
+                  </h6>
+                  <form onSubmit={handleCreateDiscountCode} className="space-y-4">
+                    <div>
+                      <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Código de Cupón *</label>
+                      <input
+                        type="text"
+                        name="code"
+                        required
+                        placeholder="Ej. VERANO24"
+                        className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none uppercase font-semibold text-[#1c1c18]"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Tipo de Descuento *</label>
+                        <select name="discount_type" className="w-full bg-white border border-stone-200 p-2 text-xs text-[#1c1c18] focus:outline-none">
+                          <option value="percentage">Porcentaje (%)</option>
+                          <option value="fixed">Monto Fijo ($ MXN)</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Valor *</label>
+                        <input
+                          type="number"
+                          name="value"
+                          step="0.01"
+                          required
+                          min="0.01"
+                          placeholder="Ej. 10 o 150"
+                          className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none text-[#1c1c18]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Límite de Usos (Opcional)</label>
+                        <input
+                          type="number"
+                          name="max_uses"
+                          min="1"
+                          placeholder="Ej. 100"
+                          className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none text-[#1c1c18]"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Fecha de Expiración (Opcional)</label>
+                        <input
+                          type="date"
+                          name="expires_at"
+                          className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none text-[#1c1c18]"
+                        />
+                      </div>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={isCreatingDiscountCode}
+                      className="w-full bg-[#8C4723] hover:bg-[#70381b] text-white py-2.5 font-semibold uppercase tracking-wider text-xs cursor-pointer transition-colors"
+                    >
+                      {isCreatingDiscountCode ? "Guardando..." : "Crear Cupón"}
+                    </button>
+                  </form>
+                </div>
+
+                {/* Tabla de Listado */}
+                <div className="lg:col-span-2 space-y-4">
+                  <h6 className="font-serif text-sm font-bold text-stone-850 uppercase">
+                    Cupones Activos e Historial
+                  </h6>
+                  
+                  <div className="bg-white border border-stone-200 overflow-x-auto">
+                    <table className="w-full text-left text-xs border-collapse">
+                      <thead>
+                        <tr className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[9px] border-b border-stone-200 font-semibold">
+                          <th className="p-3">Código</th>
+                          <th className="p-3">Tipo</th>
+                          <th className="p-3 text-right">Valor</th>
+                          <th className="p-3 text-center">Usos / Límite</th>
+                          <th className="p-3">Expiración</th>
+                          <th className="p-3 text-center">Estado</th>
+                          <th className="p-3 text-center">Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-stone-100 font-sans">
+                        {discountCodesList.length === 0 ? (
+                          <tr>
+                            <td colSpan="7" className="p-8 text-center text-stone-400 italic">No hay cupones creados aún.</td>
+                          </tr>
+                        ) : (
+                          discountCodesList.map((code) => {
+                            const isExpired = code.expires_at && new Date(code.expires_at) < new Date();
+                            const isLimitReached = code.max_uses && code.uses_count >= code.max_uses;
+                            const isInvalid = isExpired || isLimitReached;
+                            
+                            return (
+                              <tr key={code.id} className="hover:bg-stone-50/50">
+                                <td className="p-3 font-mono font-bold text-stone-900">{code.code}</td>
+                                <td className="p-3 text-stone-600 uppercase text-[10px]">
+                                  {code.discount_type === "percentage" ? "Porcentaje" : "Fijo ($)"}
+                                </td>
+                                <td className="p-3 text-right font-bold text-stone-800">
+                                  {code.discount_type === "percentage" ? `${code.value}%` : `$${parseFloat(code.value).toFixed(2)}`}
+                                </td>
+                                <td className="p-3 text-center text-stone-600">
+                                  {code.uses_count} / {code.max_uses || "∞"}
+                                </td>
+                                <td className="p-3 text-stone-500">
+                                  {code.expires_at ? new Date(code.expires_at).toLocaleDateString() : "Nunca"}
+                                </td>
+                                <td className="p-3 text-center">
+                                  <label className="inline-flex items-center gap-1.5 cursor-pointer select-none">
+                                    <input
+                                      type="checkbox"
+                                      checked={code.active}
+                                      onChange={() => handleToggleDiscountCode(code.id, code.active, code.code)}
+                                      className="w-3.5 h-3.5 rounded border-stone-300 text-[#8C4723] focus:ring-[#8C4723] cursor-pointer"
+                                    />
+                                    <span className={`text-[9px] font-bold uppercase tracking-wider ${code.active ? 'text-emerald-700' : 'text-stone-400'}`}>
+                                      {code.active ? "Activo" : "Inactivo"}
+                                    </span>
+                                  </label>
+                                </td>
+                                <td className="p-3 text-center">
+                                  <button
+                                    onClick={() => handleDeleteDiscountCode(code.id, code.code)}
+                                    className="text-red-700 hover:text-red-900 font-bold uppercase hover:underline cursor-pointer text-[10px]"
+                                  >
+                                    Eliminar
+                                  </button>
+                                </td>
+                              </tr>
+                            );
+                          })
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
           )}
