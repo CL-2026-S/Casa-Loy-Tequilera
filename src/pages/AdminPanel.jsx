@@ -1,6 +1,32 @@
 import { useState, useEffect, useRef } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 
+const REGIMENES_FISCALES = [
+  { code: "601", label: "601 - General de Ley Personas Morales" },
+  { code: "603", label: "603 - Personas Morales con Fines no Lucrativos" },
+  { code: "605", label: "605 - Sueldos y Salarios e Ingresos Asimilados a Salarios" },
+  { code: "606", label: "606 - Arrendamiento" },
+  { code: "607", label: "607 - Régimen de Enajenación o Adquisición de Bienes" },
+  { code: "608", label: "608 - Demás ingresos" },
+  { code: "609", label: "609 - Consolidación" },
+  { code: "610", label: "610 - Residentes en el Extranjero sin Establecimiento Permanente en México" },
+  { code: "611", label: "611 - Ingresos por Dividendos (socios y accionistas)" },
+  { code: "612", label: "612 - Personas Físicas con Actividades Empresariales y Profesionales" },
+  { code: "614", label: "614 - Ingresos por intereses" },
+  { code: "615", label: "615 - Régimen de los ingresos por obtención de premios" },
+  { code: "616", label: "616 - Sin obligaciones fiscales" },
+  { code: "620", label: "620 - Sociedades Cooperativas de Producción que optan por diferir sus ingresos" },
+  { code: "621", label: "621 - Incorporación Fiscal" },
+  { code: "622", label: "622 - Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras" },
+  { code: "623", label: "623 - Opcional para Grupos de Sociedades" },
+  { code: "624", label: "624 - Coordinados" },
+  { code: "625", label: "625 - Régimen de las Actividades Empresariales con ingresos a través de Plataformas Tecnológicas" },
+  { code: "626", label: "626 - Régimen Simplificado de Confianza" },
+  { code: "628", label: "628 - Hidrocarburos" },
+  { code: "629", label: "629 - De los Regímenes Fiscales Preferentes y de las Empresas Multinacionales" },
+  { code: "630", label: "630 - Enajenación de acciones en bolsa de valores" }
+];
+
 export default function AdminPanel({
   lang,
   setPage,
@@ -95,6 +121,15 @@ export default function AdminPanel({
   const [manualAmount, setManualAmount] = useState(550);
   const [manualMethod, setManualMethod] = useState("Efectivo");
   const [isSubmittingManual, setIsSubmittingManual] = useState(false);
+
+  // Manual Tour Billing details
+  const [manualRequiresInvoice, setManualRequiresInvoice] = useState(false);
+  const [manualRfc, setManualRfc] = useState("");
+  const [manualRazonSocial, setManualRazonSocial] = useState("");
+  const [manualPostalCode, setManualPostalCode] = useState("");
+  const [manualRegimenFiscal, setManualRegimenFiscal] = useState("");
+  const [manualCfdiUse, setManualCfdiUse] = useState("G03");
+  const [manualCardType, setManualCardType] = useState("");
 
   // Manual Restaurant Reservation fields
   const [restName, setRestName] = useState("");
@@ -793,6 +828,34 @@ export default function AdminPanel({
       alert("Por favor completa los campos obligatorios.");
       return;
     }
+
+    if (manualRequiresInvoice) {
+      if (!manualRfc || manualRfc.trim().length < 12 || manualRfc.trim().length > 13) {
+        alert("Por favor introduce un RFC válido (12 o 13 caracteres).");
+        return;
+      }
+      if (!manualRazonSocial || manualRazonSocial.trim() === "") {
+        alert("Por favor introduce la Razón Social.");
+        return;
+      }
+      if (!manualPostalCode || manualPostalCode.trim().length !== 5) {
+        alert("Por favor introduce un Código Postal válido (5 dígitos).");
+        return;
+      }
+      if (!manualRegimenFiscal) {
+        alert("Por favor selecciona el Régimen Fiscal.");
+        return;
+      }
+      if (!manualCfdiUse) {
+        alert("Por favor selecciona el Uso de CFDI.");
+        return;
+      }
+      if (manualMethod === "Tarjeta" && !manualCardType) {
+        alert("Por favor selecciona el Tipo de Tarjeta.");
+        return;
+      }
+    }
+
     setIsSubmittingManual(true);
     const randomCode = `CL-MAN-${manualTour.toUpperCase()}-${manualDate.replace(/-/g, '')}${Math.floor(1000 + Math.random() * 9000)}`;
 
@@ -814,7 +877,14 @@ export default function AdminPanel({
           time_str: manualTime,
           guests: parseInt(manualGuests),
           total_paid: parseFloat(manualAmount),
-          payment_method: manualMethod
+          payment_method: manualMethod,
+          requires_invoice: manualRequiresInvoice,
+          rfc: manualRequiresInvoice ? manualRfc : '',
+          razon_social: manualRequiresInvoice ? manualRazonSocial : '',
+          postal_code: manualRequiresInvoice ? manualPostalCode : '',
+          regimen_fiscal: manualRequiresInvoice ? manualRegimenFiscal : '',
+          cfdi_use: manualRequiresInvoice ? manualCfdiUse : '',
+          card_type: (manualRequiresInvoice && manualMethod === 'Tarjeta') ? manualCardType : ''
         })
       });
 
@@ -825,6 +895,13 @@ export default function AdminPanel({
         setManualPhone("");
         setManualGuests(1);
         setManualDate("");
+        setManualRequiresInvoice(false);
+        setManualRfc("");
+        setManualRazonSocial("");
+        setManualPostalCode("");
+        setManualRegimenFiscal("");
+        setManualCfdiUse("G03");
+        setManualCardType("");
         setShowManualForm(false);
         loadTabData();
       } else {
@@ -2156,7 +2233,12 @@ export default function AdminPanel({
                         <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Método de Pago *</label>
                         <select
                           value={manualMethod}
-                          onChange={(e) => setManualMethod(e.target.value)}
+                          onChange={(e) => {
+                            setManualMethod(e.target.value);
+                            if (e.target.value !== "Tarjeta") {
+                              setManualCardType("");
+                            }
+                          }}
                           className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18]"
                         >
                           <option value="Efectivo">Efectivo</option>
@@ -2166,6 +2248,147 @@ export default function AdminPanel({
                         </select>
                       </div>
                     </div>
+
+                    {/* Factura Checkbox */}
+                    <div className="flex items-center gap-2 pt-2 pb-1">
+                      <input
+                        type="checkbox"
+                        id="manualRequiresInvoice"
+                        checked={manualRequiresInvoice}
+                        onChange={(e) => {
+                          setManualRequiresInvoice(e.target.checked);
+                          if (e.target.checked && !manualCfdiUse) {
+                            setManualCfdiUse("G03");
+                          }
+                        }}
+                        className="w-4 h-4 text-[#8C4723] border-stone-300 rounded focus:ring-[#8C4723] accent-[#8C4723] cursor-pointer"
+                      />
+                      <label htmlFor="manualRequiresInvoice" className="text-xs font-bold text-stone-700 select-none cursor-pointer uppercase tracking-wider text-[10px]">
+                        ¿Requieres factura fiscal mexicana?
+                      </label>
+                    </div>
+
+                    {/* Factura Fields */}
+                    {manualRequiresInvoice && (
+                      <div className="bg-stone-100 p-4 border border-stone-200 space-y-3 transition-all duration-300">
+                        <h6 className="text-[10px] font-bold text-[#8C4723] uppercase tracking-wider">
+                          Datos de Facturación (CFDI 4.0)
+                        </h6>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">
+                              RFC *
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              value={manualRfc}
+                              onChange={(e) => setManualRfc(e.target.value.toUpperCase().replace(/[^A-Z0-9&]/gi, '').slice(0, 13))}
+                              placeholder="XAXX010101000"
+                              className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18]"
+                            />
+                            <span className="text-[9px] text-stone-400 block mt-0.5">
+                              {manualRfc.trim().length === 12 ? "Persona Moral (12 carac.)" : 
+                               manualRfc.trim().length === 13 ? "Persona Física (13 carac.)" : 
+                               "12 o 13 caracteres"}
+                            </span>
+                          </div>
+                          <div>
+                            <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">
+                              Código Postal (CP) *
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              value={manualPostalCode}
+                              onChange={(e) => setManualPostalCode(e.target.value.replace(/\D/g, '').slice(0, 5))}
+                              placeholder="e.g. 44100"
+                              className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18]"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">
+                            Razón Social *
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            value={manualRazonSocial}
+                            onChange={(e) => setManualRazonSocial(e.target.value)}
+                            placeholder="Ej. CASA LOY SA DE CV o JUAN PEREZ"
+                            className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18]"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">
+                              Régimen Fiscal *
+                            </label>
+                            <select
+                              required
+                              value={manualRegimenFiscal}
+                              onChange={(e) => setManualRegimenFiscal(e.target.value)}
+                              className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18]"
+                            >
+                              <option value="">-- Seleccionar Régimen --</option>
+                              {REGIMENES_FISCALES.map((reg) => (
+                                <option key={reg.code} value={reg.code}>{reg.label}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">
+                              Uso de CFDI *
+                            </label>
+                            <select
+                              required
+                              value={manualCfdiUse}
+                              onChange={(e) => setManualCfdiUse(e.target.value)}
+                              className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18]"
+                            >
+                              <option value="G03">G03 - Gastos en general</option>
+                              <option value="S01">S01 - Sin efectos fiscales</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        {manualMethod === "Tarjeta" && (
+                          <div className="mt-3">
+                            <span className="block text-[10px] font-bold text-stone-500 uppercase mb-1">
+                              Tipo de Tarjeta (Facturación) *
+                            </span>
+                            <div className="flex gap-4">
+                              <label className="inline-flex items-center gap-1.5 cursor-pointer text-xs font-sans text-stone-700">
+                                <input
+                                  type="radio"
+                                  name="manualCardType"
+                                  value="Crédito"
+                                  checked={manualCardType === "Crédito"}
+                                  onChange={(e) => setManualCardType(e.target.value)}
+                                  className="text-[#8C4723] focus:ring-[#8C4723] w-4 h-4 cursor-pointer accent-[#8C4723]"
+                                />
+                                Crédito
+                              </label>
+                              <label className="inline-flex items-center gap-1.5 cursor-pointer text-xs font-sans text-stone-700">
+                                <input
+                                  type="radio"
+                                  name="manualCardType"
+                                  value="Débito"
+                                  checked={manualCardType === "Débito"}
+                                  onChange={(e) => setManualCardType(e.target.value)}
+                                  className="text-[#8C4723] focus:ring-[#8C4723] w-4 h-4 cursor-pointer accent-[#8C4723]"
+                                />
+                                Débito
+                              </label>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   <button
