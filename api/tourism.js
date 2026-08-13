@@ -986,7 +986,46 @@ export default async function handler(req, res) {
         return res.status(200).json({ success: true });
       }
 
-      // Action 14: Toggle discount code active state (Admin)
+      // Action 14: Update discount code details (Admin)
+      if (action === 'update_discount_code') {
+        const { code_id, code, discount_type, value, max_uses, expires_at } = req.body;
+        if (!code_id || !code || !discount_type || value === undefined) {
+          return res.status(400).json({ error: 'Missing required parameters.' });
+        }
+
+        const cleanCode = code.trim().toUpperCase();
+
+        // Check if another coupon has the same code
+        const { data: existing } = await supabase
+          .from('discount_codes')
+          .select('id')
+          .eq('code', cleanCode)
+          .neq('id', code_id)
+          .maybeSingle();
+
+        if (existing) {
+          return res.status(409).json({ error: 'Ya existe otro cupón con el código ' + cleanCode });
+        }
+
+        const { error: updErr } = await supabase
+          .from('discount_codes')
+          .update({
+            code: cleanCode,
+            discount_type,
+            value: parseFloat(value),
+            max_uses: max_uses ? parseInt(max_uses, 10) : null,
+            expires_at: expires_at || null
+          })
+          .eq('id', code_id);
+
+        if (updErr) throw updErr;
+
+        await auditLog(activeUser.userId, activeUser.email, activeUser.role, 'update_discount_code', `Cupón ID ${code_id} actualizado: ${cleanCode}`);
+
+        return res.status(200).json({ success: true });
+      }
+
+      // Action 15: Toggle discount code active state (Admin)
       if (action === 'toggle_discount_code') {
         const { code_id, active } = req.body;
         if (!code_id || active === undefined) {

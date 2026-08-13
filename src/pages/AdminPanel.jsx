@@ -141,6 +141,7 @@ export default function AdminPanel({
   // Admin Discount Codes list state
   const [discountCodesList, setDiscountCodesList] = useState([]);
   const [isCreatingDiscountCode, setIsCreatingDiscountCode] = useState(false);
+  const [editingDiscountCode, setEditingDiscountCode] = useState(null);
 
   const handleManualApplyCoupon = async () => {
     if (!manualDiscountCodeInput.trim()) {
@@ -205,6 +206,7 @@ export default function AdminPanel({
     setIsCreatingDiscountCode(true);
 
     try {
+      const isEditing = !!editingDiscountCode;
       const res = await fetch("/api/tourism", {
         method: "POST",
         headers: {
@@ -212,7 +214,8 @@ export default function AdminPanel({
           "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
-          action: "create_discount_code",
+          action: isEditing ? "update_discount_code" : "create_discount_code",
+          code_id: isEditing ? editingDiscountCode.id : undefined,
           code: code.trim().toUpperCase(),
           discount_type,
           value: parseFloat(value),
@@ -222,12 +225,13 @@ export default function AdminPanel({
       });
 
       if (res.ok) {
-        alert("¡Cupón de descuento creado con éxito!");
+        alert(isEditing ? "¡Cupón de descuento actualizado con éxito!" : "¡Cupón de descuento creado con éxito!");
+        setEditingDiscountCode(null);
         e.target.reset();
         loadTabData();
       } else {
         const data = await res.json();
-        alert(`Error: ${data.error || "No se pudo crear el cupón"}`);
+        alert(`Error: ${data.error || "No se pudo guardar el cupón"}`);
       }
     } catch (err) {
       console.error(err);
@@ -4074,18 +4078,19 @@ export default function AdminPanel({
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Formulario de Creación */}
+                {/* Formulario de Creación / Edición */}
                 <div className="lg:col-span-1 bg-stone-50 border border-stone-200 p-6 space-y-4 font-sans h-fit">
                   <h6 className="font-serif text-sm font-bold text-stone-800 border-b border-stone-200 pb-1.5 uppercase">
-                    Crear Nuevo Cupón
+                    {editingDiscountCode ? "Editar Cupón" : "Crear Nuevo Cupón"}
                   </h6>
-                  <form onSubmit={handleCreateDiscountCode} className="space-y-4">
+                  <form key={editingDiscountCode ? editingDiscountCode.id : "new"} onSubmit={handleCreateDiscountCode} className="space-y-4">
                     <div>
                       <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Código de Cupón *</label>
                       <input
                         type="text"
                         name="code"
                         required
+                        defaultValue={editingDiscountCode ? editingDiscountCode.code : ""}
                         placeholder="Ej. VERANO24"
                         className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none uppercase font-semibold text-[#1c1c18]"
                       />
@@ -4094,7 +4099,11 @@ export default function AdminPanel({
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Tipo de Descuento *</label>
-                        <select name="discount_type" className="w-full bg-white border border-stone-200 p-2 text-xs text-[#1c1c18] focus:outline-none">
+                        <select
+                          name="discount_type"
+                          defaultValue={editingDiscountCode ? editingDiscountCode.discount_type : "percentage"}
+                          className="w-full bg-white border border-stone-200 p-2 text-xs text-[#1c1c18] focus:outline-none"
+                        >
                           <option value="percentage">Porcentaje (%)</option>
                           <option value="fixed">Monto Fijo ($ MXN)</option>
                         </select>
@@ -4107,6 +4116,7 @@ export default function AdminPanel({
                           step="0.01"
                           required
                           min="0.01"
+                          defaultValue={editingDiscountCode ? editingDiscountCode.value : ""}
                           placeholder="Ej. 10 o 150"
                           className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none text-[#1c1c18]"
                         />
@@ -4120,6 +4130,7 @@ export default function AdminPanel({
                           type="number"
                           name="max_uses"
                           min="1"
+                          defaultValue={editingDiscountCode ? editingDiscountCode.max_uses || "" : ""}
                           placeholder="Ej. 100"
                           className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none text-[#1c1c18]"
                         />
@@ -4129,18 +4140,30 @@ export default function AdminPanel({
                         <input
                           type="date"
                           name="expires_at"
+                          defaultValue={editingDiscountCode && editingDiscountCode.expires_at ? editingDiscountCode.expires_at.split('T')[0] : ""}
                           className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none text-[#1c1c18]"
                         />
                       </div>
                     </div>
 
-                    <button
-                      type="submit"
-                      disabled={isCreatingDiscountCode}
-                      className="w-full bg-[#8C4723] hover:bg-[#70381b] text-white py-2.5 font-semibold uppercase tracking-wider text-xs cursor-pointer transition-colors"
-                    >
-                      {isCreatingDiscountCode ? "Guardando..." : "Crear Cupón"}
-                    </button>
+                    <div className="flex gap-2">
+                      {editingDiscountCode && (
+                        <button
+                          type="button"
+                          onClick={() => setEditingDiscountCode(null)}
+                          className="flex-1 bg-stone-200 hover:bg-stone-300 text-stone-700 py-2.5 font-semibold uppercase tracking-wider text-xs cursor-pointer transition-colors"
+                        >
+                          Cancelar
+                        </button>
+                      )}
+                      <button
+                        type="submit"
+                        disabled={isCreatingDiscountCode}
+                        className="flex-1 bg-[#8C4723] hover:bg-[#70381b] text-white py-2.5 font-semibold uppercase tracking-wider text-xs cursor-pointer transition-colors"
+                      >
+                        {isCreatingDiscountCode ? "Guardando..." : (editingDiscountCode ? "Actualizar" : "Crear Cupón")}
+                      </button>
+                    </div>
                   </form>
                 </div>
 
@@ -4202,7 +4225,13 @@ export default function AdminPanel({
                                     </span>
                                   </label>
                                 </td>
-                                <td className="p-3 text-center">
+                                <td className="p-3 text-center space-x-2 whitespace-nowrap">
+                                  <button
+                                    onClick={() => setEditingDiscountCode(code)}
+                                    className="text-blue-700 hover:text-blue-900 font-bold uppercase hover:underline cursor-pointer text-[10px]"
+                                  >
+                                    Editar
+                                  </button>
                                   <button
                                     onClick={() => handleDeleteDiscountCode(code.id, code.code)}
                                     className="text-red-700 hover:text-red-900 font-bold uppercase hover:underline cursor-pointer text-[10px]"
