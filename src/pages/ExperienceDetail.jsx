@@ -1575,7 +1575,7 @@ export default function ExperienceDetail({
                                             description: `${activeData.title} - ${numAdults} Ad, ${numTeens} Jv, ${numChildren} Nñ`,
                                             custom_id: code,
                                             payee: {
-                                              email_address: "cuentasporcobrar@casaloy.com"
+                                              email_address: "atencioncasaloy@gmail.com"
                                             }
                                           }
                                         ]
