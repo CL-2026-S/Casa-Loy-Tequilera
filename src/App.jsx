@@ -408,7 +408,7 @@ export default function App() {
   const shouldShowAgeGate = !ageVerified && page !== "privacy";
 
   return (
-    <PayPalScriptProvider options={{ "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID || "AbyKuzlmnXXLw8pF1BR0SDFXDwlqRhxPdlysrAbffLKsbZdggzNOpHAEBLbA8bu1cSYLgEpHDpXkpJ6C", currency: "MXN" }}>
+    <PayPalScriptProvider options={{ "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID || "BAAvK-L9UVFBEa4dRiPs_e-lLR28owxHR7ogtbjBnC40ulxWbvVqVh5POA09f5FUVFrFPlt4n0Nzf4Sdb0", currency: "MXN" }}>
       <div className="bg-[#fcf9f3] text-[#1c1c18] font-body-md overflow-x-hidden antialiased select-none relative">
         {/* Dynamic SEO Injector for Meta Tags and JSON-LD microdata */}
         <SEO page={page} lang={lang} />

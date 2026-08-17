@@ -3,7 +3,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 // CONFIGURACIÓN DE PAGO: Inserta aquí tu Client ID de PayPal comercial (Live)
 // Para pruebas de desarrollo o sandbox, puedes usar "test".
-const PAYPAL_CLIENT_ID = "AbyKuzlmnXXLw8pF1BR0SDFXDwlqRhxPdlysrAbffLKsbZdggzNOpHAEBLbA8bu1cSYLgEpHDpXkpJ6C";
+const PAYPAL_CLIENT_ID = "BAAvK-L9UVFBEa4dRiPs_e-lLR28owxHR7ogtbjBnC40ulxWbvVqVh5POA09f5FUVFrFPlt4n0Nzf4Sdb0";
 
 const REGIMENES_FISCALES = [
   { code: "601", label: "601 - General de Ley Personas Morales" },
@@ -1574,9 +1574,6 @@ export default function ExperienceDetail({
                                             },
                                             description: `${activeData.title} - ${numAdults} Ad, ${numTeens} Jv, ${numChildren} Nñ`,
                                             custom_id: code,
-                                            payee: {
-                                              email_address: "atencioncasaloy@gmail.com"
-                                            }
                                           }
                                         ]
                                       });
