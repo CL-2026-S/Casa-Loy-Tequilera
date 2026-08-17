@@ -577,7 +577,7 @@ export default function ExperienceDetail({
         : appliedCoupon.value)
     : 0;
 
-  const finalPrice = Math.max(0, totalPrice - Math.min(discountAmount, totalPrice));
+  const finalPrice = Math.round(Math.max(0, totalPrice - Math.min(discountAmount, totalPrice)) * 100) / 100;
 
   const pricePerPerson = isGroupQuote ? 0 : (numGuests > 0 ? Math.round(finalPrice / numGuests) : adultPrice);
   const occupiedSpots = selectedTime ? (bookingsCapacity[selectedDateStr]?.[selectedTime] || 0) : 0;
@@ -1568,7 +1568,7 @@ export default function ExperienceDetail({
                                         purchase_units: [
                                           {
                                             amount: {
-                                              value: finalPrice.toString(),
+                                              value: finalPrice.toFixed(2),
                                               currency_code: "MXN"
                                             },
                                             description: `${activeData.title} - ${numAdults} Ad, ${numTeens} Jv, ${numChildren} Nñ`,
