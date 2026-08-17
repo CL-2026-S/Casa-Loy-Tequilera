@@ -4295,10 +4295,10 @@ export default function AdminPanel({
       {/* QR Ticket Modal for Admin */}
       {selectedQrTicket && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white max-w-md w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl relative border border-stone-200 text-stone-800 space-y-4 text-left scrollbar-thin">
+          <div id="printable-ticket" className="bg-white max-w-md w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl relative border border-stone-200 text-stone-800 space-y-4 text-left scrollbar-thin">
             <button
               onClick={() => setSelectedQrTicket(null)}
-              className="absolute top-3 right-3 text-stone-400 hover:text-stone-700 cursor-pointer"
+              className="absolute top-3 right-3 text-stone-400 hover:text-stone-700 cursor-pointer print-hidden"
             >
               <span className="material-symbols-outlined text-xl">close</span>
             </button>
@@ -4414,7 +4414,7 @@ export default function AdminPanel({
             )}
 
 
-            <div className="pt-2 flex gap-2">
+            <div className="pt-2 flex gap-2 print-hidden">
               <button
                 onClick={() => window.print()}
                 className="flex-1 bg-stone-100 hover:bg-stone-200 text-stone-700 py-2.5 font-semibold text-xs uppercase tracking-wider cursor-pointer"
