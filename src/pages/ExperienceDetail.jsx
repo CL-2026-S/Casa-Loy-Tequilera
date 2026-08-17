@@ -1558,12 +1558,11 @@ export default function ExperienceDetail({
                                       }
 
                                       const code = `CL-${packageId.toUpperCase()}-${selectedDateStr.replace(/-/g, '')}${Math.floor(1000 + Math.random() * 9000)}`;
-                                      try {
-                                        await saveBookingToLog(code, "paypal", "Carrito Abandonado (Intento de Pago)");
-                                        setPaypalPendingCode(code);
-                                      } catch (saveErr) {
-                                        console.error("Failed to pre-save booking attempt:", saveErr);
-                                      }
+                                      // Save to log asynchronously in the background to avoid browser blocking the popup
+                                      saveBookingToLog(code, "paypal", "Carrito Abandonado (Intento de Pago)")
+                                        .catch(saveErr => console.error("Failed to pre-save booking attempt:", saveErr));
+                                      
+                                      setPaypalPendingCode(code);
 
                                       return actions.order.create({
                                         purchase_units: [

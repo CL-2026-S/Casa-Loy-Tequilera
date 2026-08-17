@@ -2692,6 +2692,7 @@ export default function AdminPanel({
                       <th className="p-3">Cliente</th>
                       <th className="p-3">Tour</th>
                       <th className="p-3">Fecha y Hora</th>
+                      <th className="p-3">Fecha Compra/Intento</th>
                       <th className="p-3 text-center">Pax</th>
                       <th className="p-3 text-right">Monto</th>
                       <th className="p-3 text-center">Origen/Creador</th>
@@ -2702,7 +2703,7 @@ export default function AdminPanel({
                   <tbody className="divide-y divide-stone-100">
                     {filteredBookingsLog.length === 0 ? (
                       <tr>
-                        <td colSpan="9" className="p-8 text-center text-stone-400 italic">
+                        <td colSpan="10" className="p-8 text-center text-stone-400 italic">
                           {searchQuery ? "No se encontraron reservaciones que coincidan con la búsqueda." : "No hay registros de reservaciones en la base de datos."}
                         </td>
                       </tr>
@@ -2743,6 +2744,9 @@ export default function AdminPanel({
                             <td className="p-3">
                               <div>{log.date}</div>
                               <div className="text-[10px] text-stone-400">{log.time}</div>
+                            </td>
+                            <td className="p-3 text-stone-600 font-medium">
+                              {log.timestamp || "No registrada"}
                             </td>
                             <td className="p-3 text-center font-semibold">{log.guests} pax</td>
                             <td className="p-3 text-right font-medium">
