@@ -321,6 +321,7 @@ export default function AdminPanel({
   const [downloadStartDate, setDownloadStartDate] = useState("");
   const [downloadEndDate, setDownloadEndDate] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   // Verify session on mount and when token changes
   useEffect(() => {
@@ -926,7 +927,7 @@ export default function AdminPanel({
       if (ticket.status === "Completada" || ticket.used_at) {
         setSearchStatus("found_used");
         setScanValidatedTime(ticket.used_at || ticket.timestamp);
-      } else if (ticket.status === "Intento de Pago") {
+      } else if (ticket.status === "Intento de Pago" || ticket.status === "Carrito Abandonado (Intento de Pago)") {
         setSearchStatus("found_attempt");
       } else if (ticket.status === "Cancelada") {
         setSearchStatus("found_cancelled");
@@ -1642,6 +1643,16 @@ export default function AdminPanel({
 
   // Filter bookings log based on search query
   const filteredBookingsLog = bookingsLog.filter((log) => {
+    if (statusFilter !== "all") {
+      if (statusFilter === "Carrito Abandonado (Intento de Pago)") {
+        if (log.status !== "Carrito Abandonado (Intento de Pago)" && log.status !== "Intento de Pago") {
+          return false;
+        }
+      } else if (log.status !== statusFilter) {
+        return false;
+      }
+    }
+
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase().trim();
     
@@ -2287,24 +2298,42 @@ export default function AdminPanel({
 
               {logSubTab === "list" ? (
                 <>
-                  {/* Buscador de Reservaciones */}
-                  <div className="bg-white border border-stone-200 p-4 mb-4 flex items-center gap-3">
-                    <div className="flex-1 relative">
+                  {/* Buscador y Filtros de Reservaciones */}
+                  <div className="bg-white border border-stone-200 p-4 mb-4 flex flex-col md:flex-row items-center gap-3">
+                    <div className="flex-1 w-full relative">
                       <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">search</span>
                       <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Buscar por código, nombre, correo, teléfono, fecha, tour o estado..."
+                        placeholder="Buscar por código, nombre, correo, teléfono, fecha o tour..."
                         className="w-full bg-stone-50/50 border border-stone-200 pl-10 pr-4 py-2 text-xs focus:outline-none focus:border-[#8C4723] focus:bg-white text-[#1c1c18]"
                       />
                     </div>
-                    {searchQuery && (
-                      <button
-                        onClick={() => setSearchQuery("")}
-                        className="text-xs text-stone-500 hover:text-stone-850 font-semibold cursor-pointer underline underline-offset-2"
+
+                    <div className="w-full md:w-64">
+                      <select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="w-full bg-stone-50 border border-stone-200 p-2.5 text-xs focus:outline-none focus:border-[#8C4723] text-[#1c1c18]"
                       >
-                        Limpiar
+                        <option value="all">Todos los estados</option>
+                        <option value="Confirmada">Confirmadas (Vigentes)</option>
+                        <option value="Completada">Completadas (Usadas)</option>
+                        <option value="Cancelada">Canceladas</option>
+                        <option value="Carrito Abandonado (Intento de Pago)">Carrito Abandonado (PayPal)</option>
+                      </select>
+                    </div>
+
+                    {(searchQuery || statusFilter !== "all") && (
+                      <button
+                        onClick={() => {
+                          setSearchQuery("");
+                          setStatusFilter("all");
+                        }}
+                        className="text-xs text-stone-500 hover:text-stone-850 font-semibold cursor-pointer underline underline-offset-2 shrink-0"
+                      >
+                        Limpiar Filtros
                       </button>
                     )}
                   </div>
@@ -2739,11 +2768,11 @@ export default function AdminPanel({
                                     ? "bg-red-50 text-red-700 border-red-200" 
                                     : log.status === "Cancelada"
                                       ? "bg-stone-100 text-stone-500 border-stone-300"
-                                      : log.status === "Intento de Pago"
+                                      : (log.status === "Intento de Pago" || log.status === "Carrito Abandonado (Intento de Pago)")
                                         ? "bg-amber-50 text-amber-700 border-amber-200"
                                         : "bg-emerald-50 text-emerald-700 border-emerald-200"
                                 }`}>
-                                  {log.status}
+                                  {log.status === "Intento de Pago" || log.status === "Carrito Abandonado (Intento de Pago)" ? "Carrito Abandonado" : log.status}
                                 </span>
                               ) : (
                                 <select
@@ -2754,7 +2783,7 @@ export default function AdminPanel({
                                       ? "bg-red-50 text-red-700 border-red-200" 
                                       : log.status === "Cancelada"
                                         ? "bg-stone-100 text-stone-500 border-stone-300"
-                                        : log.status === "Intento de Pago"
+                                        : (log.status === "Intento de Pago" || log.status === "Carrito Abandonado (Intento de Pago)")
                                           ? "bg-amber-50 text-amber-700 border-amber-200"
                                           : "bg-emerald-50 text-emerald-700 border-emerald-200"
                                   }`}
@@ -2762,12 +2791,13 @@ export default function AdminPanel({
                                   <option value="Confirmada">Confirmada (Vigente)</option>
                                   <option value="Cancelada">Cancelada</option>
                                   <option value="Completada">Completada (Usada)</option>
-                                  <option value="Intento de Pago">Intento de Pago (Pendiente)</option>
+                                  <option value="Carrito Abandonado (Intento de Pago)">Carrito Abandonado</option>
+                                  <option value="Intento de Pago">Intento de Pago (Antiguo)</option>
                                 </select>
                               )}
                             </td>
                             <td className="p-3 text-center">
-                              {log.status === "Intento de Pago" ? (
+                              {(log.status === "Intento de Pago" || log.status === "Carrito Abandonado (Intento de Pago)") ? (
                                 <span className="inline-block text-[9px] text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 font-bold uppercase tracking-wider">No Pagado</span>
                               ) : log.status === "Cancelada" ? (
                                 <span className="inline-block text-[9px] text-stone-500 bg-stone-100 border border-stone-200 px-2 py-0.5 font-bold uppercase tracking-wider">Cancelado</span>
@@ -2979,9 +3009,11 @@ export default function AdminPanel({
                                               ? "bg-red-50 text-red-700 border-red-200" 
                                               : isCanceled
                                                 ? "bg-stone-100 text-stone-500 border-stone-300"
-                                                : "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                                : (log.status === "Intento de Pago" || log.status === "Carrito Abandonado (Intento de Pago)")
+                                                  ? "bg-amber-50 text-amber-700 border-amber-200"
+                                                  : "bg-emerald-50 text-emerald-700 border-emerald-200"
                                           }`}>
-                                            {log.status}
+                                            {log.status === "Intento de Pago" || log.status === "Carrito Abandonado (Intento de Pago)" ? "Carrito Abandonado" : log.status}
                                           </span>
                                         ) : (
                                           <select
@@ -2992,7 +3024,7 @@ export default function AdminPanel({
                                                 ? "bg-red-50 text-red-700 border-red-200" 
                                                 : isCanceled
                                                   ? "bg-stone-100 text-stone-500 border-stone-300"
-                                                  : log.status === "Intento de Pago"
+                                                  : (log.status === "Intento de Pago" || log.status === "Carrito Abandonado (Intento de Pago)")
                                                     ? "bg-amber-50 text-amber-700 border-amber-200"
                                                     : "bg-emerald-50 text-emerald-700 border-emerald-200"
                                             }`}
@@ -3000,7 +3032,8 @@ export default function AdminPanel({
                                             <option value="Confirmada">Confirmada</option>
                                             <option value="Cancelada">Cancelada</option>
                                             <option value="Completada">Completada</option>
-                                            <option value="Intento de Pago">Intento de Pago</option>
+                                            <option value="Carrito Abandonado (Intento de Pago)">Carrito Abandonado</option>
+                                            <option value="Intento de Pago">Intento de Pago (Antiguo)</option>
                                           </select>
                                         )}
 
@@ -3020,7 +3053,7 @@ export default function AdminPanel({
                                           </div>
                                         )}
 
-                                        {!isCanceled && log.status !== "Intento de Pago" && (
+                                        {!isCanceled && log.status !== "Intento de Pago" && log.status !== "Carrito Abandonado (Intento de Pago)" && (
                                           <button
                                             type="button"
                                             onClick={() => setSelectedQrTicket(log)}

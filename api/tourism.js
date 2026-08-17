@@ -130,13 +130,11 @@ export default async function handler(req, res) {
       if (rErr) throw rErr;
 
       const bookingsCapacity = {};
-      const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
-      // Calculate capacity dynamically from active reservations and recent payment attempts (last 15 minutes)
+      // Calculate capacity dynamically from active reservations (Confirmed or Completed)
       reservations?.forEach(r => {
         const isConfirmedOrCompleted = r.status === 'Confirmada' || r.status === 'Completada';
-        const isRecentPaymentAttempt = r.status === 'Intento de Pago' && r.created_at && new Date(r.created_at) > fifteenMinutesAgo;
         
-        if (isConfirmedOrCompleted || isRecentPaymentAttempt) {
+        if (isConfirmedOrCompleted) {
           const d = r.date_str;
           const t = r.time_str;
           const guests = parseInt(r.guests || '0');
@@ -300,19 +298,17 @@ export default async function handler(req, res) {
           .maybeSingle();
         const maxCapacity = parseInt(limitData?.value || '50');
 
-        // 2. Fetch current occupancy for this slot dynamically from active reservations (including recent payment attempts < 15 mins)
+        // 2. Fetch current occupancy for this slot dynamically from active reservations (Confirmed or Completed)
         const { data: activeBookings } = await supabase
           .from('reservations')
-          .select('guests, status, created_at')
+          .select('guests, status')
           .eq('date_str', date_str)
           .eq('time_str', time_str)
-          .in('status', ['Confirmada', 'Completada', 'Intento de Pago']);
+          .in('status', ['Confirmada', 'Completada']);
         
-        const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000);
         let occupiedCount = activeBookings?.reduce((sum, r) => {
           const isConfirmedOrCompleted = r.status === 'Confirmada' || r.status === 'Completada';
-          const isRecentPaymentAttempt = r.status === 'Intento de Pago' && r.created_at && new Date(r.created_at) > fifteenMinutesAgo;
-          if (isConfirmedOrCompleted || isRecentPaymentAttempt) {
+          if (isConfirmedOrCompleted) {
             return sum + parseInt(r.guests || '0');
           }
           return sum;
@@ -568,7 +564,7 @@ export default async function handler(req, res) {
           return res.status(404).json({ error: 'TICKET_NOT_FOUND', message: 'Ticket no encontrado.' });
         }
 
-        if (ticket.status === 'Intento de Pago') {
+        if (ticket.status === 'Intento de Pago' || ticket.status === 'Carrito Abandonado (Intento de Pago)') {
           return res.status(400).json({ error: 'UNPAID_TICKET', message: 'No se puede validar un boleto con pago pendiente.' });
         }
         if (ticket.status === 'Cancelada') {
