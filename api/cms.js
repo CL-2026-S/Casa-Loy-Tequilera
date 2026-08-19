@@ -222,11 +222,46 @@ export default async function handler(req, res) {
           knowledge,
           benefits,
           is_active,
-          image_url
+          image_url,
+          image_base64,
+          image_filename
         } = req.body || {};
 
         if (!id || !category || !title_es || !location_es || !type_es) {
           return res.status(400).json({ error: 'Faltan campos requeridos de la vacante.' });
+        }
+
+        let dbImageUrl = image_url;
+
+        if (image_base64 && image_filename) {
+          try {
+            const fileBuffer = Buffer.from(image_base64, 'base64');
+            const fileExtension = image_filename.split('.').pop() || 'jpg';
+            const uniqueFileName = `job_img_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExtension}`;
+            
+            const { data: uploadData, error: uploadError } = await supabase
+              .storage
+              .from('cvs')
+              .upload(uniqueFileName, fileBuffer, {
+                contentType: `image/${fileExtension === 'jpg' ? 'jpeg' : fileExtension}`,
+                upsert: true
+              });
+
+            if (uploadError) {
+              console.error("Supabase Storage image upload error:", uploadError.message);
+            } else {
+              const { data: publicUrlData } = supabase
+                .storage
+                .from('cvs')
+                .getPublicUrl(uniqueFileName);
+              
+              if (publicUrlData && publicUrlData.publicUrl) {
+                dbImageUrl = publicUrlData.publicUrl;
+              }
+            }
+          } catch (uploadExc) {
+            console.error("Exception uploading job image to Supabase:", uploadExc);
+          }
         }
 
         const jobData = {
@@ -243,7 +278,7 @@ export default async function handler(req, res) {
           knowledge: knowledge || [],
           benefits: benefits || [],
           is_active: is_active === undefined ? true : is_active,
-          image_url: image_url || null
+          image_url: dbImageUrl || null
         };
 
         const { error } = await supabase

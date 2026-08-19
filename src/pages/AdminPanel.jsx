@@ -89,6 +89,22 @@ export default function AdminPanel({
   // --- CMS FORM EDITING STATES ---
   const [editingBanner, setEditingBanner] = useState(null);
   const [editingJob, setEditingJob] = useState(null);
+  const [jobImageFile, setJobImageFile] = useState(null);
+  const [jobImageBase64, setJobImageBase64] = useState("");
+  const [jobImageUrlVal, setJobImageUrlVal] = useState("");
+
+  useEffect(() => {
+    if (editingJob) {
+      setJobImageUrlVal(editingJob.image_url || "");
+      setJobImageFile(null);
+      setJobImageBase64("");
+    } else {
+      setJobImageUrlVal("");
+      setJobImageFile(null);
+      setJobImageBase64("");
+    }
+  }, [editingJob]);
+
   const [editingBlog, setEditingBlog] = useState(null);
   const [editingPos, setEditingPos] = useState(null);
   const [editingUser, setEditingUser] = useState(null);
@@ -1373,21 +1389,29 @@ export default function AdminPanel({
     const benefits = data.benefits_raw ? data.benefits_raw.split('\n').filter(Boolean).map(line => ({ es: line.trim(), en: line.trim() })) : [];
 
     try {
+      const payload = {
+        ...data,
+        id: editingJob?.id || data.id,
+        responsibilities,
+        requirements,
+        knowledge,
+        benefits,
+        is_active: data.is_active === "true",
+        image_url: jobImageUrlVal
+      };
+
+      if (jobImageBase64 && jobImageFile) {
+        payload.image_base64 = jobImageBase64;
+        payload.image_filename = jobImageFile.name;
+      }
+
       const res = await fetch("/api/cms?action=save_job", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({
-          ...data,
-          id: editingJob?.id || data.id,
-          responsibilities,
-          requirements,
-          knowledge,
-          benefits,
-          is_active: data.is_active === "true"
-        })
+        body: JSON.stringify(payload)
       });
       if (res.ok) {
         alert("Vacante de empleo guardada.");
@@ -3845,9 +3869,37 @@ export default function AdminPanel({
                         </div>
                       </div>
 
-                      <div>
-                        <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Imagen de Portada (URL)</label>
-                        <input type="text" name="image_url" defaultValue={editingJob.image_url || ""} placeholder="Ej. /Empleado Casa Loy Tequilera.webp (dejar en blanco para usar la predeterminada)" className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 items-end font-sans">
+                        <div>
+                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Imagen de Portada (Subir Archivo)</label>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                              if (e.target.files && e.target.files[0]) {
+                                const file = e.target.files[0];
+                                setJobImageFile(file);
+                                const reader = new FileReader();
+                                reader.readAsDataURL(file);
+                                reader.onload = () => {
+                                  setJobImageBase64(reader.result.split(',')[1]);
+                                  setJobImageUrlVal(`[Archivo seleccionado: ${file.name}]`);
+                                };
+                              }
+                            }}
+                            className="w-full bg-white border border-stone-200 p-1 text-xs focus:outline-none file:mr-2 file:py-0.5 file:px-2 file:border-0 file:text-[10px] file:font-semibold file:bg-[#2F403E]/10 file:text-[#2F403E] hover:file:bg-[#2F403E]/20"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Imagen URL (Manual / Cargada)</label>
+                          <input
+                            type="text"
+                            value={jobImageUrlVal}
+                            onChange={(e) => setJobImageUrlVal(e.target.value)}
+                            placeholder="Ej. /Empleado Casa Loy Tequilera.webp (dejar vacío para predeterminada)"
+                            className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none"
+                          />
+                        </div>
                       </div>
 
                       <div className="grid grid-cols-2 gap-3">
