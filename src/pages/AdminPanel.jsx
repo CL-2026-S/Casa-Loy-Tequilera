@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
+import { jobsData } from "../data/jobs";
 
 const REGIMENES_FISCALES = [
   { code: "601", label: "601 - General de Ley Personas Morales" },
@@ -1418,6 +1419,59 @@ export default function AdminPanel({
     } catch (e) {
       console.error(e);
     }
+  };
+
+  const mapLocalJobToDb = (localJob) => {
+    return {
+      id: localJob.id,
+      category: localJob.category || "comercial",
+      title_es: localJob.title?.es || "",
+      title_en: localJob.title?.en || "",
+      location_es: localJob.location?.es || "",
+      location_en: localJob.location?.en || "",
+      type_es: localJob.type?.es || "",
+      type_en: localJob.type?.en || "",
+      time_es: localJob.time?.es || "",
+      time_en: localJob.time?.en || "",
+      hero_desc_es: localJob.heroDesc?.es || "",
+      hero_desc_en: localJob.heroDesc?.en || "",
+      compensation_es: localJob.compVal?.es || "",
+      compensation_en: localJob.compVal?.en || "",
+      responsibilities: (localJob.responsibilities || []).map(r => ({
+        num: r.num || "01",
+        title_es: r.title?.es || r.title || "",
+        title_en: r.title?.en || r.title_es || r.title || "",
+        desc_es: r.desc?.es || r.desc || "",
+        desc_en: r.desc?.en || r.desc_es || r.desc || ""
+      })),
+      requirements: (localJob.requirements || []).map(r => ({
+        icon: r.icon || "school",
+        title_es: r.title?.es || r.title || "",
+        title_en: r.title?.en || r.title_es || r.title || "",
+        desc_es: r.desc?.es || r.desc || "",
+        desc_en: r.desc?.en || r.desc_es || r.desc || ""
+      })),
+      knowledge: (localJob.conocimientos || []).map(k => ({
+        es: k.es || k || "",
+        en: k.en || k.es || k || ""
+      })),
+      benefits: (localJob.ofrecemos || []).map(b => ({
+        es: b.es || b || "",
+        en: b.en || b.es || b || ""
+      })),
+      is_active: true,
+      is_fallback: true
+    };
+  };
+
+  const getMergedJobsList = () => {
+    const list = [...jobsList];
+    jobsData.forEach(fallbackJob => {
+      if (!list.some(dbJob => dbJob.id === fallbackJob.id)) {
+        list.push(mapLocalJobToDb(fallbackJob));
+      }
+    });
+    return list;
   };
 
   const handleSaveBlog = async (e) => {
@@ -3835,25 +3889,34 @@ export default function AdminPanel({
                   )}
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {jobsList.length === 0 ? (
-                      <p className="text-xs text-stone-400 italic">No hay vacantes personalizadas en la base de datos (se utilizan fallbacks locales).</p>
+                    {getMergedJobsList().length === 0 ? (
+                      <p className="text-xs text-stone-400 italic">No hay vacantes configuradas en el sistema.</p>
                     ) : (
-                      jobsList.map(j => (
+                      getMergedJobsList().map(j => (
                         <div key={j.id} className="border border-stone-200 p-4 space-y-2.5 bg-white relative">
                           <div className="flex justify-between items-start">
                             <div>
                               <span className="bg-[#2F403E]/10 text-[#2F403E] px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider">{j.category}</span>
                               <h5 className="font-serif text-base font-bold text-stone-900 mt-1">{j.title_es}</h5>
                             </div>
-                            <span className={`px-2 py-0.5 text-[9px] uppercase font-bold border ${j.is_active ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-stone-50 text-stone-400 border-stone-200'}`}>
-                              {j.is_active ? 'Activa' : 'Borrador'}
-                            </span>
+                            <div className="flex flex-col items-end gap-1.5">
+                              <span className={`px-2 py-0.5 text-[9px] uppercase font-bold border ${j.is_active ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-stone-50 text-stone-400 border-stone-200'}`}>
+                                {j.is_active ? 'Activa' : 'Borrador'}
+                              </span>
+                              {j.is_fallback && (
+                                <span className="bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 text-[9px] uppercase font-bold">
+                                  Predefinida
+                                </span>
+                              )}
+                            </div>
                           </div>
                           <p className="text-xs text-stone-500 font-mono">ID: {j.id} • {j.location_es}</p>
                           <p className="text-xs text-stone-600 line-clamp-2">{j.hero_desc_es}</p>
                           <div className="flex justify-end gap-3 pt-3 border-t border-stone-100 mt-2">
                             <button onClick={() => setEditingJob(j)} className="text-[10px] text-blue-700 hover:underline font-bold uppercase cursor-pointer">Editar</button>
-                            <button onClick={() => handleDeleteJob(j.id)} className="text-[10px] text-red-700 hover:underline font-bold uppercase cursor-pointer">Eliminar</button>
+                            {!j.is_fallback && (
+                              <button onClick={() => handleDeleteJob(j.id)} className="text-[10px] text-red-700 hover:underline font-bold uppercase cursor-pointer">Eliminar</button>
+                            )}
                           </div>
                         </div>
                       ))
