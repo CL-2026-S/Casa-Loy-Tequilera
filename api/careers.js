@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed. Use POST.' });
   }
 
-  const { name, phone, email, cv_name, job_id } = req.body || {};
+  const { name, phone, email, cv_name, job_id, cv_file_base64 } = req.body || {};
 
   if (!name || !phone || !email || !cv_name || !job_id) {
     return res.status(400).json({ error: 'Faltan campos obligatorios en la solicitud (nombre, telefono, correo, cv_name, job_id).' });
@@ -31,13 +31,46 @@ export default async function handler(req, res) {
     let applicationId = null;
 
     if (supabase) {
+      let dbCvName = cv_name;
+
+      if (cv_file_base64) {
+        try {
+          const fileBuffer = Buffer.from(cv_file_base64, 'base64');
+          const fileExtension = cv_name.split('.').pop() || 'pdf';
+          const uniqueFileName = `cv_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExtension}`;
+          
+          const { data: uploadData, error: uploadError } = await supabase
+            .storage
+            .from('cvs')
+            .upload(uniqueFileName, fileBuffer, {
+              contentType: fileExtension === 'pdf' ? 'application/pdf' : 'application/octet-stream',
+              upsert: true
+            });
+
+          if (uploadError) {
+            console.error("Supabase Storage upload error:", uploadError.message);
+          } else {
+            const { data: publicUrlData } = supabase
+              .storage
+              .from('cvs')
+              .getPublicUrl(uniqueFileName);
+            
+            if (publicUrlData && publicUrlData.publicUrl) {
+              dbCvName = publicUrlData.publicUrl;
+            }
+          }
+        } catch (uploadExc) {
+          console.error("Exception uploading CV to Supabase storage:", uploadExc);
+        }
+      }
+
       const { data: newApp, error: insertError } = await supabase
         .from('job_applications')
         .insert({
           name,
           phone,
           email,
-          cv_name,
+          cv_name: dbCvName,
           job_id
         })
         .select()

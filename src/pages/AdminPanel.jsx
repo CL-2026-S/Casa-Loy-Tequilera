@@ -321,6 +321,8 @@ export default function AdminPanel({
   const [selectedQrTicket, setSelectedQrTicket] = useState(null);
   const [downloadStartDate, setDownloadStartDate] = useState("");
   const [downloadEndDate, setDownloadEndDate] = useState("");
+  const [appDownloadStartDate, setAppDownloadStartDate] = useState("");
+  const [appDownloadEndDate, setAppDownloadEndDate] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
@@ -930,6 +932,76 @@ export default function AdminPanel({
     const link = document.createElement("a");
     link.setAttribute("href", url);
     link.setAttribute("download", `reservaciones_casa_loy_${downloadStartDate}_a_${downloadEndDate}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleDownloadApplicationsCsv = () => {
+    if (!appDownloadStartDate || !appDownloadEndDate) {
+      alert("Por favor selecciona una fecha de inicio y una fecha de fin.");
+      return;
+    }
+
+    if (appDownloadStartDate > appDownloadEndDate) {
+      alert("La fecha de inicio no puede ser posterior a la fecha de fin.");
+      return;
+    }
+
+    const filtered = jobApplicationsList.filter(app => {
+      const appDate = app.created_at.split("T")[0];
+      return appDate >= appDownloadStartDate && appDate <= appDownloadEndDate;
+    });
+
+    if (filtered.length === 0) {
+      alert("No se encontraron postulantes en el periodo seleccionado.");
+      return;
+    }
+
+    const headers = [
+      "Nombre",
+      "Correo",
+      "Teléfono",
+      "Vacante de Interés",
+      "CV Recibido",
+      "Fecha de Registro"
+    ];
+
+    const rows = filtered.map(app => {
+      const matchedJob = jobsList.find(j => j.id === app.job_id);
+      const jobTitle = app.job_id === 'spontaneous' 
+        ? "Postulación Espontánea" 
+        : (matchedJob ? matchedJob.title_es : app.job_id);
+      
+      const appDateStr = new Date(app.created_at).toLocaleDateString('es-MX', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      });
+
+      return [
+        app.name,
+        app.email,
+        app.phone,
+        jobTitle,
+        app.cv_name,
+        appDateStr
+      ];
+    });
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(row => row.map(val => {
+        const str = String(val).replace(/"/g, '""');
+        return str.includes(",") || str.includes("\n") || str.includes('"') ? `"${str}"` : str;
+      }).join(","))
+    ].join("\n");
+
+    const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `postulantes_casa_loy_${appDownloadStartDate}_a_${appDownloadEndDate}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -3793,9 +3865,39 @@ export default function AdminPanel({
               {/* CMS DD: Job Applications Table */}
               {cmsTab === "applications" && (user?.role === "admin" || user?.role === "rh") && (
                 <div className="space-y-6">
-                  <div>
-                    <h6 className="text-xs uppercase tracking-widest text-[#8C4723] font-bold">Postulantes y CVs Recibidos</h6>
-                    <p className="text-xs text-stone-400 mt-1">Consulta los perfiles e interesados registrados en la bolsa de trabajo.</p>
+                  <div className="flex flex-wrap items-end justify-between gap-4 border-b border-stone-100 pb-4">
+                    <div>
+                      <h6 className="text-xs uppercase tracking-widest text-[#8C4723] font-bold font-sans">Postulantes y CVs Recibidos</h6>
+                      <p className="text-xs text-stone-400 mt-1 font-sans">Consulta los perfiles e interesados registrados en la bolsa de trabajo.</p>
+                    </div>
+
+                    <div className="flex flex-wrap items-end gap-3 bg-stone-50 p-3 border border-stone-200/50 rounded-sm font-sans">
+                      <div>
+                        <label className="block text-[9px] text-stone-500 uppercase font-bold mb-1">Desde</label>
+                        <input
+                          type="date"
+                          value={appDownloadStartDate}
+                          onChange={(e) => setAppDownloadStartDate(e.target.value)}
+                          className="bg-white border border-stone-200 p-1.5 text-xs focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] text-stone-500 uppercase font-bold mb-1">Hasta</label>
+                        <input
+                          type="date"
+                          value={appDownloadEndDate}
+                          onChange={(e) => setAppDownloadEndDate(e.target.value)}
+                          className="bg-white border border-stone-200 p-1.5 text-xs focus:outline-none"
+                        />
+                      </div>
+                      <button
+                        onClick={handleDownloadApplicationsCsv}
+                        className="flex items-center gap-1.5 bg-[#8C4723] hover:bg-[#703517] text-white px-3 py-1.5 text-xs font-semibold cursor-pointer transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-xs">download</span>
+                        Exportar CSV
+                      </button>
+                    </div>
                   </div>
 
                   <div className="overflow-x-auto">
@@ -3839,7 +3941,25 @@ export default function AdminPanel({
                                     </span>
                                   )}
                                 </td>
-                                <td className="p-3 font-mono text-[11px] text-stone-500">{app.cv_name}</td>
+                                <td className="p-3">
+                                  {app.cv_name ? (
+                                    app.cv_name.startsWith("http") ? (
+                                      <a
+                                        href={app.cv_name}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1 bg-[#2F403E]/10 hover:bg-[#2F403E]/20 text-[#2F403E] px-2 py-1 text-[10px] font-bold uppercase rounded-sm cursor-pointer transition-colors"
+                                      >
+                                        <span className="material-symbols-outlined text-[11px] font-semibold">download</span>
+                                        Descargar CV
+                                      </a>
+                                    ) : (
+                                      <span className="text-stone-500 font-mono text-[11px]">{app.cv_name}</span>
+                                    )
+                                  ) : (
+                                    <span className="text-stone-400 italic">Sin CV</span>
+                                  )}
+                                </td>
                                 <td className="p-3 text-stone-400">
                                   {new Date(app.created_at).toLocaleDateString('es-MX', {
                                     year: 'numeric',

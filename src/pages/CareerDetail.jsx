@@ -145,32 +145,50 @@ export default function CareerDetail({ lang = "es", setPage, jobId }) {
       return;
     }
     setSubmitting(true);
-    try {
-      const response = await fetch("/api/careers", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          phone: formData.phone,
-          email: formData.email,
-          cv_name: cvFile.name,
-          job_id: job.id,
-        }),
-      });
 
-      if (response.ok) {
-        setSubmitted(true);
-        setFormData({ name: "", phone: "", email: "" });
-        setCvFile(null);
-        setTimeout(() => setSubmitted(false), 5000);
-      } else {
-        console.error("Submission failed");
-      }
+    try {
+      const reader = new FileReader();
+      reader.readAsDataURL(cvFile);
+      reader.onload = async () => {
+        const base64Data = reader.result.split(',')[1];
+        
+        try {
+          const response = await fetch("/api/careers", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: formData.name,
+              phone: formData.phone,
+              email: formData.email,
+              cv_name: cvFile.name,
+              cv_file_base64: base64Data,
+              job_id: job.id,
+            }),
+          });
+
+          if (response.ok) {
+            setSubmitted(true);
+            setFormData({ name: "", phone: "", email: "" });
+            setCvFile(null);
+            setTimeout(() => setSubmitted(false), 5000);
+          } else {
+            console.error("Submission failed");
+          }
+        } catch (err) {
+          console.error("Error submitting job application:", err);
+        } finally {
+          setSubmitting(false);
+        }
+      };
+
+      reader.onerror = (error) => {
+        console.error("Error reading file:", error);
+        setSubmitting(false);
+      };
     } catch (err) {
-      console.error("Error submitting job application:", err);
-    } finally {
+      console.error("Error reading file:", err);
       setSubmitting(false);
     }
   };
