@@ -221,7 +221,8 @@ export default async function handler(req, res) {
           requirements,
           knowledge,
           benefits,
-          is_active
+          is_active,
+          image_url
         } = req.body || {};
 
         if (!id || !category || !title_es || !location_es || !type_es) {
@@ -241,7 +242,8 @@ export default async function handler(req, res) {
           requirements: requirements || [],
           knowledge: knowledge || [],
           benefits: benefits || [],
-          is_active: is_active === undefined ? true : is_active
+          is_active: is_active === undefined ? true : is_active,
+          image_url: image_url || null
         };
 
         const { error } = await supabase

@@ -117,7 +117,8 @@ export default function CareerDetail({ lang = "es", setPage, jobId }) {
               benefits: (j.benefits || []).map(b => ({
                 es: b.es || b,
                 en: b.en || b.es || b
-              }))
+              })),
+              image_url: j.image_url
             };
             setDynamicJob(mapped);
           }
@@ -236,6 +237,9 @@ export default function CareerDetail({ lang = "es", setPage, jobId }) {
   const t = labels[lang] || labels.es;
 
   const getJobImage = (id) => {
+    if (job && job.image_url) {
+      return job.image_url;
+    }
     switch (id) {
       case "kam":
         return "/Empleado Casa Loy Tequilera.webp";

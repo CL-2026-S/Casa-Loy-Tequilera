@@ -1459,6 +1459,7 @@ export default function AdminPanel({
         es: b.es || b || "",
         en: b.en || b.es || b || ""
       })),
+      image_url: localJob.id === 'kam' ? '/Empleado Casa Loy Tequilera.webp' : '/Trabajo Duro Casa Loy Tequilera Jimado.webp',
       is_active: true,
       is_fallback: true
     };
@@ -3783,7 +3784,7 @@ export default function AdminPanel({
                       <p className="text-xs text-stone-400 mt-1">Crea y administra ofertas de empleo en la sección Bolsa de Trabajo.</p>
                     </div>
                     <button
-                      onClick={() => setEditingJob({ id: "", category: "comercial", title_es: "", location_es: "Guadalajara, Jalisco", type_es: "Tiempo completo", time_es: "Reciente", hero_desc_es: "", compensation_es: "", is_active: true })}
+                      onClick={() => setEditingJob({ id: "", category: "comercial", title_es: "", location_es: "Guadalajara, Jalisco", type_es: "Tiempo completo", time_es: "Reciente", hero_desc_es: "", compensation_es: "", image_url: "", is_active: true })}
                       className="text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white px-3.5 py-2 font-semibold"
                     >
                       + Nueva Vacante
@@ -3842,6 +3843,11 @@ export default function AdminPanel({
                           <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Antigüedad/Tiempo</label>
                           <input type="text" name="time_es" defaultValue={editingJob.time_es} placeholder="Reciente" className="w-full bg-white border border-stone-200 p-2 text-xs" />
                         </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Imagen de Portada (URL)</label>
+                        <input type="text" name="image_url" defaultValue={editingJob.image_url || ""} placeholder="Ej. /Empleado Casa Loy Tequilera.webp (dejar en blanco para usar la predeterminada)" className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" />
                       </div>
 
                       <div className="grid grid-cols-2 gap-3">
