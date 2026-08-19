@@ -75,6 +75,24 @@ export default async function handler(req, res) {
         if (error) throw error;
         return res.status(200).json(data);
       }
+      // Fetch Job Applications (Private: Admin or RH only)
+      if (type === 'applications') {
+        const currentUser = getAuthUser(req);
+        if (!currentUser) {
+          return res.status(401).json({ error: 'UNAUTHORIZED', message: 'Inicia sesión para ver las postulaciones.' });
+        }
+        if (currentUser.role !== 'admin' && currentUser.role !== 'rh') {
+          return res.status(403).json({ error: 'FORBIDDEN', message: 'No tienes permisos para ver las postulaciones.' });
+        }
+
+        const { data, error } = await supabase
+          .from('job_applications')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        return res.status(200).json(data);
+      }
 
       return res.status(400).json({ error: 'Falta o es incorrecto el parámetro type.' });
     }
@@ -86,9 +104,13 @@ export default async function handler(req, res) {
         return res.status(401).json({ error: 'UNAUTHORIZED', message: 'Inicia sesión para realizar cambios.' });
       }
 
-      const hasPermission = currentUser.role === 'admin' || currentUser.role === 'editor';
+      const isJobsAction = action === 'save_job' || action === 'delete_job';
+      const hasPermission = isJobsAction
+        ? (currentUser.role === 'admin' || currentUser.role === 'editor' || currentUser.role === 'rh')
+        : (currentUser.role === 'admin' || currentUser.role === 'editor');
+
       if (!hasPermission) {
-        return res.status(403).json({ error: 'FORBIDDEN', message: 'No tienes los permisos requeridos (Editor/Admin).' });
+        return res.status(403).json({ error: 'FORBIDDEN', message: 'No tienes los permisos requeridos para realizar esta acción.' });
       }
 
       // Action: Update Banner

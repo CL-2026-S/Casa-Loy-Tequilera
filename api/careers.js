@@ -1,4 +1,5 @@
 import { supabase } from './_utils/clients.js';
+import { sendJobApplicationEmail } from './_utils/emails.js';
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -45,6 +46,36 @@ export default async function handler(req, res) {
       if (!insertError) {
         dbSuccess = true;
         applicationId = newApp.id;
+
+        // Fetch job title if needed
+        let jobTitle = "Postulación Espontánea";
+        if (job_id && job_id !== 'spontaneous') {
+          try {
+            const { data: jobData } = await supabase
+              .from('job_offers')
+              .select('title_es')
+              .eq('id', job_id)
+              .maybeSingle();
+            if (jobData && jobData.title_es) {
+              jobTitle = jobData.title_es;
+            }
+          } catch (jobErr) {
+            console.error("Error fetching job details for email:", jobErr);
+          }
+        }
+
+        // Send notification email to HR
+        try {
+          await sendJobApplicationEmail({
+            name,
+            email,
+            phone,
+            cv_name,
+            job_title: jobTitle
+          });
+        } catch (emailErr) {
+          console.error("Error sending job application email:", emailErr);
+        }
       } else {
         console.error("Could not insert into job_applications table. Error:", insertError.message);
         return res.status(500).json({ error: 'Error al registrar la solicitud en la base de datos.', details: insertError.message });

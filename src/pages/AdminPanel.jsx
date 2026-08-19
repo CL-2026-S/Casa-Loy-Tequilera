@@ -81,6 +81,7 @@ export default function AdminPanel({
   const [bannersList, setBannersList] = useState([]);
   const [dishesList, setDishesList] = useState([]);
   const [jobsList, setJobsList] = useState([]);
+  const [jobApplicationsList, setJobApplicationsList] = useState([]);
   const [blogList, setBlogList] = useState([]);
   const [posList, setPosList] = useState([]);
 
@@ -346,6 +347,9 @@ export default function AdminPanel({
         setActiveTab("restaurant");
       } else if (user.role === "viewer" || user.role === "cuentas_por_cobrar") {
         setActiveTab("log");
+      } else if (user.role === "rh") {
+        setActiveTab("cms");
+        setCmsTab("jobs");
       } else {
         setActiveTab("calendar");
       }
@@ -611,7 +615,7 @@ export default function AdminPanel({
 
     if (activeTab === "cms") {
       try {
-        const res = await fetch(`/api/cms?type=${cmsTab}`);
+        const res = await fetch(`/api/cms?type=${cmsTab}`, { headers });
         if (res.ok) {
           const data = await res.json();
           if (cmsTab === "banners") setBannersList(data);
@@ -619,6 +623,19 @@ export default function AdminPanel({
           if (cmsTab === "jobs") setJobsList(data);
           if (cmsTab === "blog") setBlogList(data);
           if (cmsTab === "pos") setPosList(data);
+          if (cmsTab === "applications") {
+            setJobApplicationsList(data);
+            // Also fetch jobs to map job_id to title in applications list
+            try {
+              const jobsRes = await fetch("/api/cms?type=jobs", { headers });
+              if (jobsRes.ok) {
+                const jobsData = await jobsRes.json();
+                setJobsList(jobsData);
+              }
+            } catch (jobsErr) {
+              console.error("Error loading jobs fallback for applications:", jobsErr);
+            }
+          }
         }
       } catch (e) {
         console.error(`Error fetching CMS ${cmsTab}:`, e);
@@ -1758,14 +1775,19 @@ export default function AdminPanel({
             </button>
           )}
 
-          {(user?.role === "admin" || user?.role === "editor") && (
+          {(user?.role === "admin" || user?.role === "editor" || user?.role === "rh") && (
             <button
-              onClick={() => setActiveTab("cms")}
+              onClick={() => {
+                setActiveTab("cms");
+                if (user?.role === "rh" && cmsTab !== "jobs" && cmsTab !== "applications") {
+                  setCmsTab("jobs");
+                }
+              }}
               className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
                 activeTab === "cms" ? "border-[#8C4723] text-[#8C4723] font-bold" : "border-transparent text-stone-500 hover:text-stone-800"
               }`}
             >
-              📝 CMS Contenidos
+              {user?.role === "rh" ? "💼 Bolsa de Trabajo" : "📝 CMS Contenidos"}
             </button>
           )}
 
@@ -3276,18 +3298,19 @@ export default function AdminPanel({
           )}
 
           {/* TAB: CMS modules (Banners, Dishes, Blog with IA, Jobs, POS CRUD) */}
-          {(user?.role === "admin" || user?.role === "editor") && activeTab === "cms" && (
+          {(user?.role === "admin" || user?.role === "editor" || user?.role === "rh") && activeTab === "cms" && (
             <div className="space-y-6 text-left">
               
               {/* CMS Sub navigation bar */}
               <div className="flex border-b border-stone-200 gap-3 md:gap-4 overflow-x-auto pb-1">
                 {[
-                  { id: "banners", label: "🖼️ Banners & Galerías" },
-                  { id: "dishes", label: "🍽️ Top 3 Platillos" },
-                  { id: "blog", label: "✍️ Blog & Asistencia IA" },
-                  { id: "jobs", label: "💼 Bolsa de Trabajo" },
-                  { id: "pos", label: "📍 Puntos de Venta (Where to buy)" }
-                ].map(sub => (
+                  { id: "banners", label: "🖼️ Banners & Galerías", roles: ["admin", "editor"] },
+                  { id: "dishes", label: "🍽️ Top 3 Platillos", roles: ["admin", "editor"] },
+                  { id: "blog", label: "✍️ Blog & Asistencia IA", roles: ["admin", "editor"] },
+                  { id: "jobs", label: "💼 Vacantes", roles: ["admin", "editor", "rh"] },
+                  { id: "applications", label: "👥 Postulantes / CVs", roles: ["admin", "rh"] },
+                  { id: "pos", label: "📍 Puntos de Venta (Where to buy)", roles: ["admin", "editor"] }
+                ].filter(sub => sub.roles.includes(user?.role)).map(sub => (
                   <button
                     key={sub.id}
                     onClick={() => {
@@ -3767,6 +3790,75 @@ export default function AdminPanel({
                 </div>
               )}
 
+              {/* CMS DD: Job Applications Table */}
+              {cmsTab === "applications" && (user?.role === "admin" || user?.role === "rh") && (
+                <div className="space-y-6">
+                  <div>
+                    <h6 className="text-xs uppercase tracking-widest text-[#8C4723] font-bold">Postulantes y CVs Recibidos</h6>
+                    <p className="text-xs text-stone-400 mt-1">Consulta los perfiles e interesados registrados en la bolsa de trabajo.</p>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse text-xs">
+                      <thead>
+                        <tr className="bg-stone-50 text-stone-500 uppercase font-bold border-b border-stone-200">
+                          <th className="p-3 font-sans">Postulante</th>
+                          <th className="p-3 font-sans">Contacto</th>
+                          <th className="p-3 font-sans">Vacante de Interés</th>
+                          <th className="p-3 font-sans">CV Recibido</th>
+                          <th className="p-3 font-sans">Fecha de Registro</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-stone-100">
+                        {jobApplicationsList.length === 0 ? (
+                          <tr>
+                            <td colSpan="5" className="p-8 text-center text-stone-400 italic">No hay registros de postulaciones en el sistema.</td>
+                          </tr>
+                        ) : (
+                          jobApplicationsList.map(app => {
+                            const matchedJob = jobsList.find(j => j.id === app.job_id);
+                            const jobTitle = app.job_id === 'spontaneous' 
+                              ? "Postulación Espontánea" 
+                              : (matchedJob ? matchedJob.title_es : app.job_id);
+
+                            return (
+                              <tr key={app.id} className="hover:bg-stone-50/40 text-stone-700 font-sans">
+                                <td className="p-3 font-semibold text-stone-900">{app.name}</td>
+                                <td className="p-3 space-y-1">
+                                  <div>📧 <a href={`mailto:${app.email}`} className="text-[#8C4723] hover:underline font-semibold">{app.email}</a></div>
+                                  <div className="text-stone-500">📞 {app.phone}</div>
+                                </td>
+                                <td className="p-3">
+                                  {app.job_id === 'spontaneous' ? (
+                                    <span className="inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider bg-stone-100 text-stone-600 rounded-sm">
+                                      {jobTitle}
+                                    </span>
+                                  ) : (
+                                    <span className="inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider bg-[#2F403E]/10 text-[#2F403E] rounded-sm">
+                                      {jobTitle}
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="p-3 font-mono text-[11px] text-stone-500">{app.cv_name}</td>
+                                <td className="p-3 text-stone-400">
+                                  {new Date(app.created_at).toLocaleDateString('es-MX', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })}
+                                </td>
+                              </tr>
+                            );
+                          })
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
               {/* CMS E: Points of Sale (KAMs CRUD) */}
               {cmsTab === "pos" && (
                 <div className="space-y-6">
@@ -4041,6 +4133,7 @@ export default function AdminPanel({
                         <option value="editor">Editor (CMS, Blog, Banners, KAMs)</option>
                         <option value="experience_manager">Gestor de Experiencias (Tours, QR)</option>
                         <option value="restaurant_manager">Gestor de Restaurante (Reservas Mesa)</option>
+                        <option value="rh">Recursos Humanos (RH - Bolsa de Trabajo)</option>
                         <option value="cuentas_por_cobrar">Cuentas por Cobrar (Solo lectura de reservas y facturas)</option>
                         <option value="viewer">Visor (Lectura de Reservas & Logs)</option>
                       </select>
@@ -4084,6 +4177,7 @@ export default function AdminPanel({
                             staff.role === 'experience_manager' ? 'bg-amber-100 text-amber-800' :
                             staff.role === 'restaurant_manager' ? 'bg-purple-100 text-purple-800' :
                             staff.role === 'cuentas_por_cobrar' ? 'bg-emerald-100 text-emerald-800' :
+                            staff.role === 'rh' ? 'bg-teal-100 text-teal-800' :
                             'bg-stone-100 text-stone-600'
                           }`}>
                             {staff.role}

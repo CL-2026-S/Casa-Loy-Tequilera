@@ -1049,4 +1049,73 @@ export async function sendPasswordResetEmail(email, tempPassword) {
   }
 }
 
+/**
+ * Sends a notification email to HR when someone applies to a job opening or submits a spontaneous profile.
+ * @param {object} appDetails 
+ */
+export async function sendJobApplicationEmail(appDetails) {
+  if (!resend) {
+    console.warn("Resend client not configured. Skipping job application email.");
+    return { success: false, error: "Resend not initialized" };
+  }
 
+  const { name, email, phone, cv_name, job_title } = appDetails;
+  const fromEmail = getFromEmail();
+
+  const html = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #fcf9f3; color: #1c1c18; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e2dc; padding: 40px; box-sizing: border-box; }
+        .logo { max-height: 40px; width: auto; margin-bottom: 20px; display: block; }
+        h2 { font-family: Georgia, serif; font-size: 20px; color: #8C4723; font-weight: normal; margin-top: 0; border-bottom: 1px solid #e5e2dc; padding-bottom: 15px; }
+        .info-table { width: 100%; border-collapse: collapse; margin: 24px 0; }
+        .info-table th { text-align: left; padding: 12px 8px; border-bottom: 1px solid #f0eee8; color: #8C4723; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; width: 35%; }
+        .info-table td { padding: 12px 8px; border-bottom: 1px solid #f0eee8; font-size: 14px; color: #1c1c18; }
+        .footer { font-size: 11px; color: #8a8a82; margin-top: 30px; border-top: 1px solid #e5e2dc; padding-top: 20px; text-align: center; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsI1CK1zDTaSkEhtFNd7gFs0Br7ZXW2rKE6mtXNlOgTpveNdFqRSK2aREIwDEFz2pNbAMxdM8OBUebW2gToScRYF1Q-TmhbHUos5e3w1fOey3coasOccOtVC4bzvDGydMpNF2wf6Q6Mt3FsJZRCihsNaG2kM2hluZ5hkMnIRqzGfCNnIgQCUk8l3pxlAgWZcH9ZqrbWcx3BD1-oHbu3TuTW9SKgwmqAzXcaSv6qTNhx6pJvTmykqnAVLEaPpvw8UHbNpl7z0SLcNA7" alt="Casa Loy Tequilera" class="logo">
+        <h2>Nueva Candidatura Registrada (Bolsa de Trabajo)</h2>
+        <p>Se ha recibido una nueva postulación a través de la plataforma web de Casa Loy:</p>
+        
+        <table class="info-table">
+          <tr><th>Nombre</th><td><strong>${name}</strong></td></tr>
+          <tr><th>Correo</th><td><a href="mailto:${email}">${email}</a></td></tr>
+          <tr><th>Teléfono</th><td>${phone}</td></tr>
+          <tr><th>Vacante / Interés</th><td><strong>${job_title}</strong></td></tr>
+          <tr><th>CV Recibido (Nombre)</th><td>${cv_name}</td></tr>
+        </table>
+        
+        <div class="footer">
+          <p>Este correo ha sido generado automáticamente por el sistema de Casa Loy Tequilera.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: fromEmail,
+      to: ['rh@casaloy.com'],
+      bcc: ['jgutierrez@casaloy.com'],
+      subject: `Nuevo interesado en Bolsa de Trabajo: ${name}`,
+      html: html,
+    });
+
+    if (error) {
+      console.error("Resend API error sending job application email:", error);
+      return { success: false, error };
+    }
+    return { success: true, messageId: data.id };
+  } catch (err) {
+    console.error("Exception in sendJobApplicationEmail:", err);
+    return { success: false, error: err.message };
+  }
+}
