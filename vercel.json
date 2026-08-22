@@ -35,8 +35,16 @@
   ],
   "rewrites": [
     {
+      "source": "/api/email/welcome",
+      "destination": "/api/email?action=welcome"
+    },
+    {
+      "source": "/api/email/monthly-newsletter",
+      "destination": "/api/email?action=monthly-newsletter"
+    },
+    {
       "source": "/api/email/maquila-followup",
-      "destination": "/api/maquila?action=followup"
+      "destination": "/api/email?action=maquila-followup"
     },
     {
       "source": "/api/newsletter/subscribe",
