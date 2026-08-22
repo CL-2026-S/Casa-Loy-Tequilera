@@ -360,6 +360,11 @@ export default function AdminPanel({
   const [maquilaManualLeadType, setMaquilaManualLeadType] = useState("Empresario");
   const [maquilaManualComments, setMaquilaManualComments] = useState("");
 
+  // Edit comments inline states
+  const [editingMaquilaLeadId, setEditingMaquilaLeadId] = useState(null);
+  const [editingMaquilaComments, setEditingMaquilaComments] = useState("");
+  const [isUpdatingMaquilaComments, setIsUpdatingMaquilaComments] = useState(false);
+
 
   // Verify session on mount and when token changes
   useEffect(() => {
@@ -1276,6 +1281,39 @@ export default function AdminPanel({
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleUpdateMaquilaComments = async (leadId, newComments) => {
+    setIsUpdatingMaquilaComments(true);
+    try {
+      const res = await fetch("/api/maquila?action=update_comments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          id: leadId,
+          comments: newComments
+        })
+      });
+
+      if (res.ok) {
+        setEditingMaquilaLeadId(null);
+        // Refresh local leads list
+        setMaquilaLeadsList(prev => prev.map(lead => 
+          lead.id === leadId ? { ...lead, comments: newComments } : lead
+        ));
+      } else {
+        const data = await res.json();
+        alert(`Error: ${data.error || "No se pudieron actualizar los comentarios."}`);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error al conectar con la API.");
+    } finally {
+      setIsUpdatingMaquilaComments(false);
+    }
   };
 
   // --- MANUAL RESERVATIONS CAPTURES ---
@@ -5041,9 +5079,53 @@ export default function AdminPanel({
                                 {leadTypeVal}
                               </span>
                             </td>
-                            <td className="p-3 max-w-[280px] break-words text-stone-500 italic">
-                              {lead.comments || '-'}
-                            </td>
+                            {editingMaquilaLeadId === lead.id ? (
+                              <td className="p-3 max-w-[280px]">
+                                <div className="flex flex-col gap-1.5">
+                                  <textarea
+                                    value={editingMaquilaComments}
+                                    onChange={(e) => setEditingMaquilaComments(e.target.value)}
+                                    className="w-full bg-white border border-stone-300 p-1.5 text-xs focus:outline-none text-[#1c1c18] font-sans rounded"
+                                    rows="2"
+                                  />
+                                  <div className="flex gap-2 justify-end">
+                                    <button
+                                      onClick={() => handleUpdateMaquilaComments(lead.id, editingMaquilaComments)}
+                                      disabled={isUpdatingMaquilaComments}
+                                      className="px-2 py-1 bg-[#2F403E] hover:bg-[#8C4723] text-white text-[10px] uppercase font-bold rounded cursor-pointer disabled:opacity-50"
+                                    >
+                                      Guardar
+                                    </button>
+                                    <button
+                                      onClick={() => setEditingMaquilaLeadId(null)}
+                                      className="px-2 py-1 bg-stone-200 hover:bg-stone-300 text-stone-700 text-[10px] uppercase font-bold rounded cursor-pointer"
+                                    >
+                                      Cancelar
+                                    </button>
+                                  </div>
+                                </div>
+                              </td>
+                            ) : (
+                              <td className="p-3 max-w-[280px] break-words text-stone-500 italic">
+                                <div className="flex justify-between items-start gap-2 group">
+                                  <span className="flex-1">
+                                    {lead.comments || '-'}
+                                  </span>
+                                  {user?.role !== "viewer" && (
+                                    <button
+                                      onClick={() => {
+                                        setEditingMaquilaLeadId(lead.id);
+                                        setEditingMaquilaComments(lead.comments || "");
+                                      }}
+                                      className="text-stone-400 hover:text-[#8C4723] transition-colors p-0.5 cursor-pointer shrink-0 opacity-80 md:opacity-0 md:group-hover:opacity-100"
+                                      title="Editar comentarios"
+                                    >
+                                      <span className="material-symbols-outlined text-[15px]">edit</span>
+                                    </button>
+                                  )}
+                                </div>
+                              </td>
+                            )}
                             <td className="p-3 text-center whitespace-nowrap">
                               {lead.follow_up_sent ? (
                                 <div className="flex flex-col items-center">
@@ -5104,9 +5186,51 @@ export default function AdminPanel({
                           <div><span className="text-stone-400">Email:</span> <span className="font-mono text-stone-700">{lead.email}</span></div>
                           <div><span className="text-stone-400">Teléfono:</span> <span className="text-stone-700">{lead.phone ? `+${lead.lada || ''} ${lead.phone}`.trim() : 'N/A'}</span></div>
                           <div><span className="text-stone-400">Servicio:</span> <span className="font-medium text-stone-800">{lead.solution || 'No especificado'}</span></div>
-                          {lead.comments && (
-                            <div className="bg-stone-50 p-2 border border-stone-100 text-stone-600 italic text-[11px] mt-1 rounded">
-                              "{lead.comments}"
+                          {editingMaquilaLeadId === lead.id ? (
+                            <div className="bg-stone-50 p-3 border border-stone-200 mt-1 rounded space-y-2">
+                              <label className="block text-[9px] font-bold text-stone-400 uppercase">Editar Comentarios</label>
+                              <textarea
+                                value={editingMaquilaComments}
+                                onChange={(e) => setEditingMaquilaComments(e.target.value)}
+                                className="w-full bg-white border border-stone-300 p-2 text-xs focus:outline-none text-[#1c1c18] font-sans rounded"
+                                rows="3"
+                              />
+                              <div className="flex gap-2 justify-end">
+                                <button
+                                  type="button"
+                                  onClick={() => handleUpdateMaquilaComments(lead.id, editingMaquilaComments)}
+                                  disabled={isUpdatingMaquilaComments}
+                                  className="px-3 py-1.5 bg-[#2F403E] hover:bg-[#8C4723] text-white text-[10px] uppercase font-bold rounded cursor-pointer disabled:opacity-50"
+                                >
+                                  Guardar
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setEditingMaquilaLeadId(null)}
+                                  className="px-3 py-1.5 bg-stone-200 hover:bg-stone-300 text-stone-700 text-[10px] uppercase font-bold rounded cursor-pointer"
+                                >
+                                  Cancelar
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="bg-stone-50 p-2 border border-stone-100 text-stone-600 italic text-[11px] mt-1 rounded flex justify-between items-start gap-2">
+                              <span className="flex-1">
+                                {lead.comments ? `"${lead.comments}"` : <span className="text-stone-400 not-italic font-sans">Sin comentarios.</span>}
+                              </span>
+                              {user?.role !== "viewer" && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setEditingMaquilaLeadId(lead.id);
+                                    setEditingMaquilaComments(lead.comments || "");
+                                  }}
+                                  className="text-stone-400 hover:text-[#8C4723] transition-colors p-0.5 cursor-pointer shrink-0"
+                                  title="Editar comentarios"
+                                >
+                                  <span className="material-symbols-outlined text-[15px]">edit</span>
+                                </button>
+                              )}
                             </div>
                           )}
                         </div>

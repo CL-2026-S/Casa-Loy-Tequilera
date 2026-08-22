@@ -17,6 +17,50 @@ export default async function handler(req, res) {
     return;
   }
 
+  const { action } = req.query || {};
+
+  // 1. Action: Update Comments (POST)
+  if (req.method === 'POST' && action === 'update_comments') {
+    const staffUser = getAuthUser(req);
+    if (!staffUser) {
+      return res.status(401).json({ error: 'No autorizado. Debe iniciar sesión.' });
+    }
+
+    // Role check: admin, lead_maquila, editor are allowed
+    const allowedRoles = ['admin', 'lead_maquila', 'editor'];
+    if (!allowedRoles.includes(staffUser.role)) {
+      return res.status(403).json({ error: 'Prohibido. No tiene permisos para editar comentarios.' });
+    }
+
+    const { id, comments } = req.body || {};
+    if (!id) {
+      return res.status(400).json({ error: 'El ID del lead es obligatorio.' });
+    }
+
+    if (!supabase) {
+      return res.status(500).json({ error: 'Database client not initialized.' });
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('maquila_leads')
+        .update({ comments: comments || '' })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error("Error updating maquila comments:", error);
+        return res.status(500).json({ error: 'Error al actualizar los comentarios en la base de datos.' });
+      }
+
+      return res.status(200).json({ success: true, lead: data });
+    } catch (err) {
+      console.error("Exception in update maquila comments:", err);
+      return res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+  }
+
   // GET: Retrieve all maquila leads (Requires Authentication)
   if (req.method === 'GET') {
     const staffUser = getAuthUser(req);
