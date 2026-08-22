@@ -35,6 +35,10 @@
   ],
   "rewrites": [
     {
+      "source": "/api/email/maquila-followup",
+      "destination": "/api/maquila?action=followup"
+    },
+    {
       "source": "/api/newsletter/subscribe",
       "destination": "/api/newsletter?action=subscribe"
     },
