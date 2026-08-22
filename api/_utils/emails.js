@@ -1133,25 +1133,33 @@ export async function sendMaquilaFollowUpEmail(name, email) {
     <html lang="es">
     <head>
       <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <style>
-        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #fcf9f3; color: #1c1c18; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e2dc; padding: 40px; }
-        p { font-size: 15px; line-height: 1.6; color: #3e3e38; }
-        .btn-container { text-align: center; margin: 30px 0; }
-        .btn-cal { background-color: #8C4723; color: #ffffff !important; padding: 12px 24px; text-decoration: none; font-size: 15px; font-weight: bold; border-radius: 4px; display: inline-block; }
-        .footer { font-size: 12px; color: #8a8a82; margin-top: 30px; text-align: center; border-top: 1px solid #e5e2dc; padding-top: 20px; }
+        body { font-family: 'Georgia', 'Times New Roman', serif; background-color: #fcf9f3; color: #1c1c18; padding: 30px 20px; margin: 0; text-align: center; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e2dc; padding: 48px; box-sizing: border-box; text-align: center; }
+        .logo-container { text-align: center; margin-bottom: 40px; }
+        .logo { max-height: 48px; width: auto; }
+        p { font-size: 16px; line-height: 1.8; color: #2F403E; margin-bottom: 24px; text-align: center; }
+        .salutation { font-size: 18px; font-weight: bold; color: #1c1c18; margin-bottom: 20px; }
+        .btn-container { text-align: center; margin: 36px 0; }
+        .btn-cal { background-color: #8C4723; color: #ffffff !important; padding: 14px 32px; text-decoration: none; font-family: 'Montserrat', 'Helvetica', 'Arial', sans-serif; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.2em; display: inline-block; transition: background-color 0.3s ease; }
+        .signature { font-family: 'Georgia', serif; font-size: 16px; color: #1c1c18; margin-top: 30px; margin-bottom: 0; font-weight: bold; }
+        .footer { font-family: 'Montserrat', 'Helvetica', 'Arial', sans-serif; font-size: 10px; color: #8a8a82; margin-top: 40px; text-align: center; border-top: 1px solid #e5e2dc; padding-top: 24px; letter-spacing: 0.1em; text-transform: uppercase; }
       </style>
     </head>
     <body>
       <div class="container">
-        <p>Hola ${name},</p>
+        <div class="logo-container">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsI1CK1zDTaSkEhtFNd7gFs0Br7ZXW2rKE6mtXNlOgTpveNdFqRSK2aREIwDEFz2pNbAMxdM8OBUebW2gToScRYF1Q-TmhbHUos5e3w1fOey3coasOccOtVC4bzvDGydMpNF2wf6Q6Mt3FsJZRCihsNaG2kM2hluZ5hkMnIRqzGfCNnIgQCUk8l3pxlAgWZcH9ZqrbWcx3BD1-oHbu3TuTW9SKgwmqAzXcaSv6qTNhx6pJvTmykqnAVLEaPpvw8UHbNpl7z0SLcNA7" alt="Casa Loy Tequilera" class="logo" />
+        </div>
+        <p class="salutation">Hola ${name},</p>
         <p>Soy de Casa Loy Tequilera. Qué gusto conocerte ayer.</p>
         <p>Retomando lo que platicamos sobre tu proyecto de tequila, quisiera ayudarte a aterrizar la mejor opción para ti. ¿Te parece si coordinamos una breve llamada para conocer los detalles?</p>
         <div class="btn-container">
-          <a href="https://cal.com/internationalcasaloy/" class="btn-cal" target="_blank">Agendar Llamada</a>
+          <a href="https://cal.com/internationalcasaloy/" class="btn-cal" target="_blank">AGENDA UNA LLAMADA</a>
         </div>
         <p>Quedo a tus órdenes,</p>
-        <p><strong>Casa Loy Tequilera</strong></p>
+        <p class="signature">Casa Loy Tequilera</p>
         <div class="footer">
           <p>&copy; 2026 Casa Loy Tequilera. Todos los derechos reservados.</p>
         </div>
