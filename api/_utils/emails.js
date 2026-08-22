@@ -1119,3 +1119,63 @@ export async function sendJobApplicationEmail(appDetails) {
     return { success: false, error: err.message };
   }
 }
+
+export async function sendMaquilaFollowUpEmail(name, email) {
+  if (!resend) {
+    console.warn("Resend client not configured. Skipping maquila follow-up email.");
+    return { success: false, error: "Resend not initialized" };
+  }
+
+  const fromEmail = getFromEmail();
+  
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #fcf9f3; color: #1c1c18; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e2dc; padding: 40px; }
+        p { font-size: 15px; line-height: 1.6; color: #3e3e38; }
+        .btn-container { text-align: center; margin: 30px 0; }
+        .btn-cal { background-color: #8C4723; color: #ffffff !important; padding: 12px 24px; text-decoration: none; font-size: 15px; font-weight: bold; border-radius: 4px; display: inline-block; }
+        .footer { font-size: 12px; color: #8a8a82; margin-top: 30px; text-align: center; border-top: 1px solid #e5e2dc; padding-top: 20px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <p>Hola ${name},</p>
+        <p>Soy de Casa Loy Tequilera. Qué gusto conocerte ayer.</p>
+        <p>Retomando lo que platicamos sobre tu proyecto de tequila, quisiera ayudarte a aterrizar la mejor opción para ti. ¿Te parece si coordinamos una breve llamada para conocer los detalles?</p>
+        <div class="btn-container">
+          <a href="https://cal.com/internationalcasaloy/" class="btn-cal" target="_blank">Agendar Llamada</a>
+        </div>
+        <p>Quedo a tus órdenes,</p>
+        <p><strong>Casa Loy Tequilera</strong></p>
+        <div class="footer">
+          <p>&copy; 2026 Casa Loy Tequilera. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: fromEmail,
+      to: email,
+      subject: `Retomando tu proyecto de tequila - Casa Loy`,
+      html: htmlContent,
+    });
+
+    if (error) {
+      console.error("Resend error sending follow-up email:", error);
+      return { success: false, error };
+    }
+    return { success: true, messageId: data?.id };
+  } catch (err) {
+    console.error("Exception in sendMaquilaFollowUpEmail:", err);
+    return { success: false, error: err.message };
+  }
+}
+

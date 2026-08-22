@@ -343,6 +343,24 @@ export default function AdminPanel({
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
+  // Maquila Leads States
+  const [maquilaLeadsList, setMaquilaLeadsList] = useState([]);
+  const [maquilaDownloadStartDate, setMaquilaDownloadStartDate] = useState("");
+  const [maquilaDownloadEndDate, setMaquilaDownloadEndDate] = useState("");
+  const [maquilaSearchQuery, setMaquilaSearchQuery] = useState("");
+  const [maquilaLeadTypeFilter, setMaquilaLeadTypeFilter] = useState("all");
+  const [showMaquilaManualForm, setShowMaquilaManualForm] = useState(false);
+  const [isSubmittingMaquilaManual, setIsSubmittingMaquilaManual] = useState(false);
+
+  // Manual Maquila Lead Form fields
+  const [maquilaManualName, setMaquilaManualName] = useState("");
+  const [maquilaManualEmail, setMaquilaManualEmail] = useState("");
+  const [maquilaManualPhone, setMaquilaManualPhone] = useState("");
+  const [maquilaManualService, setMaquilaManualService] = useState("");
+  const [maquilaManualLeadType, setMaquilaManualLeadType] = useState("Empresario");
+  const [maquilaManualComments, setMaquilaManualComments] = useState("");
+
+
   // Verify session on mount and when token changes
   useEffect(() => {
     if (token) {
@@ -369,6 +387,8 @@ export default function AdminPanel({
       } else if (user.role === "rh") {
         setActiveTab("cms");
         setCmsTab("jobs");
+      } else if (user.role === "lead_maquila") {
+        setActiveTab("maquila_leads");
       } else {
         setActiveTab("calendar");
       }
@@ -677,6 +697,22 @@ export default function AdminPanel({
         }
       } catch (e) {
         console.error("Error fetching discount codes:", e);
+      }
+    }
+
+    if (activeTab === "maquila_leads") {
+      try {
+        const res = await fetch("/api/maquila", {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setMaquilaLeadsList(data);
+        }
+      } catch (e) {
+        console.error("Error fetching maquila leads:", e);
       }
     }
   };
@@ -1123,6 +1159,124 @@ export default function AdminPanel({
       }
     };
   }, [scannerActive]);
+
+  // --- MAQUILA LEADS ACTIONS ---
+  const handleMaquilaManualSubmit = async (e) => {
+    e.preventDefault();
+    if (!maquilaManualName || !maquilaManualEmail || !maquilaManualPhone) {
+      alert("Por favor completa los campos obligatorios (Nombre, Correo y Teléfono).");
+      return;
+    }
+
+    setIsSubmittingMaquilaManual(true);
+
+    try {
+      const res = await fetch("/api/maquila", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          creation_mode: 'manual',
+          name: maquilaManualName,
+          email: maquilaManualEmail,
+          phone: maquilaManualPhone,
+          solution: maquilaManualService,
+          lead_type: maquilaManualLeadType,
+          comments: maquilaManualComments
+        })
+      });
+
+      if (res.ok) {
+        alert("¡Lead registrado con éxito!");
+        setMaquilaManualName("");
+        setMaquilaManualEmail("");
+        setMaquilaManualPhone("");
+        setMaquilaManualService("");
+        setMaquilaManualLeadType("Empresario");
+        setMaquilaManualComments("");
+        setShowMaquilaManualForm(false);
+        loadTabData();
+      } else {
+        const data = await res.json();
+        alert(`Error: ${data.error || "No se pudo registrar el lead"}`);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error al conectar con la API.");
+    } finally {
+      setIsSubmittingMaquilaManual(false);
+    }
+  };
+
+  const handleDownloadMaquilaCsv = () => {
+    if (!maquilaDownloadStartDate || !maquilaDownloadEndDate) {
+      alert("Por favor selecciona una fecha de inicio y una fecha de fin.");
+      return;
+    }
+
+    if (maquilaDownloadStartDate > maquilaDownloadEndDate) {
+      alert("La fecha de inicio no puede ser posterior a la fecha de fin.");
+      return;
+    }
+
+    const filtered = maquilaLeadsList.filter(lead => {
+      if (!lead.created_at) return false;
+      const leadDate = lead.created_at.split('T')[0];
+      return leadDate >= maquilaDownloadStartDate && leadDate <= maquilaDownloadEndDate;
+    });
+
+    if (filtered.length === 0) {
+      alert("No se encontraron leads en el periodo seleccionado.");
+      return;
+    }
+
+    const headers = [
+      "Fecha Registro",
+      "Nombre",
+      "Email",
+      "Telefono",
+      "Lada",
+      "Empresa",
+      "Servicio",
+      "Tipo Lead",
+      "Comentarios",
+      "Seguimiento Enviado",
+      "Fecha Seguimiento"
+    ];
+
+    const rows = filtered.map(lead => [
+      lead.created_at ? new Date(lead.created_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) : '',
+      lead.name,
+      lead.email,
+      lead.phone,
+      lead.lada || '',
+      lead.company || '',
+      lead.solution || '',
+      lead.lead_type || lead.objective || '',
+      lead.comments || '',
+      lead.follow_up_sent ? "Sí" : "No",
+      lead.follow_up_sent_at ? new Date(lead.follow_up_sent_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) : ''
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(row => row.map(val => {
+        const str = String(val).replace(/"/g, '""');
+        return str.includes(",") || str.includes("\n") || str.includes('"') ? `"${str}"` : str;
+      }).join(","))
+    ].join("\n");
+
+    const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `leads_maquila_${maquilaDownloadStartDate}_a_${maquilaDownloadEndDate}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   // --- MANUAL RESERVATIONS CAPTURES ---
   const handleManualBookingSubmit = async (e) => {
@@ -1847,6 +2001,24 @@ export default function AdminPanel({
     );
   });
 
+  // Filter maquila leads based on search query and lead type filter
+  const filteredMaquilaLeads = maquilaLeadsList.filter((lead) => {
+    const query = maquilaSearchQuery.trim().toLowerCase();
+    const matchesSearch = !query || 
+      (lead.name && lead.name.toLowerCase().includes(query)) ||
+      (lead.email && lead.email.toLowerCase().includes(query)) ||
+      (lead.phone && lead.phone.toLowerCase().includes(query)) ||
+      (lead.solution && lead.solution.toLowerCase().includes(query)) ||
+      (lead.comments && lead.comments.toLowerCase().includes(query)) ||
+      (lead.company && lead.company.toLowerCase().includes(query));
+
+    const activeLeadType = lead.lead_type || lead.objective || '';
+    const matchesType = maquilaLeadTypeFilter === 'all' || 
+      activeLeadType.toLowerCase() === maquilaLeadTypeFilter.toLowerCase();
+
+    return matchesSearch && matchesType;
+  });
+
   // --- RENDER MAIN ADMIN DASHBOARD (LOGGED IN) ---
   return (
     <div className="bg-[#fcf9f3] min-h-screen text-[#1c1c18] py-24 font-sans select-text">
@@ -1961,6 +2133,17 @@ export default function AdminPanel({
               }`}
             >
               🏷️ Cupones
+            </button>
+          )}
+
+          {(user?.role === "admin" || user?.role === "lead_maquila" || user?.role === "editor" || user?.role === "viewer") && (
+            <button
+              onClick={() => setActiveTab("maquila_leads")}
+              className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
+                activeTab === "maquila_leads" ? "border-[#8C4723] text-[#8C4723] font-bold" : "border-transparent text-stone-500 hover:text-stone-800"
+              }`}
+            >
+              💼 Leads Maquila
             </button>
           )}
 
@@ -4377,6 +4560,7 @@ export default function AdminPanel({
                         <option value="rh">Recursos Humanos (RH - Bolsa de Trabajo)</option>
                         <option value="cuentas_por_cobrar">Cuentas por Cobrar (Solo lectura de reservas y facturas)</option>
                         <option value="viewer">Visor (Lectura de Reservas & Logs)</option>
+                        <option value="lead_maquila">Gestor de Leads de Maquila (Solo registro y visualización de Maquilas)</option>
                       </select>
                     </div>
                     <div>
@@ -4419,6 +4603,7 @@ export default function AdminPanel({
                             staff.role === 'restaurant_manager' ? 'bg-purple-100 text-purple-800' :
                             staff.role === 'cuentas_por_cobrar' ? 'bg-emerald-100 text-emerald-800' :
                             staff.role === 'rh' ? 'bg-teal-100 text-teal-800' :
+                            staff.role === 'lead_maquila' ? 'bg-orange-100 text-orange-850 border border-orange-200' :
                             'bg-stone-100 text-stone-600'
                           }`}>
                             {staff.role}
@@ -4619,6 +4804,329 @@ export default function AdminPanel({
                     </table>
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB: Leads de Maquila (Admin/Lead Maquila/Editor/Viewer) */}
+          {(user?.role === "admin" || user?.role === "lead_maquila" || user?.role === "editor" || user?.role === "viewer") && activeTab === "maquila_leads" && (
+            <div className="space-y-6 text-left">
+              <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-stone-100 pb-4">
+                <div>
+                  <h5 className="text-sm uppercase tracking-wider text-[#8C4723] font-bold font-sans">
+                    Leads de Maquila B2B
+                  </h5>
+                  <p className="text-xs text-stone-400 font-sans">Listado y registro de prospectos para maquila de marca propia.</p>
+                </div>
+                
+                {user?.role !== "viewer" && (
+                  <button
+                    onClick={() => setShowMaquilaManualForm(!showMaquilaManualForm)}
+                    className="text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white font-semibold uppercase tracking-wider px-4 py-2.5 flex items-center gap-1.5 cursor-pointer transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-xs">add</span>
+                    {showMaquilaManualForm ? "Cancelar Registro" : "Registrar Lead Manual"}
+                  </button>
+                )}
+              </div>
+
+              {/* Formulario de Alta Manual */}
+              {showMaquilaManualForm && (
+                <form onSubmit={handleMaquilaManualSubmit} className="bg-stone-50 border border-stone-200/60 p-6 space-y-4 max-w-xl mx-auto text-left font-sans">
+                  <h6 className="font-serif text-sm font-bold text-stone-850 border-b border-stone-200 pb-2 uppercase tracking-wide">
+                    Registrar Nuevo Lead (Alta Manual)
+                  </h6>
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Nombre Completo *</label>
+                      <input
+                        type="text"
+                        required
+                        value={maquilaManualName}
+                        onChange={(e) => setMaquilaManualName(e.target.value)}
+                        placeholder="Ej. Juan Pérez"
+                        className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18]"
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Correo Electrónico *</label>
+                        <input
+                          type="email"
+                          required
+                          value={maquilaManualEmail}
+                          onChange={(e) => setMaquilaManualEmail(e.target.value)}
+                          placeholder="correo@ejemplo.com"
+                          className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18]"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Teléfono / WhatsApp *</label>
+                        <input
+                          type="tel"
+                          required
+                          value={maquilaManualPhone}
+                          onChange={(e) => setMaquilaManualPhone(e.target.value)}
+                          placeholder="3312345678"
+                          className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Servicio de Interés</label>
+                        <input
+                          type="text"
+                          value={maquilaManualService}
+                          onChange={(e) => setMaquilaManualService(e.target.value)}
+                          placeholder="Ej. Maquila Completa, Granel, Envasado..."
+                          className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18]"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Tipo de Lead *</label>
+                        <select
+                          value={maquilaManualLeadType}
+                          onChange={(e) => setMaquilaManualLeadType(e.target.value)}
+                          className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18]"
+                        >
+                          <option value="Importador">Importador</option>
+                          <option value="Empresario">Empresario</option>
+                          <option value="Marca Existente">Marca Existente</option>
+                          <option value="Otro">Otro</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Comentarios / Notas sobre el Proyecto</label>
+                      <textarea
+                        rows="3"
+                        value={maquilaManualComments}
+                        onChange={(e) => setMaquilaManualComments(e.target.value)}
+                        placeholder="Escribe aquí detalles de la plática, requerimientos específicos, etc."
+                        className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18]"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmittingMaquilaManual}
+                    className="w-full bg-[#8C4723] hover:bg-[#70381b] text-white py-3 text-xs font-semibold uppercase tracking-widest cursor-pointer shadow-md transition-colors disabled:opacity-50"
+                  >
+                    {isSubmittingMaquilaManual ? "Guardando..." : "Registrar Lead y Programar Correo"}
+                  </button>
+                </form>
+              )}
+
+              {/* Buscador y Filtros de Leads */}
+              <div className="bg-white border border-stone-200 p-4 mb-4 flex flex-col md:flex-row items-center gap-3 font-sans">
+                <div className="flex-1 w-full relative">
+                  <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm">search</span>
+                  <input
+                    type="text"
+                    value={maquilaSearchQuery}
+                    onChange={(e) => setMaquilaSearchQuery(e.target.value)}
+                    placeholder="Buscar por nombre, correo, teléfono, empresa, comentarios o servicio..."
+                    className="w-full bg-stone-50/50 border border-stone-200 pl-10 pr-4 py-2 text-xs focus:outline-none focus:border-[#8C4723] focus:bg-white text-[#1c1c18]"
+                  />
+                </div>
+
+                <div className="w-full md:w-64">
+                  <select
+                    value={maquilaLeadTypeFilter}
+                    onChange={(e) => setMaquilaLeadTypeFilter(e.target.value)}
+                    className="w-full bg-stone-50 border border-stone-200 p-2.5 text-xs focus:outline-none focus:border-[#8C4723] text-[#1c1c18]"
+                  >
+                    <option value="all">Todos los tipos de lead</option>
+                    <option value="Importador">Importador</option>
+                    <option value="Empresario">Empresario</option>
+                    <option value="Marca Existente">Marca Existente</option>
+                    <option value="Otro">Otro</option>
+                  </select>
+                </div>
+
+                {(maquilaSearchQuery || maquilaLeadTypeFilter !== "all") && (
+                  <button
+                    onClick={() => {
+                      setMaquilaSearchQuery("");
+                      setMaquilaLeadTypeFilter("all");
+                    }}
+                    className="text-xs text-stone-500 hover:text-stone-850 font-semibold cursor-pointer underline underline-offset-2 shrink-0"
+                  >
+                    Limpiar Filtros
+                  </button>
+                )}
+              </div>
+
+              {/* Descargar Reportes de Leads Form */}
+              <div className="bg-stone-50 border border-stone-200/60 p-4 flex flex-col md:flex-row md:items-end gap-4 mb-4 font-sans">
+                <div className="flex-1 min-w-[150px]">
+                  <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Descargar Periodos - Fecha Inicio</label>
+                  <input
+                    type="date"
+                    value={maquilaDownloadStartDate}
+                    onChange={(e) => setMaquilaDownloadStartDate(e.target.value)}
+                    className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18]"
+                  />
+                </div>
+                <div className="flex-1 min-w-[150px]">
+                  <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Descargar Periodos - Fecha Fin</label>
+                  <input
+                    type="date"
+                    value={maquilaDownloadEndDate}
+                    onChange={(e) => setMaquilaDownloadEndDate(e.target.value)}
+                    className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18]"
+                  />
+                </div>
+                <button
+                  onClick={handleDownloadMaquilaCsv}
+                  className="bg-[#8C4723] hover:bg-[#70381b] text-white font-semibold uppercase tracking-wider text-xs px-5 py-2.5 flex items-center gap-1.5 cursor-pointer h-[38px] transition-colors"
+                >
+                  <span className="material-symbols-outlined text-xs">download</span>
+                  Descargar Reporte (CSV)
+                </button>
+              </div>
+
+              {/* Desktop view: table */}
+              <div className="hidden md:block overflow-x-auto border border-stone-200 bg-white font-sans">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[9px] border-b border-stone-200 font-semibold">
+                      <th className="p-3">Fecha</th>
+                      <th className="p-3">Cliente</th>
+                      <th className="p-3">Servicio / Interés</th>
+                      <th className="p-3 text-center">Tipo Lead</th>
+                      <th className="p-3">Comentarios / Notas</th>
+                      <th className="p-3 text-center">Seguimiento</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-stone-100">
+                    {filteredMaquilaLeads.length === 0 ? (
+                      <tr>
+                        <td colSpan="6" className="p-8 text-center text-stone-400 italic">
+                          {maquilaSearchQuery ? "No se encontraron leads que coincidan con la búsqueda." : "No hay registros de leads en la base de datos."}
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredMaquilaLeads.map((lead) => {
+                        const leadTypeVal = lead.lead_type || lead.objective || 'Empresario';
+                        return (
+                          <tr key={lead.id} className="hover:bg-stone-50/40 text-stone-700">
+                            <td className="p-3 text-stone-400 whitespace-nowrap">
+                              {lead.created_at ? new Date(lead.created_at).toLocaleDateString('es-MX', {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit'
+                              }) : 'N/A'}
+                            </td>
+                            <td className="p-3">
+                              <div className="font-semibold text-stone-900">{lead.name}</div>
+                              <div className="text-[10px] text-stone-500 font-mono">{lead.email}</div>
+                              <div className="text-[10px] text-stone-500">{lead.phone ? `+${lead.lada || ''} ${lead.phone}`.trim() : ''}</div>
+                              {lead.company && <div className="text-[9px] uppercase font-bold text-[#8C4723] mt-0.5">{lead.company}</div>}
+                            </td>
+                            <td className="p-3 font-medium">{lead.solution || 'No especificado'}</td>
+                            <td className="p-3 text-center">
+                              <span className={`inline-block px-2 py-0.5 text-[9px] uppercase tracking-wider font-bold rounded-sm border ${
+                                leadTypeVal === "Importador" ? "bg-blue-50 text-blue-800 border-blue-200" :
+                                leadTypeVal === "Marca Existente" ? "bg-purple-50 text-purple-800 border-purple-200" :
+                                leadTypeVal === "Empresario" ? "bg-amber-50 text-amber-800 border-amber-200" :
+                                "bg-stone-50 text-stone-850 border-stone-200"
+                              }`}>
+                                {leadTypeVal}
+                              </span>
+                            </td>
+                            <td className="p-3 max-w-[280px] break-words text-stone-500 italic">
+                              {lead.comments || '-'}
+                            </td>
+                            <td className="p-3 text-center whitespace-nowrap">
+                              {lead.follow_up_sent ? (
+                                <div className="flex flex-col items-center">
+                                  <span className="inline-block bg-emerald-50 text-emerald-700 border border-emerald-200 text-[9px] font-bold px-2 py-0.5 rounded-sm">
+                                    ENVIADO
+                                  </span>
+                                  {lead.follow_up_sent_at && (
+                                    <span className="text-[9px] text-stone-400 mt-0.5 font-mono">
+                                      {new Date(lead.follow_up_sent_at).toLocaleDateString('es-MX', { month: 'short', day: 'numeric' })}
+                                    </span>
+                                  )}
+                                </div>
+                              ) : (
+                                <span className="inline-block bg-amber-50 text-amber-700 border border-amber-200 text-[9px] font-bold px-2 py-0.5 rounded-sm">
+                                  PENDIENTE
+                                </span>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile view: list of cards */}
+              <div className="block md:hidden space-y-3 font-sans">
+                {filteredMaquilaLeads.length === 0 ? (
+                  <div className="bg-white border border-stone-200 p-8 text-center text-stone-400 italic rounded">
+                    No se encontraron leads que coincidan con la búsqueda.
+                  </div>
+                ) : (
+                  filteredMaquilaLeads.map((lead) => {
+                    const leadTypeVal = lead.lead_type || lead.objective || 'Empresario';
+                    return (
+                      <div key={lead.id} className="bg-white border border-stone-200 p-4 rounded shadow-sm text-left space-y-2">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <span className="text-[10px] text-stone-400 font-mono">
+                              {lead.created_at ? new Date(lead.created_at).toLocaleDateString('es-MX') : 'N/A'}
+                            </span>
+                            <h6 className="font-bold text-stone-900 text-sm mt-0.5">{lead.name}</h6>
+                            {lead.company && <div className="text-[9px] uppercase font-bold text-[#8C4723]">{lead.company}</div>}
+                          </div>
+                          
+                          <span className={`inline-block px-2 py-0.5 text-[9px] uppercase tracking-wider font-bold rounded-sm border ${
+                            leadTypeVal === "Importador" ? "bg-blue-50 text-blue-800 border-blue-200" :
+                            leadTypeVal === "Marca Existente" ? "bg-purple-50 text-purple-800 border-purple-200" :
+                            leadTypeVal === "Empresario" ? "bg-amber-50 text-amber-800 border-amber-200" :
+                            "bg-stone-50 text-stone-850 border-stone-200"
+                          }`}>
+                            {leadTypeVal}
+                          </span>
+                        </div>
+
+                        <div className="text-xs space-y-1 pt-1 border-t border-stone-100">
+                          <div><span className="text-stone-400">Email:</span> <span className="font-mono text-stone-700">{lead.email}</span></div>
+                          <div><span className="text-stone-400">Teléfono:</span> <span className="text-stone-700">{lead.phone ? `+${lead.lada || ''} ${lead.phone}`.trim() : 'N/A'}</span></div>
+                          <div><span className="text-stone-400">Servicio:</span> <span className="font-medium text-stone-800">{lead.solution || 'No especificado'}</span></div>
+                          {lead.comments && (
+                            <div className="bg-stone-50 p-2 border border-stone-100 text-stone-600 italic text-[11px] mt-1 rounded">
+                              "{lead.comments}"
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex justify-between items-center pt-2 border-t border-stone-100 text-[10px]">
+                          <span className="text-stone-400">Seguimiento Automático:</span>
+                          {lead.follow_up_sent ? (
+                            <span className="inline-block bg-emerald-50 text-emerald-700 border border-emerald-200 text-[9px] font-bold px-1.5 py-0.2 rounded-sm">
+                              ENVIADO {lead.follow_up_sent_at && `(${new Date(lead.follow_up_sent_at).toLocaleDateString('es-MX')})`}
+                            </span>
+                          ) : (
+                            <span className="inline-block bg-amber-50 text-amber-700 border border-amber-200 text-[9px] font-bold px-1.5 py-0.2 rounded-sm">
+                              PENDIENTE
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </div>
           )}
