@@ -359,6 +359,7 @@ export default function AdminPanel({
   const [maquilaManualService, setMaquilaManualService] = useState("");
   const [maquilaManualLeadType, setMaquilaManualLeadType] = useState("Empresario");
   const [maquilaManualComments, setMaquilaManualComments] = useState("");
+  const [maquilaManualOrigin, setMaquilaManualOrigin] = useState("Expo Tequila");
 
   // Edit comments inline states
   const [editingMaquilaLeadId, setEditingMaquilaLeadId] = useState(null);
@@ -1189,7 +1190,8 @@ export default function AdminPanel({
           phone: maquilaManualPhone,
           solution: maquilaManualService,
           lead_type: maquilaManualLeadType,
-          comments: maquilaManualComments
+          comments: maquilaManualComments,
+          origin: maquilaManualOrigin
         })
       });
 
@@ -1201,6 +1203,7 @@ export default function AdminPanel({
         setMaquilaManualService("");
         setMaquilaManualLeadType("Empresario");
         setMaquilaManualComments("");
+        setMaquilaManualOrigin("Expo Tequila");
         setShowMaquilaManualForm(false);
         loadTabData();
       } else {
@@ -1247,6 +1250,7 @@ export default function AdminPanel({
       "Servicio",
       "Tipo Lead",
       "Comentarios",
+      "Origen",
       "Seguimiento Enviado",
       "Fecha Seguimiento"
     ];
@@ -1261,6 +1265,7 @@ export default function AdminPanel({
       lead.solution || '',
       lead.lead_type || lead.objective || '',
       lead.comments || '',
+      lead.origin || 'quiz',
       lead.follow_up_sent ? "Sí" : "No",
       lead.follow_up_sent_at ? new Date(lead.follow_up_sent_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) : ''
     ]);
@@ -2048,7 +2053,8 @@ export default function AdminPanel({
       (lead.phone && lead.phone.toLowerCase().includes(query)) ||
       (lead.solution && lead.solution.toLowerCase().includes(query)) ||
       (lead.comments && lead.comments.toLowerCase().includes(query)) ||
-      (lead.company && lead.company.toLowerCase().includes(query));
+      (lead.company && lead.company.toLowerCase().includes(query)) ||
+      (lead.origin && lead.origin.toLowerCase().includes(query));
 
     const activeLeadType = lead.lead_type || lead.objective || '';
     const matchesType = maquilaLeadTypeFilter === 'all' || 
@@ -4940,6 +4946,18 @@ export default function AdminPanel({
                     </div>
 
                     <div>
+                      <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Origen del Lead *</label>
+                      <input
+                        type="text"
+                        required
+                        value={maquilaManualOrigin}
+                        onChange={(e) => setMaquilaManualOrigin(e.target.value)}
+                        placeholder="Ej. Expo Tequila, Recomendado, Llamada, Web..."
+                        className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none text-[#1c1c18]"
+                      />
+                    </div>
+
+                    <div>
                       <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Comentarios / Notas sobre el Proyecto</label>
                       <textarea
                         rows="3"
@@ -5039,6 +5057,7 @@ export default function AdminPanel({
                       <th className="p-3">Cliente</th>
                       <th className="p-3">Servicio / Interés</th>
                       <th className="p-3 text-center">Tipo Lead</th>
+                      <th className="p-3 text-center">Origen</th>
                       <th className="p-3">Comentarios / Notas</th>
                       <th className="p-3 text-center">Seguimiento</th>
                     </tr>
@@ -5046,7 +5065,7 @@ export default function AdminPanel({
                   <tbody className="divide-y divide-stone-100">
                     {filteredMaquilaLeads.length === 0 ? (
                       <tr>
-                        <td colSpan="6" className="p-8 text-center text-stone-400 italic">
+                        <td colSpan="7" className="p-8 text-center text-stone-400 italic">
                           {maquilaSearchQuery ? "No se encontraron leads que coincidan con la búsqueda." : "No hay registros de leads en la base de datos."}
                         </td>
                       </tr>
@@ -5077,6 +5096,13 @@ export default function AdminPanel({
                                 "bg-stone-50 text-stone-850 border-stone-200"
                               }`}>
                                 {leadTypeVal}
+                              </span>
+                            </td>
+                            <td className="p-3 text-center">
+                              <span className={`inline-block px-2 py-0.5 text-[9px] uppercase tracking-wider font-bold rounded-sm border ${
+                                (lead.origin || 'quiz').toLowerCase() === 'quiz' ? 'bg-[#f4f7f6] text-[#2F403E] border-[#2F403E]/10' : 'bg-orange-50 text-orange-850 border-orange-200'
+                              }`}>
+                                {lead.origin || 'quiz'}
                               </span>
                             </td>
                             {editingMaquilaLeadId === lead.id ? (
@@ -5186,6 +5212,7 @@ export default function AdminPanel({
                           <div><span className="text-stone-400">Email:</span> <span className="font-mono text-stone-700">{lead.email}</span></div>
                           <div><span className="text-stone-400">Teléfono:</span> <span className="text-stone-700">{lead.phone ? `+${lead.lada || ''} ${lead.phone}`.trim() : 'N/A'}</span></div>
                           <div><span className="text-stone-400">Servicio:</span> <span className="font-medium text-stone-800">{lead.solution || 'No especificado'}</span></div>
+                          <div><span className="text-stone-400">Origen:</span> <span className="font-medium text-[#8C4723] uppercase text-[10px] tracking-wider">{lead.origin || 'quiz'}</span></div>
                           {editingMaquilaLeadId === lead.id ? (
                             <div className="bg-stone-50 p-3 border border-stone-200 mt-1 rounded space-y-2">
                               <label className="block text-[9px] font-bold text-stone-400 uppercase">Editar Comentarios</label>

@@ -111,6 +111,7 @@ export default async function handler(req, res) {
     stage,
     comments,
     lead_type,
+    origin,
     creation_mode 
   } = req.body || {};
 
@@ -167,6 +168,7 @@ export default async function handler(req, res) {
       stage: stage || '',
       comments: comments || '',
       lead_type: lead_type || '',
+      origin: origin || 'manual',
       follow_up_sent: false
     } : {
       name,
@@ -179,6 +181,7 @@ export default async function handler(req, res) {
       stage,
       comments: '',
       lead_type: '',
+      origin: 'quiz',
       follow_up_sent: false
     };
 
