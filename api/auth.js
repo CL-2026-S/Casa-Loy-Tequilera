@@ -1,5 +1,5 @@
 import { supabase } from './_utils/clients.js';
-import { hashPassword, signToken, verifyToken, getAuthUser, auditLog } from './_utils/auth.js';
+import { hashPassword, signToken, verifyToken, getAuthUser, auditLog, userHasRole } from './_utils/auth.js';
 import { sendPasswordResetEmail } from './_utils/emails.js';
 
 export default async function handler(req, res) {
@@ -151,7 +151,7 @@ export default async function handler(req, res) {
         return res.status(401).json({ error: 'UNAUTHORIZED', message: 'Inicia sesión para continuar.' });
       }
 
-      if (currentUser.role !== 'admin' && currentUser.role !== 'visor') {
+      if (!userHasRole(currentUser, 'admin', 'visor')) {
         return res.status(403).json({ error: 'FORBIDDEN', message: 'Acceso restringido.' });
       }
 
@@ -174,7 +174,7 @@ export default async function handler(req, res) {
 
     // List staff users (Admin only)
     if (req.method === 'GET' && action === 'list_users') {
-      if (currentUser.role !== 'admin') {
+      if (!userHasRole(currentUser, 'admin')) {
         return res.status(403).json({ error: 'FORBIDDEN', message: 'No tienes privilegios de Administrador.' });
       }
 
@@ -189,7 +189,7 @@ export default async function handler(req, res) {
 
     // Create staff user (Admin only)
     if (req.method === 'POST' && action === 'create_user') {
-      if (currentUser.role !== 'admin') {
+      if (!userHasRole(currentUser, 'admin')) {
         return res.status(403).json({ error: 'FORBIDDEN', message: 'No tienes privilegios de Administrador.' });
       }
 
@@ -238,7 +238,7 @@ export default async function handler(req, res) {
 
     // Update staff user (Admin only)
     if (req.method === 'POST' && action === 'update_user') {
-      if (currentUser.role !== 'admin') {
+      if (!userHasRole(currentUser, 'admin')) {
         return res.status(403).json({ error: 'FORBIDDEN', message: 'No tienes privilegios de Administrador.' });
       }
 
@@ -277,7 +277,7 @@ export default async function handler(req, res) {
 
     // Delete staff user (Admin only)
     if (req.method === 'POST' && action === 'delete_user') {
-      if (currentUser.role !== 'admin') {
+      if (!userHasRole(currentUser, 'admin')) {
         return res.status(403).json({ error: 'FORBIDDEN', message: 'No tienes privilegios de Administrador.' });
       }
 

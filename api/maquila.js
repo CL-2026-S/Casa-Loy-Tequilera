@@ -1,6 +1,6 @@
 import { supabase } from './_utils/clients.js';
 import { sendMaquilaLeadEmail } from './_utils/emails.js';
-import { getAuthUser } from './_utils/auth.js';
+import { getAuthUser, userHasRole } from './_utils/auth.js';
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -27,8 +27,7 @@ export default async function handler(req, res) {
     }
 
     // Role check: admin, lead_maquila, editor are allowed
-    const allowedRoles = ['admin', 'lead_maquila', 'editor'];
-    if (!allowedRoles.includes(staffUser.role)) {
+    if (!userHasRole(staffUser, 'lead_maquila', 'editor')) {
       return res.status(403).json({ error: 'Prohibido. No tiene permisos para editar comentarios.' });
     }
 
@@ -69,8 +68,7 @@ export default async function handler(req, res) {
     }
 
     // Role check: admin, lead_maquila, editor, viewer are allowed
-    const allowedRoles = ['admin', 'lead_maquila', 'editor', 'viewer'];
-    if (!allowedRoles.includes(staffUser.role)) {
+    if (!userHasRole(staffUser, 'lead_maquila', 'editor', 'viewer')) {
       return res.status(403).json({ error: 'Prohibido. No tiene permisos suficientes para ver leads.' });
     }
 
@@ -125,8 +123,7 @@ export default async function handler(req, res) {
     }
 
     // Role check: admin, lead_maquila, editor are allowed to register manually
-    const allowedRoles = ['admin', 'lead_maquila', 'editor'];
-    if (!allowedRoles.includes(staffUser.role)) {
+    if (!userHasRole(staffUser, 'lead_maquila', 'editor')) {
       return res.status(403).json({ error: 'Prohibido. No tiene permisos para registrar leads.' });
     }
 

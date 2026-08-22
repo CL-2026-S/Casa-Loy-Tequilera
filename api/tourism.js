@@ -1,6 +1,6 @@
 import { supabase, authorizeInternal } from './_utils/clients.js';
 import { sendBookingEmail } from './_utils/emails.js';
-import { getAuthUser, auditLog } from './_utils/auth.js';
+import { getAuthUser, auditLog, userHasRole } from './_utils/auth.js';
 
 const getCurrentGuadalajaraTime = () => {
   try {
@@ -219,13 +219,13 @@ export default async function handler(req, res) {
       }
       
       if (staffUser) {
-        if (staffUser.role === 'cuentas_por_cobrar' && action !== 'update_invoice_sent') {
+        if (userHasRole(staffUser, 'cuentas_por_cobrar') && !userHasRole(staffUser, 'admin', 'experience_manager') && action !== 'update_invoice_sent') {
           return res.status(403).json({ 
             error: 'FORBIDDEN', 
             message: 'No tienes permisos para realizar esta acción (solo lectura de reservas).' 
           });
         }
-        if (staffUser.role === 'viewer' || staffUser.role === 'visor') {
+        if ((userHasRole(staffUser, 'viewer') || userHasRole(staffUser, 'visor')) && !userHasRole(staffUser, 'admin', 'experience_manager')) {
           return res.status(403).json({ 
             error: 'FORBIDDEN', 
             message: 'No tienes permisos para realizar modificaciones (solo lectura).' 

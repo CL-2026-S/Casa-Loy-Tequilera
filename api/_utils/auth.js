@@ -67,3 +67,11 @@ export function getAuthUser(req) {
   const token = authHeader.split(' ')[1];
   return verifyToken(token);
 }
+
+// Helper to check if a user has a specific role or multiple roles (comma separated)
+export function userHasRole(user, ...roles) {
+  if (!user || !user.role) return false;
+  const userRoles = String(user.role).split(',').map(r => r.trim());
+  if (userRoles.includes('admin')) return true;
+  return roles.some(role => userRoles.includes(role));
+}

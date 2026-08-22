@@ -1,5 +1,5 @@
 import { supabase, authorizeInternal } from './_utils/clients.js';
-import { getAuthUser, auditLog } from './_utils/auth.js';
+import { getAuthUser, auditLog, userHasRole } from './_utils/auth.js';
 import { sendRestaurantBookingEmail } from './_utils/emails.js';
 
 export default async function handler(req, res) {
@@ -26,7 +26,7 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       const currentUser = getAuthUser(req);
-      if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'restaurant_manager' && currentUser.role !== 'viewer')) {
+      if (!currentUser || !userHasRole(currentUser, 'admin', 'restaurant_manager', 'viewer')) {
         return res.status(401).json({ error: 'UNAUTHORIZED', message: 'No tienes permisos para consultar las reservas de restaurante.' });
       }
 
@@ -124,7 +124,7 @@ export default async function handler(req, res) {
       const currentUser = getAuthUser(req);
       const isInternal = authorizeInternal(req);
 
-      if (!isInternal && (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'restaurant_manager'))) {
+      if (!isInternal && (!currentUser || !userHasRole(currentUser, 'admin', 'restaurant_manager'))) {
         return res.status(401).json({ error: 'UNAUTHORIZED', message: 'No tienes autorización para cambiar el estado de las reservas.' });
       }
 

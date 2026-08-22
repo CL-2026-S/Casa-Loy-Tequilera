@@ -1,5 +1,5 @@
 import { supabase } from './_utils/clients.js';
-import { getAuthUser, auditLog } from './_utils/auth.js';
+import { getAuthUser, auditLog, userHasRole } from './_utils/auth.js';
 
 // Helper to map DB row (or mock data) to include brands and categories arrays for frontend compatibility
 function mapStoreForFrontend(store) {
@@ -185,7 +185,7 @@ export default async function handler(req, res) {
   // --- 2. POST / PUT / DELETE Handlers (Protected: Editor / Admin roles only) ---
   if (req.method === 'POST' || req.method === 'PUT' || req.method === 'DELETE') {
     const currentUser = getAuthUser(req);
-    if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'editor')) {
+    if (!currentUser || !userHasRole(currentUser, 'admin', 'editor')) {
       return res.status(401).json({ error: 'UNAUTHORIZED', message: 'No tienes autorización para realizar modificaciones en los puntos de venta.' });
     }
 

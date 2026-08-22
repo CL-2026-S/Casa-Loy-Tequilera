@@ -1,5 +1,5 @@
 import { supabase } from './_utils/clients.js';
-import { getAuthUser, auditLog } from './_utils/auth.js';
+import { getAuthUser, auditLog, userHasRole } from './_utils/auth.js';
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -81,7 +81,7 @@ export default async function handler(req, res) {
         if (!currentUser) {
           return res.status(401).json({ error: 'UNAUTHORIZED', message: 'Inicia sesión para ver las postulaciones.' });
         }
-        if (currentUser.role !== 'admin' && currentUser.role !== 'rh') {
+        if (!userHasRole(currentUser, 'admin', 'rh')) {
           return res.status(403).json({ error: 'FORBIDDEN', message: 'No tienes permisos para ver las postulaciones.' });
         }
 
@@ -106,8 +106,8 @@ export default async function handler(req, res) {
 
       const isJobsAction = action === 'save_job' || action === 'delete_job';
       const hasPermission = isJobsAction
-        ? (currentUser.role === 'admin' || currentUser.role === 'editor' || currentUser.role === 'rh')
-        : (currentUser.role === 'admin' || currentUser.role === 'editor');
+        ? userHasRole(currentUser, 'admin', 'editor', 'rh')
+        : userHasRole(currentUser, 'admin', 'editor');
 
       if (!hasPermission) {
         return res.status(403).json({ error: 'FORBIDDEN', message: 'No tienes los permisos requeridos para realizar esta acción.' });

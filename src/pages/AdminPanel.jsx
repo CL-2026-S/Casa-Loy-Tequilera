@@ -49,6 +49,19 @@ export default function AdminPanel({
   });
   const [isLoggedIn, setIsLoggedIn] = useState(!!token);
 
+  // Helper functions for multiple roles (comma separated)
+  const userHasRole = (roleToCheck) => {
+    if (!user || !user.role) return false;
+    return user.role.split(',').map(r => r.trim()).includes(roleToCheck);
+  };
+  
+  const isReadOnly = () => {
+    if (!user || !user.role) return true;
+    const roles = user.role.split(',').map(r => r.trim());
+    if (roles.includes('admin')) return false; // Admin has write access to everything
+    return roles.includes('viewer') || roles.includes('cuentas_por_cobrar');
+  };
+
   // Form states (Login)
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
@@ -384,17 +397,19 @@ export default function AdminPanel({
   useEffect(() => {
     // Set default active tab based on user role
     if (user) {
-      if (user.role === "editor") {
+      if (userHasRole("admin") || userHasRole("experience_manager")) {
+        setActiveTab("calendar");
+      } else if (userHasRole("editor")) {
         setActiveTab("cms");
-      } else if (user.role === "restaurant_manager") {
+      } else if (userHasRole("restaurant_manager")) {
         setActiveTab("restaurant");
-      } else if (user.role === "viewer" || user.role === "cuentas_por_cobrar") {
-        setActiveTab("log");
-      } else if (user.role === "rh") {
+      } else if (userHasRole("rh")) {
         setActiveTab("cms");
         setCmsTab("jobs");
-      } else if (user.role === "lead_maquila") {
+      } else if (userHasRole("lead_maquila")) {
         setActiveTab("maquila_leads");
+      } else if (userHasRole("viewer") || userHasRole("cuentas_por_cobrar")) {
+        setActiveTab("log");
       } else {
         setActiveTab("calendar");
       }
@@ -634,7 +649,7 @@ export default function AdminPanel({
       }
     }
 
-    if (activeTab === "audit" && user?.role === "admin") {
+    if (activeTab === "audit" && userHasRole("admin")) {
       try {
         const res = await fetch("/api/auth?action=audit_logs", { headers });
         if (res.ok) {
@@ -646,7 +661,7 @@ export default function AdminPanel({
       }
     }
 
-    if (activeTab === "users" && user?.role === "admin") {
+    if (activeTab === "users" && userHasRole("admin")) {
       try {
         const res = await fetch("/api/auth?action=list_users", { headers });
         if (res.ok) {
@@ -687,7 +702,7 @@ export default function AdminPanel({
       }
     }
 
-    if (activeTab === "coupons" && (user?.role === "admin" || user?.role === "experience_manager")) {
+    if (activeTab === "coupons" && (userHasRole("admin") || userHasRole("experience_manager"))) {
       try {
         const res = await fetch("/api/tourism", {
           method: "POST",
@@ -1804,6 +1819,25 @@ export default function AdminPanel({
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.target));
     const isNew = !editingUser?.id;
+
+    // Collect checked roles
+    const checkedBoxes = Array.from(e.target.querySelectorAll('input[name="roles_checkbox"]:checked'));
+    if (checkedBoxes.length === 0) {
+      alert("Por favor selecciona al menos un rol para el usuario.");
+      return;
+    }
+    const finalRole = checkedBoxes.map(cb => cb.value).join(',');
+
+    const payload = {
+      name: data.name,
+      email: data.email,
+      role: finalRole,
+      id: editingUser?.id
+    };
+    if (data.password) {
+      payload.password = data.password;
+    }
+
     try {
       const res = await fetch(`/api/auth?action=${isNew ? 'create_user' : 'update_user'}`, {
         method: "POST",
@@ -1811,7 +1845,7 @@ export default function AdminPanel({
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({ ...data, id: editingUser?.id })
+        body: JSON.stringify(payload)
       });
       const resData = await res.json();
       if (res.ok && resData.success) {
@@ -2075,8 +2109,11 @@ export default function AdminPanel({
               <span className="material-symbols-outlined">shield_person</span>
               <h4 className="font-serif text-xl font-bold uppercase tracking-wider">Casa Loy Tequilera Panel</h4>
             </div>
-            <p className="text-xs text-stone-500 mt-1">
-              Sesión activa: <strong className="text-stone-800">{user?.name}</strong> • Rol: <span className="bg-stone-100 text-stone-700 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider">{user?.role}</span>
+            <p className="text-xs text-stone-500 mt-1 flex items-center gap-1.5 flex-wrap">
+              Sesión activa: <strong className="text-stone-800">{user?.name}</strong> • Roles: 
+              {String(user?.role || '').split(',').map(r => (
+                <span key={r} className="bg-stone-100 text-stone-700 px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider rounded-sm">{r}</span>
+              ))}
             </p>
           </div>
           
@@ -2098,7 +2135,7 @@ export default function AdminPanel({
 
         {/* Dynamic Navigation Tabs based on Role */}
         <div className="flex flex-wrap border-b border-stone-200 gap-4 md:gap-6">
-          {(user?.role === "admin" || user?.role === "experience_manager") && (
+          {(userHasRole("admin") || userHasRole("experience_manager")) && (
             <button
               onClick={() => setActiveTab("calendar")}
               className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
@@ -2109,7 +2146,7 @@ export default function AdminPanel({
             </button>
           )}
 
-          {(user?.role === "admin" || user?.role === "experience_manager") && (
+          {(userHasRole("admin") || userHasRole("experience_manager")) && (
             <button
               onClick={() => setActiveTab("validate")}
               className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
@@ -2120,7 +2157,7 @@ export default function AdminPanel({
             </button>
           )}
 
-          {(user?.role === "admin" || user?.role === "experience_manager" || user?.role === "viewer" || user?.role === "cuentas_por_cobrar") && (
+          {(userHasRole("admin") || userHasRole("experience_manager") || userHasRole("viewer") || userHasRole("cuentas_por_cobrar")) && (
             <button
               onClick={() => setActiveTab("log")}
               className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
@@ -2131,7 +2168,7 @@ export default function AdminPanel({
             </button>
           )}
 
-          {(user?.role === "admin" || user?.role === "restaurant_manager" || user?.role === "viewer") && (
+          {(userHasRole("admin") || userHasRole("restaurant_manager") || userHasRole("viewer")) && (
             <button
               onClick={() => setActiveTab("restaurant")}
               className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
@@ -2142,11 +2179,11 @@ export default function AdminPanel({
             </button>
           )}
 
-          {(user?.role === "admin" || user?.role === "editor" || user?.role === "rh") && (
+          {(userHasRole("admin") || userHasRole("editor") || userHasRole("rh")) && (
             <button
               onClick={() => {
                 setActiveTab("cms");
-                if (user?.role === "rh" && cmsTab !== "jobs" && cmsTab !== "applications") {
+                if (userHasRole("rh") && !userHasRole("admin") && !userHasRole("editor") && cmsTab !== "jobs" && cmsTab !== "applications") {
                   setCmsTab("jobs");
                 }
               }}
@@ -2154,11 +2191,11 @@ export default function AdminPanel({
                 activeTab === "cms" ? "border-[#8C4723] text-[#8C4723] font-bold" : "border-transparent text-stone-500 hover:text-stone-800"
               }`}
             >
-              {user?.role === "rh" ? "💼 Bolsa de Trabajo" : "📝 CMS Contenidos"}
+              {(userHasRole("rh") && !userHasRole("admin") && !userHasRole("editor")) ? "💼 Bolsa de Trabajo" : "📝 CMS Contenidos"}
             </button>
           )}
 
-          {user?.role === "admin" && (
+          {userHasRole("admin") && (
             <button
               onClick={() => setActiveTab("users")}
               className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
@@ -2169,7 +2206,7 @@ export default function AdminPanel({
             </button>
           )}
 
-          {(user?.role === "admin" || user?.role === "experience_manager") && (
+          {(userHasRole("admin") || userHasRole("experience_manager")) && (
             <button
               onClick={() => setActiveTab("coupons")}
               className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
@@ -2180,7 +2217,7 @@ export default function AdminPanel({
             </button>
           )}
 
-          {(user?.role === "admin" || user?.role === "lead_maquila" || user?.role === "editor" || user?.role === "viewer") && (
+          {(userHasRole("admin") || userHasRole("lead_maquila") || userHasRole("editor") || userHasRole("viewer")) && (
             <button
               onClick={() => setActiveTab("maquila_leads")}
               className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
@@ -2191,7 +2228,7 @@ export default function AdminPanel({
             </button>
           )}
 
-          {(user?.role === "admin" || user?.role === "viewer") && (
+          {(userHasRole("admin") || userHasRole("viewer")) && (
             <button
               onClick={() => setActiveTab("audit")}
               className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
@@ -2207,7 +2244,7 @@ export default function AdminPanel({
         <div className="bg-white border border-stone-200/60 p-8 shadow-sm">
           
           {/* TAB: Calendar & Capacity (Tours) */}
-          {(user?.role === "admin" || user?.role === "experience_manager") && activeTab === "calendar" && (
+          {(userHasRole("admin") || userHasRole("experience_manager")) && activeTab === "calendar" && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 text-left">
               <div className="lg:col-span-8 space-y-6">
                 <div className="bg-stone-50 p-4 border border-stone-200/50">
@@ -2448,7 +2485,7 @@ export default function AdminPanel({
           )}
 
           {/* TAB: Ticket Validation (QR & Manual search) */}
-          {(user?.role === "admin" || user?.role === "experience_manager") && activeTab === "validate" && (
+          {(userHasRole("admin") || userHasRole("experience_manager")) && activeTab === "validate" && (
             <div className="max-w-xl mx-auto space-y-6 text-left py-4">
               <div className="space-y-2">
                 <h5 className="text-sm uppercase tracking-wider text-[#8C4723] font-bold">
@@ -2649,7 +2686,7 @@ export default function AdminPanel({
           )}
 
           {/* TAB: Bookings Log (Tours) */}
-          {(user?.role === "admin" || user?.role === "experience_manager" || user?.role === "viewer" || user?.role === "cuentas_por_cobrar") && activeTab === "log" && (
+          {(userHasRole("admin") || userHasRole("experience_manager") || userHasRole("viewer") || userHasRole("cuentas_por_cobrar")) && activeTab === "log" && (
             <div className="space-y-6 text-left">
               <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-stone-100 pb-4">
                 <div>
@@ -2659,7 +2696,7 @@ export default function AdminPanel({
                   <p className="text-xs text-stone-400">Listado general de reservas y control de estado.</p>
                 </div>
                 
-                {user?.role !== "viewer" && user?.role !== "cuentas_por_cobrar" && (
+                {!isReadOnly() && (
                   <button
                     onClick={() => setShowManualForm(!showManualForm)}
                     className="text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white font-semibold uppercase tracking-wider px-4 py-2.5 flex items-center gap-1.5 cursor-pointer"
@@ -2739,7 +2776,7 @@ export default function AdminPanel({
                   </div>
 
                   {/* Descargar Periodos Form */}
-                  {(user?.role === "admin" || user?.role === "experience_manager" || user?.role === "cuentas_por_cobrar") && (
+                  {(userHasRole("admin") || userHasRole("experience_manager") || userHasRole("cuentas_por_cobrar")) && (
                 <div className="bg-stone-50 border border-stone-200/60 p-4 flex flex-col md:flex-row md:items-end gap-4 mb-4">
                   <div className="flex-1 min-w-[150px]">
                     <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Descargar Periodos - Fecha Inicio</label>
@@ -3130,7 +3167,7 @@ export default function AdminPanel({
                                     type="checkbox"
                                     id={`invoice-check-${log.code}`}
                                     checked={log.invoice_sent || false}
-                                    disabled={user?.role === "viewer"}
+                                    disabled={userHasRole("viewer")}
                                     onChange={(e) => handleToggleInvoiceSent(log.code, e.target.checked)}
                                     className="w-3.5 h-3.5 rounded border-stone-300 text-[#8C4723] focus:ring-[#8C4723] cursor-pointer"
                                   />
@@ -3166,7 +3203,7 @@ export default function AdminPanel({
                               </div>
                             </td>
                             <td className="p-3 text-center">
-                              {(user?.role === "viewer" || user?.role === "cuentas_por_cobrar") ? (
+                              {isReadOnly() ? (
                                 <span className={`inline-block px-2.5 py-1 text-[9px] uppercase tracking-wider font-bold border ${
                                   isCompleted 
                                     ? "bg-red-50 text-red-700 border-red-200" 
@@ -3407,7 +3444,7 @@ export default function AdminPanel({
                                       </div>
 
                                       <div className="flex flex-wrap items-center justify-between gap-2 text-[10px]">
-                                        {user?.role === "viewer" || user?.role === "cuentas_por_cobrar" ? (
+                                        {isReadOnly() ? (
                                           <span className={`inline-block px-2 py-0.5 uppercase tracking-wider font-bold border ${
                                             isCompleted 
                                               ? "bg-red-50 text-red-700 border-red-200" 
@@ -3447,7 +3484,7 @@ export default function AdminPanel({
                                               type="checkbox"
                                               id={`inv-cal-${log.code}`}
                                               checked={log.invoice_sent || false}
-                                              disabled={user?.role === "viewer"}
+                                              disabled={userHasRole("viewer")}
                                               onChange={(e) => handleToggleInvoiceSent(log.code, e.target.checked)}
                                               className="w-3 h-3 rounded border-stone-300 text-[#8C4723] focus:ring-[#8C4723] cursor-pointer"
                                             />
@@ -3493,7 +3530,7 @@ export default function AdminPanel({
           )}
 
           {/* TAB: Restaurant Reservations (Nativo 1937) */}
-          {(user?.role === "admin" || user?.role === "restaurant_manager" || user?.role === "viewer") && activeTab === "restaurant" && (
+          {(userHasRole("admin") || userHasRole("restaurant_manager") || userHasRole("viewer")) && activeTab === "restaurant" && (
             <div className="space-y-6 text-left">
               <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-stone-100 pb-4">
                 <div>
@@ -3503,7 +3540,7 @@ export default function AdminPanel({
                   <p className="text-xs text-stone-400">Administra mesas, cupos y reservas capturadas en el portal de Nativo.</p>
                 </div>
                 
-                {user?.role !== "viewer" && (
+                {!userHasRole("viewer") && (
                   <button
                     onClick={() => setShowRestManualForm(!showRestManualForm)}
                     className="text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white font-semibold uppercase tracking-wider px-4 py-2.5 flex items-center gap-1.5 cursor-pointer"
@@ -3638,7 +3675,7 @@ export default function AdminPanel({
                           <td className="p-3 text-center font-bold">{log.guests} pax</td>
                           <td className="p-3 uppercase text-[10px] tracking-wide text-stone-500 font-semibold">{log.reason}</td>
                           <td className="p-3 text-center">
-                            {user?.role === "viewer" ? (
+                            {userHasRole("viewer") ? (
                               <span className={`inline-block px-2.5 py-1 text-[9px] uppercase tracking-wider font-bold border ${
                                 log.status === "Completada"
                                   ? "bg-red-50 text-red-700 border-red-200"
@@ -3676,7 +3713,7 @@ export default function AdminPanel({
           )}
 
           {/* TAB: CMS modules (Banners, Dishes, Blog with IA, Jobs, POS CRUD) */}
-          {(user?.role === "admin" || user?.role === "editor" || user?.role === "rh") && activeTab === "cms" && (
+          {(userHasRole("admin") || userHasRole("editor") || userHasRole("rh")) && activeTab === "cms" && (
             <div className="space-y-6 text-left">
               
               {/* CMS Sub navigation bar */}
@@ -3688,7 +3725,7 @@ export default function AdminPanel({
                   { id: "jobs", label: "💼 Vacantes", roles: ["admin", "editor", "rh"] },
                   { id: "applications", label: "👥 Postulantes / CVs", roles: ["admin", "rh"] },
                   { id: "pos", label: "📍 Puntos de Venta (Where to buy)", roles: ["admin", "editor"] }
-                ].filter(sub => sub.roles.includes(user?.role)).map(sub => (
+                ].filter(sub => sub.roles.some(roleOpt => userHasRole(roleOpt))).map(sub => (
                   <button
                     key={sub.id}
                     onClick={() => {
@@ -4211,7 +4248,7 @@ export default function AdminPanel({
               )}
 
               {/* CMS DD: Job Applications Table */}
-              {cmsTab === "applications" && (user?.role === "admin" || user?.role === "rh") && (
+              {cmsTab === "applications" && (userHasRole("admin") || userHasRole("rh")) && (
                 <div className="space-y-6">
                   <div className="flex flex-wrap items-end justify-between gap-4 border-b border-stone-100 pb-4">
                     <div>
@@ -4516,7 +4553,7 @@ export default function AdminPanel({
           )}
 
           {/* TAB: Audit logs (Admin only) */}
-          {activeTab === "audit" && user?.role === "admin" && (
+          {activeTab === "audit" && userHasRole("admin") && (
             <div className="space-y-4 text-left">
               <div>
                 <h5 className="text-sm uppercase tracking-wider text-[#8C4723] font-bold">
@@ -4559,7 +4596,7 @@ export default function AdminPanel({
           )}
 
           {/* TAB: Personal & RBAC (Admin only) */}
-          {activeTab === "users" && user?.role === "admin" && (
+          {activeTab === "users" && userHasRole("admin") && (
             <div className="space-y-6 text-left">
               <div className="flex justify-between items-center border-b border-stone-100 pb-4">
                 <div>
@@ -4593,19 +4630,35 @@ export default function AdminPanel({
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Asignación de Rol *</label>
-                      <select name="role" defaultValue={editingUser.role} className="w-full bg-white border border-stone-200 p-2 text-xs">
-                        <option value="admin">Administrador (Acceso Completo)</option>
-                        <option value="editor">Editor (CMS, Blog, Banners, KAMs)</option>
-                        <option value="experience_manager">Gestor de Experiencias (Tours, QR)</option>
-                        <option value="restaurant_manager">Gestor de Restaurante (Reservas Mesa)</option>
-                        <option value="rh">Recursos Humanos (RH - Bolsa de Trabajo)</option>
-                        <option value="cuentas_por_cobrar">Cuentas por Cobrar (Solo lectura de reservas y facturas)</option>
-                        <option value="viewer">Visor (Lectura de Reservas & Logs)</option>
-                        <option value="lead_maquila">Gestor de Leads de Maquila (Solo registro y visualización de Maquilas)</option>
-                      </select>
+                      <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Roles Asignados (Selecciona uno o varios) *</label>
+                      <div className="bg-white border border-stone-200 p-3 space-y-2 rounded max-h-[160px] overflow-y-auto">
+                        {[
+                          { id: 'admin', label: 'Administrador (Acceso Completo)' },
+                          { id: 'editor', label: 'Editor (CMS, Blog, Banners)' },
+                          { id: 'experience_manager', label: 'Gestor de Experiencias (Tours, QR)' },
+                          { id: 'restaurant_manager', label: 'Gestor de Restaurante (Mesas)' },
+                          { id: 'rh', label: 'Recursos Humanos (Bolsa de Trabajo)' },
+                          { id: 'cuentas_por_cobrar', label: 'Cuentas por Cobrar (Facturas)' },
+                          { id: 'viewer', label: 'Visor General (Solo Lectura)' },
+                          { id: 'lead_maquila', label: 'Gestor de Leads de Maquila' }
+                        ].map(roleOpt => {
+                          const isChecked = String(editingUser?.role || '').split(',').map(r => r.trim()).includes(roleOpt.id);
+                          return (
+                            <label key={roleOpt.id} className="flex items-center gap-2 cursor-pointer text-stone-700 hover:text-stone-900 select-none">
+                              <input 
+                                type="checkbox" 
+                                name="roles_checkbox" 
+                                value={roleOpt.id} 
+                                defaultChecked={isChecked}
+                                className="rounded text-[#8C4723] focus:ring-[#8C4723] cursor-pointer" 
+                              />
+                              <span className="text-xs">{roleOpt.label}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
                     </div>
                     <div>
                       <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">
@@ -4640,18 +4693,22 @@ export default function AdminPanel({
                         <td className="p-3 font-semibold text-stone-900">{staff.name}</td>
                         <td className="p-3 font-mono text-[11px] text-stone-500">{staff.email}</td>
                         <td className="p-3">
-                          <span className={`inline-block px-2.5 py-0.5 text-[10px] font-sans font-bold uppercase rounded-sm ${
-                            staff.role === 'admin' ? 'bg-red-100 text-red-800' :
-                            staff.role === 'editor' ? 'bg-blue-100 text-blue-800' :
-                            staff.role === 'experience_manager' ? 'bg-amber-100 text-amber-800' :
-                            staff.role === 'restaurant_manager' ? 'bg-purple-100 text-purple-800' :
-                            staff.role === 'cuentas_por_cobrar' ? 'bg-emerald-100 text-emerald-800' :
-                            staff.role === 'rh' ? 'bg-teal-100 text-teal-800' :
-                            staff.role === 'lead_maquila' ? 'bg-orange-100 text-orange-850 border border-orange-200' :
-                            'bg-stone-100 text-stone-600'
-                          }`}>
-                            {staff.role}
-                          </span>
+                          <div className="flex flex-wrap gap-1.5">
+                            {String(staff.role || '').split(',').map(r => r.trim()).map(roleName => (
+                              <span key={roleName} className={`inline-block px-2.5 py-0.5 text-[10px] font-sans font-bold uppercase rounded-sm ${
+                                roleName === 'admin' ? 'bg-red-100 text-red-800' :
+                                roleName === 'editor' ? 'bg-blue-100 text-blue-800' :
+                                roleName === 'experience_manager' ? 'bg-amber-100 text-amber-800' :
+                                roleName === 'restaurant_manager' ? 'bg-purple-100 text-purple-800' :
+                                roleName === 'cuentas_por_cobrar' ? 'bg-emerald-100 text-emerald-800' :
+                                roleName === 'rh' ? 'bg-teal-100 text-teal-800' :
+                                roleName === 'lead_maquila' ? 'bg-orange-100 text-orange-850 border border-orange-200' :
+                                'bg-stone-100 text-stone-600'
+                              }`}>
+                                {roleName}
+                              </span>
+                            ))}
+                          </div>
                         </td>
                         <td className="p-3 text-stone-400">{new Date(staff.created_at).toLocaleDateString()}</td>
                         <td className="p-3 text-center space-x-3">
@@ -4667,7 +4724,7 @@ export default function AdminPanel({
           )}
 
           {/* TAB: Cupones de Descuento (Admin/Experience Manager) */}
-          {(user?.role === "admin" || user?.role === "experience_manager") && activeTab === "coupons" && (
+          {(userHasRole("admin") || userHasRole("experience_manager")) && activeTab === "coupons" && (
             <div className="space-y-6 text-left">
               <div className="flex justify-between items-center border-b border-stone-100 pb-4">
                 <div>
@@ -4853,7 +4910,7 @@ export default function AdminPanel({
           )}
 
           {/* TAB: Leads de Maquila (Admin/Lead Maquila/Editor/Viewer) */}
-          {(user?.role === "admin" || user?.role === "lead_maquila" || user?.role === "editor" || user?.role === "viewer") && activeTab === "maquila_leads" && (
+          {(userHasRole("admin") || userHasRole("lead_maquila") || userHasRole("editor") || userHasRole("viewer")) && activeTab === "maquila_leads" && (
             <div className="space-y-6 text-left">
               <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-stone-100 pb-4">
                 <div>
@@ -4863,7 +4920,7 @@ export default function AdminPanel({
                   <p className="text-xs text-stone-400 font-sans">Listado y registro de prospectos para maquila de marca propia.</p>
                 </div>
                 
-                {user?.role !== "viewer" && (
+                {!userHasRole("viewer") && (
                   <button
                     onClick={() => setShowMaquilaManualForm(!showMaquilaManualForm)}
                     className="text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white font-semibold uppercase tracking-wider px-4 py-2.5 flex items-center gap-1.5 cursor-pointer transition-colors"
@@ -5137,7 +5194,7 @@ export default function AdminPanel({
                                   <span className="flex-1">
                                     {lead.comments || '-'}
                                   </span>
-                                  {user?.role !== "viewer" && (
+                                  {!userHasRole("viewer") && (
                                     <button
                                       onClick={() => {
                                         setEditingMaquilaLeadId(lead.id);
@@ -5245,7 +5302,7 @@ export default function AdminPanel({
                               <span className="flex-1">
                                 {lead.comments ? `"${lead.comments}"` : <span className="text-stone-400 not-italic font-sans">Sin comentarios.</span>}
                               </span>
-                              {user?.role !== "viewer" && (
+                              {!userHasRole("viewer") && (
                                 <button
                                   type="button"
                                   onClick={() => {
@@ -5395,7 +5452,7 @@ export default function AdminPanel({
                      <input
                        type="checkbox"
                        checked={selectedQrTicket.invoice_sent || false}
-                       disabled={user?.role === "viewer"}
+                       disabled={userHasRole("viewer")}
                        onChange={(e) => handleToggleInvoiceSent(selectedQrTicket.code, e.target.checked)}
                        className="w-3.5 h-3.5 rounded border-stone-300 text-[#8C4723] focus:ring-[#8C4723] cursor-pointer"
                      />
