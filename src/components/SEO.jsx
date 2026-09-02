@@ -75,21 +75,28 @@ const seoData = {
       }
     },
     maquilas: {
-      title: "Maquila de Tequila 100% Agave & Marca Propia B2B | Casa Loy Tequilera",
-      description: "Servicios integrales de Maquila de Tequila 100% agave, envasado, desarrollo de marca privada (Private Label) y exportación internacional. Hornos de mampostería y certificación CRT.",
-      ogTitle: "Servicio de Maquila de Tequila B2B - Casa Loy Tequilera",
-      ogDesc: "Lleva tu marca al mercado global con nuestra capacidad operativa, certificación CRT y estándares internacionales.",
+      title: "Marca Propia de Tequila 100% Agave B2B | Casa Loy Tequilera",
+      description: "Servicios integrales de producción de Tequila 100% agave, envasado, desarrollo de marca propia (Private Label) y exportación internacional. Hornos de mampostería y certificación CRT.",
+      ogTitle: "Servicio de Marca Propia de Tequila B2B - Casa Loy Tequilera",
+      ogDesc: "Lleva tu marca propia al mercado global con nuestra capacidad operativa, certificación CRT y estándares internacionales.",
       ogImage: "/Molienda.webp",
       schema: {
         "@context": "https://schema.org",
         "@type": "Service",
-        "serviceType": "Maquila de Tequila B2B y Marca Propia",
+        "serviceType": "Marca Propia de Tequila B2B",
         "provider": {
           "@type": "Organization",
           "name": "Casa Loy Tequilera"
         },
         "areaServed": "Global"
       }
+    },
+    "maquilas-v2": {
+      title: "Guía de Maquila de Tequila B2B v2 | Casa Loy Tequilera",
+      description: "Servicios de Maquila B2B, Marca Propia y Tequila a Granel en Los Altos de Jalisco. NOM 1633.",
+      ogTitle: "Guía de Maquila de Tequila B2B v2 - Casa Loy Tequilera",
+      ogDesc: "Detalles y diagnóstico interactivo para proyectos de tequila de marca propia y maquila por contrato.",
+      ogImage: "/Jimado Agave Tequilana Weber.webp"
     },
     brands: {
       title: "Nuestras Marcas | Portafolio de Tequilas Casa Loy",
@@ -371,11 +378,28 @@ const seoData = {
       ogImage: "/Don Manuel Loy.webp"
     },
     maquilas: {
-      title: "Private Label Tequila Development | Casa Loy Contract Bottling",
-      description: "We offer end-to-end private label tequila development and contract bottling services. Traditional masonry ovens, expert distillation, and packaging.",
-      ogTitle: "Contract Bottling & Brand Development - Casa Loy",
+      title: "100% Agave Tequila Private Label & Bottling B2B | Casa Loy Tequilera",
+      description: "Comprehensive 100% agave tequila private label manufacturing, contract bottling, and international export. Traditional masonry ovens and CRT certification.",
+      ogTitle: "B2B Private Label Tequila Services - Casa Loy Tequilera",
       ogDesc: "Bring your brand to the global market with our operational capacity and international quality standards.",
-      ogImage: "/Molienda.webp"
+      ogImage: "/Molienda.webp",
+      schema: {
+        "@context": "https://schema.org",
+        "@type": "Service",
+        "serviceType": "Tequila Private Label B2B",
+        "provider": {
+          "@type": "Organization",
+          "name": "Casa Loy Tequilera"
+        },
+        "areaServed": "Global"
+      }
+    },
+    "maquilas-v2": {
+      title: "Private Label Tequila B2B Guide v2 | Casa Loy Tequilera",
+      description: "B2B Private Label Tequila Manufacturing, Contract Bottling, and Bulk Supply in Los Altos de Jalisco. NOM 1633.",
+      ogTitle: "Private Label Tequila B2B Guide v2 - Casa Loy Tequilera",
+      ogDesc: "Operational details and 8-step diagnostic quiz for private label tequila projects.",
+      ogImage: "/Jimado Agave Tequilana Weber.webp"
     },
     brands: {
       title: "Our Brands | Casa Loy Tequila Portfolio",
@@ -484,7 +508,7 @@ const pathMap = {
   home: { es: "/", en: "/" },
   "home-interactive": { es: "/interactivo", en: "/interactivo" },
   about: { es: "/quienes-somos", en: "/about" },
-  maquilas: { es: "/maquilas", en: "/bottling" },
+  maquilas: { es: "/marca-propia", en: "/private-label" },
   brands: { es: "/marcas", en: "/brands" },
   turismo: { es: "/turismo", en: "/tourism" },
   "experience-oro": { es: "/turismo/oro", en: "/tourism/gold" },

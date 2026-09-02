@@ -21,6 +21,26 @@
       ],
       "destination": "https://casaloy.com/:path*",
       "permanent": true
+    },
+    {
+      "source": "/maquilas",
+      "destination": "/marca-propia",
+      "permanent": true
+    },
+    {
+      "source": "/bottling",
+      "destination": "/private-label",
+      "permanent": true
+    },
+    {
+      "source": "/maquilas-v2",
+      "destination": "/marca-propia",
+      "permanent": true
+    },
+    {
+      "source": "/bottling-v2",
+      "destination": "/private-label",
+      "permanent": true
     }
   ],
   "crons": [

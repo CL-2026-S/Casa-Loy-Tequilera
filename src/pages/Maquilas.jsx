@@ -105,10 +105,10 @@ export default function Maquilas({ lang = "es" }) {
 
   const content = {
     es: {
-      heroSub: "Destilería & Maquila Tequila B2B",
-      heroTitle: "Maquila de Tequila 100% Agave y Marca Propia",
+      heroSub: "Destilería & Tequila Marca Propia B2B",
+      heroTitle: "Marca Propia de Tequila 100% Agave",
       heroTitleItalic: "Infraestructura, Certificación CRT y Exportación Global.",
-      heroBtn: "Cotizar Maquila B2B",
+      heroBtn: "Cotizar Marca Propia B2B",
       
       quizOvertitle: "Quiz estratégico de 3 preguntas",
       quizTitle: "¿Qué tipo de proyecto buscas desarrollar?",
@@ -120,7 +120,7 @@ export default function Maquilas({ lang = "es" }) {
       step3Title: "¿En qué etapa se encuentra tu proyecto?",
       
       step1Opts: [
-        "Maquila completa de tequila",
+        "Desarrollo integral de Marca Propia",
         "Desarrollo de marca privada (Private Label)",
         "Compra de tequila a granel",
         "Embotellado para mi marca",
@@ -174,7 +174,7 @@ export default function Maquilas({ lang = "es" }) {
       capabilitiesList: [
         {
           num: "01",
-          title: "Maquila Integral",
+          title: "Producción Integral de Marca Propia",
           desc: "Desde la jima hasta el etiquetado final. Control total del proceso bajo estándares premium de exportación.",
           bullets: ["100% Agave Azul", "Diseño de Botella"],
         },
@@ -237,7 +237,7 @@ export default function Maquilas({ lang = "es" }) {
       step3Title: "What stage is your project in?",
       
       step1Opts: [
-        "Full tequila contract bottling",
+        "Full private label tequila production",
         "Private label development (Private Label)",
         "Bulk tequila purchase",
         "Bottling for my brand",

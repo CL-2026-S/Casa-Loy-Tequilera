@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maquila de Tequila B2B v2 | Casa Loy Tequilera</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Servicios de Maquila B2B, Marca Propia y Tequila a Granel en Los Altos de Jalisco. NOM 1633.">
+  <meta property="og:title" content="Guía de Maquila de Tequila B2B v2 - Casa Loy Tequilera">
+  <meta property="og:description" content="Detalles y diagnóstico interactivo para proyectos de tequila de marca propia y maquila por contrato.">
+  <meta property="og:image" content="/Jimado Agave Tequilana Weber.webp">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#8C4723',
+            secondary: '#53443a',
+            'outline-variant': '#d9c2b6'
+          },
+          fontFamily: {
+            serif: ['"EB Garamond"', 'serif'],
+            sans: ['Montserrat', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Slow Zoom Animation for Hero Image */
+    @keyframes slowZoom {
+      0% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+    .animate-slow-zoom {
+      animation: slowZoom 12s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* Scroll Arrow Animation */
+    @keyframes scrollArrow {
+      0% { transform: translateY(-4px); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(4px); opacity: 0; }
+    }
+    .animate-scroll-arrow {
+      animation: scrollArrow 2.2s infinite ease-in-out;
+    }
+
+    /* Custom Transitions */
+    .transition-custom {
+      transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+  </style>
+</head>
+<body class="bg-[#fcf9f3] text-[#1c1c18] font-sans antialiased selection:bg-primary/20">
+
+  <!-- 5.1 HERO PARALLAX BANNER -->
+  <section class="relative h-screen w-full bg-zinc-950 overflow-hidden">
+    <div class="absolute inset-0 z-0 overflow-hidden">
+      <img
+        alt="Maquila Tequila Production"
+        class="w-full h-full object-cover brightness-[0.72] animate-slow-zoom"
+        src="/Naves Industriales Casa Loy Tequilera.webp"
+      />
+      <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
+    </div>
+    
+    <div class="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center h-full pt-16 pb-28">
+      <span class="font-sans text-[#FDA377] font-bold tracking-[0.3em] text-[10px] md:text-xs uppercase mb-6 block">
+        Destilería & Maquila Tequila B2B
+      </span>
+      <h1 class="font-serif text-[clamp(28px,4.5vw,56px)] leading-[1.1] tracking-tight font-light text-white uppercase max-w-4xl mx-auto mb-6">
+        MAQUILA DE TEQUILA DE MARCA PROPIA EN MÉXICO
+      </h1>
+      <p class="font-serif text-white/90 italic text-lg md:text-xl font-normal max-w-2xl mx-auto mb-6">
+        "Tu visión. Nuestra maestría y legado."
+      </p>
+      <p class="font-sans text-white/80 font-light text-sm md:text-base max-w-2xl mx-auto mb-10 leading-relaxed">
+        Una destilería familiar con NOM 1633 diseñada para fundadores, marcas existentes y distribuidores listos para construir un proyecto con raíces sólidas y trazabilidad total.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-5 items-center justify-center w-full max-w-md sm:max-w-none pt-2">
+        <a
+          class="bg-primary border border-primary hover:bg-[#a6562b] hover:border-[#a6562b] text-white font-sans text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-semibold py-4 px-8 transition-custom min-w-[200px] text-center shadow-lg"
+          href="#quiz-v2"
+        >
+          Iniciar Diagnóstico B2B
+        </a>
+        <a
+          class="border border-white/35 hover:border-white hover:bg-white/5 text-white font-sans text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-semibold py-4 px-8 transition-custom min-w-[200px] text-center"
+          href="#contact-scheduler"
+        >
+          Reservar Llamada Técnica
+        </a>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1.5 opacity-70">
+      <svg class="w-4 h-4 text-white/70 animate-scroll-arrow" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+      </svg>
+    </div>
+  </section>
+
+  <!-- TRUST BAR -->
+  <div class="bg-[#EDE7DE]/40 border-y border-outline-variant/30 py-5">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12">
+      <div class="flex flex-wrap lg:flex-nowrap justify-center items-center gap-y-3 gap-x-5 text-center">
+        <span class="font-sans text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-primary">NOM 1633</span>
+        <span class="text-primary text-xs font-semibold select-none hidden lg:inline">✦</span>
+        <span class="font-sans text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-[#1C1C1C]">Los Altos de Jalisco</span>
+        <span class="text-primary text-xs font-semibold select-none hidden lg:inline">✦</span>
+        <span class="font-sans text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-[#1C1C1C]">Destilería Familiar</span>
+        <span class="text-primary text-xs font-semibold select-none hidden lg:inline">✦</span>
+        <span class="font-sans text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-[#1C1C1C]">Agave Propio desde 1992</span>
+        <span class="text-primary text-xs font-semibold select-none hidden lg:inline">✦</span>
+        <span class="font-sans text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-[#1C1C1C]">Control por Lotes</span>
+        <span class="text-primary text-xs font-semibold select-none hidden lg:inline">✦</span>
+        <span class="font-sans text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-[#1C1C1C]">Exportación Global</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5.2 WHY CASA LOY (Bento Grid) -->
+  <section class="py-20 md:py-32">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
+      <div class="mb-12">
+        <span class="font-sans text-secondary font-semibold tracking-widest uppercase mb-4 block text-xs">
+          Por qué Casa Loy
+        </span>
+        <h2 class="font-serif text-4xl md:text-5xl mb-12 text-[#1c1c18] font-light leading-tight">
+          Una destilería familiar y productora en Los Altos de Jalisco.
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- 1. NOM 1633 Card -->
+        <div class="border border-outline-variant bg-[#EDE7DE]/40 p-8 flex flex-col justify-between min-h-[220px] md:col-span-2 relative transition-custom hover:border-primary">
+          <div>
+            <span class="font-sans text-primary text-[10px] font-bold tracking-widest block mb-4 uppercase">Origen</span>
+            <h3 class="font-serif text-2xl text-[#1c1c18] font-bold leading-tight max-w-xl">NOM 1633, Ayotlán, Jalisco</h3>
+          </div>
+          <div class="absolute right-8 bottom-4 font-serif text-6xl text-primary/10 select-none font-bold">1633</div>
+        </div>
+
+        <!-- 2. Family Structure Card -->
+        <div class="bg-zinc-950 text-white p-8 flex flex-col justify-between min-h-[220px]">
+          <div>
+            <span class="font-sans text-[#FDA377] text-[10px] font-bold tracking-widest block mb-4 uppercase">Estructura</span>
+            <h3 class="font-serif text-xl text-white font-semibold leading-snug">Empresa familiar, tres generaciones agaveras</h3>
+          </div>
+          <span class="material-symbols-outlined text-[#FDA377] text-3xl opacity-20 self-end">diversity_3</span>
+        </div>
+
+        <!-- 3. Own Agave Card -->
+        <div class="border border-outline-variant bg-white p-8 flex flex-col justify-between min-h-[220px] transition-custom hover:border-primary">
+          <div>
+            <span class="font-sans text-primary text-[10px] font-bold tracking-widest block mb-4 uppercase">Agave</span>
+            <h3 class="font-serif text-xl text-[#1c1c18] font-semibold leading-snug">Cultivo propio certificado desde 1992</h3>
+          </div>
+          <div class="font-mono text-xs text-primary font-semibold tracking-wider">Desde 1992</div>
+        </div>
+
+        <!-- 4. Infrastructure Card -->
+        <div class="border border-outline-variant bg-white p-8 flex flex-col justify-between min-h-[220px] md:col-span-2 relative transition-custom hover:border-primary">
+          <div>
+            <span class="font-sans text-primary text-[10px] font-bold tracking-widest block mb-4 uppercase">Infraestructura</span>
+            <h3 class="font-serif text-2xl text-[#1c1c18] font-bold leading-tight max-w-xl">Diseñada para escalar proyectos de volumen serio</h3>
+          </div>
+          <span class="material-symbols-outlined text-stone-200 text-5xl absolute right-8 bottom-6 select-none">precision_manufacturing</span>
+        </div>
+
+        <!-- 5. Team Card -->
+        <div class="border border-outline-variant bg-white p-8 flex flex-col justify-between min-h-[220px] transition-custom hover:border-primary group">
+          <div>
+            <span class="font-sans text-primary text-[10px] font-bold tracking-widest block mb-4 uppercase">Equipo</span>
+            <h3 class="font-serif text-xl text-[#1c1c18] font-semibold leading-snug">Atención directa de los tomadores de decisiones</h3>
+          </div>
+          <div class="w-8 h-[1px] bg-primary/20 group-hover:w-16 transition-all duration-300"></div>
+        </div>
+
+        <!-- 6. Lab Quality Card -->
+        <div class="border border-outline-variant bg-[#EDE7DE]/20 p-8 flex flex-col justify-between min-h-[220px] md:col-span-2 transition-custom hover:border-primary">
+          <div>
+            <span class="font-sans text-primary text-[10px] font-bold tracking-widest block mb-4 uppercase">Calidad</span>
+            <h3 class="font-serif text-2xl text-[#1c1c18] font-bold leading-tight max-w-xl">Análisis químicos y control lote a lote en laboratorio</h3>
+          </div>
+          <span class="material-symbols-outlined text-primary text-4xl opacity-35 self-end">biotech</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5.3 INTERACTIVE PROCESS EXPLORER -->
+  <section class="bg-[#1C1A19] text-white py-20 md:py-32 relative overflow-hidden">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left relative z-10">
+      <div class="mb-12">
+        <span class="font-sans text-[#FDA377] font-semibold tracking-widest uppercase mb-4 block text-xs">
+          Dentro de la Destilería
+        </span>
+        <h2 class="font-serif text-4xl md:text-5xl text-white font-light">
+          De la tierra a la botella: Nuestro Proceso.
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 mt-10">
+        <!-- Steps Tab List -->
+        <div class="lg:col-span-4 flex flex-col gap-2" id="process-tab-list">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Step Detail Display Card -->
+        <div class="lg:col-span-8 bg-zinc-950 border border-white/10 grid grid-cols-1 md:grid-cols-2 overflow-hidden shadow-2xl relative">
+          <div class="w-full h-full min-h-[300px] overflow-hidden order-1 md:order-2">
+            <img id="process-active-img" src="" alt="Proceso" class="w-full h-full object-cover transition-all duration-500">
+          </div>
+
+          <div class="p-8 md:p-10 flex flex-col justify-center text-left order-2 md:order-1 border-t md:border-t-0 md:border-r border-white/10">
+            <div class="space-y-4">
+              <span id="process-active-num" class="font-mono text-xs font-bold text-[#FDA377]">ETAPA 01</span>
+              <h3 id="process-active-title" class="font-serif text-2xl text-white font-semibold">Carga...</h3>
+              <p id="process-active-desc" class="font-sans text-sm text-[#B7C4BA] leading-relaxed font-light">Cargando detalles...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5.4 RUTAS DE SOLUCIÓN -->
+  <section class="py-20 md:py-32">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
+      <div>
+        <span class="font-sans text-secondary font-semibold tracking-widest uppercase mb-4 block text-xs">
+          Soluciones de Producción
+        </span>
+        <h2 class="font-serif text-4xl md:text-5xl mb-12 text-[#1c1c18] font-light">
+          Elige la ruta de producción adecuada.
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+        <!-- Card 1 -->
+        <div class="border border-outline-variant bg-white p-8 flex flex-col justify-between min-h-[250px] cursor-pointer group transition-custom hover:-translate-y-1 hover:border-primary hover:shadow-lg" onclick="selectSolution('Tequila de Marca Propia')">
+          <div class="space-y-4">
+            <div class="font-sans text-xs text-primary font-bold">01</div>
+            <h3 class="font-serif text-lg font-semibold text-[#1c1c18] group-hover:text-primary transition-colors">Tequila de Marca Propia</h3>
+            <p class="font-sans text-xs text-[#53443a] leading-relaxed font-light">Crea, envasa y comercializa tequila bajo tu propia marca desde cero.</p>
+          </div>
+          <div class="flex items-center justify-between mt-6">
+            <span class="font-mono text-[9px] text-stone-500 uppercase tracking-widest bg-stone-100 py-1 px-2.5 rounded group-hover:bg-amber-50 group-hover:text-amber-800 transition-colors">private_label</span>
+            <span class="material-symbols-outlined text-sm text-stone-400 group-hover:text-primary group-hover:translate-x-1 transition-all">arrow_forward</span>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="border border-outline-variant bg-white p-8 flex flex-col justify-between min-h-[250px] cursor-pointer group transition-custom hover:-translate-y-1 hover:border-primary hover:shadow-lg" onclick="selectSolution('Maquila / Producción por Contrato')">
+          <div class="space-y-4">
+            <div class="font-sans text-xs text-primary font-bold">02</div>
+            <h3 class="font-serif text-lg font-semibold text-[#1c1c18] group-hover:text-primary transition-colors">Maquila / Contrato</h3>
+            <p class="font-sans text-xs text-[#53443a] leading-relaxed font-light">Producción a la medida bajo tus especificaciones y fórmulas requeridas.</p>
+          </div>
+          <div class="flex items-center justify-between mt-6">
+            <span class="font-mono text-[9px] text-stone-500 uppercase tracking-widest bg-stone-100 py-1 px-2.5 rounded group-hover:bg-amber-50 group-hover:text-amber-800 transition-colors">contract_mfg</span>
+            <span class="material-symbols-outlined text-sm text-stone-400 group-hover:text-primary group-hover:translate-x-1 transition-all">arrow_forward</span>
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="border border-outline-variant bg-white p-8 flex flex-col justify-between min-h-[250px] cursor-pointer group transition-custom hover:-translate-y-1 hover:border-primary hover:shadow-lg" onclick="selectSolution('Tequila a Granel')">
+          <div class="space-y-4">
+            <div class="font-sans text-xs text-primary font-bold">03</div>
+            <h3 class="font-serif text-lg font-semibold text-[#1c1c18] group-hover:text-primary transition-colors">Tequila a Granel</h3>
+            <p class="font-sans text-xs text-[#53443a] leading-relaxed font-light">Suministro de volumen constante para embotelladoras, importadores o distribuidores.</p>
+          </div>
+          <div class="flex items-center justify-between mt-6">
+            <span class="font-mono text-[9px] text-stone-500 uppercase tracking-widest bg-stone-100 py-1 px-2.5 rounded group-hover:bg-amber-50 group-hover:text-amber-800 transition-colors">bulk_tequila</span>
+            <span class="material-symbols-outlined text-sm text-stone-400 group-hover:text-primary group-hover:translate-x-1 transition-all">arrow_forward</span>
+          </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="border border-outline-variant bg-white p-8 flex flex-col justify-between min-h-[250px] cursor-pointer group transition-custom hover:-translate-y-1 hover:border-primary hover:shadow-lg" onclick="selectSolution('Servicio de Envasado y Co-packing')">
+          <div class="space-y-4">
+            <div class="font-sans text-xs text-primary font-bold">04</div>
+            <h3 class="font-serif text-lg font-semibold text-[#1c1c18] group-hover:text-primary transition-colors">Envasado & Co-packing</h3>
+            <p class="font-sans text-xs text-[#53443a] leading-relaxed font-light">Embotellado, etiquetado y embalaje para proyectos que ya tienen líquido o botellas.</p>
+          </div>
+          <div class="flex items-center justify-between mt-6">
+            <span class="font-mono text-[9px] text-stone-500 uppercase tracking-widest bg-stone-100 py-1 px-2.5 rounded group-hover:bg-amber-50 group-hover:text-amber-800 transition-colors">copacking</span>
+            <span class="material-symbols-outlined text-sm text-stone-400 group-hover:text-primary group-hover:translate-x-1 transition-all">arrow_forward</span>
+          </div>
+        </div>
+        <!-- Card 5 -->
+        <div class="border border-outline-variant bg-white p-8 flex flex-col justify-between min-h-[250px] cursor-pointer group transition-custom hover:-translate-y-1 hover:border-primary hover:shadow-lg" onclick="selectSolution('Desarrollo de Perfil de Autor')">
+          <div class="space-y-4">
+            <div class="font-sans text-xs text-primary font-bold">05</div>
+            <h3 class="font-serif text-lg font-semibold text-[#1c1c18] group-hover:text-primary transition-colors">Perfil de Autor</h3>
+            <p class="font-sans text-xs text-[#53443a] leading-relaxed font-light">Ajuste de perfiles organolépticos exclusivos guiado por nuestros maestros tequileros.</p>
+          </div>
+          <div class="flex items-center justify-between mt-6">
+            <span class="font-mono text-[9px] text-stone-500 uppercase tracking-widest bg-stone-100 py-1 px-2.5 rounded group-hover:bg-amber-50 group-hover:text-amber-800 transition-colors">custom_profile</span>
+            <span class="material-symbols-outlined text-sm text-stone-400 group-hover:text-primary group-hover:translate-x-1 transition-all">arrow_forward</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="mt-12 font-serif italic text-base text-primary max-w-2xl leading-relaxed">
+        * Todas las rutas están certificadas bajo la <strong>NOM 1633</strong> garantizando el estricto cumplimiento ante el Consejo Regulador del Tequila.
+      </p>
+    </div>
+  </section>
+
+  <!-- 5.5 TARGET AUDIENCE INTERACTIVE TABS -->
+  <section class="bg-[#EDE7DE]/20 py-20 md:py-32 border-y border-outline-variant/30">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
+      <div>
+        <span class="font-sans text-secondary font-semibold tracking-widest uppercase mb-2 block text-xs">
+          Rutas por Negocio
+        </span>
+        <h2 class="font-serif text-4xl md:text-5xl text-[#1c1c18] font-light">
+          Soluciones diseñadas a la medida de tu rol.
+        </h2>
+        <p class="text-sm text-[#53443a] font-light mt-3 mb-10 max-w-xl leading-relaxed">
+          Selecciona tu perfil de negocio para conocer los beneficios y la ruta sugerida:
+        </p>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="flex flex-wrap gap-2 border-b border-outline-variant/30 pb-px mb-8" id="audience-tab-list">
+        <!-- Populated by JavaScript -->
+      </div>
+
+      <!-- Selected Audience Details -->
+      <div class="bg-white border border-outline-variant/40 p-8 md:p-12 shadow-sm min-h-[300px] flex flex-col justify-between">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div class="lg:col-span-7 space-y-4">
+            <span id="aud-active-tag" class="font-sans text-xs text-primary font-bold">Carga...</span>
+            <h3 id="aud-active-title" class="font-serif text-2xl md:text-3xl text-[#1c1c18] font-bold">Cargando...</h3>
+            <p id="aud-active-desc" class="font-sans text-sm text-[#53443a] leading-relaxed font-light">...</p>
+          </div>
+
+          <div class="lg:col-span-5 bg-[#EDE7DE]/15 p-6 border-l-2 border-primary space-y-4">
+            <div class="font-sans text-[10px] text-[#8C4723] font-bold tracking-widest uppercase">
+              Beneficios Clave
+            </div>
+            <ul class="space-y-3" id="aud-active-benefits">
+              <!-- Populated by JavaScript -->
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-outline-variant/20 flex flex-col sm:flex-row gap-4 items-center justify-between">
+          <span class="font-serif italic text-xs text-stone-500">
+            * Evaluaremos tu factibilidad técnica en base a este perfil.
+          </span>
+          <a 
+            href="#quiz-v2"
+            class="bg-[#8C4723] text-white hover:bg-[#a6562b] py-3.5 px-8 font-sans text-[10px] uppercase tracking-widest font-semibold text-center transition-all min-w-[200px]"
+          >
+            Comenzar Proyecto
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5.6 PROBLEMAS QUE RESOLVEMOS (Accordion) -->
+  <section class="py-20 md:py-32">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
+      <div>
+        <span class="font-sans text-secondary font-semibold tracking-widest uppercase mb-4 block text-xs">
+          Mitigación de Riesgo
+        </span>
+        <h2 class="font-serif text-4xl md:text-5xl mb-12 text-[#1c1c18] font-light">
+          Tu proyecto de tequila conlleva riesgos comerciales reales. Te ayudamos a mitigarlos.
+        </h2>
+      </div>
+
+      <div class="max-w-4xl space-y-2 border-t border-outline-variant/40 pt-4 mt-6" id="risks-accordion-container">
+        <!-- Populated by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 5.7 QUIZ INTERACTIVO -->
+  <section id="quiz-v2" class="relative py-20 md:py-32 bg-[#1C1A19] text-white overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <img
+        alt="Agave Hearts Background"
+        class="w-full h-full object-cover brightness-[0.45] opacity-45"
+        src="/Piñas de Agave Tequilana Weber.webp"
+      />
+    </div>
+    <div class="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <div class="lg:col-span-5 text-left space-y-6">
+          <span class="font-sans text-[#FDA377] font-semibold tracking-widest uppercase block text-xs">
+            Diagnóstico Operativo
+          </span>
+          <h2 class="font-serif text-4xl md:text-5xl text-white leading-tight font-light">
+            ¿En qué etapa se encuentra tu proyecto de tequila?
+          </h2>
+          <p class="font-sans text-white/80 font-light leading-relaxed text-sm md:text-base">
+            Diagnóstico estratégico de 8 pasos para calificar tu ruta de producción, volumen y viabilidad operativa.
+          </p>
+          
+          <div class="flex flex-col gap-2 pt-2" id="quiz-step-indicator-box">
+            <div class="text-xs text-white/40 font-mono" id="quiz-step-counter">
+              Paso 1 de 8
+            </div>
+            <button 
+              id="quiz-back-btn"
+              onclick="prevQuizStep()"
+              class="text-[#FDA377] text-xs font-sans uppercase tracking-wider text-left border-b border-[#FDA377] max-w-fit pb-0.5 hover:text-white hover:border-white transition-colors cursor-pointer bg-transparent hidden"
+            >
+              ← Regresar
+            </button>
+          </div>
+        </div>
+
+        <!-- Glassmorphic Quiz Container -->
+        <div class="lg:col-span-7 p-8 md:p-10 bg-white/10 backdrop-blur-2xl border border-white/15 rounded-none shadow-2xl min-h-[440px] flex flex-col justify-center text-left relative">
+          
+          <!-- Step 1: Solution -->
+          <div id="quiz-step-1" class="quiz-step-pane space-y-6">
+            <span class="font-sans text-[#FDA377] font-bold tracking-wider text-[10px] block">01 / 08 · SOLUCIÓN</span>
+            <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">¿Qué solución de producción buscas?</h3>
+            <div class="grid grid-cols-1 gap-2.5">
+              <button onclick="setQuizAnswer('solution', 'Tequila de Marca Propia', 2)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>Tequila de Marca Propia</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">01</span>
+              </button>
+              <button onclick="setQuizAnswer('solution', 'Maquila / Producción por Contrato', 2)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>Maquila / Producción por Contrato</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">02</span>
+              </button>
+              <button onclick="setQuizAnswer('solution', 'Tequila a Granel', 2)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>Tequila a Granel</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">03</span>
+              </button>
+              <button onclick="setQuizAnswer('solution', 'Servicio de Envasado y Co-packing', 2)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>Servicio de Envasado y Co-packing</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">04</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 2: Stage -->
+          <div id="quiz-step-2" class="quiz-step-pane space-y-6 hidden">
+            <span class="font-sans text-[#FDA377] font-bold tracking-wider text-[10px] block">02 / 08 · ETAPA</span>
+            <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">¿En qué etapa se encuentra tu proyecto?</h3>
+            <div class="grid grid-cols-1 gap-2.5">
+              <button onclick="setQuizAnswer('stage', 'Idea Inicial', 3)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>Idea Inicial o Conceptualización</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">01</span>
+              </button>
+              <button onclick="setQuizAnswer('stage', 'Marca Registrada', 3)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>Concepto Definido / Marca Registrada</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">02</span>
+              </button>
+              <button onclick="setQuizAnswer('stage', 'Marca Operando', 3)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>Marca Operando / Buscando cambio de proveedor</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">03</span>
+              </button>
+              <button onclick="setQuizAnswer('stage', 'Inmediata', 3)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>Compra inmediata o producción de urgencia</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">04</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 3: Market -->
+          <div id="quiz-step-3" class="quiz-step-pane space-y-6 hidden">
+            <span class="font-sans text-[#FDA377] font-bold tracking-wider text-[10px] block">03 / 08 · MERCADO</span>
+            <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">¿Cuál es tu mercado objetivo principal?</h3>
+            <div class="grid grid-cols-1 gap-2.5">
+              <button onclick="setQuizAnswer('market', 'EE.UU.', 4)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>Estados Unidos (USA)</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">01</span>
+              </button>
+              <button onclick="setQuizAnswer('market', 'México', 4)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>México</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">02</span>
+              </button>
+              <button onclick="setQuizAnswer('market', 'Europa', 4)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>Europa</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">03</span>
+              </button>
+              <button onclick="setQuizAnswer('market', 'Canadá y LatAm', 4)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>Canadá y Sudamérica</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">04</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 4: Contact -->
+          <div id="quiz-step-4" class="quiz-step-pane space-y-6 hidden">
+            <span class="font-sans text-[#FDA377] font-bold tracking-wider text-[10px] block">04 / 08 · CONTACTO</span>
+            <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">Por favor ingresa tus datos de contacto</h3>
+            <div class="space-y-4">
+              <div class="border-b border-white/30 focus-within:border-primary transition-all">
+                <input required type="text" id="contact-name" placeholder="Nombre Completo *" class="w-full border-0 bg-transparent py-2.5 text-white placeholder:text-white/40 focus:outline-none text-sm font-sans">
+              </div>
+              <div class="border-b border-white/30 focus-within:border-primary transition-all">
+                <input required type="text" id="contact-company" placeholder="Nombre de la Empresa *" class="w-full border-0 bg-transparent py-2.5 text-white placeholder:text-white/40 focus:outline-none text-sm font-sans">
+              </div>
+              <div class="grid grid-cols-3 gap-4 border-b border-white/30 focus-within:border-primary transition-all">
+                <input required type="text" id="contact-lada" placeholder="LADA" class="border-0 bg-transparent py-2.5 text-white placeholder:text-white/40 focus:outline-none text-sm text-center font-sans">
+                <input required type="tel" id="contact-phone" placeholder="Teléfono *" class="col-span-2 border-0 bg-transparent py-2.5 text-white placeholder:text-white/40 focus:outline-none text-sm font-sans">
+              </div>
+              <div class="border-b border-white/30 focus-within:border-primary transition-all">
+                <input required type="email" id="contact-email" placeholder="Correo Electrónico *" class="w-full border-0 bg-transparent py-2.5 text-white placeholder:text-white/40 focus:outline-none text-sm font-sans">
+              </div>
+              
+              <button type="button" onclick="submitContactStep()" class="w-full mt-4 py-4 bg-[#8C4723] hover:bg-[#a6562b] text-white font-sans text-xs uppercase tracking-widest font-semibold transition-all">
+                Siguiente Paso →
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 5: Volume -->
+          <div id="quiz-step-5" class="quiz-step-pane space-y-6 hidden">
+            <span class="font-sans text-[#FDA377] font-bold tracking-wider text-[10px] block">05 / 08 · VOLUMEN</span>
+            <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">¿Cuál es tu volumen anual estimado?</h3>
+            <div class="grid grid-cols-1 gap-2.5">
+              <button onclick="setQuizAnswer('volume', '<10k Litros', 6)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>Menos de 10,000 litros (Volumen inicial)</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">01</span>
+              </button>
+              <button onclick="setQuizAnswer('volume', '10k-50k Litros', 6)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>10,000 a 50,000 litros</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">02</span>
+              </button>
+              <button onclick="setQuizAnswer('volume', '50k-100k Litros', 6)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>50,000 a 100,000 litros</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">03</span>
+              </button>
+              <button onclick="setQuizAnswer('volume', '>100k Litros', 6)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>Más de 100,000 litros (Alta escala)</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">04</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 6: Distillate -->
+          <div id="quiz-step-6" class="quiz-step-pane space-y-6 hidden">
+            <span class="font-sans text-[#FDA377] font-bold tracking-wider text-[10px] block">06 / 08 · DESTILADO</span>
+            <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">¿Qué tipo de tequila requieres producir?</h3>
+            <div class="grid grid-cols-1 gap-2.5">
+              <button onclick="setQuizAnswer('tequilaType', 'Blanco', 7)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>Blanco / Plata (Sin paso por barrica)</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">01</span>
+              </button>
+              <button onclick="setQuizAnswer('tequilaType', 'Reposado', 7)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>Reposado</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">02</span>
+              </button>
+              <button onclick="setQuizAnswer('tequilaType', 'Añejo', 7)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>Añejo</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">03</span>
+              </button>
+              <button onclick="setQuizAnswer('tequilaType', 'Especial/Cristalino', 7)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
+                <span>Cristalino o perfil organoléptico especial</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">04</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 7: Assets -->
+          <div id="quiz-step-7" class="quiz-step-pane space-y-6 hidden">
+            <span class="font-sans text-[#FDA377] font-bold tracking-wider text-[10px] block">07 / 08 · ACTIVOS</span>
+            <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">¿Con qué activos cuenta tu marca actualmente?</h3>
+            <div class="grid grid-cols-1 gap-2" id="assets-checkboxes-container">
+              <!-- Populated by JavaScript -->
+            </div>
+            <button type="button" onclick="submitAssetsStep()" class="w-full mt-4 py-4 bg-[#8C4723] hover:bg-[#a6562b] text-white font-sans text-xs uppercase tracking-widest font-semibold transition-all">
+              Siguiente Paso →
+            </button>
+          </div>
+
+          <!-- Step 8: Timeline & Notes -->
+          <div id="quiz-step-8" class="quiz-step-pane space-y-6 hidden">
+            <span class="font-sans text-[#FDA377] font-bold tracking-wider text-[10px] block">08 / 08 · CRONOGRAMA</span>
+            <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">¿Cuándo tienes planeado lanzar tu tequila?</h3>
+            <form onsubmit="handleFinalFormSubmit(event)" class="space-y-4">
+              <div class="border-b border-white/35 focus-within:border-primary transition-all">
+                <select required id="quiz-timeline" class="w-full border-0 bg-transparent py-2.5 text-white/80 focus:outline-none text-sm font-sans">
+                  <option value="" class="text-black">-- Selecciona fecha de lanzamiento -- *</option>
+                  <option value="Inmediato (<3 meses)" class="text-black">Urgente / Inmediato (Menos de 3 meses)</option>
+                  <option value="Corto Plazo (3-6 meses)" class="text-black">Corto Plazo (3 a 6 meses)</option>
+                  <option value="Mediano Plazo (6-12 meses)" class="text-black">Mediano Plazo (6 a 12 meses)</option>
+                  <option value="Planeación (>12 meses)" class="text-black">Planeación futura (Más de 12 meses)</option>
+                </select>
+              </div>
+
+              <div class="border-b border-white/35 focus-within:border-primary transition-all">
+                <textarea rows="3" id="quiz-notes" placeholder="Notas adicionales, requerimientos o comentarios sobre tu proyecto..." class="w-full border-0 bg-transparent py-2 text-white placeholder:text-white/40 focus:outline-none text-sm font-sans resize-none"></textarea>
+              </div>
+
+              <button type="submit" id="quiz-submit-button" class="w-full mt-4 py-4 bg-amber-600 hover:bg-amber-700 text-white font-sans text-xs uppercase tracking-widest font-semibold transition-all shadow-lg">
+                Enviar y Recibir Diagnóstico
+              </button>
+            </form>
+          </div>
+
+          <!-- Step 9: Success -->
+          <div id="quiz-step-9" class="quiz-step-pane text-center py-6 space-y-5 hidden">
+            <span class="material-symbols-outlined text-5xl text-[#FDA377] block mb-2">check_circle</span>
+            <h3 class="font-serif text-2xl text-white">¡Diagnóstico Recibido!</h3>
+            <p class="font-sans text-white/70 max-w-md mx-auto text-sm leading-relaxed font-light">
+              Gracias por completar tu diagnóstico. Un especialista técnico revisará tu proyecto y se comunicará en un lapso menor a 24 horas.
+            </p>
+            <button onclick="resetQuizForm()" class="text-[#FDA377] font-sans uppercase border-b border-[#FDA377] pb-0.5 hover:text-white hover:border-white transition-all mt-6 text-xs bg-transparent">
+              Realizar otro diagnóstico
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5.8 PROCESO DE TRABAJO -->
+  <section class="bg-zinc-950 text-white py-20 md:py-32">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
+      <div>
+        <span class="font-sans text-[#FDA377] font-semibold tracking-widest uppercase mb-4 block text-xs">
+          Ruta de Trabajo
+        </span>
+        <h2 class="font-serif text-4xl md:text-5xl mb-12 text-white font-light">
+          De la idea a la producción: Un camino claro antes de comprometerte.
+        </h2>
+      </div>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6" id="roadmap-grid">
+        <!-- Populated by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 5.9 MÉTODOS POR RESULTADO -->
+  <section class="py-20 md:py-32">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
+      <div>
+        <span class="font-sans text-secondary font-semibold tracking-widest uppercase mb-4 block text-xs">
+          Tipos de Líquido
+        </span>
+        <h2 class="font-serif text-4xl md:text-5xl mb-12 text-[#1c1c18] font-light">
+          El perfil de tequila que tu marca requiere, y cómo lo construimos.
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="liquids-grid">
+        <!-- Populated by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 5.10 AGAVE Y SUMINISTRO -->
+  <section class="bg-[#EDE7DE]/20 py-20 md:py-32 border-y border-outline-variant/30">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
+      <div>
+        <span class="font-sans text-secondary font-semibold tracking-widest uppercase mb-4 block text-xs">
+          Abastecimiento de Campo
+        </span>
+        <h2 class="font-serif text-4xl md:text-5xl mb-12 text-[#1c1c18] font-light">
+          Tu marca de tequila comienza en el campo, no en la destilería.
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-10">
+        <div class="overflow-hidden shadow-md border border-outline-variant/40">
+          <img 
+            src="/Jimado Agave Tequilana Weber.webp" 
+            alt="Jimador trabajando en campos de agave de Casa Loy Tequilera" 
+            class="w-full aspect-[4/3] object-cover transition-transform duration-500 hover:scale-105"
+          />
+        </div>
+        
+        <div class="flex flex-col gap-6 text-left" id="agave-details-box">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5.11 + 5.12 CALIDAD Y CUMPLIMIENTO (Clean Minimalist layout) -->
+  <section class="bg-[#fcf9f3] border-b border-outline-variant/40 py-20 md:py-32">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
+        
+        <!-- Pillar 1: Quality -->
+        <div class="space-y-4">
+          <span class="font-sans text-primary font-bold text-[10px] tracking-widest uppercase block">Aseguramiento de Calidad</span>
+          <h3 class="font-serif text-2xl text-[#1c1c18] font-bold leading-tight">Consistencia Lote a Lote</h3>
+          <p class="font-sans text-xs text-secondary leading-relaxed font-light">
+            Validación en laboratorio interno, perfiles físico-químicos definidos, revisión sensorial y aprobación final del cliente antes de envasar.
+          </p>
+          <div class="flex flex-wrap gap-x-6 gap-y-2 pt-2" id="quality-bullets-box">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Pillar 2: Compliance -->
+        <div class="space-y-4">
+          <span class="font-sans text-primary font-bold text-[10px] tracking-widest uppercase block">Regulación Aduanal & CRT</span>
+          <h3 class="font-serif text-2xl text-[#1c1c18] font-bold leading-tight">Coordinamos el Cumplimiento Legal</h3>
+          <p class="font-sans text-xs text-secondary leading-relaxed font-light">
+            Te ayudamos a navegar la compleja estructura aduanal, registro ante el CRT y certificaciones internacionales para la exportación regular.
+          </p>
+          <div class="flex flex-wrap gap-x-6 gap-y-2 pt-2" id="compliance-bullets-box">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 5.12b NDA PRIVACIDAD BANNER -->
+  <section class="bg-zinc-950 text-white py-12 md:py-16">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12">
+      <div class="border border-white/10 bg-zinc-900/60 p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 text-left">
+        <div class="w-14 h-14 border border-[#FDA377] rounded-full flex items-center justify-center flex-shrink-0">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FDA377" stroke-width="1.5">
+            <path d="M12 2 L20 6 V12 C20 17 16.5 20.5 12 22 C7.5 20.5 4 17 4 12 V6 Z" />
+          </svg>
+        </div>
+        <div class="flex-1 space-y-2">
+          <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">Tu Marca. Tu Proyecto. Protegido bajo Contrato.</h3>
+          <p class="font-sans text-sm text-white/70 leading-relaxed font-light">Tu fórmula es tuya. Cada proyecto inicia bajo un Acuerdo de Confidencialidad (NDA) firmado, con propiedad intelectual clara y documentación resguardada contra fugas de información.</p>
+          <div class="border border-white/20 text-[#FDA377] px-3.5 py-1 rounded-full text-[10px] font-mono tracking-wider inline-block uppercase font-normal">NDA Disponible Inmediatamente</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5.13 PRUEBA SOCIAL -->
+  <section class="py-20 md:py-32 bg-[#EDE7DE]/20 border-b border-outline-variant/30">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Left side Quote -->
+        <div class="lg:col-span-5 space-y-6">
+          <span class="font-sans text-secondary font-semibold tracking-widest uppercase block text-xs">
+            Pruebas, no promesas.
+          </span>
+          <h2 class="font-serif italic text-3xl md:text-4xl text-[#8C4723] font-light leading-snug">
+            "La confianza se construye lote a lote. Diseñamos procesos comerciales transparentes y trazables."
+          </h2>
+          <div class="w-16 h-[2px] bg-primary"></div>
+        </div>
+
+        <!-- Right side list -->
+        <div class="lg:col-span-7 divide-y divide-outline-variant/30 text-left" id="proof-items-list">
+          <!-- Populated by JavaScript -->
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 5.14 FAQ -->
+  <section id="faq-v2" class="py-20 md:py-32">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
+      <div>
+        <span class="font-sans text-secondary font-semibold tracking-widest uppercase mb-4 block text-xs">
+          FAQ
+        </span>
+        <h2 class="font-serif text-4xl md:text-5xl mb-12 text-[#1c1c18] font-light">
+          Respuestas directas para decisiones informadas.
+        </h2>
+      </div>
+      
+      <div class="max-w-4xl" id="faqs-accordion-container">
+        <!-- Populated by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA + CAL.COM SCHEDULER -->
+  <section class="bg-zinc-950 text-white py-20 md:py-32" id="contact-scheduler">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-center">
+      <div>
+        <span class="font-sans text-[#FDA377] font-semibold tracking-widest uppercase mb-4 block text-xs">
+          Siguiente Paso
+        </span>
+        <h2 class="font-serif text-4xl md:text-5xl text-white max-w-3xl mx-auto mb-6 font-light">
+          Agenda una videollamada técnica de 20 minutos.
+        </h2>
+        <p class="font-sans text-white/75 text-sm md:text-base max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+          Sin compromisos ni discursos comerciales agresivos. Evaluaremos la viabilidad operativa de tu proyecto con un especialista de producción.
+        </p>
+      </div>
+      
+      <div class="flex flex-col sm:flex-row gap-5 items-center justify-center w-full max-w-md sm:max-w-none pt-2 mb-16">
+        <a
+          class="bg-[#8C4723] border border-[#8C4723] hover:bg-[#a6562b] hover:border-[#a6562b] text-white font-sans text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-semibold py-4 px-8 transition-all min-w-[200px] text-center shadow-lg"
+          href="#cal-inline-v2"
+        >
+          Agendar Llamada →
+        </a>
+        <a
+          class="border border-white/35 hover:border-white hover:bg-white/5 text-white font-sans text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-semibold py-4 px-8 transition-all min-w-[200px] text-center"
+          href="#quiz-v2"
+        >
+          Enviar Detalles de Proyecto
+        </a>
+      </div>
+
+      <!-- Cal.com Embed Container -->
+      <div class="w-full max-w-5xl mx-auto bg-white border border-outline-variant/20 p-4 md:p-8 shadow-2xl relative text-left">
+        <div class="mb-6 border-b border-stone-200/50 pb-4 text-center md:text-left">
+          <h4 class="font-serif text-2xl mb-1 text-zinc-900 font-semibold">Reserva tu videollamada técnica</h4>
+          <p class="text-xs text-stone-500 font-light font-sans">Selecciona un espacio libre en nuestra agenda oficial de Cal.com.</p>
+        </div>
+        <div id="cal-inline-v2" class="w-full h-[620px]"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER WATERMARK -->
+  <div class="bg-[#EDE7DE] border-t border-outline-variant/30 py-8 text-center">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12">
+      <p class="font-mono text-[10px] text-[#53443a] uppercase tracking-wider margin-0">
+        CASA LOY TEQUILERA — B2B PRIVATE LABEL GUIDE v2 · NOM 1633 · TODOS LOS DERECHOS RESERVADOS
+      </p>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC (Interactive features & states) -->
+  <script>
+    // Data structures matching MaquilasV2.jsx
+    const insideSteps = [
+      { num: "01", name: "Agave", desc: "Agaves tequilana Weber variedad azul rigurosamente seleccionados en Los Altos de Jalisco, con alta concentración de azúcares reductores totales (ART).", img: "/Piñas de Agave Tequilana Weber.webp" },
+      { num: "02", name: "Cocción", desc: "Cocción lenta y uniforme en hornos de mampostería tradicionales para hidrolizar suavemente los almidones del agave en azúcares fermentables.", img: "/Agave cocido.webp" },
+      { num: "03", name: "Molienda", desc: "Extracción suave de los jugos del agave utilizando molino de rodillos o tahona de piedra tradicional para conservar las fibras aromáticas.", img: "/Tahona Agave Molienda.webp" },
+      { num: "04", name: "Fermentación", desc: "Fermentación natural y libre en tinas de acero inoxidable con levaduras propias de la casa para definir los aromas primarios del destilado.", img: "/Fermentación.webp" },
+      { num: "05", name: "Destilación", desc: "Doble destilación lenta en alambiques de cobre tradicionales para refinar y purificar el espirituoso manteniendo el carácter del terruño.", img: "/Destilación.webp" },
+      { num: "06", name: "Barricas", desc: "Maduración y reposo en cavas subterráneas climatizadas utilizando barricas de roble americano, francés o barricas seleccionadas de vino y whiskey.", img: "/Cava de Añejamiento.webp" },
+      { num: "07", name: "Laboratorio", desc: "Control analítico cromatográfico estricto in-house en cada lote para garantizar consistencia química y organoléptica certificada.", img: "/Laboratorio.webp" },
+      { num: "08", name: "Envasado", desc: "Línea de envasado semiautomática adaptada para botellas personalizadas, con control de filtración fina y etiquetado manual ultra-premium.", img: "/Embotellado 2.webp" }
+    ];
+
+    const whoAudiences = [
+      {
+        tag: "Fundadores",
+        title: "Creando una marca de tequila desde cero",
+        desc: "Guiamos tu entrada a una categoría altamente regulada. Te ayudamos con el registro ante el CRT, desarrollo del líquido, diseño de envase y conexión con proveedores autorizados de botellas.",
+        benefits: ["Acompañamiento CRT paso a paso", "Lotes mínimos viables optimizados", "Propiedad garantizada de tu fórmula"]
+      },
+      {
+        tag: "Marcas Existentes",
+        title: "Buscando un socio de maquila más consistente",
+        desc: "Evita quiebres de stock y variaciones en el sabor. Analizamos químicamente tu líquido actual para replicar su perfil sensorial con total precisión en nuestra destilería.",
+        benefits: ["Transición sin variaciones de sabor", "Reserva de agave para contratos anuales", "Logística y cesión ante el CRT en tiempo récord"]
+      },
+      {
+        tag: "Distribuidores",
+        title: "Introduciendo el tequila a tu portafolio global",
+        desc: "Añade una categoría de alto valor comercial. Proveemos marcas blancas listas para exportar o líquidos a la medida con soporte completo en regulaciones internacionales.",
+        benefits: ["Cumplimiento TTB y aduanas internacionales", "Fórmulas adaptadas al gusto de tu mercado", "Certificados de exportación oficiales"]
+      },
+      {
+        tag: "Compradores a Granel",
+        title: "Asegurando volumen constante y perfiles estables",
+        desc: "Suministro continuo de tequila 100% de agave o mixto. Ideal para embotelladoras y distribuidores que buscan estabilidad de precio y consistencia química.",
+        benefits: ["Cromatografía y reporte de laboratorio por lote", "Logística de cisternas y contenedores IBC", "Contratos de suministro a largo plazo"]
+      }
+    ];
+
+    const problems = [
+      { num: "01", title: "Empezar desde cero", desc: "Guiamos tu entrada a una categoría compleja con normativas estrictas de denominación de origen.", fullDesc: "Desarrollar una marca desde el concepto inicial requiere estructuración ante el IMPI, trámites ante el CRT, registro de marca y diseño técnico de envases. Te damos acompañamiento en toda la ruta crítica regulatoria para evitar retrasos costosos." },
+      { num: "02", title: "Cambiar de productor", desc: "Garantizamos una transición suave sin quiebres de inventario o variaciones en el sabor.", fullDesc: "Mapeamos tu perfil organoléptico mediante cromatografía de gases para replicar el sabor de tu tequila actual en nuestra destilería. Además, gestionamos la cesión de marca o alta de co-producción en el CRT de forma ágil para proteger tu cadena de suministro." },
+      { num: "03", title: "Escalamiento y distribución", desc: "Aumentamos el volumen conforme tu marca crece, manteniendo la calidad en cada lote.", fullDesc: "Nuestra capacidad instalada y reservas de agave propio nos permiten garantizar un suministro continuo y escalable. Crecemos con tu marca, ofreciendo el mismo estándar premium en lotes iniciales pequeños y en pedidos comerciales masivos." },
+      { num: "04", title: "Exportación internacional", desc: "Simplificamos la burocracia, logística y aduanas con soporte especializado.", fullDesc: "Conectamos tu marca con agentes aduanales y distribuidores con experiencia. Preparamos certificados de exportación oficiales del CRT, hojas analíticas de laboratorio, y cumplimos con los estándares TTB (EE.UU.), aduanas de la UE y de Asia." }
+    ];
+
+    const processSteps = [
+      { num: "01", title: "Diagnóstico Inicial" },
+      { num: "02", title: "Llamada Técnica Directa" },
+      { num: "03", title: "Definición de Producto" },
+      { num: "04", title: "Cumplimiento Legal" },
+      { num: "05", title: "Producción & Control" },
+      { num: "06", title: "Envío & Exportación" }
+    ];
+
+    const methods = [
+      { idx: "01", name: "Tradicional / Ultra-Premium", desc: "Molienda con tahona de piedra, cocción en hornos de mampostería y alambiques de cobre." },
+      { idx: "02", name: "Premium Consistente", desc: "Cocción en autoclaves de acero inoxidable y fermentación con control de temperatura." },
+      { idx: "03", name: "Comercial Escalable", desc: "Destilación eficiente en columnas para marcas de alto volumen y rotación rápida." },
+      { idx: "04", name: "Firma del Autor", desc: "Levaduras exclusivas de la casa y maduración en barricas seleccionadas de vino o whisky." }
+    ];
+
+    const proofItems = [
+      { label: "Atención", val: "Contacto directo con los ingenieros y productores a cargo" },
+      { label: "Proceso", val: "Trazabilidad química y documental verificable por el CRT" },
+      { label: "Casos de éxito", val: "Casos de éxito autorizados — Próximamente" },
+      { label: "Privacidad", val: "Testimonios publicados estrictamente con autorización escrita" }
+    ];
+
+    const faqs = [
+      { group: "founders", q: "¿Cómo empiezo mi propia marca de tequila?", a: "Comienza definiendo el perfil organoléptico (sabor), mercado destino y presupuesto inicial. Nosotros te guiamos en la ruta de certificación oficial ante el CRT." },
+      { group: "founders", q: "¿Quién es el dueño de la fórmula de mi tequila?", a: "Tú. Tu marca es dueña de su perfil y receta. Firmamos contratos de propiedad intelectual que te blindan legalmente." },
+      { group: "founders", q: "¿Puedo visitar las instalaciones de la destilería?", a: "Sí. Damos la bienvenida a visitas técnicas de proyectos calificados. Ver la destilería en persona es la mejor forma de iniciar un lazo de confianza." },
+      { group: "brands", q: "¿Puedo cambiar de productor sin que se detenga mi cadena de suministro?", a: "Sí. Trazamos un plan de transición coordinado, produciendo lotes de seguridad antes del cambio legal de marca ante el CRT." },
+      { group: "brands", q: "¿Pueden fabricar perfiles de forma exclusiva para mí?", a: "Sí. Desarrollamos recetas y perfiles organolépticos exclusivos protegidos bajo contrato de exclusividad." },
+      { group: "bulk", q: "¿Ofrecen tequila a granel certificado?", a: "Sí. Suministramos tequila 100% agave y mixto a granel con perfiles consistentes listos para ser envasados en destino." },
+      { group: "bulk", q: "¿Puedo proveer mis propias botellas y etiquetas?", a: "Sí. Recibimos insumos proporcionados por tu marca o coordinamos el desarrollo y compra de vidrio local con nuestros proveedores autorizados." },
+      { group: "distributors", q: "¿Qué permisos y aduanas se requieren para exportar desde México?", a: "Se requiere padrón de exportadores, certificado de exportación del CRT, factura comercial y cumplir con las regulaciones del país destino (como TTB/COLA en EE.UU.)." },
+      { group: "compliance", q: "¿Qué significa que Casa Loy sea NOM 1633?", a: "La NOM (Norma Oficial Mexicana) 1633 es nuestro registro único autorizado ante el CRT, certificando que destilamos bajo las normas oficiales en la región geográfica protegida por la denominación de origen." }
+    ];
+
+    // Initialization functions
+    document.addEventListener("DOMContentLoaded", () => {
+      renderProcessTabs();
+      updateProcessDisplay(0);
+      
+      renderAudienceTabs();
+      updateAudienceDisplay(0);
+
+      renderRisksAccordion();
+      
+      renderRoadmap();
+      renderLiquids();
+      renderAgaveDetails();
+      renderQualityBullets();
+      renderComplianceBullets();
+      renderProofItems();
+      renderFaqs();
+      renderAssetsCheckboxes();
+    });
+
+    // Process Explorer Tabs
+    function renderProcessTabs() {
+      const container = document.getElementById("process-tab-list");
+      container.innerHTML = insideSteps.map((step, idx) => `
+        <button
+          onclick="updateProcessDisplay(${idx})"
+          id="process-tab-btn-${idx}"
+          class="w-full text-left p-4 flex items-center gap-5 border transition-all duration-300 bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white"
+        >
+          <span class="font-mono text-xs font-bold text-[#FDA377]">${step.num}</span>
+          <span class="font-sans text-sm font-semibold tracking-wider uppercase">${step.name}</span>
+        </button>
+      `).join('');
+    }
+
+    function updateProcessDisplay(idx) {
+      // Toggle button active styles
+      insideSteps.forEach((_, i) => {
+        const btn = document.getElementById(`process-tab-btn-${i}`);
+        if (btn) {
+          if (i === idx) {
+            btn.className = "w-full text-left p-4 flex items-center gap-5 border transition-all duration-300 bg-primary border-primary text-white pl-6";
+          } else {
+            btn.className = "w-full text-left p-4 flex items-center gap-5 border transition-all duration-300 bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white";
+          }
+        }
+      });
+
+      // Update contents
+      document.getElementById("process-active-img").src = insideSteps[idx].img;
+      document.getElementById("process-active-num").innerText = `ETAPA ${insideSteps[idx].num}`;
+      document.getElementById("process-active-title").innerText = insideSteps[idx].name;
+      document.getElementById("process-active-desc").innerText = insideSteps[idx].desc;
+    }
+
+    // Audience tabs
+    function renderAudienceTabs() {
+      const container = document.getElementById("audience-tab-list");
+      container.innerHTML = whoAudiences.map((aud, idx) => `
+        <button
+          onclick="updateAudienceDisplay(${idx})"
+          id="aud-tab-btn-${idx}"
+          class="py-3.5 px-6 font-sans text-xs uppercase tracking-wider font-semibold border-b-2 transition-all cursor-pointer border-transparent text-stone-500 hover:text-[#1c1c18]"
+        >
+          ${aud.tag}
+        </button>
+      `).join('');
+    }
+
+    function updateAudienceDisplay(idx) {
+      whoAudiences.forEach((_, i) => {
+        const btn = document.getElementById(`aud-tab-btn-${i}`);
+        if (btn) {
+          if (i === idx) {
+            btn.className = "py-3.5 px-6 font-sans text-xs uppercase tracking-wider font-semibold border-b-2 transition-all cursor-pointer border-primary text-primary bg-white/40";
+          } else {
+            btn.className = "py-3.5 px-6 font-sans text-xs uppercase tracking-wider font-semibold border-b-2 transition-all cursor-pointer border-transparent text-stone-500 hover:text-[#1c1c18]";
+          }
+        }
+      });
+
+      const aud = whoAudiences[idx];
+      document.getElementById("aud-active-tag").innerText = aud.tag;
+      document.getElementById("aud-active-title").innerText = aud.title;
+      document.getElementById("aud-active-desc").innerText = aud.desc;
+
+      const bulletsBox = document.getElementById("aud-active-benefits");
+      bulletsBox.innerHTML = aud.benefits.map(b => `
+        <li class="flex items-center gap-2.5 text-xs text-[#1c1c18] font-light">
+          <span class="material-symbols-outlined text-sm text-primary">check</span>
+          <span>${b}</span>
+        </li>
+      `).join('');
+    }
+
+    // Risks accordion
+    function renderRisksAccordion() {
+      const container = document.getElementById("risks-accordion-container");
+      container.innerHTML = problems.map((prob, idx) => `
+        <div class="py-4 border-b border-outline-variant/30 transition-all duration-300" id="risk-row-${idx}">
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center cursor-pointer" onclick="toggleRisk(${idx})">
+            <span class="font-serif text-3xl font-semibold md:col-span-1 text-primary/30" id="risk-num-${idx}">${prob.num}</span>
+            <h3 class="font-sans text-lg font-bold text-[#1c1c18] md:col-span-4 flex items-center justify-between">
+              <span>${prob.title}</span>
+              <span class="material-symbols-outlined md:hidden text-primary" id="risk-icon-${idx}">add</span>
+            </h3>
+            <p class="font-sans text-sm text-secondary leading-relaxed md:col-span-7 font-light">${prob.desc}</p>
+          </div>
+          <div class="hidden overflow-hidden mt-4 pl-6" id="risk-detail-${idx}">
+            <p class="font-sans text-xs text-secondary bg-white p-4 border border-outline-variant/40 leading-relaxed font-light">
+              ${prob.fullDesc}
+            </p>
+          </div>
+        </div>
+      `).join('');
+      toggleRisk(0); // Open first by default
+    }
+
+    let activeRiskIndex = -1;
+    function toggleRisk(idx) {
+      if (activeRiskIndex !== -1 && activeRiskIndex !== idx) {
+        // Close previous
+        document.getElementById(`risk-detail-${activeRiskIndex}`).classList.add("hidden");
+        document.getElementById(`risk-row-${activeRiskIndex}`).classList.remove("px-6", "bg-[#EDE7DE]/20");
+        document.getElementById(`risk-num-${activeRiskIndex}`).className = "font-serif text-3xl font-semibold md:col-span-1 text-primary/30";
+        document.getElementById(`risk-icon-${activeRiskIndex}`).innerText = "add";
+      }
+
+      const el = document.getElementById(`risk-detail-${idx}`);
+      const row = document.getElementById(`risk-row-${idx}`);
+      const num = document.getElementById(`risk-num-${idx}`);
+      const icon = document.getElementById(`risk-icon-${idx}`);
+      
+      if (el.classList.contains("hidden")) {
+        el.classList.remove("hidden");
+        row.classList.add("px-6", "bg-[#EDE7DE]/20");
+        num.className = "font-serif text-3xl font-semibold md:col-span-1 text-primary scale-105";
+        icon.innerText = "remove";
+        activeRiskIndex = idx;
+      } else {
+        el.classList.add("hidden");
+        row.classList.remove("px-6", "bg-[#EDE7DE]/20");
+        num.className = "font-serif text-3xl font-semibold md:col-span-1 text-primary/30";
+        icon.innerText = "add";
+        activeRiskIndex = -1;
+      }
+    }
+
+    // Dynamic Lists & Renderers
+    function renderRoadmap() {
+      const container = document.getElementById("roadmap-grid");
+      container.innerHTML = processSteps.map(step => `
+        <div class="bg-white/5 border border-white/10 p-8 flex flex-col justify-between min-h-[180px] transition-custom hover:bg-white/10 hover:border-primary">
+          <span class="font-sans text-xs text-[#FDA377] font-bold block mb-4">${step.num}</span>
+          <h3 class="font-serif text-base font-semibold text-white leading-tight">${step.title}</h3>
+        </div>
+      `).join('');
+    }
+
+    function renderLiquids() {
+      const container = document.getElementById("liquids-grid");
+      container.innerHTML = methods.map(method => `
+        <div class="border border-outline-variant bg-white flex flex-col min-h-[220px] transition-custom hover:border-primary/40 hover:-translate-y-1 hover:shadow-md">
+          <div class="p-8 border-b border-outline-variant/30 flex-grow text-left">
+            <div class="font-sans text-[10px] text-primary font-bold tracking-widest uppercase mb-2">Perfil ${method.idx}</div>
+            <h3 class="font-serif text-lg font-bold text-[#1c1c18] leading-tight">${method.name}</h3>
+          </div>
+          <div class="bg-[#EDE7DE]/30 p-6 text-xs text-secondary leading-relaxed font-sans font-light text-left min-h-[88px] flex items-center">
+            ${method.desc}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderAgaveDetails() {
+      const container = document.getElementById("agave-details-box");
+      const list = [
+        { k: "Origen", v: "Ayotlán, Los Altos de Jalisco" },
+        { k: "Desde", v: "Raíces agaveras cultivando la tierra desde 1992" },
+        { k: "Trazabilidad", v: "Planeación de suministro a nivel de parcela y jima controlada" }
+      ];
+      container.innerHTML = list.map(item => `
+        <div class="border-l-2 border-primary pl-6 py-1">
+          <div class="font-sans text-[10px] text-primary font-bold tracking-widest uppercase">${item.k}</div>
+          <div class="font-sans text-sm text-[#1c1c18] font-normal mt-1">${item.v}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderQualityBullets() {
+      const container = document.getElementById("quality-bullets-box");
+      const bullets = ["Laboratorio in-house en cada lote", "Firma y aprobación del cliente previa", "Trazabilidad completa de principio a fin"];
+      container.innerHTML = bullets.map(b => `
+        <span class="flex items-center gap-2 text-[11px] text-[#1c1c18] font-light font-sans">
+          <span class="material-symbols-outlined text-xs text-primary">check</span>
+          <span>${b}</span>
+        </span>
+      `).join('');
+    }
+
+    function renderComplianceBullets() {
+      const container = document.getElementById("compliance-bullets-box");
+      const bullets = ["NOM 1633 autorizada por el CRT", "Documentación de exportación completa", "Soporte legal con agentes aduanales y distribuidores"];
+      container.innerHTML = bullets.map(b => `
+        <span class="flex items-center gap-2 text-[11px] text-[#1c1c18] font-light font-sans">
+          <span class="material-symbols-outlined text-xs text-primary">check</span>
+          <span>${b}</span>
+        </span>
+      `).join('');
+    }
+
+    function renderProofItems() {
+      const container = document.getElementById("proof-items-list");
+      container.innerHTML = proofItems.map((item, idx) => `
+        <div class="py-5 flex gap-5 items-start">
+          <span class="font-mono text-xs font-bold text-primary pt-0.5">0${idx+1}</span>
+          <div class="space-y-1">
+            <h4 class="font-sans text-xs font-semibold uppercase tracking-wider text-[#1c1c18]">${item.label}</h4>
+            <p class="font-sans text-xs text-secondary font-light leading-relaxed">${item.val}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderFaqs() {
+      const container = document.getElementById("faqs-accordion-container");
+      const groups = {
+        founders: "Fundadores e Inversionistas",
+        brands: "Marcas Existentes",
+        bulk: "Compradores a Granel",
+        distributors: "Distribuidores e Importadores",
+        compliance: "Regulación y Cumplimiento"
+      };
+
+      let html = "";
+      Object.keys(groups).forEach(gKey => {
+        const name = groups[gKey];
+        const list = faqs.filter(f => f.group === gKey);
+        
+        html += `
+          <div class="mb-10 text-left">
+            <div class="font-sans text-xs text-primary font-bold tracking-wider uppercase border-b border-outline-variant/30 pb-2 mb-3 mt-6">
+              ${name}
+            </div>
+        `;
+        list.forEach(faq => {
+          html += `
+            <details class="border-b border-outline-variant/20 py-4 group">
+              <summary class="cursor-pointer font-serif text-base font-semibold flex justify-between items-center text-[#1c1c18] select-none list-none group-open:text-primary transition-colors">
+                <span>${faq.q}</span>
+                <span class="material-symbols-outlined text-primary text-xl group-open:rotate-180 transition-transform duration-200">expand_more</span>
+              </summary>
+              <p class="mt-3 text-sm text-secondary leading-relaxed font-light pl-2">
+                ${faq.a}
+              </p>
+            </details>
+          `;
+        });
+        html += `</div>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function renderAssetsCheckboxes() {
+      const container = document.getElementById("assets-checkboxes-container");
+      const list = [
+        "Marca registrada legalmente ante el IMPI u organismo equivalente",
+        "Diseño de botella y etiqueta finalizado",
+        "Permiso de importación en mercado destino listo",
+        "Ninguno aún, requiero soporte de consultoría integral"
+      ];
+      container.innerHTML = list.map((item, idx) => `
+        <label class="flex items-center gap-3 p-4 border border-white/10 bg-white/5 hover:bg-white/10 transition-all cursor-pointer text-xs font-sans text-white/95">
+          <input type="checkbox" value="${item}" id="asset-chk-${idx}" class="w-4 h-4 text-primary rounded focus:ring-0 bg-transparent border-white/30">
+          <span>${item}</span>
+        </label>
+      `).join('');
+    }
+
+    // 8-step Quiz Interactive Flow
+    let quizAnswersLocal = {
+      solution: "",
+      stage: "",
+      market: "",
+      volume: "",
+      tequilaType: "",
+      assetsReady: [],
+      timeline: "",
+      notes: ""
+    };
+    let currentQuizStepLocal = 1;
+
+    function selectSolution(solName) {
+      setQuizAnswer('solution', solName, 2);
+      document.getElementById("quiz-v2").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function setQuizAnswer(field, value, nextStep) {
+      quizAnswersLocal[field] = value;
+      changeQuizStep(nextStep);
+    }
+
+    function prevQuizStep() {
+      if (currentQuizStepLocal > 1) {
+        changeQuizStep(currentQuizStepLocal - 1);
+      }
+    }
+
+    function changeQuizStep(step) {
+      // Hide all steps
+      for (let i = 1; i <= 9; i++) {
+        const el = document.getElementById(`quiz-step-${i}`);
+        if (el) el.classList.add("hidden");
+      }
+
+      // Show current step
+      document.getElementById(`quiz-step-${step}`).classList.remove("hidden");
+      currentQuizStepLocal = step;
+
+      // Update counters & buttons
+      const counter = document.getElementById("quiz-step-counter");
+      const backBtn = document.getElementById("quiz-back-btn");
+      const indicatorBox = document.getElementById("quiz-step-indicator-box");
+
+      if (step < 9) {
+        indicatorBox.classList.remove("hidden");
+        counter.innerText = `Paso ${step} de 8`;
+        if (step > 1) {
+          backBtn.classList.remove("hidden");
+        } else {
+          backBtn.classList.add("hidden");
+        }
+      } else {
+        // Success step
+        indicatorBox.classList.add("hidden");
+      }
+    }
+
+    function submitContactStep() {
+      const name = document.getElementById("contact-name").value.trim();
+      const company = document.getElementById("contact-company").value.trim();
+      const lada = document.getElementById("contact-lada").value.trim();
+      const phone = document.getElementById("contact-phone").value.trim();
+      const email = document.getElementById("contact-email").value.trim();
+
+      if (!name || !company || !phone || !email) {
+        alert("Por favor completa los campos requeridos (*)");
+        return;
+      }
+      changeQuizStep(5);
+    }
+
+    function submitAssetsStep() {
+      const selected = [];
+      for (let i = 0; i < 4; i++) {
+        const chk = document.getElementById(`asset-chk-${i}`);
+        if (chk && chk.checked) {
+          selected.push(chk.value);
+        }
+      }
+      quizAnswersLocal.assetsReady = selected;
+      changeQuizStep(8);
+    }
+
+    async function handleFinalFormSubmit(event) {
+      event.preventDefault();
+      
+      const timeline = document.getElementById("quiz-timeline").value;
+      const notes = document.getElementById("quiz-notes").value.trim();
+
+      if (!timeline) {
+        alert("Por favor selecciona un cronograma estimado.");
+        return;
+      }
+
+      quizAnswersLocal.timeline = timeline;
+      quizAnswersLocal.notes = notes;
+
+      const submitBtn = document.getElementById("quiz-submit-button");
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Procesando...";
+
+      const commentsMarkdown = `
+**[Diagnóstico B2B Maquilas V2 - HTML Standalone]**
+- **Mercado Objetivo:** ${quizAnswersLocal.market}
+- **Volumen Estimado:** ${quizAnswersLocal.volume}
+- **Tipo de Tequila:** ${quizAnswersLocal.tequilaType}
+- **Activos Listos:** ${quizAnswersLocal.assetsReady.join(", ") || "Ninguno"}
+- **Lanzamiento Estimado:** ${quizAnswersLocal.timeline}
+- **Notas del Proyecto:** ${quizAnswersLocal.notes || "Sin comentarios adicionales"}
+- **Modo:** HTML Estático Compartido
+      `.trim();
+
+      const payload = {
+        name: document.getElementById("contact-name").value.trim(),
+        company: document.getElementById("contact-company").value.trim(),
+        email: document.getElementById("contact-email").value.trim(),
+        lada: document.getElementById("contact-lada").value.trim(),
+        phone: document.getElementById("contact-phone").value.trim(),
+        solution: quizAnswersLocal.solution,
+        objective: quizAnswersLocal.market,
+        stage: quizAnswersLocal.stage,
+        comments: commentsMarkdown,
+        origin: "html_shared"
+      };
+
+      try {
+        const response = await fetch("/api/maquila", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (response.ok) {
+          changeQuizStep(9);
+        } else {
+          // Fallback simulation in offline/standalone mode if API is unreachable
+          console.log("Submit failed or offline, simulating local success. Payload:", payload);
+          changeQuizStep(9);
+        }
+      } catch (error) {
+        console.warn("Connection error to API. Simulating success locally for shared demo.", error);
+        changeQuizStep(9);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Enviar y Recibir Diagnóstico";
+      }
+    }
+
+    function resetQuizForm() {
+      quizAnswersLocal = {
+        solution: "",
+        stage: "",
+        market: "",
+        volume: "",
+        tequilaType: "",
+        assetsReady: [],
+        timeline: "",
+        notes: ""
+      };
+      document.getElementById("contact-name").value = "";
+      document.getElementById("contact-company").value = "";
+      document.getElementById("contact-lada").value = "";
+      document.getElementById("contact-phone").value = "";
+      document.getElementById("contact-email").value = "";
+      document.getElementById("quiz-timeline").value = "";
+      document.getElementById("quiz-notes").value = "";
+
+      for (let i = 0; i < 4; i++) {
+        const chk = document.getElementById(`asset-chk-${i}`);
+        if (chk) chk.checked = false;
+      }
+
+      changeQuizStep(1);
+    }
+  </script>
+
+  <!-- Cal.com embed loader script -->
+  <script>
+    (function (C, A, L) {
+      let p = function (a, ar) { a.q.push(ar); };
+      let d = C.document;
+      C.Cal = C.Cal || function () {
+        let cal = C.Cal;
+        let ar = arguments;
+        if (!cal.loaded) {
+          cal.ns = {};
+          cal.q = cal.q || [];
+          d.head.appendChild(d.createElement("script")).src = A;
+          cal.loaded = true;
+        }
+        if (ar[0] === L) {
+          const api = function () { p(api, arguments); };
+          const namespace = ar[1];
+          api.q = api.q || [];
+          if (typeof namespace === "string") {
+            cal.ns[namespace] = cal.ns[namespace] || api;
+            p(cal.ns[namespace], ar);
+            p(cal, ["initNamespace", namespace]);
+          } else p(cal, ar);
+          return;
+        }
+        p(cal, ar);
+      };
+    })(window, "https://app.cal.com/embed/embed.js", "init");
+
+    Cal("init", { origin: "https://cal.com" });
+    Cal("inline", {
+      elementOrSelector: "#cal-inline-v2",
+      calLink: "internationalcasaloy",
+      config: { 
+        layout: "month_view",
+        theme: "light",
+        timeZone: "America/Mexico_City",
+        timezone: "America/Mexico_City"
+      }
+    });
+    Cal("ui", {
+      styles: {
+        branding: {
+          brandColor: "#8C4723"
+        }
+      },
+      hideEventTypeDetails: false,
+      layout: "month_view"
+    });
+  </script>
+</body>
+</html>

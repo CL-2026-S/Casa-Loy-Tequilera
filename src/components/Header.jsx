@@ -11,7 +11,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
       es: {
         home: "/",
         about: "/quienes-somos",
-        maquilas: "/maquilas",
+        maquilas: "/marca-propia",
         brands: "/marcas",
         turismo: "/turismo",
         nativo: "/nativo",
@@ -20,7 +20,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
       en: {
         home: "/",
         about: "/about",
-        maquilas: "/bottling",
+        maquilas: "/private-label",
         brands: "/brands",
         turismo: "/tourism",
         nativo: "/restaurant-nativo",

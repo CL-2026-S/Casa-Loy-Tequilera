@@ -70,7 +70,7 @@ export default function Footer({ lang = "es", setPage }) {
         { name: "Reserva Casa Loy", url: "https://reservatequila.com/", external: true },
         { name: "TADDEL Tequila", url: "https://TADDELtequila.com/", external: true },
         { name: "Tierra Zafiro Tequila", url: "https://TierraZafirotequila.com/", external: true },
-        { name: "Desarrolla tu Marca", page: "maquilas", external: false },
+        { name: "Marca Propia", page: "maquilas", external: false },
         { name: "Experiencias Casa Loy", page: "turismo", external: false },
         { name: "Restaurante 1937 Nativo", page: "nativo", external: false },
         { name: "Blog", page: "blog", external: false },
@@ -108,7 +108,7 @@ export default function Footer({ lang = "es", setPage }) {
         { name: "Reserva Casa Loy", url: "https://reservatequila.com/", external: true },
         { name: "TADDEL Tequila", url: "https://TADDELtequila.com/", external: true },
         { name: "Tierra Zafiro Tequila", url: "https://TierraZafirotequila.com/", external: true },
-        { name: "Develop your Brand", page: "maquilas", external: false },
+        { name: "Private Label", page: "maquilas", external: false },
         { name: "Casa Loy Experiences", page: "turismo", external: false },
         { name: "Restaurante 1937 Nativo", page: "nativo", external: false },
         { name: "Blog", page: "blog", external: false },
@@ -186,14 +186,14 @@ export default function Footer({ lang = "es", setPage }) {
                 const getPageRoute = (p) => {
                   const paths = {
                     es: {
-                      maquilas: "/maquilas",
+                      maquilas: "/marca-propia",
                       turismo: "/turismo",
                       nativo: "/nativo",
                       blog: "/blog",
                       careers: "/bolsa-de-trabajo"
                     },
                     en: {
-                      maquilas: "/bottling",
+                      maquilas: "/private-label",
                       turismo: "/tourism",
                       nativo: "/restaurant-nativo",
                       blog: "/blog",

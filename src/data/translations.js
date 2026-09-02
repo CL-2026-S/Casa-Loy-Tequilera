@@ -3,7 +3,7 @@ export const translations = {
     nav: {
       home: "Inicio",
       about: "Quiénes Somos",
-      bottling: "Maquila Tequila B2B",
+      bottling: "Marca Propia",
       brands: "Nuestras Marcas",
       tourism: "Tours & Experiencias",
       nativo: "1937 Nativo Gastronomía",
@@ -85,7 +85,7 @@ export const translations = {
     nav: {
       home: "Home",
       about: "About Us",
-      bottling: "Private Label B2B",
+      bottling: "Private Label",
       brands: "Our Brands",
       tourism: "Tours & Experiences",
       nativo: "1937 Nativo Gastronomy",

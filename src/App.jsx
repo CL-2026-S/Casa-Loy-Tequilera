@@ -14,6 +14,7 @@ import Home from "./pages/Home";
 import HomeInteractive from "./pages/HomeInteractive";
 import AboutUs from "./pages/AboutUs";
 import Maquilas from "./pages/Maquilas";
+import MaquilasV2 from "./pages/MaquilasV2";
 import Brands from "./pages/Brands";
 import Turismo from "./pages/Turismo";
 import ExperienceDetail from "./pages/ExperienceDetail";
@@ -36,7 +37,9 @@ const routesMap = {
   "/": { page: "home", lang: null }, // Shared
   "/interactivo": { page: "home-interactive", lang: null }, // Shared
   "/quienes-somos": { page: "about", lang: "es" },
+  "/marca-propia": { page: "maquilas", lang: "es" },
   "/maquilas": { page: "maquilas", lang: "es" },
+  "/maquilas-v2": { page: "maquilas", lang: "es" },
   "/marcas": { page: "brands", lang: "es" },
   "/turismo": { page: "turismo", lang: "es" },
   "/turismo/oro": { page: "experience-oro", lang: "es" },
@@ -56,7 +59,9 @@ const routesMap = {
   // English Paths
   "/about": { page: "about", lang: "en" },
   "/about-us": { page: "about", lang: "en" },
+  "/private-label": { page: "maquilas", lang: "en" },
   "/bottling": { page: "maquilas", lang: "en" },
+  "/bottling-v2": { page: "maquilas", lang: "en" },
   "/brands": { page: "brands", lang: "en" },
   "/tourism": { page: "turismo", lang: "en" },
   "/tourism/gold": { page: "experience-oro", lang: "en" },
@@ -195,7 +200,8 @@ export default function App() {
         "home": "/",
         "home-interactive": "/interactivo",
         "about": "/quienes-somos",
-        "maquilas": "/maquilas",
+        "maquilas": "/marca-propia",
+        "maquilas-v2": "/marca-propia",
         "brands": "/marcas",
         "turismo": "/turismo",
         "experience-oro": "/turismo/oro",
@@ -213,7 +219,8 @@ export default function App() {
         "home": "/",
         "home-interactive": "/interactivo",
         "about": "/about",
-        "maquilas": "/bottling",
+        "maquilas": "/private-label",
+        "maquilas-v2": "/private-label",
         "brands": "/brands",
         "turismo": "/tourism",
         "experience-oro": "/tourism/gold",
@@ -244,7 +251,8 @@ export default function App() {
         home: "/",
         "home-interactive": "/interactivo",
         about: "/quienes-somos",
-        maquilas: "/maquilas",
+        maquilas: "/marca-propia",
+        "maquilas-v2": "/marca-propia",
         brands: "/marcas",
         turismo: "/turismo",
         "experience-oro": "/turismo/oro",
@@ -267,7 +275,8 @@ export default function App() {
         home: "/",
         "home-interactive": "/interactivo",
         about: "/about",
-        maquilas: "/bottling",
+        maquilas: "/private-label",
+        "maquilas-v2": "/private-label",
         brands: "/brands",
         turismo: "/tourism",
         "experience-oro": "/tourism/gold",
@@ -438,8 +447,12 @@ export default function App() {
             <Route path="/about" element={<AboutUs t={t} lang={lang} setPage={setPage} />} />
             <Route path="/about-us" element={<AboutUs t={t} lang={lang} setPage={setPage} />} />
             
-            <Route path="/maquilas" element={<Maquilas t={t} lang={lang} />} />
-            <Route path="/bottling" element={<Maquilas t={t} lang={lang} />} />
+            <Route path="/marca-propia" element={<Maquilas t={t} lang={lang} />} />
+            <Route path="/private-label" element={<Maquilas t={t} lang={lang} />} />
+            <Route path="/maquilas" element={<Navigate to="/marca-propia" replace />} />
+            <Route path="/bottling" element={<Navigate to="/private-label" replace />} />
+            <Route path="/maquilas-v2" element={<Navigate to="/marca-propia" replace />} />
+            <Route path="/bottling-v2" element={<Navigate to="/private-label" replace />} />
             
             <Route path="/marcas" element={<Brands t={t} lang={lang} country={country} />} />
             <Route path="/brands" element={<Brands t={t} lang={lang} country={country} />} />
