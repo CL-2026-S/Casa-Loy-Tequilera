@@ -119,6 +119,10 @@ export default function AdminPanel({
   }, [editingJob]);
 
   const [editingBlog, setEditingBlog] = useState(null);
+  const [authorsList, setAuthorsList] = useState([]);
+  const [showAuthorModal, setShowAuthorModal] = useState(false);
+  const [editingAuthor, setEditingAuthor] = useState(null);
+  const [selectedAuthorId, setSelectedAuthorId] = useState("");
   const [editingPos, setEditingPos] = useState(null);
   const [editingUser, setEditingUser] = useState(null);
 
@@ -681,7 +685,18 @@ export default function AdminPanel({
           if (cmsTab === "banners") setBannersList(data);
           if (cmsTab === "dishes") setDishesList(data);
           if (cmsTab === "jobs") setJobsList(data);
-          if (cmsTab === "blog") setBlogList(data);
+          if (cmsTab === "blog") {
+            setBlogList(data);
+            try {
+              const aRes = await fetch("/api/cms?type=blog_authors", { headers });
+              if (aRes.ok) {
+                const aData = await aRes.json();
+                setAuthorsList(aData);
+              }
+            } catch (aErr) {
+              console.error("Error loading authors in CMS:", aErr);
+            }
+          }
           if (cmsTab === "pos") setPosList(data);
           if (cmsTab === "applications") {
             setJobApplicationsList(data);
@@ -1752,6 +1767,82 @@ export default function AdminPanel({
       }
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  // --- BLOG AUTHORS MANAGEMENT ---
+  const fetchAuthors = async () => {
+    try {
+      const res = await fetch("/api/cms?type=blog_authors", {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setAuthorsList(data);
+      }
+    } catch (e) {
+      console.error("Error fetching authors:", e);
+    }
+  };
+
+  const handleSaveAuthor = async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target));
+    try {
+      const res = await fetch("/api/cms?action=save_author", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ ...data, id: editingAuthor?.id })
+      });
+      if (res.ok) {
+        alert("Autor guardado correctamente en el directorio.");
+        setEditingAuthor(null);
+        fetchAuthors();
+      } else {
+        alert("Error al guardar autor.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error de conexión al guardar autor.");
+    }
+  };
+
+  const handleDeleteAuthor = async (id) => {
+    if (!confirm("¿Deseas eliminar este autor del directorio?")) return;
+    try {
+      const res = await fetch("/api/cms?action=delete_author", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ id })
+      });
+      if (res.ok) {
+        alert("Autor eliminado del directorio.");
+        fetchAuthors();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleSelectSavedAuthor = (authorId) => {
+    setSelectedAuthorId(authorId);
+    if (!authorId) return;
+    const found = authorsList.find(a => a.id === authorId);
+    if (found) {
+      const nameInput = document.querySelector('input[name="author_es"]');
+      const roleInput = document.querySelector('input[name="author_role"]');
+      const photoInput = document.querySelector('input[name="author_photo"]');
+      const bioInput = document.querySelector('input[name="author_bio"]');
+      if (nameInput) nameInput.value = found.name;
+      if (roleInput) roleInput.value = found.role;
+      if (photoInput) photoInput.value = found.photo;
+      if (bioInput) bioInput.value = found.bio || "";
     }
   };
 
@@ -3919,12 +4010,28 @@ export default function AdminPanel({
                       <h6 className="text-xs uppercase tracking-widest text-[#8C4723] font-bold">Artículos de Blog & Asistencia de IA</h6>
                       <p className="text-xs text-stone-400 mt-1">Escribe crónicas, novedades y utiliza Inteligencia Artificial para redactar textos optimizados para SEO.</p>
                     </div>
-                    <button
-                      onClick={() => setEditingBlog({ slug: "", title: "", description: "", category: "Noticias", label: "PROCESOS", image_url: "", body_es: "", body_en: "" })}
-                      className="text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white px-3.5 py-2 font-semibold"
-                    >
-                      + Nuevo Artículo
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          fetchAuthors();
+                          setShowAuthorModal(true);
+                        }}
+                        className="text-xs bg-stone-800 hover:bg-stone-900 text-white px-3.5 py-2 font-semibold flex items-center gap-1.5 cursor-pointer shadow-xs"
+                      >
+                        <span className="material-symbols-outlined text-[16px]">groups</span>
+                        Directorio de Autores ({authorsList.length})
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedAuthorId("");
+                          setEditingBlog({ slug: "", title: "", description: "", category: "Noticias", label: "PROCESOS", image_url: "", body_es: "", body_en: "" });
+                        }}
+                        className="text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white px-3.5 py-2 font-semibold flex items-center gap-1 cursor-pointer shadow-xs"
+                      >
+                        + Nuevo Artículo
+                      </button>
+                    </div>
                   </div>
 
                   {editingBlog && (
@@ -3985,11 +4092,45 @@ export default function AdminPanel({
                       </div>
 
                       {/* Literal Blog Author Identity Section */}
-                      <div className="bg-stone-100/70 border border-stone-200 p-3.5 rounded-sm space-y-3">
-                        <div className="flex items-center gap-1.5 text-[10px] text-[#8C4723] uppercase font-bold tracking-wider">
-                          <span className="material-symbols-outlined text-[14px]">person</span>
-                          Identidad Editorial del Autor (Byline Literal)
+                      <div className="bg-stone-100/80 border border-stone-200 p-4 rounded-sm space-y-3.5">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1.5 text-[10px] text-[#8C4723] uppercase font-bold tracking-wider">
+                            <span className="material-symbols-outlined text-[15px]">person</span>
+                            Identidad Editorial del Autor (Byline Literal)
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setEditingAuthor({ name: "", role: "", photo: "/Don Manuel Loy.webp", bio: "" });
+                              setShowAuthorModal(true);
+                            }}
+                            className="text-[10px] text-[#8C4723] hover:underline font-bold flex items-center gap-1 cursor-pointer"
+                          >
+                            <span className="material-symbols-outlined text-[13px]">person_add</span>
+                            + Gestionar Directorio de Autores
+                          </button>
                         </div>
+
+                        {/* Dropdown selector for saved authors */}
+                        <div className="bg-white p-3 border border-stone-200 rounded space-y-1.5 shadow-2xs">
+                          <label className="block text-[10px] text-stone-800 uppercase font-bold flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[14px] text-[#8C4723]">how_to_reg</span>
+                            ⚡ Cargar Autor Guardado (Llena automáticamente nombre, cargo, foto y bio):
+                          </label>
+                          <select
+                            value={selectedAuthorId}
+                            onChange={(e) => handleSelectSavedAuthor(e.target.value)}
+                            className="w-full bg-stone-50 border border-stone-300 p-2 text-xs font-semibold text-stone-900 rounded focus:outline-none focus:border-[#8C4723]"
+                          >
+                            <option value="">-- Selecciona de la lista para auto-completar --</option>
+                            {authorsList.map((a) => (
+                              <option key={a.id} value={a.id}>
+                                {a.name} — {a.role}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                           <div>
                             <label className="block text-[9px] text-stone-500 uppercase font-bold mb-1">Nombre del Autor(a) *</label>
@@ -3997,7 +4138,7 @@ export default function AdminPanel({
                           </div>
                           <div>
                             <label className="block text-[9px] text-stone-500 uppercase font-bold mb-1">Cargo / Especialidad *</label>
-                            <input type="text" name="author_role" defaultValue={editingBlog.author_role || "Maestro Tequilero & Selección de Terroir"} placeholder="Maestro Tequilero" className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" />
+                            <input type="text" name="author_role" defaultValue={editingBlog.author_role || "Patriarca & Guardián del Terroir"} placeholder="Maestro Tequilero" className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" />
                           </div>
                           <div>
                             <label className="block text-[9px] text-stone-500 uppercase font-bold mb-1">Foto del Autor (URL o Ruta) *</label>
@@ -5501,6 +5642,220 @@ export default function AdminPanel({
               <button
                 onClick={() => setSelectedQrTicket(null)}
                 className="flex-1 bg-[#8C4723] hover:bg-[#70381b] text-white py-2.5 font-semibold text-xs uppercase tracking-wider cursor-pointer"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* BLOG AUTHORS DIRECTORY MODAL */}
+      {showAuthorModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl relative border border-stone-200 text-stone-800 space-y-5 text-left rounded-lg">
+            <button
+              onClick={() => {
+                setShowAuthorModal(false);
+                setEditingAuthor(null);
+              }}
+              className="absolute top-4 right-4 text-stone-400 hover:text-stone-700 cursor-pointer"
+            >
+              <span className="material-symbols-outlined text-xl">close</span>
+            </button>
+
+            <div className="border-b border-stone-200 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h5 className="font-serif text-lg font-bold text-[#8C4723] flex items-center gap-2">
+                  <span className="material-symbols-outlined text-xl">groups</span>
+                  Directorio de Autores del Journal
+                </h5>
+                <p className="text-xs text-stone-500 mt-0.5">
+                  Crea a los autores una sola vez para seleccionarlos con 1 clic al redactar crónicas.
+                </p>
+              </div>
+              {!editingAuthor && (
+                <button
+                  onClick={() => setEditingAuthor({ name: "", role: "", photo: "/Don Manuel Loy.webp", bio: "" })}
+                  className="bg-[#8C4723] hover:bg-[#70381b] text-white text-xs px-3 py-1.5 uppercase font-bold rounded flex items-center gap-1 cursor-pointer shrink-0"
+                >
+                  <span className="material-symbols-outlined text-[15px]">add</span>
+                  Nuevo Autor
+                </button>
+              )}
+            </div>
+
+            {/* Form to create/edit author */}
+            {editingAuthor ? (
+              <form onSubmit={handleSaveAuthor} className="bg-stone-50 border border-stone-200 p-4 rounded-lg space-y-4">
+                <div className="flex items-center justify-between border-b border-stone-200 pb-2">
+                  <h6 className="font-serif text-xs font-bold text-stone-900 uppercase">
+                    {editingAuthor.id ? "Editar Autor" : "Registrar Nuevo Autor"}
+                  </h6>
+                  <button
+                    type="button"
+                    onClick={() => setEditingAuthor(null)}
+                    className="text-xs text-stone-400 hover:text-stone-700 font-semibold"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div>
+                    <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Nombre Completo *</label>
+                    <input
+                      type="text"
+                      name="name"
+                      required
+                      defaultValue={editingAuthor.name}
+                      placeholder="Ej. Don Manuel Loy"
+                      className="w-full bg-white border border-stone-300 p-2 rounded focus:outline-none focus:border-[#8C4723]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Cargo / Rol Editorial *</label>
+                    <input
+                      type="text"
+                      name="role"
+                      required
+                      defaultValue={editingAuthor.role}
+                      placeholder="Ej. Maestro Tequilero & Selección"
+                      className="w-full bg-white border border-stone-300 p-2 rounded focus:outline-none focus:border-[#8C4723]"
+                    />
+                  </div>
+                </div>
+
+                <div className="text-xs space-y-1.5">
+                  <label className="block text-[10px] text-stone-500 uppercase font-bold">Foto del Autor (URL o Ruta) *</label>
+                  <input
+                    type="text"
+                    id="author_photo_modal_input"
+                    name="photo"
+                    required
+                    defaultValue={editingAuthor.photo || "/Don Manuel Loy.webp"}
+                    className="w-full bg-white border border-stone-300 p-2 rounded focus:outline-none focus:border-[#8C4723]"
+                  />
+                  {/* Quick-pick photos from project */}
+                  <div className="pt-1">
+                    <span className="text-[10px] text-stone-400 block mb-1">Fotos sugeridas de Casa Loy (clic para seleccionar):</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {[
+                        { label: "Don Manuel Loy", path: "/Don Manuel Loy.webp" },
+                        { label: "Sergio Chef", path: "/Sergio Chef.webp" },
+                        { label: "Jimador de Origen", path: "/Empleado Jimador Casa Loy Tequilera.webp" },
+                        { label: "Claudia Sommelier", path: "/Ejecutiva.webp" },
+                        { label: "Empleado Campo", path: "/Empleado Casa Loy Tequilera.webp" }
+                      ].map((opt) => (
+                        <button
+                          key={opt.path}
+                          type="button"
+                          onClick={() => {
+                            const input = document.getElementById("author_photo_modal_input");
+                            if (input) input.value = opt.path;
+                          }}
+                          className="text-[10px] bg-white hover:bg-stone-200 border border-stone-300 px-2 py-1 rounded text-stone-700 flex items-center gap-1 cursor-pointer"
+                        >
+                          <img src={opt.path} alt="" className="w-3.5 h-3.5 rounded-full object-cover" />
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-xs">
+                  <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Biografía / Semblanza</label>
+                  <textarea
+                    name="bio"
+                    rows="3"
+                    defaultValue={editingAuthor.bio}
+                    placeholder="Breve reseña sobre su trayectoria y conexión con el tequila y Casa Loy..."
+                    className="w-full bg-white border border-stone-300 p-2 rounded focus:outline-none focus:border-[#8C4723]"
+                  />
+                </div>
+
+                <div className="flex justify-end gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setEditingAuthor(null)}
+                    className="px-3 py-1.5 text-xs border border-stone-300 rounded text-stone-600 hover:bg-stone-100 cursor-pointer"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-1.5 text-xs bg-[#8C4723] hover:bg-[#70381b] text-white font-bold rounded cursor-pointer"
+                  >
+                    Guardar Autor
+                  </button>
+                </div>
+              </form>
+            ) : null}
+
+            {/* Authors list grid */}
+            <div className="space-y-3">
+              <h6 className="text-xs uppercase tracking-wider text-stone-400 font-bold">
+                Autores Registrados ({authorsList.length})
+              </h6>
+
+              {authorsList.length === 0 ? (
+                <div className="text-center py-8 text-stone-400 italic text-xs">
+                  No hay autores registrados aún. Crea el primero arriba.
+                </div>
+              ) : (
+                <div className="divide-y divide-stone-100 border border-stone-200 rounded-lg overflow-hidden bg-white">
+                  {authorsList.map((a) => (
+                    <div key={a.id} className="p-3.5 flex items-center justify-between gap-3 hover:bg-stone-50">
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={a.photo}
+                          alt={a.name}
+                          className="w-10 h-10 rounded-full object-cover border border-[#D4AF37] shrink-0 bg-stone-100"
+                        />
+                        <div>
+                          <h6 className="font-serif font-bold text-stone-900 text-sm leading-tight">
+                            {a.name}
+                          </h6>
+                          <span className="text-[11px] text-[#8C4723] font-semibold block">
+                            {a.role}
+                          </span>
+                          {a.bio && (
+                            <p className="text-[11px] text-stone-500 font-light line-clamp-1 mt-0.5">
+                              {a.bio}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => setEditingAuthor(a)}
+                          className="text-blue-700 hover:underline text-xs font-bold uppercase p-1 cursor-pointer"
+                          title="Editar autor"
+                        >
+                          Editar
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteAuthor(a.id)}
+                          className="text-red-700 hover:underline text-xs font-bold uppercase p-1 cursor-pointer"
+                          title="Eliminar autor"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="border-t border-stone-200 pt-3 flex justify-end">
+              <button
+                onClick={() => setShowAuthorModal(false)}
+                className="px-4 py-2 text-xs bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold rounded cursor-pointer"
               >
                 Cerrar
               </button>

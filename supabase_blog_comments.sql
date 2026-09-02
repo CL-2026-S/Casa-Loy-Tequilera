@@ -50,3 +50,28 @@ BEGIN
         ALTER TABLE blog_posts ADD COLUMN author_bio TEXT;
     END IF;
 END $$;
+
+-- =========================================================
+-- TABLA: blog_authors (Directorio reutilizable de autores)
+-- =========================================================
+CREATE TABLE IF NOT EXISTS blog_authors (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name TEXT NOT NULL,
+    role TEXT NOT NULL,
+    photo TEXT NOT NULL,
+    bio TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_blog_authors_name ON blog_authors(name);
+
+ALTER TABLE blog_authors ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public read access to blog authors"
+    ON blog_authors FOR SELECT
+    USING (true);
+
+CREATE POLICY "Allow public write access to blog authors"
+    ON blog_authors FOR ALL
+    USING (true);
+

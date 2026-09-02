@@ -1,6 +1,40 @@
 import { supabase } from './_utils/clients.js';
 import { getAuthUser, auditLog, userHasRole } from './_utils/auth.js';
 
+// Predefined authentic authors for Casa Loy
+const defaultBlogAuthors = [
+  {
+    id: 'author-don-manuel',
+    name: 'Don Manuel Loy',
+    role: 'Patriarca & Guardián del Terroir',
+    photo: '/Don Manuel Loy.webp',
+    bio: 'Con más de cuatro décadas custodiando los campos de agave azul en Ayotlán, Don Manuel Loy transmite la maestría del tiempo, el fuego y la destilación de ultra-lujo.'
+  },
+  {
+    id: 'author-sergio-chef',
+    name: 'Sergio Chef',
+    role: 'Chef Ejecutivo Restaurante 1937 Nativo',
+    photo: '/Sergio Chef.webp',
+    bio: 'Explorador culinario del maridaje con tequila y los ingredientes endémicos de Los Altos de Jalisco.'
+  },
+  {
+    id: 'author-maestro-tequilero',
+    name: 'Ing. Gabriel Lozano',
+    role: 'Maestro Tequilero & Selección de Origen',
+    photo: '/Empleado Jimador Casa Loy Tequilera.webp',
+    bio: 'Especialista en fermentación pausada, destilación en alambiques de cobre y añejamiento en barricas de roble.'
+  },
+  {
+    id: 'author-sommelier',
+    name: 'Lic. Claudia Villarreal',
+    role: 'Sommelier en Jefe Casa Loy',
+    photo: '/Ejecutiva.webp',
+    bio: 'Guía de catas sensoriales y defensora de la denominación de origen del tequila de alta gama.'
+  }
+];
+
+let memoryAuthorsStore = [...defaultBlogAuthors];
+
 export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -74,6 +108,24 @@ export default async function handler(req, res) {
           .order('published_at', { ascending: false });
         if (error) throw error;
         return res.status(200).json(data);
+      }
+
+      // Fetch Blog Authors
+      if (type === 'blog_authors') {
+        try {
+          const { data, error } = await supabase
+            .from('blog_authors')
+            .select('*')
+            .order('name', { ascending: true });
+
+          if (!error && data && data.length > 0) {
+            return res.status(200).json(data);
+          }
+        } catch (e) {
+          console.warn("Could not query blog_authors table:", e.message);
+        }
+
+        return res.status(200).json(memoryAuthorsStore);
       }
       // Fetch Job Applications (Private: Admin or RH only)
       if (type === 'applications') {
@@ -396,6 +448,78 @@ export default async function handler(req, res) {
           currentUser.role,
           'delete_blog',
           `Entrada de blog eliminada ID: ${id}`
+        );
+
+        return res.status(200).json({ success: true });
+      }
+
+      // Action: Save Author
+      if (action === 'save_author') {
+        const { id, name, role, photo, bio } = req.body || {};
+        if (!name || !role || !photo) {
+          return res.status(400).json({ error: 'Nombre, cargo y foto son campos obligatorios.' });
+        }
+
+        const authorData = {
+          name: name.trim(),
+          role: role.trim(),
+          photo: photo.trim(),
+          bio: (bio || '').trim()
+        };
+
+        let authorId = id;
+        if (id) {
+          try {
+            await supabase.from('blog_authors').update(authorData).eq('id', id);
+          } catch (e) {
+            console.warn("Supabase update blog_authors notice:", e.message);
+          }
+          // Update in-memory
+          const idx = memoryAuthorsStore.findIndex(a => a.id === id);
+          if (idx !== -1) {
+            memoryAuthorsStore[idx] = { ...memoryAuthorsStore[idx], ...authorData };
+          }
+        } else {
+          authorId = `auth_${Date.now()}`;
+          try {
+            const { data } = await supabase.from('blog_authors').insert(authorData).select().single();
+            if (data?.id) authorId = data.id;
+          } catch (e) {
+            console.warn("Supabase insert blog_authors notice:", e.message);
+          }
+          memoryAuthorsStore.push({ id: authorId, ...authorData });
+        }
+
+        await auditLog(
+          currentUser.userId,
+          currentUser.email,
+          currentUser.role,
+          id ? 'update_author' : 'create_author',
+          `Autor guardado: ${name}`
+        );
+
+        return res.status(200).json({ success: true, author: { id: authorId, ...authorData } });
+      }
+
+      // Action: Delete Author
+      if (action === 'delete_author') {
+        const { id } = req.body || {};
+        if (!id) return res.status(400).json({ error: 'ID es obligatorio.' });
+
+        try {
+          await supabase.from('blog_authors').delete().eq('id', id);
+        } catch (e) {
+          console.warn("Supabase delete blog_authors notice:", e.message);
+        }
+
+        memoryAuthorsStore = memoryAuthorsStore.filter(a => a.id !== id);
+
+        await auditLog(
+          currentUser.userId,
+          currentUser.email,
+          currentUser.role,
+          'delete_author',
+          `Autor eliminado ID: ${id}`
         );
 
         return res.status(200).json({ success: true });
