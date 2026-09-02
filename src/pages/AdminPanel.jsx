@@ -3984,6 +3984,32 @@ export default function AdminPanel({
                         </div>
                       </div>
 
+                      {/* Literal Blog Author Identity Section */}
+                      <div className="bg-stone-100/70 border border-stone-200 p-3.5 rounded-sm space-y-3">
+                        <div className="flex items-center gap-1.5 text-[10px] text-[#8C4723] uppercase font-bold tracking-wider">
+                          <span className="material-symbols-outlined text-[14px]">person</span>
+                          Identidad Editorial del Autor (Byline Literal)
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                          <div>
+                            <label className="block text-[9px] text-stone-500 uppercase font-bold mb-1">Nombre del Autor(a) *</label>
+                            <input type="text" name="author_es" defaultValue={editingBlog.author_es || "Don Manuel Loy"} placeholder="Don Manuel Loy" className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" />
+                          </div>
+                          <div>
+                            <label className="block text-[9px] text-stone-500 uppercase font-bold mb-1">Cargo / Especialidad *</label>
+                            <input type="text" name="author_role" defaultValue={editingBlog.author_role || "Maestro Tequilero & Selección de Terroir"} placeholder="Maestro Tequilero" className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" />
+                          </div>
+                          <div>
+                            <label className="block text-[9px] text-stone-500 uppercase font-bold mb-1">Foto del Autor (URL o Ruta) *</label>
+                            <input type="text" name="author_photo" defaultValue={editingBlog.author_photo || "/Don Manuel Loy.webp"} placeholder="/Don Manuel Loy.webp" className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-[9px] text-stone-500 uppercase font-bold mb-1">Biografía Corta del Autor</label>
+                          <input type="text" name="author_bio" defaultValue={editingBlog.author_bio || "Guardián de la tradición centenaria y el terroir de Los Altos de Jalisco en Casa Loy."} placeholder="Breve semblanza..." className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" />
+                        </div>
+                      </div>
+
                       <div>
                         <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Resumen / Descripción corta *</label>
                         <textarea name="description" required defaultValue={editingBlog.description} rows="2" className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none"></textarea>

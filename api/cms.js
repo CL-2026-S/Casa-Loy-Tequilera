@@ -331,6 +331,9 @@ export default async function handler(req, res) {
           body_en,
           author_es,
           author_en,
+          author_photo,
+          author_role,
+          author_bio,
           seo_title,
           seo_description,
           seo_keywords
@@ -351,6 +354,9 @@ export default async function handler(req, res) {
           body_en: body_en || body_es || description,
           author_es: author_es || 'Casa Loy Tequilera',
           author_en: author_en || 'Casa Loy Tequilera',
+          author_photo: author_photo || '/Empleado Jimador Casa Loy Tequilera.webp',
+          author_role: author_role || 'Maestro Tequilero & Selección de Origen',
+          author_bio: author_bio || 'Guardián de la tradición centenaria y el terroir de Los Altos de Jalisco en Casa Loy.',
           seo_title: seo_title || title,
           seo_description: seo_description || description,
           seo_keywords: seo_keywords || category

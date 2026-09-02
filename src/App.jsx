@@ -451,8 +451,8 @@ export default function App() {
             <Route path="/private-label" element={<Maquilas t={t} lang={lang} />} />
             <Route path="/maquilas" element={<Navigate to="/marca-propia" replace />} />
             <Route path="/bottling" element={<Navigate to="/private-label" replace />} />
-            <Route path="/maquilas-v2" element={<Navigate to="/marca-propia" replace />} />
-            <Route path="/bottling-v2" element={<Navigate to="/private-label" replace />} />
+            <Route path="/maquilas-v2" element={<MaquilasV2 lang="es" />} />
+            <Route path="/bottling-v2" element={<MaquilasV2 lang="en" />} />
             
             <Route path="/marcas" element={<Brands t={t} lang={lang} country={country} />} />
             <Route path="/brands" element={<Brands t={t} lang={lang} country={country} />} />

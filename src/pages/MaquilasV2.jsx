@@ -132,37 +132,74 @@ export default function MaquilasV2({ lang = "es" }) {
       heroTitle: "MAQUILA DE TEQUILA DE MARCA PROPIA EN MÉXICO",
       heroSubtitle: "Tu marca de tequila comienza con el auténtico origen en Los Altos de Jalisco.",
       heroSecondary: "Tu visión. Nuestra maestría y legado.",
-      heroSub: "Una destilería familiar con NOM 1633 diseñada para fundadores, marcas existentes y distribuidores listos para construir un proyecto con raíces sólidas y trazabilidad total.",
+      heroSub: "Destilería integrada con NOM 1633, respaldada por Grupo Orbe XXI con más de 60 años de trayectoria empresarial, 3,600 hectáreas de agave propio y 13.5 millones de litros de capacidad anual.",
       heroBtnStart: "Iniciar Diagnóstico B2B",
       heroBtnCall: "Reservar Llamada Técnica",
       
-      trustNom: "NOM 1633",
-      trustRegion: "Los Altos de Jalisco",
-      trustStructure: "Destilería Familiar",
-      trustRoots: "Agave Propio desde 1992",
-      trustControl: "Control por Lotes",
-      trustExport: "Exportación Global",
+      trustNom: "NOM 1633 CRT",
+      trustRegion: "Ayotlán · Los Altos de Jalisco",
+      trustStructure: "Grupo Orbe XXI (60+ Años)",
+      trustRoots: "3,600 Has. / 10.8M Agaves",
+      trustControl: "13.5M L / Año Capacidad",
+      trustExport: "1.2M L Cava Barricas",
+      trustAdditiveFree: "Certificado 100% Additive Free",
 
-      whyTitle: "Una destilería familiar y productora en Los Altos de Jalisco.",
+      // Respaldo Institucional Grupo Orbe XXI (PDF pág. 3-4)
+      groupOverTitle: "Respaldo Corporativo & Trayectoria",
+      groupTitle: "ORBE XXI GROUP: Más de 60 años de solidez institucional.",
+      groupDesc: "Tu marca de tequila no depende de intermediarios vulnerables ni de productores improvisados. Detrás de Casa Loy Tequilera opera Grupo Orbe XXI, un consorcio multinacional con más de seis décadas de experiencia agroindustrial, presencia en América, Europa y Asia, y solvencia garantizada.",
+      groupPillars: [
+        { metric: "60+ Años", title: "Legado Empresarial", desc: "Grupo corporativo consolidado con liderazgo comprobado en agroindustria, alimentos y comercio exterior." },
+        { metric: "2,900+", title: "Colaboradores Globales", desc: "Fuerza operativa y técnica internacional con estándares de gobierno corporativo de clase mundial." },
+        { metric: "Desde 1992", title: "Especialistas en Agave (TeknoAgrox)", desc: "Más de tres décadas cultivando, seleccionando y perfeccionando la genética del Agave Tequilana Weber azul." },
+        { metric: "Nutriagaves (2003)", title: "Presencia en USA, Europa & Asia", desc: "Líder global en jarabe e inulina de agave orgánico, con cadenas logísticas y certificaciones internacionales activas." }
+      ],
+      groupTequileraCard: {
+        overtitle: "División Tequilera del Consorcio",
+        title: "Casa Loy Tequilera — Fundada en 2019",
+        desc: "Creada para integrar el control total de la cadena de valor: desde nuestras 3,600 hectáreas de agave propio hasta una destilería de vanguardia con capacidad de 13.5 millones de litros anuales y cava de añejamiento de 1.2M L."
+      },
+      groupSynergies: ["Casa Loy Tequilera", "Nutriagaves Group", "TeknoAgrox", "Loydeal", "OMEX Alimentaria", "IPASA", "PAOSA"],
+
+      whyTitle: "Una destilería de clase mundial en Los Altos de Jalisco.",
       whyCards: [
         { wk: "Origen", title: "NOM 1633, Ayotlán, Jalisco", highlight: true, metric: "1633" },
-        { wk: "Estructura", title: "Empresa familiar, tres generaciones agaveras", dark: true },
-        { wk: "Agave", title: "Cultivo propio certificado desde 1992", metric: "Desde 1992" },
-        { wk: "Equipo", title: "Atención directa de los tomadores de decisiones" },
-        { wk: "Infraestructura", title: "Diseñada para escalar proyectos de volumen serio", highlight: true, span2: true },
-        { wk: "Calidad", title: "Análisis químicos y control lote a lote en laboratorio" }
+        { wk: "Respaldo", title: "Grupo Orbe XXI: 60+ años, 2,900 colaboradores", dark: true },
+        { wk: "Agave Propio", title: "3,600 Has. y 10.8M agaves en inventario", metric: "3,600 Has." },
+        { wk: "Equipo Técnico", title: "Atención directa de maestros tequileros e ingenieros" },
+        { wk: "Infraestructura", title: "13.5M L destilación anual y 1.2M L en cava de barricas", highlight: true, span2: true },
+        { wk: "Laboratorio", title: "Tasting Lab profesional y cromatografía in-house lote a lote" }
       ],
 
-      insideTitle: "De la tierra a la botella: Nuestro Proceso.",
+      // World-Class Infrastructure & Capacities (PDF pág. 11-18)
+      infraOverTitle: "Infraestructura Industrial Auditada",
+      infraTitle: "Capacidades instaladas para proyectos de cualquier escala.",
+      infraDesc: "Nuestra planta en Ayotlán combina la destilación artesanal en alambiques de cobre y extracción en tahona ancestral con tecnología europea continua de alta escala, respaldada por suministro propio de agua de pozo profundo.",
+      infraCards: [
+        { metric: "240 Tons", title: "Cocción Tradicional", desc: "4 hornos de mampostería (60t cada uno) para hidrólisis lenta al vapor de las piñas de agave." },
+        { metric: "80 Tons", title: "Autoclaves de Acero", desc: "2 autoclaves de acero inoxidable (40t cada una) para cocción rápida y preservación de notas frescas." },
+        { metric: "200tn / 500k L", title: "Sistemas de Extracción", desc: "200 tons/día extracción verde + Tahona de piedra volcánica (500,000 L/año) y molino de rodillos." },
+        { metric: "4.5M Litros", title: "Alambiques de Cobre", desc: "Destilación artesanal en alambiques con serpentín de cobre: 15,000 L/día a 55° Alc. Vol." },
+        { metric: "9M Litros", title: "Columnas Europeas", desc: "Destilación continua automatizada: 30,000 L/día a 55° Alc. Vol. para marcas de alto volumen." },
+        { metric: "1.2M Litros", title: "Cava de Barricas", desc: "Roble Americano Virgen, Barricas de Bourbon y Roble Francés en cava climatizada." },
+        { metric: "1.3M Litros", title: "Tanques de Acero Inox.", desc: "Almacenamiento y estabilización de producto terminado con control de temperatura." },
+        { metric: "2,000 Pallets", title: "Bodega Logística", desc: "1,000 tarimas para insumos secos (botellas/cajas) + 1,000 tarimas para producto terminado exportable." }
+      ],
+      infraWater: {
+        title: "Agua de Pozo Profundo Propio",
+        desc: "Extracción directa en sitio que garantiza máxima pureza fisicoquímica y balance mineral constante en cada fermentación y dilución de ensamble."
+      },
+
+      insideTitle: "De la tierra a la botella: Nuestro Proceso Integral.",
       insideSteps: [
-        { num: "01", name: "Agave", desc: "Agaves tequilana Weber variedad azul rigurosamente seleccionados en Los Altos de Jalisco, con alta concentración de azúcares reductores totales (ART).", img: "/Piñas de Agave Tequilana Weber.webp" },
-        { num: "02", name: "Cocción", desc: "Cocción lenta y uniforme en hornos de mampostería tradicionales para hidrolizar suavemente los almidones del agave en azúcares fermentables.", img: "/Agave cocido.webp" },
-        { num: "03", name: "Molienda", desc: "Extracción suave de los jugos del agave utilizando molino de rodillos o tahona de piedra tradicional para conservar las fibras aromáticas.", img: "/Tahona Agave Molienda.webp" },
-        { num: "04", name: "Fermentación", desc: "Fermentación natural y libre en tinas de acero inoxidable con levaduras propias de la casa para definir los aromas primarios del destilado.", img: "/Fermentación.webp" },
-        { num: "05", name: "Destilación", desc: "Doble destilación lenta en alambiques de cobre tradicionales para refinar y purificar el espirituoso manteniendo el carácter del terruño.", img: "/Destilación.webp" },
-        { num: "06", name: "Barricas", desc: "Maduración y reposo en cavas subterráneas climatizadas utilizando barricas de roble americano, francés o barricas seleccionadas de vino y whiskey.", img: "/Cava de Añejamiento.webp" },
-        { num: "07", name: "Laboratorio", desc: "Control analítico cromatográfico estricto in-house en cada lote para garantizar consistencia química y organoléptica certificada.", img: "/Laboratorio.webp" },
-        { num: "08", name: "Envasado", desc: "Línea de envasado semiautomática adaptada para botellas personalizadas, con control de filtración fina y etiquetado manual ultra-premium.", img: "/Embotellado 2.webp" }
+        { num: "01", name: "Agave Propio", desc: "3,600 Hectáreas propias y más de 10.8 millones de plantas en Jalisco, Michoacán y Guanajuato. Jima selectiva con alta concentración de azúcares reductores totales (ART) y certificación orgánica.", img: "/Piñas de Agave Tequilana Weber.webp" },
+        { num: "02", name: "Cocción (2 Métodos)", desc: "Flexibilidad total: 4 hornos de mampostería tradicionales (240 tons total a vapor lento) o 2 autoclaves rápidas de acero (80 tons total) que maximizan el rendimiento y frescura.", img: "/Agave cocido.webp" },
+        { num: "03", name: "Extracción (3 Métodos)", desc: "3 sistemas a elegir: Tahona ancestral de piedra volcánica (500,000 L/año), molino de rodillos/tornillo noble sin machacar fibras amargas, o sistema de difusor para alta escala.", img: "/Tahona Agave Molienda.webp" },
+        { num: "04", name: "Fermentación (2 Métodos)", desc: "Fermentación lenta al aire libre en tinas abiertas de acero inoxidable o fermentación técnica en tanques cerrados con control de temperatura y levaduras exclusivas de la casa.", img: "/Fermentación.webp" },
+        { num: "05", name: "Destilación (2 Métodos)", desc: "Alambiques tradicionales con serpentín de cobre (15,000 L/día a 55° · 4.5M L/año) o columnas europeas continuas automatizadas (30,000 L/día · 9M L/año). Agua de pozo profundo propio.", img: "/Destilación.webp" },
+        { num: "06", name: "Cava de Barricas", desc: "Capacidad de 1.2 Millones de Litros en cava subterránea climatizada con humedad relativa controlada. Crianza en Roble Americano Virgen, Barricas de Bourbon y Roble Francés.", img: "/Cava de Añejamiento.webp" },
+        { num: "07", name: "Tasting Lab & Control Químico", desc: "Cabinas sensoriales de cata profesional y laboratorio fisicoquímico in-house con cromatografía de gases para certificar perfiles 100% Additive Free y cumplimiento NOM-006 / TTB.", img: "/Laboratorio.webp" },
+        { num: "08", name: "Envasado & QA", desc: "Línea de envasado con triple punto de aseguramiento de calidad: llenado automatizado, etiquetado de alta precisión e inspección visual en mesa lumínica botella por botella.", img: "/Embotellado 2.webp" }
       ],
 
       solutionsTitle: "Elige la ruta de producción adecuada.",
@@ -172,6 +209,22 @@ export default function MaquilasV2({ lang = "es" }) {
         { num: "03", title: "Tequila a Granel", desc: "Suministro de volumen constante para embotelladoras, importadores o distribuidores.", tag: "bulk_tequila" },
         { num: "04", title: "Servicio de Envasado y Co-packing", desc: "Embotellado, etiquetado y embalaje para proyectos que ya tienen líquido o botellas.", tag: "copacking_bottling" },
         { num: "05", title: "Desarrollo de Perfil de Autor", desc: "Ajuste de perfiles organolépticos exclusivos guiado por nuestros maestros tequileros.", tag: "custom_profile" }
+      ],
+
+      // Categorías y Clases Oficiales (PDF pág. 9-10)
+      catOverTitle: "Marco Regulatorio Oficial NOM-006",
+      catTitle: "Categorías y Clases Oficiales de Tequila.",
+      catDesc: "Diseñamos y envasamos perfiles en cualquiera de las categorías y clases reconocidas por la legislación mexicana y el Consejo Regulador del Tequila, adaptándonos al paladar y posicionamiento de tu mercado meta.",
+      categories: [
+        { title: "Tequila 100% Puro de Agave", desc: "Elaborado exclusivamente a partir de los azúcares del Agave Tequilana Weber variedad azul cultivado dentro de la zona de Denominación de Origen. Debe ser envasado de origen dentro de México.", badge: "NOM-006 Exclusivo" },
+        { title: "Tequila (Mixto)", desc: "Elaborado con un mínimo de 51% de azúcares de agave azul y hasta 49% de otros azúcares de caña o maíz. Permite exportación a granel para embotellado en el país de destino.", badge: "Apto Granel Exportación" }
+      ],
+      classes: [
+        { name: "Blanco / Silver", time: "Sin añejamiento", desc: "Embotellado directo tras la destilación o estabilización en tanques. Perfil herbal y cítrico puro de agave cocido." },
+        { name: "Joven / Gold", time: "Mezcla o abocado", desc: "Tequila blanco mezclado con reposados o añejos, o redondeado suavemente para cócteles y gran escala." },
+        { name: "Reposado", time: "2 a 11 meses", desc: "Madurado en barricas o pipones de roble americano o francés. Notas de vainilla suave, almendra y madera noble." },
+        { name: "Añejo", time: "1 a 3 años", desc: "Maduración prolongada en barricas de roble de capacidad no mayor a 600 litros. Carácter tostado, cacao y frutos secos." },
+        { name: "Extra Añejo", time: "Más de 3 años", desc: "Ultra maduración en barricas de roble seleccionadas. Máxima complejidad organoléptica para segmentos de lujo." }
       ],
 
       whoTitle: "Soluciones diseñadas a la medida de tu rol.",
@@ -233,27 +286,78 @@ export default function MaquilasV2({ lang = "es" }) {
 
       methodsTitle: "El perfil de tequila que tu marca requiere, y cómo lo construimos.",
       methods: [
-        { idx: "01", name: "Tradicional / Ultra-Premium", desc: "Molienda con tahona de piedra, cocción en hornos de mampostería y alambiques de cobre." },
-        { idx: "02", name: "Premium Consistente", desc: "Cocción en autoclaves de acero inoxidable y fermentación con control de temperatura." },
-        { idx: "03", name: "Comercial Escalable", desc: "Destilación eficiente en columnas para marcas de alto volumen y rotación rápida." },
-        { idx: "04", name: "Firma del Autor", desc: "Levaduras exclusivas de la casa y maduración en barricas seleccionadas de vino o whisky." }
+        { idx: "01", name: "Tradicional / Ultra-Premium (Tahona)", desc: "Molienda con tahona de piedra volcánica ancestral, cocción en hornos de mampostería y alambiques de cobre. 100% Additive Free." },
+        { idx: "02", name: "Premium Consistente (Autoclave)", desc: "Cocción en autoclaves de acero inoxidable, extracción noble sin machacar fibras y fermentación con control estricto de temperatura." },
+        { idx: "03", name: "Comercial Escalable (Columnas)", desc: "Destilación eficiente en columnas europeas continuas (hasta 9M L/año) para marcas de alto volumen y rotación competitiva." },
+        { idx: "04", name: "Firma del Autor & Barricas Selectas", desc: "Levaduras exclusivas de la casa y crianza en barricas seleccionadas de Roble Blanco Americano Virgen, Bourbon o Roble Francés." }
       ],
 
-      agaveTitle: "Tu marca de tequila comienza en el campo, no en la destilería.",
-      agaveOriginKey: "Origen",
-      agaveOriginVal: "Ayotlán, Los Altos de Jalisco",
-      agaveSinceKey: "Desde",
-      agaveSinceVal: "Raíces agaveras cultivando la tierra desde 1992",
-      agaveTraceKey: "Trazabilidad",
-      agaveTraceVal: "Planeación de suministro a nivel de parcela y jima controlada",
+      // Agave, Terroir & Golden Corridor (PDF pág. 5-7)
+      agaveOverTitle: "Autosuficiencia Agrícola & Terruño",
+      agaveTitle: "Tu tequila nace en el campo: 3,600 Has. y 10.8 millones de agaves.",
+      agaveSub: "En una industria vulnerable a la especulación y escasez del agave, Casa Loy garantiza estabilidad de precios y suministro permanente gracias a tres décadas de experiencia como productores agaveros autosuficientes.",
+      agaveMetrics: [
+        { metric: "3,600 Has.", title: "Superficie Cultivada", desc: "8,649 acres de tierra propia en Jalisco, Michoacán y Guanajuato." },
+        { metric: "10.8M", title: "Plantas en Inventario", desc: "Plantaciones escalonadas por edades para garantizar jima continua." },
+        { metric: "31+ Años", title: "Experiencia Agavera", desc: "Cultivando y seleccionando hijuelos de élite desde 1992 (TeknoAgrox)." },
+        { metric: "Orgánico", title: "Capacidad Certificada", desc: "Cultivo libre de pesticidas sintéticos apto para certificación USDA / UE." }
+      ],
+      corridorOverTitle: "Ubicación Estratégica",
+      corridorTitle: "Ayotlán: En el Corazón de Los Altos de Jalisco",
+      corridorDesc: "Nuestra destilería y campos se ubican a más de 2,000 metros sobre el nivel del mar en Ayotlán, Jalisco. Esta altitud, combinada con tierras rojas arcillosas ricas en hierro y minerales, somete al agave azul a un estrés térmico natural que concentra niveles excepcionales de Azúcares Reductores Totales (ART).",
+      corridorHighlightTitle: "✦ El Corredor Dorado de los Grandes Tequilas",
+      corridorHighlightDesc: "Ayotlán forma parte de la ruta tequilera más prestigiosa y codiciada a nivel internacional, compartiendo terruño con destilerías legendarias:",
+      corridorRoute: ["Guadalajara", "Casamigos", "Patrón", "Don Julio", "Ayotlán (CASA LOY)", "Tequila Ocho / Teremana"],
 
-      qualityTitle: "Consistencia Lote a Lote",
-      qualityDesc: "Validación en laboratorio interno, perfiles físico-químicos definidos, revisión sensorial y aprobación final del cliente antes de envasar.",
-      qualityBullets: ["Laboratorio in-house en cada lote", "Firma y aprobación del cliente previa", "Trazabilidad completa de principio a fin"],
-      
-      complianceTitle: "Coordinamos el Cumplimiento Legal",
-      complianceDesc: "Te ayudamos a navegar la compleja estructura aduanal, registro ante el CRT y certificaciones internacionales para la exportación regular.",
-      complianceBullets: ["NOM 1633 autorizada por el CRT", "Documentación de exportación completa", "Soporte legal con agentes aduanales y distribuidores"],
+      // Quality, Tasting Lab & Bottling QA (PDF pág. 19)
+      qaOverTitle: "Garantía Analítica & Sensorial",
+      qaTitle: "Aseguramiento de Calidad: Del Laboratorio a la Botella.",
+      qaSub: "Cada lote de producción es validado en nuestro laboratorio químico in-house y en cabinas especializadas de cata antes de pasar por nuestra línea de envasado con triple punto de inspección.",
+      qaCards: [
+        {
+          icon: "local_bar",
+          title: "Tasting Lab Profesional",
+          desc: "Cabinas individuales de evaluación organoléptica aisladas para paneles de catadores profesionales. Validamos el perfil sensorial (aroma, balance alcohólico, notas de retrogusto) contra tu perfil patrón antes de embotellar.",
+          bullets: ["Cabinas sensoriales normalizadas", "Blind tests y paneles de expertos", "Aprobación formal previa de muestra"]
+        },
+        {
+          icon: "science",
+          title: "Laboratorio Fisicoquímico",
+          desc: "Equipamiento analítico avanzado y cromatografía de gases in-house. Monitoreamos alcoholímetro, acidez total, ésteres, aldehídos, furfural y metanol conforme a la NOM-006-SCFI y normativas TTB de EE.UU.",
+          bullets: ["Cromatografía de gases por lote", "Certificados analíticos oficiales", "Confirmación 100% Additive Free"]
+        },
+        {
+          icon: "inventory",
+          title: "Línea de Envasado & QA",
+          desc: "Área de envasado y acondicionamiento con estricto aseguramiento de calidad: llenado volumétrico automatizado, etiquetado de alta precisión e inspección visual en mesa de luz para asegurar botellas perfectas.",
+          bullets: ["Llenado automatizado de precisión", "Etiquetado automatizado y manual premium", "Inspección visual botella por botella"]
+        }
+      ],
+
+      // Sostenibilidad & Clean Tech (PDF pág. 20)
+      ecoOverTitle: "Responsabilidad Ambiental & Clean Tech",
+      ecoTitle: "Sostenibilidad: Destilación con respeto por el planeta.",
+      ecoSub: "Los consumidores globales exigen marcas auténticamente sustentables. En Casa Loy implementamos un modelo de economía circular integral para minimizar la huella de carbono y optimizar el uso de recursos naturales.",
+      ecoCards: [
+        { metric: "Hasta 45%", title: "Energía Solar Fotovoltaica", desc: "Parque de paneles solares instalado en naves que abastece hasta el 45% de la demanda energética total de la planta en operación a plena capacidad." },
+        { metric: "Biomasa", title: "Cero Combustibles Fósiles", desc: "Caldera de biomasa de última generación que aprovecha el bagazo residual del agave cocido para generar vapor limpio, erradicando el combustóleo y gas fósil." },
+        { metric: "100% Circular", title: "Compostaje de Fibras de Agave", desc: "Aprovechamiento total de las fibras de agave desechadas durante la extracción para elaborar composta orgánica que regresa como fertilizante a nuestros propios campos." },
+        { metric: "Reúso 100%", title: "Reciclaje de Agua para Riego", desc: "Planta de tratamiento de efluentes que recupera y depura el agua utilizada en procesos industriales para ser reintegrada en el riego de parcelas agrícolas." },
+        { metric: "Tratamiento Integral", title: "Aprovechamiento de Vinazas", desc: "Sistema avanzado de tratamiento y neutralización de vinazas residuales para su transformación en fertilizante orgánico rico en minerales para la tierra." },
+        { metric: "Storytelling", title: "Ventaja Comercial B2B", desc: "Comunica con orgullo a tus distribuidores y consumidores finales que tu tequila es producido en una de las destilerías más ecológicas y sostenibles de México.", badge: "ESG Compliance Ready" }
+      ],
+
+      // Certificaciones Internacionales (PDF pág. 21)
+      certOverTitle: "Acreditaciones Internacionales",
+      certTitle: "Certificaciones de clase mundial que abren fronteras.",
+      certSub: "Tu marca contará con el respaldo técnico y los sellos oficiales exigidos por los retailers y distribuidores más rigurosos de Estados Unidos, Europa y mercados globales.",
+      certBadges: [
+        { code: "USDA", name: "USDA Organic", desc: "Certificación de producción orgánica para exportación directa al mercado de EE.UU.", market: "Mercado Norteamericano" },
+        { code: "BIO", name: "EU Organic", desc: "Sello orgánico de la Unión Europea (Euro-leaf) para distribución en los 27 países miembros.", market: "Unión Europea" },
+        { code: "KMD", name: "KMD Kosher", desc: "Certificación de pureza Kosher México con validez y reconocimiento internacional.", market: "Pureza Garantizada" },
+        { code: "100%", name: "Additive Free", desc: "Confirmado libre de aditivos por Tequila Matchmaker. Cero colorantes, abocantes o aromas.", market: "Tequila Matchmaker" },
+        { code: "FSSC", name: "FSSC 22000", desc: "Food Safety System Certification. Máximo estándar global en inocuidad y seguridad alimentaria.", market: "Inocuidad Global" }
+      ],
 
       ndaTitle: "Tu Marca. Tu Proyecto. Protegido bajo Contrato.",
       ndaDesc: "Tu fórmula es tuya. Cada proyecto inicia bajo un Acuerdo de Confidencialidad (NDA) firmado, con propiedad intelectual clara y documentación resguardada contra fugas de información.",
@@ -297,46 +401,99 @@ export default function MaquilasV2({ lang = "es" }) {
       heroTitle: "PRIVATE LABEL TEQUILA MANUFACTURING IN MEXICO",
       heroSubtitle: "Your tequila starts with a real origin in Los Altos de Jalisco.",
       heroSecondary: "Your vision. Our expertise and legacy.",
-      heroSub: "A family-owned distillery with NOM 1633 built for founders, existing brands, and distributors ready to build a project with real roots and total traceability.",
+      heroSub: "Integrated distillery with NOM 1633, backed by Grupo Orbe XXI with over 60 years of corporate heritage, 3,600 hectares of self-owned agave fields, and 13.5 million liters of annual distillation capacity.",
       heroBtnStart: "Start B2B Diagnosis",
       heroBtnCall: "Book Technical Call",
 
-      trustNom: "NOM 1633",
-      trustRegion: "Los Altos de Jalisco",
-      trustStructure: "Family-Owned",
-      trustRoots: "Agave roots since 1992",
-      trustControl: "Batch Control",
-      trustExport: "Export Coordination",
+      trustNom: "NOM 1633 CRT",
+      trustRegion: "Ayotlán · Los Altos de Jalisco",
+      trustStructure: "Grupo Orbe XXI (60+ Years)",
+      trustRoots: "3,600 Has. / 10.8M Agaves",
+      trustControl: "13.5M L / Year Capacity",
+      trustExport: "1.2M L Barrel Cellar",
+      trustAdditiveFree: "100% Additive Free Certified",
 
-      whyTitle: "A family-owned tequila producer in Los Altos de Jalisco.",
+      // Grupo Orbe XXI Backing
+      groupOverTitle: "Corporate Heritage & Strength",
+      groupTitle: "ORBE XXI GROUP: Over 60 years of institutional solidity.",
+      groupDesc: "Your tequila brand does not rely on vulnerable brokers or improvised producers. Behind Casa Loy Tequilera operates Grupo Orbe XXI, a multinational corporate consortium with over six decades of agribusiness experience, global presence in the Americas, Europe, and Asia, and proven financial solvency.",
+      groupPillars: [
+        { metric: "60+ Years", title: "Corporate Legacy", desc: "Consolidated group with verified leadership in agribusiness, food processing, and international trade." },
+        { metric: "2,900+", title: "Global Employees", desc: "International operational and technical workforce operating under world-class corporate governance standards." },
+        { metric: "Since 1992", title: "Agave Specialists (TeknoAgrox)", desc: "Over three decades cultivating, propagating, and perfecting the genetics of blue Weber agave." },
+        { metric: "Nutriagaves (2003)", title: "Presence in USA, Europe & Asia", desc: "Global leader in organic agave syrup and inulin, with established supply routes and global certifications." }
+      ],
+      groupTequileraCard: {
+        overtitle: "Tequila Division of the Consortium",
+        title: "Casa Loy Tequilera — Founded in 2019",
+        desc: "Established to integrate total supply chain control: from our 3,600 hectares of self-owned agave to a state-of-the-art distillery with 13.5 million liters annual capacity and a 1.2M L barrel aging room."
+      },
+      groupSynergies: ["Casa Loy Tequilera", "Nutriagaves Group", "TeknoAgrox", "Loydeal", "OMEX Alimentaria", "IPASA", "PAOSA"],
+
+      whyTitle: "A world-class distillery in Los Altos de Jalisco.",
       whyCards: [
         { wk: "Origin", title: "NOM 1633, Ayotlán, Jalisco", highlight: true, metric: "1633" },
-        { wk: "Structure", title: "Family-owned, three generations", dark: true },
-        { wk: "Agave", title: "Own cultivation since 1992", metric: "Since 1992" },
-        { wk: "Team", title: "Real people behind every project" },
-        { wk: "Infrastructure", title: "Built for serious, growing projects", highlight: true, span2: true },
-        { wk: "Quality", title: "Batch control on every production" }
+        { wk: "Heritage", title: "Grupo Orbe XXI: 60+ years, 2,900 employees", dark: true },
+        { wk: "Self-Owned Agave", title: "3,600 Has. and 10.8M agave plants in inventory", metric: "3,600 Has." },
+        { wk: "Technical Team", title: "Direct contact with master distillers and chemical engineers" },
+        { wk: "Infrastructure", title: "13.5M L annual distillation & 1.2M L barrel cellar", highlight: true, span2: true },
+        { wk: "Laboratory", title: "Professional Tasting Lab & in-house gas chromatography" }
       ],
 
-      insideTitle: "From agave to bottle.",
+      // World-Class Infrastructure & Capacities
+      infraOverTitle: "Audited Industrial Infrastructure",
+      infraTitle: "Installed capacities built for projects of any scale.",
+      infraDesc: "Our Ayotlán facility combines traditional copper pot stills and ancestral volcanic stone tahona milling with high-efficiency automated European column stills, supported by our own deep water well.",
+      infraCards: [
+        { metric: "240 Tons", title: "Traditional Masonry Ovens", desc: "4 stone ovens (60t each) for slow steam hydrolysis of mature agave piñas." },
+        { metric: "80 Tons", title: "Stainless Steel Autoclaves", desc: "2 autoclaves (40t each) for rapid pressurized cooking preserving fresh herbal notes." },
+        { metric: "200tn / 500k L", title: "Extraction Systems", desc: "200 ton/day green extraction + ancestral volcanic stone Tahona (500k L/year) and roller mill." },
+        { metric: "4.5M Liters", title: "Copper Pot Stills", desc: "Artisanal double distillation in copper coil stills: 15,000 L/day at 55% ABV." },
+        { metric: "9M Liters", title: "European Column Stills", desc: "Automated continuous column stills: 30,000 L/day at 55% ABV for high-volume commercial brands." },
+        { metric: "1.2M Liters", title: "Barrel Cellar", desc: "Virgin American Oak, Bourbon Barrels, and French Oak in temperature-controlled cellar." },
+        { metric: "1.3M Liters", title: "Stainless Tanks", desc: "Temperature-controlled holding tanks for resting and stabilizing finished product." },
+        { metric: "2,000 Pallets", title: "Logistics Warehouse", desc: "1,000 pallets for dry goods (bottles/cases) + 1,000 pallets for export-ready finished product." }
+      ],
+      infraWater: {
+        title: "Proprietary Deep Well Water",
+        desc: "Direct on-site extraction providing microbiological purity and consistent mineral balance for all fermentations and proofing blends."
+      },
+
+      insideTitle: "From soil to bottle: Our End-to-End Process.",
       insideSteps: [
-        { num: "01", name: "Agave", desc: "Rigourously hand-selected blue Weber agave from the Jalisco Highlands, featuring maximum sugar concentration (total reducing sugars).", img: "/Piñas de Agave Tequilana Weber.webp" },
-        { num: "02", name: "Cooking", desc: "Slow and uniform cooking in traditional masonry brick ovens to smoothly hydrolyze agave starches into fermentable sugars.", img: "/Agave cocido.webp" },
-        { num: "03", name: "Milling", desc: "Gentle extraction of agave juices using a roller mill or traditional volcanic stone tahona to preserve primary aroma-bearing fibers.", img: "/Tahona Agave Molienda.webp" },
-        { num: "04", name: "Fermentation", desc: "Natural and open fermentation in stainless steel vats using our own proprietary yeast strains to define primary organoleptic profiles.", img: "/Fermentación.webp" },
-        { num: "05", name: "Distillation", desc: "Slow double distillation in traditional copper pot stills to refine and purify the spirit while retaining the authentic terroir character.", img: "/Destilación.webp" },
-        { num: "06", name: "Aging", desc: "Maturation and rest in temperature-controlled underground cellars using American or French oak casks, or selected wine/whiskey barrels.", img: "/Cava de Añejamiento.webp" },
-        { num: "07", name: "Lab Testing", desc: "Strict chromatography and chemical quality control in our in-house laboratory to certify batch-to-batch consistency.", img: "/Laboratorio.webp" },
-        { num: "08", name: "Bottling", desc: "Semi-automated bottling line for custom bottles, featuring fine filtration control and manual labelling for ultra-premium brands.", img: "/Embotellado 2.webp" }
+        { num: "01", name: "Own Agave", desc: "3,600 Self-owned hectares and over 10.8 million plants in Jalisco, Michoacán, and Guanajuato. Selective harvesting with high sugar concentration (total reducing sugars) and organic certification.", img: "/Piñas de Agave Tequilana Weber.webp" },
+        { num: "02", name: "Cooking (2 Methods)", desc: "Total flexibility: 4 traditional masonry brick ovens (240 tons total capacity for slow steaming) or 2 stainless autoclaves (80 tons total) maximizing yield and freshness.", img: "/Agave cocido.webp" },
+        { num: "03", name: "Extraction (3 Methods)", desc: "3 options: Ancestral volcanic stone Tahona (500,000 L/year), screw mill without crushing bitter fibers, or high-efficiency diffuser.", img: "/Tahona Agave Molienda.webp" },
+        { num: "04", name: "Fermentation (2 Methods)", desc: "Slow open-air fermentation in open stainless steel tanks or controlled fermentation in closed tanks with proprietary yeast strains.", img: "/Fermentación.webp" },
+        { num: "05", name: "Distillation (2 Methods)", desc: "Traditional copper pot stills with coil (15,000 L/day at 55% ABV · 4.5M L/year) or automated European column stills (30,000 L/day · 9M L/year). Proprietary deep well water.", img: "/Destilación.webp" },
+        { num: "06", name: "Barrel Cellar", desc: "1.2 Million Liters capacity in underground temperature-controlled aging cellar. Aging in Virgin American Oak, Bourbon Casks, and French Oak.", img: "/Cava de Añejamiento.webp" },
+        { num: "07", name: "Tasting Lab & Chemical QA", desc: "Individual sensory evaluation booths and in-house laboratory with gas chromatography to certify 100% Additive Free profiles and NOM-006 / TTB compliance.", img: "/Laboratorio.webp" },
+        { num: "08", name: "Bottling & QA", desc: "Bottling line with triple quality assurance: automated volumetric filling, precision labelling, and light-table visual inspection bottle by bottle.", img: "/Embotellado 2.webp" }
       ],
 
       solutionsTitle: "Choose the right production path.",
       solutions: [
-        { num: "01", title: "Private Label Tequila", desc: "Create or sell tequila under your own brand from scratch.", tag: "private_label" },
-        { num: "02", title: "Contract Manufacturing / Maquila", desc: "Production for third parties under specifications and custom formulas.", tag: "contract_manufacturing" },
-        { num: "03", title: "Bulk Tequila Supply", desc: "Bulk tequila for bottlers, importers, or distributors.", tag: "bulk_tequila" },
-        { num: "04", title: "Co-packing / Bottling Services", desc: "Bottling, labeling, or packaging for a third-party project.", tag: "copacking_bottling" },
-        { num: "05", title: "Custom Profile Development", desc: "Development or adjustment of custom liquid profile guided by master distillers.", tag: "custom_profile" }
+        { num: "01", title: "Private Label Tequila", desc: "Create, bottle, and market your own custom tequila brand from scratch.", tag: "private_label" },
+        { num: "02", title: "Contract Manufacturing / Maquila", desc: "Bespoke production under your exact specifications and proprietary recipes.", tag: "contract_manufacturing" },
+        { num: "03", title: "Bulk Tequila Supply", desc: "Steady volume supply for bottlers, importers, or global distributors.", tag: "bulk_tequila" },
+        { num: "04", title: "Co-packing & Bottling Services", desc: "Bottling, labeling, and packaging for projects with existing liquid or bottles.", tag: "copacking_bottling" },
+        { num: "05", title: "Custom Profile Development", desc: "Tailored organoleptic profile design guided by master distillers.", tag: "custom_profile" }
+      ],
+
+      // Categorías y Clases Oficiales
+      catOverTitle: "NOM-006 Official Standards",
+      catTitle: "Official Tequila Categories & Classes.",
+      catDesc: "We formulate and bottle profiles in all categories and classes recognized by Mexican law and the Tequila Regulatory Council (CRT), matching the taste profile and price point of your target market.",
+      categories: [
+        { title: "100% Blue Agave Tequila", desc: "Crafted exclusively from blue Weber agave sugars cultivated within the protected Appellation of Origin. Must be bottled at source in Mexico.", badge: "NOM-006 Exclusive" },
+        { title: "Tequila (Mixto)", desc: "Crafted with a minimum of 51% blue agave sugars and up to 49% other sugars (cane/corn). Certified for bulk export and destination country bottling.", badge: "Export Bulk Approved" }
+      ],
+      classes: [
+        { name: "Blanco / Silver", time: "Unaged", desc: "Bottled directly after distillation or resting in stainless tanks. Crisp, authentic herbal profile with pure cooked agave." },
+        { name: "Joven / Gold", time: "Blended or mellowed", desc: "Blanco tequila blended with reposado or añejo, or rounded for high-volume cocktails and retail scale." },
+        { name: "Reposado", time: "2 to 11 months", desc: "Rested in oak casks or vats. Gentle vanilla, hazelnut, and refined wood notes." },
+        { name: "Añejo", time: "1 to 3 years", desc: "Extended maturation in oak barrels no larger than 600 liters. Roasted oak, cacao, and dried fruit character." },
+        { name: "Extra Añejo", time: "3+ years", desc: "Ultra-aged in hand-selected oak barrels. Highest organoleptic complexity for luxury segments." }
       ],
 
       whoTitle: "Solutions tailored to your business role.",
@@ -345,7 +502,7 @@ export default function MaquilasV2({ lang = "es" }) {
         {
           tag: "Founders",
           title: "Starting a tequila brand from scratch",
-          desc: "We guide your entry into a highly regulated industry. We support you with CRT brand registration, liquid development, packaging layout, and connections with authorized bottle suppliers.",
+          desc: "We guide your entry into a highly regulated category. We support you with CRT registration, liquid formulation, package engineering, and authorized glass supplier sourcing.",
           benefits: ["Step-by-step CRT compliance guide", "Optimized Minimum Viable Batches", "100% guaranteed formula ownership"]
         },
         {
@@ -398,27 +555,78 @@ export default function MaquilasV2({ lang = "es" }) {
 
       methodsTitle: "The tequila profile your brand needs, and how we build it.",
       methods: [
-        { idx: "01", name: "Heritage / Ultra-Premium", desc: "Stone mill (tahona), traditional brick ovens, and copper pot stills." },
-        { idx: "02", name: "Premium Consistent", desc: "Autoclave cooking and precise fermentation temperature controls." },
-        { idx: "03", name: "Scalable Commercial", desc: "High-efficiency column stills for cost-effective high-volume brands." },
-        { idx: "04", name: "Custom Signature", desc: "Proprietary yeast strains and aging in selected wine or whiskey barrels." }
+        { idx: "01", name: "Heritage / Ultra-Premium (Tahona)", desc: "Ancestral volcanic stone tahona mill, masonry steam ovens, and copper pot stills. 100% Additive Free." },
+        { idx: "02", name: "Premium Consistent (Autoclave)", desc: "Stainless steel autoclave cooking, gentle extraction without crushing fibers, and strict temperature-controlled fermentation." },
+        { idx: "03", name: "Scalable Commercial (Columns)", desc: "High-efficiency automated European column stills (up to 9M L/year) for competitive high-volume brands." },
+        { idx: "04", name: "Custom Signature & Select Casks", desc: "Proprietary yeast strains and maturation in select Virgin American Oak, Bourbon Casks, or French Oak." }
       ],
 
-      agaveTitle: "Your tequila brand starts before production — it starts with supply.",
-      agaveOriginKey: "Origin",
-      agaveOriginVal: "Ayotlán, Los Altos de Jalisco",
-      agaveSinceKey: "Since",
-      agaveSinceVal: "Agave roots cultivating the soil since 1992",
-      agaveTraceKey: "Traceability",
-      agaveTraceVal: "Parcel-level supply planning and controlled harvesting",
+      // Agave, Terroir & Golden Corridor
+      agaveOverTitle: "Agricultural Self-Sufficiency & Terroir",
+      agaveTitle: "Your tequila starts in the soil: 3,600 Has. and 10.8 million agaves.",
+      agaveSub: "In an industry vulnerable to agave speculation and market shortages, Casa Loy guarantees price stability and permanent supply through three decades of self-sufficient agave farming.",
+      agaveMetrics: [
+        { metric: "3,600 Has.", title: "Cultivated Surface", desc: "8,649 acres of self-owned land in Jalisco, Michoacán, and Guanajuato." },
+        { metric: "10.8M", title: "Plants in Inventory", desc: "Staggered age plantations ensuring continuous harvesting year-round." },
+        { metric: "31+ Years", title: "Agave Heritage", desc: "Cultivating and selecting elite agave pups since 1992 (TeknoAgrox)." },
+        { metric: "Organic", title: "Certified Capability", desc: "Pesticide-free farming qualified for USDA and EU organic certification." }
+      ],
+      corridorOverTitle: "Strategic Location",
+      corridorTitle: "Ayotlán: In the Heart of the Jalisco Highlands",
+      corridorDesc: "Our distillery and agave parcels are situated at over 2,000 meters above sea level in Ayotlán, Jalisco. This altitude, combined with mineral-rich red clay soils, subjects the agave to natural thermal stress that concentrates peak levels of Total Reducing Sugars (TRS).",
+      corridorHighlightTitle: "✦ The Golden Corridor of Tequila Legends",
+      corridorHighlightDesc: "Ayotlán forms part of the most prestigious tequila corridor in the world, sharing terroir with iconic distilleries:",
+      corridorRoute: ["Guadalajara", "Casamigos", "Patrón", "Don Julio", "Ayotlán (CASA LOY)", "Tequila Ocho / Teremana"],
 
-      qualityTitle: "Batch-to-Batch Quality",
-      qualityDesc: "In-house lab validation, defined chemical parameters, sensory review, and final client approval before shipping.",
-      qualityBullets: ["In-house laboratory analysis for every single batch", "Client approval signature before bottling", "Full batch-to-batch traceability"],
-      
-      complianceTitle: "Legal & Regulatory Compliance",
-      complianceDesc: "We assist you in navigating complex customs structures, CRT brand registrations, and international import compliance.",
-      complianceBullets: ["NOM 1633 fully authorized by the CRT", "Export documentation preparation support", "Coordination with customs agents and distributors"],
+      // Quality, Tasting Lab & Packaging
+      qaOverTitle: "Analytical & Sensory Assurance",
+      qaTitle: "Quality Assurance: From Laboratory to the Bottle.",
+      qaSub: "Every production batch is validated in our in-house chemical lab and in professional sensory testing booths before passing through our triple-check bottling line.",
+      qaCards: [
+        {
+          icon: "local_bar",
+          title: "Professional Tasting Lab",
+          desc: "Individual isolated sensory booths for expert tasting panels. We validate organoleptic traits (aroma, alcohol balance, finish) against your benchmark before bottling.",
+          bullets: ["Standardized sensory booths", "Blind tastings & expert panels", "Formal sample sign-off"]
+        },
+        {
+          icon: "science",
+          title: "Physicochemical Laboratory",
+          desc: "Advanced analytical equipment and in-house gas chromatography. We monitor alcohol, total acidity, esters, aldehydes, furfural, and methanol under NOM-006 and US TTB standards.",
+          bullets: ["Gas chromatography per batch", "Official analytical certificates", "100% Additive Free verification"]
+        },
+        {
+          icon: "inventory",
+          title: "Bottling Line & QA",
+          desc: "Packaging area with strict quality assurance: automated volumetric filling, precision labelling, and light-table visual inspection ensuring zero bottle defects.",
+          bullets: ["Automated precision filling", "Automated & manual premium labelling", "Light-table visual inspection"]
+        }
+      ],
+
+      // Sostenibilidad & Clean Tech
+      ecoOverTitle: "Environmental Responsibility & Clean Tech",
+      ecoTitle: "Sustainability: Distilling with respect for our planet.",
+      ecoSub: "Global consumers demand authentically sustainable brands. Casa Loy operates an end-to-end circular economy model minimizing carbon footprint and optimizing natural resources.",
+      ecoCards: [
+        { metric: "Up to 45%", title: "Solar Photovoltaic Energy", desc: "Rooftop solar panel park supplying up to 45% of the total plant electrical demand at full production capacity." },
+        { metric: "Biomass", title: "Zero Fossil Fuels", desc: "State-of-the-art biomass boiler utilizing cooked agave bagasse waste to produce clean steam, eradicating fuel oil and fossil gas." },
+        { metric: "100% Circular", title: "Agave Fiber Composting", desc: "100% of discarded agave fibers from milling are converted into organic compost returned as fertilizer to our fields." },
+        { metric: "100% Reuse", title: "Water Recycling for Irrigation", desc: "Effluent treatment plant recovering industrial process water to be reused in agricultural parcel irrigation." },
+        { metric: "Full Treatment", title: "Vinasse Upcycling", desc: "Advanced vinasse neutralization and treatment converting liquid distillery waste into mineral-rich organic fertilizer." },
+        { metric: "Storytelling", title: "Commercial B2B Advantage", desc: "Communicate proudly to your distributors and retail partners that your tequila is crafted in one of Mexico's greenest distilleries.", badge: "ESG Compliance Ready" }
+      ],
+
+      // Certificaciones Internacionales
+      certOverTitle: "International Accreditations",
+      certTitle: "World-class certifications that open global doors.",
+      certSub: "Your brand is backed by the technical credentials and official seals required by the most demanding retailers and distributors across the US, Europe, and global markets.",
+      certBadges: [
+        { code: "USDA", name: "USDA Organic", desc: "Certified organic production for direct export to the United States market.", market: "North America" },
+        { code: "BIO", name: "EU Organic", desc: "European Union Organic seal (Euro-leaf) for distribution across all 27 member states.", market: "European Union" },
+        { code: "KMD", name: "KMD Kosher", desc: "Kosher Mexico purity certification recognized by international rabbinical authorities.", market: "Guaranteed Purity" },
+        { code: "100%", name: "Additive Free", desc: "Confirmed Additive Free by Tequila Matchmaker. Zero artificial coloring, glycerin, or flavors.", market: "Tequila Matchmaker" },
+        { code: "FSSC", name: "FSSC 22000", desc: "Food Safety System Certification. Highest international benchmark in food safety management.", market: "Global Food Safety" }
+      ],
 
       ndaTitle: "Your Brand. Your Project. Protected.",
       ndaDesc: "Your formula stays yours. Every project includes a signed confidentiality agreement (NDA), clear IP ownership terms, and locked documentation.",
@@ -691,9 +899,59 @@ export default function MaquilasV2({ lang = "es" }) {
             <span className="font-navigation text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-[#1C1C1C]">{t.trustControl}</span>
             <span className="text-[#8C4723] text-xs font-semibold select-none hidden lg:inline">✦</span>
             <span className="font-navigation text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-[#1C1C1C]">{t.trustExport}</span>
+            <span className="text-[#8C4723] text-xs font-semibold select-none hidden lg:inline">✦</span>
+            <span className="font-navigation text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-emerald-800">{t.trustAdditiveFree}</span>
           </div>
         </div>
       </div>
+
+      {/* 5.1b RESPALDO INSTITUCIONAL: GRUPO ORBE XXI (PDF pág. 3-4) */}
+      <section className="bg-white border-b border-outline-variant/30 py-16 md:py-24">
+        <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop text-left">
+          <div className="max-w-3xl mb-12">
+            <span className="font-label-caps text-primary font-bold tracking-widest uppercase text-xs block mb-3">
+              {t.groupOverTitle}
+            </span>
+            <h2 className="font-headline-lg text-3xl md:text-5xl text-[#1c1c18] font-light leading-tight">
+              {t.groupTitle}
+            </h2>
+            <p className="font-body-md text-sm md:text-base text-secondary font-light mt-4 leading-relaxed">
+              {t.groupDesc}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {t.groupPillars.map((pillar, idx) => (
+              <div key={idx} className="p-6 border border-outline-variant/50 bg-[#EDE7DE]/15 space-y-3 hover:border-primary transition-all">
+                <div className="font-serif text-3xl font-bold text-primary">{pillar.metric}</div>
+                <h3 className="font-sans text-sm font-bold uppercase tracking-wider text-[#1c1c18]">{pillar.title}</h3>
+                <p className="font-sans text-xs text-secondary font-light leading-relaxed">{pillar.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="p-8 md:p-10 border border-primary/30 bg-[#8C4723]/5 space-y-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-primary/20 pb-4">
+              <div>
+                <span className="font-mono text-xs text-primary font-bold uppercase tracking-widest block">{t.groupTequileraCard.overtitle}</span>
+                <h3 className="font-serif text-2xl text-[#1c1c18] font-semibold">{t.groupTequileraCard.title}</h3>
+              </div>
+              <span className="font-mono text-xs bg-primary text-white px-3 py-1 uppercase tracking-wider rounded-full self-start md:self-auto font-normal">NOM 1633 CRT</span>
+            </div>
+            <p className="font-sans text-xs md:text-sm text-secondary leading-relaxed font-light">
+              {t.groupTequileraCard.desc}
+            </p>
+            <div className="pt-2 flex flex-wrap items-center gap-2 text-xs font-mono text-secondary">
+              <span className="text-[#1c1c18] font-bold">{lang === "es" ? "Sinergia del Consorcio:" : "Consortium Synergy:"}</span>
+              {t.groupSynergies.map((synergy, idx) => (
+                <span key={idx} className="bg-white border border-outline-variant/60 px-2.5 py-1 rounded text-[11px] font-sans">
+                  {synergy}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* 5.2 WHY CASA LOY (Bento Grid Redesign: Breaks repetition of text cards) */}
       <section className="py-section-gap">
@@ -847,6 +1105,46 @@ export default function MaquilasV2({ lang = "es" }) {
         </div>
       </section>
 
+      {/* 5.2b INFRAESTRUCTURA DE CLASE MUNDIAL (PDF pág. 11-18) */}
+      <section className="py-16 md:py-28 bg-[#fdfcf9] border-y border-outline-variant/30">
+        <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop text-left">
+          <div className="mb-14">
+            <span className="font-label-caps text-primary font-bold tracking-widest uppercase text-xs block mb-3">
+              {t.infraOverTitle}
+            </span>
+            <h2 className="font-headline-lg text-4xl md:text-5xl text-[#1c1c18] font-light leading-tight">
+              {t.infraTitle}
+            </h2>
+            <p className="font-body-md text-secondary text-sm md:text-base font-light max-w-3xl mt-4 leading-relaxed">
+              {t.infraDesc}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {t.infraCards.map((card, idx) => (
+              <div key={idx} className="border border-outline-variant/60 bg-white p-6 space-y-3 hover:border-primary hover:-translate-y-1 transition-all shadow-sm">
+                <span className="font-mono text-[10px] text-stone-400 font-bold uppercase tracking-widest">0{idx + 1}</span>
+                <div className="font-serif text-3xl text-primary font-semibold">{card.metric}</div>
+                <h3 className="font-sans text-sm font-bold uppercase tracking-wider text-[#1c1c18]">{card.title}</h3>
+                <p className="font-sans text-xs text-secondary font-light leading-relaxed">{card.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-10 p-6 md:p-8 bg-[#EDE7DE]/40 border border-outline-variant/60 flex flex-col md:flex-row items-center gap-6">
+            <div className="w-12 h-12 rounded-full border border-primary/40 bg-white flex items-center justify-center flex-shrink-0 text-primary">
+              <span className="material-symbols-outlined text-2xl">water_drop</span>
+            </div>
+            <div className="space-y-1 text-left">
+              <h3 className="font-serif text-lg md:text-xl text-[#1c1c18] font-semibold">{t.infraWater.title}</h3>
+              <p className="font-sans text-xs text-secondary font-light leading-relaxed">
+                {t.infraWater.desc}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 5.3 INTERACTIVE PROCESS EXPLORER */}
       <section className="bg-[#1C1A19] text-white py-section-gap relative overflow-hidden">
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop text-left relative z-10">
@@ -988,6 +1286,50 @@ export default function MaquilasV2({ lang = "es" }) {
           <motion.p {...fadeInUp} className="mt-12 font-serif italic text-base text-[#8C4723] max-w-2xl leading-relaxed">
             * {lang === "es" ? "Todas las rutas están certificadas bajo la" : "All paths are certified under"} <strong>NOM 1633</strong> {lang === "es" ? "garantizando el estricto cumplimiento ante el Consejo Regulador del Tequila." : "ensuring strict compliance with the Tequila Regulatory Council."}
           </motion.p>
+        </div>
+      </section>
+
+      {/* 5.4b CATEGORÍAS Y CLASES NOM-006-SCFI (PDF pág. 9-10) */}
+      <section className="py-16 md:py-28 bg-[#EDE7DE]/15 border-b border-outline-variant/30">
+        <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop text-left">
+          <div className="mb-14">
+            <span className="font-label-caps text-primary font-bold tracking-widest uppercase text-xs block mb-3">
+              {t.catOverTitle}
+            </span>
+            <h2 className="font-headline-lg text-4xl md:text-5xl text-[#1c1c18] font-light leading-tight">
+              {t.catTitle}
+            </h2>
+            <p className="font-body-md text-secondary text-sm md:text-base font-light max-w-3xl mt-4 leading-relaxed">
+              {t.catDesc}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            {t.categories.map((cat, idx) => (
+              <div key={idx} className="border border-outline-variant/60 bg-white p-8 space-y-4 hover:border-primary transition-all shadow-sm">
+                <span className="font-mono text-[10px] text-primary font-bold uppercase tracking-wider bg-amber-50 border border-amber-200 px-2.5 py-1 rounded inline-block">
+                  {cat.badge}
+                </span>
+                <h3 className="font-serif text-2xl text-[#1c1c18] font-semibold">{cat.title}</h3>
+                <p className="font-sans text-xs text-secondary leading-relaxed font-light">{cat.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="font-serif text-xl text-[#1c1c18] font-semibold mb-6">
+              {lang === "es" ? "Las 5 Clases Oficiales por Tiempo de Maduración:" : "The 5 Official Classes by Aging Duration:"}
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+              {t.classes.map((cls, idx) => (
+                <div key={idx} className="border border-outline-variant/50 bg-white p-5 space-y-2 hover:border-primary transition-all">
+                  <div className="font-sans text-sm font-bold text-[#1c1c18]">{cls.name}</div>
+                  <span className="font-mono text-[10px] text-primary font-semibold block">{cls.time}</span>
+                  <p className="font-sans text-[11px] text-secondary font-light leading-relaxed">{cls.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1637,21 +1979,36 @@ export default function MaquilasV2({ lang = "es" }) {
         </div>
       </section>
 
-      {/* 5.10 AGAVE Y SUMINISTRO */}
-      <section className="bg-[#EDE7DE]/20 py-section-gap border-y border-outline-variant/30">
+      {/* 5.10 AGAVE, AUTOSUFICIENCIA & EL CORREDOR DORADO (PDF pág. 5-7) */}
+      <section className="py-16 md:py-28 bg-[#f6f1eb] border-y border-outline-variant/30">
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop text-left">
-          <motion.div {...fadeInUp}>
-            <span className="font-label-caps text-secondary font-semibold tracking-widest uppercase mb-4 block text-xs">
-              {lang === "es" ? "Abastecimiento de Campo" : "Field Supply"}
+          <motion.div {...fadeInUp} className="mb-14">
+            <span className="font-label-caps text-primary font-bold tracking-widest uppercase text-xs block mb-4">
+              {t.agaveOverTitle}
             </span>
-            <h2 className="font-headline-lg text-4xl md:text-5xl mb-12 text-[#1c1c18]">
+            <h2 className="font-headline-lg text-4xl md:text-5xl text-[#1c1c18] font-light leading-tight">
               {t.agaveTitle}
             </h2>
+            <p className="font-body-md text-secondary text-sm md:text-base font-light max-w-3xl mt-4 leading-relaxed">
+              {t.agaveSub}
+            </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-10">
+          {/* Agricultural Metrics Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
+            {t.agaveMetrics.map((item, idx) => (
+              <div key={idx} className="bg-white border border-outline-variant/50 p-6 space-y-2 shadow-sm">
+                <div className="font-serif text-3xl md:text-4xl text-primary font-semibold">{item.metric}</div>
+                <div className="font-sans text-xs font-bold uppercase tracking-wider text-[#1c1c18]">{item.title}</div>
+                <p className="font-sans text-[11px] text-secondary font-light leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Terroir & The Golden Corridor */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <motion.div 
-              className="overflow-hidden shadow-md border border-outline-variant/40"
+              className="lg:col-span-6 overflow-hidden shadow-md border border-outline-variant/40"
               {...fadeInUp}
             >
               <img 
@@ -1661,82 +2018,155 @@ export default function MaquilasV2({ lang = "es" }) {
               />
             </motion.div>
             
-            <motion.div 
-              className="flex flex-col gap-6 text-left"
-              variants={staggerContainer}
-              initial="initial"
-              whileInView="whileInView"
-              viewport={{ once: true }}
-            >
-              {[
-                { k: t.agaveOriginKey, v: t.agaveOriginVal },
-                { k: t.agaveSinceKey, v: t.agaveSinceVal },
-                { k: t.agaveTraceKey, v: t.agaveTraceVal }
-              ].map((fact, idx) => (
-                <motion.div 
-                  key={idx} 
-                  className="border-l-2 border-primary pl-6 py-1"
-                  variants={{
-                    initial: { opacity: 0, x: -15 },
-                    whileInView: { opacity: 1, x: 0 }
-                  }}
-                >
-                  <div className="font-label-caps text-[10px] text-primary font-bold tracking-widest uppercase">{fact.k}</div>
-                  <div className="font-body-md text-sm text-[#1c1c18] font-normal mt-1">{fact.v}</div>
-                </motion.div>
-              ))}
-            </motion.div>
+            <div className="lg:col-span-6 space-y-6">
+              <div className="border-l-2 border-primary pl-6 space-y-2">
+                <span className="font-mono text-xs text-primary font-bold tracking-widest uppercase">{t.corridorOverTitle}</span>
+                <h3 className="font-serif text-2xl md:text-3xl text-[#1c1c18] font-semibold">{t.corridorTitle}</h3>
+                <p className="font-sans text-xs text-secondary leading-relaxed font-light">
+                  {t.corridorDesc}
+                </p>
+              </div>
+
+              <div className="p-6 bg-white border border-outline-variant/50 space-y-3">
+                <div className="font-mono text-xs text-[#8C4723] font-bold uppercase tracking-wider">
+                  {t.corridorHighlightTitle}
+                </div>
+                <p className="font-sans text-xs text-secondary leading-relaxed font-light">
+                  {t.corridorHighlightDesc}
+                </p>
+                <div className="flex flex-wrap items-center gap-2 pt-2 text-[11px] font-mono text-[#1c1c18]">
+                  {t.corridorRoute.map((stop, idx) => (
+                    <React.Fragment key={idx}>
+                      {idx > 0 && <span>→</span>}
+                      <span className={`px-2.5 py-1 rounded ${
+                        stop.includes("CASA LOY") 
+                          ? "bg-amber-100 text-amber-900 font-bold border border-amber-300" 
+                          : "bg-stone-100"
+                      }`}>
+                        {stop}
+                      </span>
+                    </React.Fragment>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 5.11 + 5.12 CALIDAD Y CUMPLIMIENTO (Clean Minimalist Redesign: Removed image column) */}
-      <section className="bg-[#fcf9f3] border-y border-outline-variant/40 py-section-gap">
+      {/* 5.11 CALIDAD, TASTING LAB & LÍNEA DE ENVASADO QA (PDF pág. 19) */}
+      <section className="py-16 md:py-28 bg-white border-b border-outline-variant/30">
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop text-left">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
-            
-            {/* Pillar 1: Quality */}
-            <motion.div {...fadeInUp} className="space-y-4">
-              <span className="font-label-caps text-primary font-bold text-[10px] tracking-widest uppercase block">
-                {lang === "es" ? "Aseguramiento de Calidad" : "Quality Assurance"}
-              </span>
-              <h3 className="font-headline-md text-2xl text-[#1c1c18] font-bold leading-tight">
-                {t.qualityTitle}
-              </h3>
-              <p className="font-sans text-xs text-[#53443a] leading-relaxed font-light">
-                {t.qualityDesc}
-              </p>
-              <div className="flex flex-wrap gap-x-6 gap-y-2 pt-2">
-                {t.qualityBullets.map((bullet, i) => (
-                  <span key={i} className="flex items-center gap-2 text-[11px] text-[#1c1c18] font-light font-sans">
-                    <span className="material-symbols-outlined text-xs text-primary">check</span>
-                    <span>{bullet}</span>
-                  </span>
-                ))}
-              </div>
-            </motion.div>
+          <motion.div {...fadeInUp} className="mb-14">
+            <span className="font-label-caps text-primary font-bold tracking-widest uppercase text-xs block mb-4">
+              {t.qaOverTitle}
+            </span>
+            <h2 className="font-headline-lg text-4xl md:text-5xl text-[#1c1c18] font-light leading-tight">
+              {t.qaTitle}
+            </h2>
+            <p className="font-body-md text-secondary text-sm md:text-base font-light max-w-3xl mt-4 leading-relaxed">
+              {t.qaSub}
+            </p>
+          </motion.div>
 
-            {/* Pillar 2: Compliance */}
-            <motion.div {...fadeInUp} className="space-y-4">
-              <span className="font-label-caps text-primary font-bold text-[10px] tracking-widest uppercase block">
-                {lang === "es" ? "Regulación Aduanal & CRT" : "Customs & CRT Regulation"}
-              </span>
-              <h3 className="font-headline-md text-2xl text-[#1c1c18] font-bold leading-tight">
-                {t.complianceTitle}
-              </h3>
-              <p className="font-sans text-xs text-[#53443a] leading-relaxed font-light">
-                {t.complianceDesc}
-              </p>
-              <div className="flex flex-wrap gap-x-6 gap-y-2 pt-2">
-                {t.complianceBullets.map((bullet, i) => (
-                  <span key={i} className="flex items-center gap-2 text-[11px] text-[#1c1c18] font-light font-sans">
-                    <span className="material-symbols-outlined text-xs text-primary">check</span>
-                    <span>{bullet}</span>
-                  </span>
-                ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {t.qaCards.map((card, idx) => (
+              <div key={idx} className="border border-outline-variant/40 bg-[#fcf9f3] p-8 flex flex-col justify-between space-y-6 hover:border-primary transition-all shadow-sm">
+                <div className="space-y-4">
+                  <span className="material-symbols-outlined text-primary text-4xl">{card.icon}</span>
+                  <h3 className="font-serif text-2xl text-[#1c1c18] font-bold">{card.title}</h3>
+                  <p className="font-sans text-xs text-secondary leading-relaxed font-light">
+                    {card.desc}
+                  </p>
+                </div>
+                <ul className="space-y-2 text-xs font-sans text-[#1c1c18] border-t border-outline-variant/30 pt-4 font-light">
+                  {card.bullets.map((b, i) => (
+                    <li key={i} className="flex items-center gap-2">
+                      <span className="material-symbols-outlined text-xs text-primary">check</span>
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
+      {/* 5.11b SOSTENIBILIDAD & ECONOMÍA CIRCULAR (PDF pág. 20) */}
+      <section className="py-16 md:py-28 bg-[#1C1A19] text-white relative overflow-hidden">
+        <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop text-left relative z-10">
+          <motion.div {...fadeInUp} className="mb-14">
+            <span className="font-label-caps text-[#FDA377] font-bold tracking-widest uppercase text-xs block mb-4">
+              {t.ecoOverTitle}
+            </span>
+            <h2 className="font-headline-lg text-4xl md:text-5xl text-white font-light leading-tight">
+              {t.ecoTitle}
+            </h2>
+            <p className="font-body-md text-white/70 text-sm md:text-base font-light max-w-3xl mt-4 leading-relaxed">
+              {t.ecoSub}
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {t.ecoCards.map((card, idx) => (
+              <div 
+                key={idx} 
+                className={`p-8 space-y-4 border transition-all ${
+                  card.badge 
+                    ? "bg-[#8C4723]/20 border-primary/40 flex flex-col justify-between" 
+                    : "bg-white/5 border-white/10 hover:border-primary"
+                }`}
+              >
+                {card.metric && (
+                  <div className="font-serif text-3xl md:text-4xl text-[#FDA377] font-light">{card.metric}</div>
+                )}
+                <div className="space-y-2">
+                  {card.badge && (
+                    <span className="font-mono text-xs text-[#FDA377] font-bold uppercase tracking-wider block">Valor para tu Marca</span>
+                  )}
+                  <h3 className="font-serif text-xl text-white font-semibold">{card.title}</h3>
+                  <p className="font-sans text-xs text-white/70 leading-relaxed font-light">{card.desc}</p>
+                </div>
+                {card.badge && (
+                  <div className="pt-4 border-t border-white/20 font-mono text-[10px] text-[#FDA377] uppercase">{card.badge}</div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5.11c CERTIFICACIONES DE CLASE MUNDIAL (PDF pág. 21) */}
+      <section className="py-16 md:py-28 bg-[#EDE7DE]/40 border-b border-outline-variant/30">
+        <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop text-left">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <span className="font-label-caps text-primary font-bold tracking-widest uppercase text-xs block mb-3">
+              {t.certOverTitle}
+            </span>
+            <h2 className="font-headline-lg text-4xl md:text-5xl text-[#1c1c18] font-light leading-tight">
+              {t.certTitle}
+            </h2>
+            <p className="font-body-md text-secondary text-sm md:text-base font-light mt-4 leading-relaxed">
+              {t.certSub}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+            {t.certBadges.map((cert, idx) => (
+              <div key={idx} className="bg-white border border-outline-variant/50 p-6 flex flex-col justify-between min-h-[220px] text-center shadow-sm hover:border-primary transition-all">
+                <div>
+                  <div className="w-12 h-12 rounded-full border border-stone-200 mx-auto flex items-center justify-center mb-4 text-xs font-mono font-bold text-[#1c1c18] bg-stone-50">
+                    {cert.code}
+                  </div>
+                  <h3 className="font-serif text-lg font-bold text-[#1c1c18]">{cert.name}</h3>
+                  <p className="font-sans text-[11px] text-secondary font-light mt-2 leading-relaxed">
+                    {cert.desc}
+                  </p>
+                </div>
+                <span className="font-mono text-[9px] text-primary font-bold uppercase mt-4">{cert.market}</span>
+              </div>
+            ))}
           </div>
         </div>
       </section>
