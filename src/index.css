@@ -6,13 +6,13 @@
   --color-primary-container: #9a5625;
   --color-on-primary: #ffffff;
   --color-primary: #7d3f0f;
-  --color-outline: #867369;
+  --color-outline: #6b5c53;
   --color-on-secondary-fixed: #351000;
-  --color-on-surface-variant: #53443a;
-  --color-on-surface: #1c1c18;
+  --color-on-surface-variant: #382c24;
+  --color-on-surface: #181715;
   --color-inverse-on-surface: #f3f0ea;
   --color-on-primary-fixed: #311300;
-  --color-on-background: #1c1c18;
+  --color-on-background: #181715;
   --color-surface-dim: #dcdad4;
   --color-tertiary: #415351;
   --color-error: #ba1a1a;
@@ -64,15 +64,15 @@
   --spacing-section-gap: 200px;
 
   --font-headline-md: "EB Garamond", serif;
-  --font-navigation: "Montserrat", sans-serif;
-  --font-label-caps: "Montserrat", sans-serif;
+  --font-navigation: "Plus Jakarta Sans", "Montserrat", sans-serif;
+  --font-label-caps: "Plus Jakarta Sans", "Montserrat", sans-serif;
   --font-display-hero: "EB Garamond", serif;
   --font-headline-lg: "EB Garamond", serif;
-  --font-body-md: "Montserrat", sans-serif;
-  --font-body-lg: "Montserrat", sans-serif;
+  --font-body-md: "Plus Jakarta Sans", "Inter", sans-serif;
+  --font-body-lg: "Plus Jakarta Sans", "Inter", sans-serif;
   --font-headline-lg-mobile: "EB Garamond", serif;
-  --font-serif: "Cormorant Garamond", "EB Garamond", serif;
-  --font-sans: "Montserrat", "Inter", sans-serif;
+  --font-serif: "EB Garamond", "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", "Inter", "Montserrat", system-ui, -apple-system, sans-serif;
 
   --animate-fade-in-slide: fade-in-slide 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 
@@ -86,6 +86,63 @@
       transform: translateY(0);
     }
   }
+}
+
+/* ============================================================
+   GLOBAL ANTI-FATIGUE & HIGH-LEGIBILITY TYPOGRAPHY RULES
+   ============================================================ */
+body {
+  font-family: var(--font-sans);
+  color: #1a1715;
+  background-color: #FAF8F5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Clear, confident headings with sturdy strokes */
+h1, h2, h3, h4, h5, h6 {
+  color: #171513;
+  text-rendering: optimizeLegibility;
+  letter-spacing: -0.015em;
+}
+
+/* Body paragraphs with comfortable contrast and line height */
+p {
+  color: #2b2724;
+  line-height: 1.75;
+}
+
+/* Eliminate faint, hairline 300 weight text across the entire site */
+.font-light {
+  font-weight: 400 !important;
+}
+
+/* Enhance contrast of secondary and muted text so it is effortlessly readable */
+.text-stone-400 {
+  color: #57534e !important;
+}
+
+.text-stone-500 {
+  color: #44403c !important;
+}
+
+.text-stone-600 {
+  color: #292524 !important;
+}
+
+.text-on-surface-variant {
+  color: #382c24 !important;
+}
+
+/* Inputs and textareas */
+input, textarea, select {
+  color: #1a1715;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #78716c;
+  opacity: 1;
 }
 
 @utility material-symbols-outlined {

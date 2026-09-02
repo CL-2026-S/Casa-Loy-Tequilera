@@ -580,13 +580,13 @@ export default function BlogPost({ lang = "es", setPage }) {
         </div>
 
         {/* Article Headline */}
-        <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-[68px] text-[#1A1816] leading-[1.12] tracking-tight font-light max-w-4xl mx-auto mb-6">
+        <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-[66px] text-[#1A1816] leading-[1.14] tracking-tight font-medium max-w-4xl mx-auto mb-6">
           {postTitle}
         </h1>
 
         {/* Subtitle / Quote description */}
         {postDescription && (
-          <p className="font-serif text-base sm:text-lg md:text-xl text-stone-600 italic font-light max-w-2xl mx-auto leading-relaxed mb-10">
+          <p className="font-serif text-lg sm:text-xl md:text-2xl text-stone-700 italic font-normal max-w-3xl mx-auto leading-relaxed mb-10">
             {postDescription}
           </p>
         )}
@@ -594,7 +594,7 @@ export default function BlogPost({ lang = "es", setPage }) {
         {/* ========================================================================= */}
         {/* 3. LITERAL BLOG BYLINE (FOTO, NOMBRE, CARGO, FECHA, HORA, TIEMPO LECTURA) */}
         {/* ========================================================================= */}
-        <div className="max-w-2xl mx-auto bg-white border border-stone-200/80 rounded-2xl p-4 sm:p-5 shadow-sm mt-4 text-left">
+        <div className="max-w-2xl mx-auto bg-white border border-stone-200/90 rounded-2xl p-4 sm:p-5 shadow-sm mt-4 text-left">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             
             {/* Author Photo, Name and Role */}
@@ -619,16 +619,16 @@ export default function BlogPost({ lang = "es", setPage }) {
                     {authorData.name}
                   </span>
                 </div>
-                <p className="font-navigation text-[11px] text-[#8C4723] uppercase tracking-wider font-semibold mt-0.5">
+                <p className="font-navigation text-[11px] text-[#8C4723] uppercase tracking-wider font-bold mt-0.5">
                   {authorData.role}
                 </p>
               </div>
             </div>
 
             {/* Publication Timestamp, Reading Time & Comments Anchor */}
-            <div className="flex flex-wrap sm:flex-col sm:items-end gap-2 sm:gap-1 text-xs text-stone-500 font-sans border-t sm:border-t-0 pt-2 sm:pt-0 border-stone-100">
+            <div className="flex flex-wrap sm:flex-col sm:items-end gap-2 sm:gap-1 text-xs text-stone-600 font-sans border-t sm:border-t-0 pt-2 sm:pt-0 border-stone-100 font-medium">
               {/* Fecha y Hora Exacta */}
-              <div className="flex items-center gap-1.5 font-medium text-stone-700">
+              <div className="flex items-center gap-1.5 font-semibold text-stone-800">
                 <span className="material-symbols-outlined text-[15px] text-[#8C4723]">
                   schedule
                 </span>
@@ -636,7 +636,7 @@ export default function BlogPost({ lang = "es", setPage }) {
               </div>
 
               {/* Tiempo de lectura y Comentarios */}
-              <div className="flex items-center gap-3 text-[11px] text-stone-500">
+              <div className="flex items-center gap-3 text-xs text-stone-600 font-medium">
                 <span className="flex items-center gap-1">
                   <span className="material-symbols-outlined text-[14px]">auto_stories</span>
                   {lang === "es" ? `${readTimeEstimate} min de lectura` : `${readTimeEstimate} min read`}
@@ -672,21 +672,21 @@ export default function BlogPost({ lang = "es", setPage }) {
         
         {/* Dynamic Post Body (From Database) */}
         {post ? (
-          <article className="max-w-3xl mx-auto space-y-8 text-base md:text-lg text-stone-800 leading-[1.85] font-light font-sans dynamic-blog-body">
+          <article className="max-w-3xl mx-auto space-y-8 text-lg sm:text-[19px] text-[#1e1b18] leading-[1.9] font-normal font-sans dynamic-blog-body">
             <div dangerouslySetInnerHTML={{ __html: lang === "es" ? post.body_es : (post.body_en || post.body_es) }} />
           </article>
         ) : (
           /* Static Editorial Post Content */
           <>
             <article className="grid grid-cols-1 lg:grid-cols-12 gap-gutter mb-24 max-w-4xl mx-auto">
-              <div className="col-span-12 lg:col-span-8 space-y-8 text-base md:text-lg text-stone-800 leading-[1.85] font-light font-sans">
-                <p className="first-letter:float-left first-letter:font-serif first-letter:text-[5rem] first-letter:leading-[0.8] first-letter:pr-3 first-letter:pt-1 first-letter:text-primary first-letter:font-semibold">
+              <div className="col-span-12 lg:col-span-8 space-y-8 text-lg sm:text-[19px] text-[#1e1b18] leading-[1.9] font-normal font-sans">
+                <p className="first-letter:float-left first-letter:font-serif first-letter:text-[5.5rem] first-letter:leading-[0.8] first-letter:pr-3 first-letter:pt-1 first-letter:text-primary first-letter:font-bold">
                   {t.p1}
                 </p>
                 <p>{t.p2}</p>
 
                 <div className="pt-8">
-                  <h2 className="font-serif text-3xl md:text-4xl mb-6 text-primary tracking-tight font-medium">
+                  <h2 className="font-serif text-3xl md:text-4xl mb-6 text-primary tracking-tight font-semibold">
                     {t.section1Title}
                   </h2>
                   <p className="mb-6">{t.section1Text}</p>
@@ -694,33 +694,33 @@ export default function BlogPost({ lang = "es", setPage }) {
               </div>
 
               <aside className="col-span-12 lg:col-span-4 sticky top-28 h-fit mt-8 lg:mt-0">
-                <div className="bg-white/80 backdrop-blur-md border border-[#8C4723]/20 rounded-xl p-6 space-y-5 shadow-sm">
+                <div className="bg-white/90 backdrop-blur-md border border-[#8C4723]/25 rounded-xl p-6 space-y-5 shadow-sm">
                   <h3 className="font-label-caps text-xs text-primary border-b border-primary/20 pb-3 tracking-widest font-bold flex items-center gap-2">
                     <span className="material-symbols-outlined text-sm">workspace_premium</span>
                     {t.asideTitle}
                   </h3>
                   <div className="space-y-4 text-left">
                     <div>
-                      <p className="font-bold text-stone-900 uppercase text-[11px] tracking-wider mb-0.5">
+                      <p className="font-bold text-stone-900 uppercase text-xs tracking-wider mb-1">
                         {t.asideItem1Title}
                       </p>
-                      <p className="text-xs text-stone-600 font-light leading-relaxed">
+                      <p className="text-xs sm:text-sm text-stone-700 font-normal leading-relaxed">
                         {t.asideItem1Text}
                       </p>
                     </div>
                     <div>
-                      <p className="font-bold text-stone-900 uppercase text-[11px] tracking-wider mb-0.5">
+                      <p className="font-bold text-stone-900 uppercase text-xs tracking-wider mb-1">
                         {t.asideItem2Title}
                       </p>
-                      <p className="text-xs text-stone-600 font-light leading-relaxed">
+                      <p className="text-xs sm:text-sm text-stone-700 font-normal leading-relaxed">
                         {t.asideItem2Text}
                       </p>
                     </div>
                     <div>
-                      <p className="font-bold text-stone-900 uppercase text-[11px] tracking-wider mb-0.5">
+                      <p className="font-bold text-stone-900 uppercase text-xs tracking-wider mb-1">
                         {t.asideItem3Title}
                       </p>
-                      <p className="text-xs text-stone-600 font-light leading-relaxed">
+                      <p className="text-xs sm:text-sm text-stone-700 font-normal leading-relaxed">
                         {t.asideItem3Text}
                       </p>
                     </div>
@@ -738,13 +738,13 @@ export default function BlogPost({ lang = "es", setPage }) {
                   src="/Añejamiento Barricas.webp"
                 />
               </div>
-              <figcaption className="mt-3 font-body-md text-xs italic text-center text-stone-500 font-light">
+              <figcaption className="mt-3 font-body-md text-xs sm:text-sm italic text-center text-stone-600 font-normal">
                 {t.caption1}
               </figcaption>
             </figure>
 
-            <section className="max-w-3xl mx-auto mb-20 space-y-8 text-left text-base md:text-lg text-stone-800 leading-[1.85] font-light font-sans">
-              <h2 className="font-serif text-3xl md:text-4xl text-left tracking-tight font-medium text-stone-900">
+            <section className="max-w-3xl mx-auto mb-20 space-y-8 text-left text-lg sm:text-[19px] text-[#1e1b18] leading-[1.9] font-normal font-sans">
+              <h2 className="font-serif text-3xl md:text-4xl text-left tracking-tight font-semibold text-stone-900">
                 {t.section2Title}
               </h2>
               <p>{t.section2Text1}</p>
@@ -786,18 +786,18 @@ export default function BlogPost({ lang = "es", setPage }) {
             <div className="space-y-2 flex-1">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <span className="font-navigation text-[10px] uppercase tracking-widest text-[#8C4723] font-bold block">
+                  <span className="font-navigation text-xs uppercase tracking-widest text-[#8C4723] font-bold block mb-1">
                     {lang === "es" ? "ESCRITO POR" : "WRITTEN BY"}
                   </span>
-                  <h3 className="font-serif text-2xl font-bold text-stone-900 leading-tight">
+                  <h3 className="font-serif text-2xl sm:text-3xl font-bold text-stone-900 leading-tight">
                     {authorData.name}
                   </h3>
                 </div>
-                <span className="font-navigation text-[11px] font-semibold text-stone-500 bg-stone-100 px-3 py-1 rounded-full">
+                <span className="font-navigation text-xs font-semibold text-[#8C4723] bg-stone-100 border border-stone-200 px-3.5 py-1 rounded-full">
                   {authorData.role}
                 </span>
               </div>
-              <p className="font-sans text-sm text-stone-600 font-light leading-relaxed">
+              <p className="font-sans text-sm sm:text-base text-stone-700 font-normal leading-relaxed">
                 {authorData.bio}
               </p>
               <div className="pt-2 flex items-center gap-4">
@@ -862,10 +862,10 @@ export default function BlogPost({ lang = "es", setPage }) {
                 <span className="material-symbols-outlined text-[22px]">forum</span>
               </div>
               <div>
-                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-stone-900">
+                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#1A1615] tracking-tight">
                   {lang === "es" ? "Comentarios de la Comunidad" : "Community Comments"}
                 </h2>
-                <p className="text-xs text-stone-500 font-sans">
+                <p className="text-sm text-stone-600 font-medium font-sans mt-0.5">
                   {comments.length} {comments.length === 1 ? (lang === "es" ? "comentario publicado" : "comment published") : (lang === "es" ? "comentarios publicados" : "comments published")}
                 </p>
               </div>
@@ -873,20 +873,20 @@ export default function BlogPost({ lang = "es", setPage }) {
           </div>
 
           {/* Formulario para dejar comentario */}
-          <div className="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-sm mb-12">
-            <h3 className="font-serif text-lg font-bold text-stone-900 mb-1">
+          <div className="bg-white border border-stone-200/90 rounded-2xl p-6 sm:p-8 shadow-sm mb-12">
+            <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#1A1615] tracking-tight mb-2">
               {lang === "es" ? "Únete a la conversación" : "Leave a Comment"}
             </h3>
-            <p className="text-xs text-stone-500 font-light mb-6">
+            <p className="text-sm sm:text-base text-stone-700 font-normal leading-relaxed mb-6">
               {lang === "es" 
                 ? "Comparte tus impresiones, dudas o experiencias sobre el destilado. Tu correo no será publicado."
                 : "Share your thoughts, questions, or experiences. Your email will remain private."}
             </p>
 
-            <form onSubmit={handleSubmitComment} className="space-y-4">
+            <form onSubmit={handleSubmitComment} className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-stone-800 uppercase tracking-wider mb-1.5">
                     {lang === "es" ? "Nombre o Apodo *" : "Your Name *"}
                   </label>
                   <input
@@ -896,12 +896,12 @@ export default function BlogPost({ lang = "es", setPage }) {
                     placeholder={lang === "es" ? "Ej. Arq. Sofía Mendoza" : "E.g. Sophia Miller"}
                     value={commentForm.name}
                     onChange={(e) => setCommentForm({ ...commentForm, name: e.target.value })}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-lg px-4 py-2.5 text-sm text-stone-900 focus:outline-none focus:border-primary focus:bg-white transition-colors"
+                    className="w-full bg-stone-50 border border-stone-300 rounded-lg px-4 py-3 text-sm text-stone-900 placeholder:text-stone-500 focus:outline-none focus:border-primary focus:bg-white transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-stone-800 uppercase tracking-wider mb-1.5">
                     {lang === "es" ? "Correo Electrónico (Privado)" : "Email Address (Private)"}
                   </label>
                   <input
@@ -910,13 +910,13 @@ export default function BlogPost({ lang = "es", setPage }) {
                     placeholder={lang === "es" ? "tu@correo.com" : "you@email.com"}
                     value={commentForm.email}
                     onChange={(e) => setCommentForm({ ...commentForm, email: e.target.value })}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-lg px-4 py-2.5 text-sm text-stone-900 focus:outline-none focus:border-primary focus:bg-white transition-colors"
+                    className="w-full bg-stone-50 border border-stone-300 rounded-lg px-4 py-3 text-sm text-stone-900 placeholder:text-stone-500 focus:outline-none focus:border-primary focus:bg-white transition-colors"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-stone-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-stone-800 uppercase tracking-wider mb-1.5">
                   {lang === "es" ? "Comentario *" : "Comment *"}
                 </label>
                 <textarea
@@ -926,7 +926,7 @@ export default function BlogPost({ lang = "es", setPage }) {
                   placeholder={lang === "es" ? "¿Qué opinas sobre este artículo o tu experiencia con Casa Loy?" : "What are your thoughts on this story or your experience with Casa Loy?"}
                   value={commentForm.text}
                   onChange={(e) => setCommentForm({ ...commentForm, text: e.target.value })}
-                  className="w-full bg-stone-50 border border-stone-300 rounded-lg p-4 text-sm text-stone-900 focus:outline-none focus:border-primary focus:bg-white transition-colors"
+                  className="w-full bg-stone-50 border border-stone-300 rounded-lg p-4 text-sm text-stone-900 placeholder:text-stone-500 focus:outline-none focus:border-primary focus:bg-white transition-colors leading-relaxed"
                 />
               </div>
 
@@ -982,10 +982,10 @@ export default function BlogPost({ lang = "es", setPage }) {
                 <span className="material-symbols-outlined text-3xl text-stone-300 mb-2">
                   chat_bubble_outline
                 </span>
-                <p className="font-serif text-lg text-stone-700 font-medium">
+                <p className="font-serif text-xl text-stone-800 font-bold">
                   {lang === "es" ? "Sé el primero en comentar" : "Be the first to comment"}
                 </p>
-                <p className="text-xs text-stone-500 font-light mt-1">
+                <p className="text-sm text-stone-600 font-normal mt-1 leading-relaxed">
                   {lang === "es" 
                     ? "Inicia la conversación sobre este tema y comparte tu punto de vista." 
                     : "Start the conversation and share your point of view."}
@@ -1005,7 +1005,7 @@ export default function BlogPost({ lang = "es", setPage }) {
                 return (
                   <div
                     key={c.id}
-                    className="p-5 sm:p-6 bg-white border border-stone-200/80 rounded-xl shadow-2xs hover:shadow-xs transition-shadow"
+                    className="p-5 sm:p-6 bg-white border border-stone-200/90 rounded-xl shadow-2xs hover:shadow-xs transition-shadow"
                   >
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div className="flex items-center gap-3">
@@ -1013,10 +1013,10 @@ export default function BlogPost({ lang = "es", setPage }) {
                           {initials}
                         </div>
                         <div>
-                          <h4 className="font-serif font-bold text-stone-900 text-sm sm:text-base leading-tight">
+                          <h4 className="font-serif font-bold text-stone-900 text-base leading-tight">
                             {c.author_name}
                           </h4>
-                          <span className="text-[11px] text-stone-400 font-sans block mt-0.5">
+                          <span className="text-xs text-stone-500 font-sans font-medium block mt-0.5">
                             {formatDateTime(c.created_at)}
                           </span>
                         </div>
@@ -1025,21 +1025,21 @@ export default function BlogPost({ lang = "es", setPage }) {
                       {/* Botón de Like a Comentario */}
                       <button
                         onClick={() => handleLikeComment(c.id)}
-                        className={`flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border transition-all cursor-pointer ${
+                        className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-all cursor-pointer font-medium ${
                           isLiked
                             ? "bg-rose-50 text-rose-600 border-rose-200"
-                            : "bg-stone-50 hover:bg-stone-100 text-stone-600 border-stone-200"
+                            : "bg-stone-50 hover:bg-stone-100 text-stone-700 border-stone-200"
                         }`}
                         title={lang === "es" ? "Me gusta este comentario" : "Like this comment"}
                       >
-                        <span className="material-symbols-outlined text-[14px]">
+                        <span className="material-symbols-outlined text-[15px]">
                           {isLiked ? "favorite" : "favorite_border"}
                         </span>
-                        <span className="font-medium text-[11px]">{c.likes || 0}</span>
+                        <span className="font-semibold text-xs">{c.likes || 0}</span>
                       </button>
                     </div>
 
-                    <p className="text-sm text-stone-700 leading-relaxed font-light pl-13">
+                    <p className="text-sm sm:text-base text-stone-800 leading-relaxed font-normal pl-13">
                       {c.comment_text}
                     </p>
                   </div>

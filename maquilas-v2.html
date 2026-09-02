@@ -14,7 +14,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 
   <!-- Tailwind CSS CDN -->
@@ -25,12 +25,12 @@
         extend: {
           colors: {
             primary: '#8C4723',
-            secondary: '#53443a',
+            secondary: '#382c24',
             'outline-variant': '#d9c2b6'
           },
           fontFamily: {
             serif: ['"EB Garamond"', 'serif'],
-            sans: ['Montserrat', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'Montserrat', 'sans-serif'],
           }
         }
       }
@@ -38,6 +38,51 @@
   </script>
 
   <style>
+    /* Global Anti-Fatigue & High Legibility */
+    body {
+      font-family: 'Plus Jakarta Sans', Montserrat, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      color: #1a1715;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      text-rendering: optimizeLegibility;
+      letter-spacing: -0.01em;
+    }
+
+    p {
+      line-height: 1.72;
+    }
+
+    /* Prevent eye strain: eliminate 300 hairline weights */
+    .font-light {
+      font-weight: 400 !important;
+    }
+
+    /* Elevate low-contrast text on dark backgrounds */
+    .text-white\/70 {
+      color: rgba(255, 255, 255, 0.94) !important;
+    }
+    .text-white\/60 {
+      color: rgba(255, 255, 255, 0.88) !important;
+    }
+    .text-white\/80 {
+      color: rgba(255, 255, 255, 0.96) !important;
+    }
+
+    /* Elevate low-contrast muted text on light backgrounds */
+    .text-stone-400 {
+      color: #57534e !important;
+    }
+    .text-stone-500 {
+      color: #44403c !important;
+    }
+    .text-stone-600 {
+      color: #292524 !important;
+    }
+
     /* Slow Zoom Animation for Hero Image */
     @keyframes slowZoom {
       0% { transform: scale(1.08); }
@@ -1176,45 +1221,45 @@
         
         <!-- Paneles Solares -->
         <div class="bg-white/5 border border-white/10 p-8 space-y-4 hover:border-primary transition-custom">
-          <div class="font-serif text-3xl md:text-4xl text-[#FDA377] font-light">Hasta 45%</div>
+          <div class="font-serif text-3xl md:text-4xl text-[#FDA377] font-medium">Hasta 45%</div>
           <h3 class="font-serif text-xl text-white font-semibold">Energía Solar Fotovoltaica</h3>
-          <p class="font-sans text-xs text-white/70 leading-relaxed font-light">
+          <p class="font-sans text-sm text-stone-200 leading-relaxed font-normal">
             Parque de paneles solares instalado en naves que abastece hasta el 45% de la demanda energética total de la planta en operación a plena capacidad.
           </p>
         </div>
 
         <!-- Caldera de Biomasa -->
         <div class="bg-white/5 border border-white/10 p-8 space-y-4 hover:border-primary transition-custom">
-          <div class="font-serif text-3xl md:text-4xl text-[#FDA377] font-light">Biomasa</div>
+          <div class="font-serif text-3xl md:text-4xl text-[#FDA377] font-medium">Biomasa</div>
           <h3 class="font-serif text-xl text-white font-semibold">Cero Combustibles Fósiles</h3>
-          <p class="font-sans text-xs text-white/70 leading-relaxed font-light">
+          <p class="font-sans text-sm text-stone-200 leading-relaxed font-normal">
             Caldera de biomasa de última generación que aprovecha el bagazo residual del agave cocido para generar vapor limpio, erradicando el combustóleo y gas fósil.
           </p>
         </div>
 
         <!-- Compostaje de Fibras -->
         <div class="bg-white/5 border border-white/10 p-8 space-y-4 hover:border-primary transition-custom">
-          <div class="font-serif text-3xl md:text-4xl text-[#FDA377] font-light">100% Circular</div>
+          <div class="font-serif text-3xl md:text-4xl text-[#FDA377] font-medium">100% Circular</div>
           <h3 class="font-serif text-xl text-white font-semibold">Compostaje de Fibras de Agave</h3>
-          <p class="font-sans text-xs text-white/70 leading-relaxed font-light">
+          <p class="font-sans text-sm text-stone-200 leading-relaxed font-normal">
             Aprovechamiento total de las fibras de agave desechadas durante la extracción para elaborar composta orgánica que regresa como fertilizante a nuestros propios campos.
           </p>
         </div>
 
         <!-- Reciclaje de Agua -->
         <div class="bg-white/5 border border-white/10 p-8 space-y-4 hover:border-primary transition-custom">
-          <div class="font-serif text-3xl md:text-4xl text-[#FDA377] font-light">Reúso 100%</div>
+          <div class="font-serif text-3xl md:text-4xl text-[#FDA377] font-medium">Reúso 100%</div>
           <h3 class="font-serif text-xl text-white font-semibold">Reciclaje de Agua para Riego</h3>
-          <p class="font-sans text-xs text-white/70 leading-relaxed font-light">
+          <p class="font-sans text-sm text-stone-200 leading-relaxed font-normal">
             Planta de tratamiento de efluentes que recupera y depura el agua utilizada en procesos industriales para ser reintegrada en el riego de parcelas agrícolas.
           </p>
         </div>
 
         <!-- Tratamiento de Vinazas -->
         <div class="bg-white/5 border border-white/10 p-8 space-y-4 hover:border-primary transition-custom">
-          <div class="font-serif text-3xl md:text-4xl text-[#FDA377] font-light">Tratamiento Integral</div>
+          <div class="font-serif text-3xl md:text-4xl text-[#FDA377] font-medium">Tratamiento Integral</div>
           <h3 class="font-serif text-xl text-white font-semibold">Aprovechamiento de Vinazas</h3>
-          <p class="font-sans text-xs text-white/70 leading-relaxed font-light">
+          <p class="font-sans text-sm text-stone-200 leading-relaxed font-normal">
             Sistema avanzado de tratamiento y neutralización de vinazas residuales para su transformación en fertilizante orgánico rico en minerales para la tierra.
           </p>
         </div>
@@ -1224,7 +1269,7 @@
           <div class="space-y-3">
             <span class="font-mono text-xs text-[#FDA377] font-bold uppercase tracking-wider">Valor para tu Marca</span>
             <h3 class="font-serif text-xl text-white font-semibold">Storytelling Ecológico Auténtico</h3>
-            <p class="font-sans text-xs text-white/80 leading-relaxed font-light">
+            <p class="font-sans text-sm text-stone-200 leading-relaxed font-normal">
               Comunica con orgullo a tus distribuidores y consumidores finales que tu tequila es producido en una de las destilerías más ecológicas y sostenibles de México.
             </p>
           </div>

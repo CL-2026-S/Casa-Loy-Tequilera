@@ -216,10 +216,10 @@ export default function Blog({ setPage, lang = "es" }) {
           <span className="font-navigation text-[11px] md:text-xs text-[#D4AF37] tracking-[0.45em] block uppercase font-bold mb-3">
             {currentT.heroOvertitle}
           </span>
-          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-white tracking-[0.2em] uppercase font-light mr-[-0.2em] mb-4">
+          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-white tracking-[0.2em] uppercase font-medium mr-[-0.2em] mb-4">
             {currentT.heroTitle}
           </h1>
-          <p className="font-serif text-sm md:text-base text-stone-200/85 italic max-w-2xl mx-auto font-light leading-relaxed">
+          <p className="font-serif text-base md:text-lg text-stone-100 italic max-w-2xl mx-auto font-normal leading-relaxed">
             {currentT.heroDesc}
           </p>
         </div>
@@ -257,7 +257,7 @@ export default function Blog({ setPage, lang = "es" }) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={currentT.searchPlaceholder}
-                className="w-full bg-stone-50 border border-stone-200 rounded-full pl-9 pr-8 py-2 text-xs text-stone-900 focus:outline-none focus:border-primary focus:bg-white transition-colors"
+                className="w-full bg-stone-50 border border-stone-300 rounded-full pl-9 pr-8 py-2.5 text-xs text-stone-900 placeholder:text-stone-500 focus:outline-none focus:border-primary focus:bg-white transition-colors"
               />
               {searchQuery && (
                 <button
@@ -293,7 +293,7 @@ export default function Blog({ setPage, lang = "es" }) {
                   <article
                     key={art.id}
                     onClick={() => art.clickable && navigate(`/blog/${art.id}`)}
-                    className="group cursor-pointer bg-white border border-stone-200/80 rounded-2xl overflow-hidden shadow-2xs hover:shadow-lg hover:border-primary/30 transition-all duration-300 flex flex-col justify-between text-left"
+                    className="group cursor-pointer bg-white border border-stone-200/90 rounded-2xl overflow-hidden shadow-2xs hover:shadow-lg hover:border-primary/40 transition-all duration-300 flex flex-col justify-between text-left"
                   >
                     <div>
                       {/* Featured Thumbnail */}
@@ -304,32 +304,32 @@ export default function Blog({ setPage, lang = "es" }) {
                           src={art.img}
                           loading="lazy"
                         />
-                        <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-xs text-primary font-navigation text-[10px] uppercase tracking-widest font-bold px-2.5 py-1 rounded-full shadow-xs">
+                        <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-xs text-primary font-navigation text-[10px] uppercase tracking-widest font-bold px-3 py-1 rounded-full shadow-xs">
                           {art.category}
                         </div>
                       </div>
 
                       {/* Card Body */}
                       <div className="p-6 space-y-3">
-                        <div className="flex items-center gap-2 text-[11px] text-stone-400 font-sans">
+                        <div className="flex items-center gap-2 text-xs text-stone-600 font-medium font-sans">
                           <span>{cardDate}</span>
                           <span>•</span>
-                          <span className="flex items-center gap-1">
-                            <span className="material-symbols-outlined text-[13px]">schedule</span>
+                          <span className="flex items-center gap-1 font-medium">
+                            <span className="material-symbols-outlined text-[14px]">schedule</span>
                             {readTime} min
                           </span>
                           <span>•</span>
-                          <span className="flex items-center gap-1 text-primary">
-                            <span className="material-symbols-outlined text-[13px]">chat</span>
+                          <span className="flex items-center gap-1 text-primary font-semibold">
+                            <span className="material-symbols-outlined text-[14px]">chat</span>
                             {art.comments_count}
                           </span>
                         </div>
 
-                        <h3 className="font-serif text-xl sm:text-2xl font-bold leading-snug group-hover:text-primary transition-colors text-stone-900 line-clamp-2">
+                        <h3 className="font-serif text-xl sm:text-2xl font-bold leading-snug group-hover:text-primary transition-colors text-stone-950 line-clamp-2">
                           {art.title}
                         </h3>
 
-                        <p className="font-sans text-stone-600 text-xs sm:text-sm leading-relaxed font-light line-clamp-3">
+                        <p className="font-sans text-stone-700 text-sm leading-relaxed font-normal line-clamp-3">
                           {art.desc}
                         </p>
                       </div>
@@ -345,10 +345,10 @@ export default function Blog({ setPage, lang = "es" }) {
                             className="w-8 h-8 rounded-full object-cover border border-[#D4AF37] shadow-xs shrink-0"
                           />
                           <div>
-                            <span className="font-serif font-bold text-xs text-stone-900 block leading-tight">
+                            <span className="font-serif font-bold text-sm text-stone-900 block leading-tight">
                               {art.author_name}
                             </span>
-                            <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-wider block font-semibold">
+                            <span className="font-navigation text-[10px] text-[#8C4723] uppercase tracking-wider block font-bold">
                               {art.author_role}
                             </span>
                           </div>
