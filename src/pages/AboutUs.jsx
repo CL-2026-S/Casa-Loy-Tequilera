@@ -914,7 +914,7 @@ export default function AboutUs({ t, lang, setPage }) {
                 
                 {/* Expanded Content: Description */}
                 <div className="max-h-[160px] opacity-100 translate-y-0 lg:max-h-0 lg:opacity-0 lg:translate-y-4 lg:group-hover:max-h-[160px] lg:group-hover:opacity-100 lg:group-hover:translate-y-0 transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)] overflow-hidden">
-                  <p className="font-sans text-xs leading-relaxed text-[#EDE7DE]/85 tracking-wide font-light pt-2.5 border-t border-[#8C4723]/25 max-w-[280px] lg:max-w-none">
+                  <p className="font-sans text-xs leading-relaxed text-white/90 tracking-wide font-normal pt-2.5 border-t border-[#8C4723]/35 max-w-[280px] lg:max-w-none">
                     {pillar.text}
                   </p>
                 </div>

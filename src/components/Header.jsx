@@ -55,9 +55,9 @@ export default function Header({ lang, setLang, t, page, setPage }) {
     
     if (isDarkHeroPage && !scrolled) {
       if (isActive) {
-        return `${base} text-white font-bold drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.4)]`;
+        return `${base} text-white font-bold`;
       }
-      return `${base} text-white/85 hover:text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]`;
+      return `${base} text-white/85 hover:text-white`;
     }
     
     if (isActive) {
@@ -92,11 +92,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
           >
             <img
               alt="Logo Casa Loy"
-              className={`h-12 w-auto object-contain transition-all duration-300 ${
-                isDarkHeroPage && !scrolled
-                  ? "drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.4)]"
-                  : ""
-              }`}
+              className="h-12 w-auto object-contain transition-all duration-300"
               src={isDarkHeroPage && !scrolled ? "/Logotipo Casa Loy Tequilera Color Blanco.webp" : "/Logotipo Casa Loy Tequilera.webp"}
             />
           </Link>
@@ -119,7 +115,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
               className="flex items-center p-1 rounded-sm hover:bg-surface-container-high/40 transition-colors"
             >
               <span className={`material-symbols-outlined text-2xl font-light transition-colors ${
-                isDarkHeroPage && !scrolled ? "text-white drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.4)]" : "text-[#1c1c18]"
+                isDarkHeroPage && !scrolled ? "text-white" : "text-[#1c1c18]"
               }`}>
                 menu
               </span>
@@ -137,11 +133,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
           >
             <img
               alt="Logo Casa Loy"
-              className={`w-auto object-contain transition-all duration-500 ${
-                isDarkHeroPage && !scrolled
-                  ? "drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.4)]"
-                  : ""
-              } ${scrolled ? "h-[58px]" : "h-[68px]"}`}
+              className={`w-auto object-contain transition-all duration-500 ${scrolled ? "h-[58px]" : "h-[68px]"}`}
               src={isDarkHeroPage && !scrolled ? "/Logotipo Casa Loy Tequilera Color Blanco.webp" : "/Logotipo Casa Loy Tequilera.webp"}
             />
           </Link>
@@ -197,8 +189,8 @@ export default function Header({ lang, setLang, t, page, setPage }) {
               onClick={() => setLang("es")}
               className={`cursor-pointer transition-all duration-300 relative py-1 group ${
                 lang === "es"
-                  ? (isDarkHeroPage && !scrolled ? "text-white font-bold drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.4)]" : "text-primary font-bold")
-                  : (isDarkHeroPage && !scrolled ? "text-white/80 hover:text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]" : "text-[#1c1c18]/60 hover:text-primary")
+                  ? (isDarkHeroPage && !scrolled ? "text-white font-bold" : "text-primary font-bold")
+                  : (isDarkHeroPage && !scrolled ? "text-white/80 hover:text-white" : "text-[#1c1c18]/60 hover:text-primary")
               }`}
             >
               ES
@@ -206,13 +198,13 @@ export default function Header({ lang, setLang, t, page, setPage }) {
                 lang === "es" ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
               }`} />
             </span>
-            <span className={`transition-colors duration-300 ${isDarkHeroPage && !scrolled ? "text-white/40 drop-shadow-[0_1px_1px_rgba(0,0,0,0.3)]" : "text-[#1c1c18] opacity-20"}`}>|</span>
+            <span className={`transition-colors duration-300 ${isDarkHeroPage && !scrolled ? "text-white/40" : "text-[#1c1c18] opacity-20"}`}>|</span>
             <span
               onClick={() => setLang("en")}
               className={`cursor-pointer transition-all duration-300 relative py-1 group ${
                 lang === "en"
-                  ? (isDarkHeroPage && !scrolled ? "text-white font-bold drop-shadow-[0_1.5px_2px_rgba(0,0,0,0.4)]" : "text-primary font-bold")
-                  : (isDarkHeroPage && !scrolled ? "text-white/80 hover:text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]" : "text-[#1c1c18]/60 hover:text-primary")
+                  ? (isDarkHeroPage && !scrolled ? "text-white font-bold" : "text-primary font-bold")
+                  : (isDarkHeroPage && !scrolled ? "text-white/80 hover:text-white" : "text-[#1c1c18]/60 hover:text-primary")
               }`}
             >
               EN

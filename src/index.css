@@ -100,16 +100,15 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Clear, confident headings with sturdy strokes */
+/* Headings and paragraphs inherit color so text-white and dark sections work perfectly */
 h1, h2, h3, h4, h5, h6 {
-  color: #171513;
+  color: inherit;
   text-rendering: optimizeLegibility;
   letter-spacing: -0.015em;
 }
 
-/* Body paragraphs with comfortable contrast and line height */
 p {
-  color: #2b2724;
+  color: inherit;
   line-height: 1.75;
 }
 
@@ -118,21 +117,33 @@ p {
   font-weight: 400 !important;
 }
 
-/* Enhance contrast of secondary and muted text so it is effortlessly readable */
-.text-stone-400 {
-  color: #57534e !important;
+/* Bulletproof text-white utilities to guarantee visibility over dark backgrounds */
+.text-white {
+  color: #ffffff !important;
 }
-
-.text-stone-500 {
-  color: #44403c !important;
+.text-white\/95 {
+  color: rgba(255, 255, 255, 0.95) !important;
 }
-
-.text-stone-600 {
-  color: #292524 !important;
+.text-white\/90 {
+  color: rgba(255, 255, 255, 0.9) !important;
 }
-
-.text-on-surface-variant {
-  color: #382c24 !important;
+.text-white\/85 {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+.text-white\/80 {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+.text-white\/75 {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+.text-white\/70 {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+.text-white\/60 {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+.text-white\/50 {
+  color: rgba(255, 255, 255, 0.5) !important;
 }
 
 /* Inputs and textareas */
@@ -188,10 +199,11 @@ input::placeholder, textarea::placeholder {
 
 @utility header-scrolled {
   height: 72px;
-  background-color: rgba(252, 249, 243, 0.85);
+  background-color: rgba(252, 249, 243, 0.95);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
-  box-shadow: 0 4px 20px rgba(28, 28, 24, 0.02), 0 1px 0 rgba(140, 71, 35, 0.08);
+  box-shadow: none;
+  border-bottom: 1px solid rgba(140, 71, 35, 0.1);
 }
 
 @utility header-unscrolled-dark {

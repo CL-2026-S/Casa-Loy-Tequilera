@@ -467,7 +467,7 @@ export default function Maquilas({ lang = "es" }) {
               <span className="font-label-caps text-primary-fixed mb-4 block tracking-widest uppercase">
                 {currentT.quizOvertitle}
               </span>
-              <h2 className="font-headline-lg text-4xl md:text-6xl mb-8 leading-tight">
+              <h2 className="font-headline-lg text-4xl md:text-6xl mb-8 leading-tight text-white">
                 {currentT.quizTitle}
               </h2>
               <p className="font-body-lg text-white/80 leading-relaxed font-light">

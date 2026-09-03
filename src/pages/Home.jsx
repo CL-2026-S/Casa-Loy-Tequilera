@@ -906,7 +906,7 @@ export default function Home({ lang = "es", setPage, setLang }) {
                   
                   {/* Floating Content */}
                   <div className="relative z-10 p-6 md:p-8 w-full flex flex-col justify-end h-full">
-                    <p className="font-body-md text-white/70 text-sm leading-relaxed font-normal max-w-xs mb-6">
+                    <p className="font-body-md text-white/90 text-sm leading-relaxed font-normal max-w-xs mb-6">
                       {sol.desc}
                     </p>
                     

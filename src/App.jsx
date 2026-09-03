@@ -15,6 +15,7 @@ import HomeInteractive from "./pages/HomeInteractive";
 import AboutUs from "./pages/AboutUs";
 import Maquilas from "./pages/Maquilas";
 import MaquilasV2 from "./pages/MaquilasV2";
+import MaquilasV3 from "./pages/MaquilasV3";
 import Brands from "./pages/Brands";
 import Turismo from "./pages/Turismo";
 import ExperienceDetail from "./pages/ExperienceDetail";
@@ -40,6 +41,7 @@ const routesMap = {
   "/marca-propia": { page: "maquilas", lang: "es" },
   "/maquilas": { page: "maquilas", lang: "es" },
   "/maquilas-v2": { page: "maquilas", lang: "es" },
+  "/maquilas-v3": { page: "maquilas", lang: "es" },
   "/marcas": { page: "brands", lang: "es" },
   "/turismo": { page: "turismo", lang: "es" },
   "/turismo/oro": { page: "experience-oro", lang: "es" },
@@ -62,6 +64,7 @@ const routesMap = {
   "/private-label": { page: "maquilas", lang: "en" },
   "/bottling": { page: "maquilas", lang: "en" },
   "/bottling-v2": { page: "maquilas", lang: "en" },
+  "/bottling-v3": { page: "maquilas", lang: "en" },
   "/brands": { page: "brands", lang: "en" },
   "/tourism": { page: "turismo", lang: "en" },
   "/tourism/gold": { page: "experience-oro", lang: "en" },
@@ -453,6 +456,8 @@ export default function App() {
             <Route path="/bottling" element={<Navigate to="/private-label" replace />} />
             <Route path="/maquilas-v2" element={<MaquilasV2 lang="es" />} />
             <Route path="/bottling-v2" element={<MaquilasV2 lang="en" />} />
+            <Route path="/maquilas-v3" element={<MaquilasV3 lang="es" />} />
+            <Route path="/bottling-v3" element={<MaquilasV3 lang="en" />} />
             
             <Route path="/marcas" element={<Brands t={t} lang={lang} country={country} />} />
             <Route path="/brands" element={<Brands t={t} lang={lang} country={country} />} />

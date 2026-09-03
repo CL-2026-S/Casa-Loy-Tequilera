@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maquila de Tequila B2B v2 | Casa Loy Tequilera</title>
   
   <!-- SEO Meta Tags -->
-  <meta name="description" content="Servicios de Maquila B2B, Marca Propia y Tequila a Granel en Los Altos de Jalisco. NOM 1633.">
-  <meta property="og:title" content="Guía de Maquila de Tequila B2B v2 - Casa Loy Tequilera">
-  <meta property="og:description" content="Detalles y diagnóstico interactivo para proyectos de tequila de marca propia y maquila por contrato.">
+  <meta name="description" content="Destilería de Tequila 100% Agave en los Altos de Jalisco. Especialistas en Maquila de Tequila B2B para marcas propias, desarrollo de producto, envasado y exportación internacional. NOM 1633.">
+  <meta property="og:title" content="Maquila de Tequila B2B & Marca Propia | Casa Loy Tequilera">
+  <meta property="og:description" content="Infraestructura auditada, autosuficiencia de agave (3,600 Has.) y asesoría técnica para proyectos de tequila de marca propia y exportación global.">
   <meta property="og:image" content="/Jimado Agave Tequilana Weber.webp">
   
-  <!-- Google Fonts -->
+  <!-- Google Fonts (Exact site typography: EB Garamond, Cormorant Garamond, Montserrat, Plus Jakarta Sans, Inter) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -24,13 +24,62 @@
       theme: {
         extend: {
           colors: {
-            primary: '#8C4723',
-            secondary: '#382c24',
-            'outline-variant': '#d9c2b6'
+            "surface-container-high": "#ebe8e2",
+            "tertiary-container": "#596b69",
+            "primary-container": "#9a5625",
+            "on-primary": "#ffffff",
+            "primary": "#8C4723",
+            "outline": "#867369",
+            "on-secondary-fixed": "#351000",
+            "on-surface-variant": "#53443a",
+            "on-surface": "#1c1c18",
+            "inverse-on-surface": "#f3f0ea",
+            "on-primary-fixed": "#311300",
+            "on-background": "#1c1c18",
+            "surface-dim": "#dcdad4",
+            "tertiary": "#415351",
+            "error": "#ba1a1a",
+            "surface-container-low": "#f6f3ed",
+            "tertiary-fixed": "#d3e6e3",
+            "surface-tint": "#8f4d1d",
+            "primary-fixed": "#ffdbc7",
+            "surface-bright": "#fcf9f3",
+            "secondary": "#914b27",
+            "surface": "#fcf9f3",
+            "secondary-container": "#fda377",
+            "outline-variant": "#d9c2b6",
+            "surface-container": "#f0eee8",
+            "surface-container-highest": "#e5e2dc",
+            "background": "#FAF8F5",
+            "canvas-ivory": "#F6F2EA",
+            "terroir-clay": "#8C4723",
+            "volcanic-stone": "#EDE7DE",
+            "brand-red-clay": "#8C4723",
+            "brand-agave-green": "#2F403E",
+            "brand-copper": "#855C37",
+            "brand-canvas": "#F7F4EE",
+            "brand-volcanic": "#EDE7DE",
+            "brand-charcoal": "#1A1615"
           },
           fontFamily: {
-            serif: ['"EB Garamond"', 'serif'],
-            sans: ['"Plus Jakarta Sans"', 'Montserrat', 'sans-serif'],
+            cormorant: ["'Cormorant Garamond'", "serif"],
+            serif: ["'EB Garamond'", "'Cormorant Garamond'", "Georgia", "serif"],
+            "headline-md": ["'EB Garamond'", "serif"],
+            "headline-lg": ["'EB Garamond'", "serif"],
+            "display-hero": ["'EB Garamond'", "serif"],
+            navigation: ["'Plus Jakarta Sans'", "'Montserrat'", "sans-serif"],
+            "label-caps": ["'Plus Jakarta Sans'", "'Montserrat'", "sans-serif"],
+            sans: ["'Plus Jakarta Sans'", "'Inter'", "'Montserrat'", "sans-serif"],
+            "body-md": ["'Plus Jakarta Sans'", "'Inter'", "sans-serif"],
+            "body-lg": ["'Plus Jakarta Sans'", "'Inter'", "sans-serif"],
+            mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"]
+          },
+          spacing: {
+            gutter: "32px",
+            "container-max": "1280px",
+            "margin-mobile": "24px",
+            "margin-desktop": "64px",
+            "section-gap": "140px"
           }
         }
       }
@@ -38,49 +87,65 @@
   </script>
 
   <style>
-    /* Global Anti-Fatigue & High Legibility */
+    /* Global Anti-Fatigue & High Legibility matching the entire site */
     body {
-      font-family: 'Plus Jakarta Sans', Montserrat, sans-serif;
+      font-family: 'Plus Jakarta Sans', 'Inter', Montserrat, sans-serif;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       text-rendering: optimizeLegibility;
       color: #1a1715;
+      background-color: #FAF8F5;
     }
 
     h1, h2, h3, h4, h5, h6 {
+      font-family: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
       text-rendering: optimizeLegibility;
       letter-spacing: -0.01em;
+      color: inherit;
     }
 
     p {
-      line-height: 1.72;
+      line-height: 1.75;
+      color: inherit;
     }
 
-    /* Prevent eye strain: eliminate 300 hairline weights */
+    .text-white {
+      color: #ffffff !important;
+    }
+
+    /* Prevent eye strain */
     .font-light {
       font-weight: 400 !important;
     }
 
-    /* Elevate low-contrast text on dark backgrounds */
-    .text-white\/70 {
-      color: rgba(255, 255, 255, 0.94) !important;
-    }
-    .text-white\/60 {
-      color: rgba(255, 255, 255, 0.88) !important;
-    }
-    .text-white\/80 {
-      color: rgba(255, 255, 255, 0.96) !important;
+    /* Fixed Header Styles matching the rest of the site */
+    .premium-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 50;
+      box-sizing: border-box;
+      transition: height 0.4s cubic-bezier(0.22, 1, 0.36, 1), 
+                  background-color 0.4s cubic-bezier(0.22, 1, 0.36, 1), 
+                  box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                  backdrop-filter 0.4s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    /* Elevate low-contrast muted text on light backgrounds */
-    .text-stone-400 {
-      color: #57534e !important;
+    .header-unscrolled {
+      height: 84px;
+      background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0) 100%);
+      background-color: transparent;
+      box-shadow: none;
     }
-    .text-stone-500 {
-      color: #44403c !important;
-    }
-    .text-stone-600 {
-      color: #292524 !important;
+
+    .header-scrolled {
+      height: 72px;
+      background-color: rgba(250, 246, 240, 0.95);
+      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(140, 71, 35, 0.12);
+      box-shadow: none;
     }
 
     /* Slow Zoom Animation for Hero Image */
@@ -89,7 +154,7 @@
       100% { transform: scale(1); }
     }
     .animate-slow-zoom {
-      animation: slowZoom 12s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation: slowZoom 14s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
 
     /* Scroll Arrow Animation */
@@ -101,51 +166,165 @@
     .animate-scroll-arrow {
       animation: scrollArrow 2.2s infinite ease-in-out;
     }
-
-    /* Custom Transitions */
-    .transition-custom {
-      transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    }
   </style>
 </head>
-<body class="bg-[#fcf9f3] text-[#1c1c18] font-sans antialiased selection:bg-primary/20">
+<body class="bg-[#FAF6F0] text-[#1c1c18] font-sans antialiased selection:bg-primary/20">
 
-  <!-- 5.1 HERO PARALLAX BANNER -->
+  <!-- ============================================================
+       CASA LOY OFFICIAL HEADER NAVIGATION (Clean, Flat, Sin Sombras)
+       ============================================================ -->
+  <header id="site-header" class="premium-header header-unscrolled">
+    <!-- Desktop Header -->
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-10 h-full hidden xl:grid grid-cols-[1.3fr_1.1fr_1.4fr_1.1fr_1.1fr_1.8fr_0.8fr_1.4fr] gap-x-6 items-center justify-items-center">
+      
+      <!-- Column 1: Logotipo Casa Loy -->
+      <a href="/" class="flex items-center justify-center hover:opacity-85 transition-opacity">
+        <img
+          id="header-logo"
+          alt="Logo Casa Loy Tequilera"
+          class="w-auto object-contain transition-all duration-500 h-[64px]"
+          src="/Logotipo Casa Loy Tequilera Color Blanco.webp"
+        />
+      </a>
+
+      <!-- Column 2: Quiénes Somos -->
+      <a href="/quienes-somos" class="nav-link font-navigation text-[clamp(9.5px,0.65vw,12px)] uppercase tracking-[0.1em] font-semibold relative transition-all duration-300 whitespace-nowrap py-1.5 group select-none text-white/90 hover:text-white">
+        Quiénes Somos
+        <span class="absolute bottom-0 left-0 w-full h-[1.5px] bg-current transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100"></span>
+      </a>
+
+      <!-- Column 3: Desarrolla tu Marca (ACTIVE) -->
+      <a href="/marca-propia" class="nav-link font-navigation text-[clamp(9.5px,0.65vw,12px)] uppercase tracking-[0.1em] font-bold relative transition-all duration-300 whitespace-nowrap py-1.5 group select-none text-white">
+        Marca Propia
+        <span class="absolute bottom-0 left-0 w-full h-[1.5px] bg-primary transform origin-left transition-transform duration-300 scale-x-100"></span>
+      </a>
+
+      <!-- Column 4: Nuestras Marcas -->
+      <a href="/marcas" class="nav-link font-navigation text-[clamp(9.5px,0.65vw,12px)] uppercase tracking-[0.1em] font-semibold relative transition-all duration-300 whitespace-nowrap py-1.5 group select-none text-white/90 hover:text-white">
+        Nuestras Marcas
+        <span class="absolute bottom-0 left-0 w-full h-[1.5px] bg-current transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100"></span>
+      </a>
+
+      <!-- Column 5: Experiencias -->
+      <a href="/turismo" class="nav-link font-navigation text-[clamp(9.5px,0.65vw,12px)] uppercase tracking-[0.1em] font-semibold relative transition-all duration-300 whitespace-nowrap py-1.5 group select-none text-white/90 hover:text-white">
+        Experiencias
+        <span class="absolute bottom-0 left-0 w-full h-[1.5px] bg-current transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100"></span>
+      </a>
+
+      <!-- Column 6: Restaurante 1937 Nativo -->
+      <a href="/nativo" class="nav-link font-navigation text-[clamp(9.5px,0.65vw,12px)] uppercase tracking-[0.1em] font-semibold relative transition-all duration-300 whitespace-nowrap py-1.5 group select-none text-white/90 hover:text-white">
+        Restaurante 1937 Nativo
+        <span class="absolute bottom-0 left-0 w-full h-[1.5px] bg-current transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100"></span>
+      </a>
+
+      <!-- Column 7: Blog -->
+      <a href="/blog" class="nav-link font-navigation text-[clamp(9.5px,0.65vw,12px)] uppercase tracking-[0.1em] font-semibold relative transition-all duration-300 whitespace-nowrap py-1.5 group select-none text-white/90 hover:text-white">
+        Blog
+        <span class="absolute bottom-0 left-0 w-full h-[1.5px] bg-current transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100"></span>
+      </a>
+
+      <!-- Column 8: CTA Button (COTIZAR B2B) -->
+      <div class="flex items-center gap-3">
+        <a
+          href="#quiz-v2"
+          id="header-cta-btn"
+          class="h-9 px-5 font-navigation text-[10.5px] uppercase tracking-[0.2em] font-semibold transition-all duration-300 shadow-sm flex items-center justify-center rounded-none bg-[#8C4723] hover:bg-[#a6562b] text-white"
+        >
+          COTIZAR B2B
+        </a>
+      </div>
+    </div>
+
+    <!-- Mobile Header -->
+    <div class="max-w-[1440px] mx-auto px-6 h-full flex xl:hidden justify-between items-center w-full">
+      <a href="/" class="flex items-center h-full">
+        <img
+          id="header-logo-mobile"
+          alt="Logo Casa Loy Tequilera"
+          class="h-10 w-auto object-contain transition-all duration-300"
+          src="/Logotipo Casa Loy Tequilera Color Blanco.webp"
+        />
+      </a>
+
+      <div class="flex items-center gap-4">
+        <a
+          href="#quiz-v2"
+          class="h-9 px-4 font-navigation text-[10px] uppercase tracking-[0.15em] font-semibold transition-all duration-300 shadow-sm flex items-center justify-center rounded-none bg-[#8C4723] hover:bg-[#a6562b] text-white"
+        >
+          COTIZAR B2B
+        </a>
+
+        <button
+          id="mobile-menu-toggle"
+          class="flex items-center p-1 rounded-sm text-white focus:outline-none"
+          aria-label="Abrir Menú"
+        >
+          <span class="material-symbols-outlined text-2xl font-light">menu</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Drawer -->
+    <div id="mobile-menu" class="fixed inset-0 bg-zinc-950/95 z-50 transform translate-x-full transition-transform duration-300 xl:hidden flex flex-col justify-between p-8 text-white">
+      <div class="flex justify-between items-center pb-6 border-b border-white/10">
+        <img src="/Logotipo Casa Loy Tequilera Color Blanco.webp" alt="Casa Loy" class="h-10 w-auto">
+        <button id="mobile-menu-close" class="p-2 text-white">
+          <span class="material-symbols-outlined text-2xl">close</span>
+        </button>
+      </div>
+      <nav class="flex flex-col space-y-5 text-left py-8 font-navigation text-sm uppercase tracking-widest">
+        <a href="/" class="hover:text-primary transition-colors">Inicio</a>
+        <a href="/quienes-somos" class="hover:text-primary transition-colors">Quiénes Somos</a>
+        <a href="/marca-propia" class="text-primary font-bold">Marca Propia</a>
+        <a href="/marcas" class="hover:text-primary transition-colors">Nuestras Marcas</a>
+        <a href="/turismo" class="hover:text-primary transition-colors">Experiencias</a>
+        <a href="/nativo" class="hover:text-primary transition-colors">Restaurante 1937 Nativo</a>
+        <a href="/blog" class="hover:text-primary transition-colors">Blog</a>
+        <a href="/donde-comprar" class="hover:text-primary transition-colors">Dónde Comprar</a>
+      </nav>
+      <div class="pt-6 border-t border-white/10">
+        <a href="#quiz-v2" onclick="document.getElementById('mobile-menu').classList.add('translate-x-full')" class="w-full py-3.5 bg-[#8C4723] text-white text-center font-navigation text-xs uppercase tracking-widest font-semibold block">
+          Diagnóstico de Proyecto
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 5.1 HERO PARALLAX BANNER (Matching Casa Loy Hero Style) -->
   <section class="relative h-screen w-full bg-zinc-950 overflow-hidden">
     <div class="absolute inset-0 z-0 overflow-hidden">
       <img
-        alt="Maquila Tequila Production"
-        class="w-full h-full object-cover brightness-[0.72] animate-slow-zoom"
+        alt="Maquila Tequila Production Casa Loy"
+        class="w-full h-full object-cover brightness-[0.70] animate-slow-zoom"
         src="/Naves Industriales Casa Loy Tequilera.webp"
+        fetchpriority="high"
       />
-      <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/65"></div>
     </div>
     
-    <div class="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center h-full pt-16 pb-28">
-      <span class="font-sans text-[#FDA377] font-bold tracking-[0.3em] text-[10px] md:text-xs uppercase mb-6 block">
-        Destilería & Maquila Tequila B2B
+    <div class="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center h-full pt-24 pb-28">
+      <span class="font-navigation text-[#FDA377] font-semibold tracking-[0.35em] text-[11px] md:text-xs uppercase mb-5 block drop-shadow-sm">
+        DESTILERÍA & MAQUILA TEQUILA B2B · NOM 1633
       </span>
-      <h1 class="font-serif text-[clamp(28px,4.5vw,56px)] leading-[1.1] tracking-tight font-light text-white uppercase max-w-4xl mx-auto mb-6">
-        MAQUILA DE TEQUILA DE MARCA PROPIA EN MÉXICO
+      <h1 class="font-serif text-[clamp(28px,4.5vw,58px)] leading-[1.12] tracking-tight font-light text-white uppercase max-w-4xl mx-auto mb-6">
+        MAQUILA DE TEQUILA DE MARCA PROPIA <br />
+        <span class="text-white italic font-normal">EN LOS ALTOS DE JALISCO</span>
       </h1>
-      <p class="font-serif text-white/90 italic text-lg md:text-xl font-normal max-w-2xl mx-auto mb-6">
-        "Tu visión. Nuestra maestría y legado."
-      </p>
-      <p class="font-sans text-white/80 font-light text-sm md:text-base max-w-2xl mx-auto mb-10 leading-relaxed">
-        Una destilería familiar con NOM 1633 diseñada para fundadores, marcas existentes y distribuidores listos para construir un proyecto con raíces sólidas y trazabilidad total.
+      <p class="font-navigation text-white/80 font-normal text-xs md:text-sm max-w-2xl mx-auto mb-10 leading-relaxed tracking-wider uppercase">
+        Infraestructura industrial de vanguardia · 3,600 Hectáreas de agave propio · Exportación global
       </p>
       <div class="flex flex-col sm:flex-row gap-5 items-center justify-center w-full max-w-md sm:max-w-none pt-2">
         <a
-          class="bg-primary border border-primary hover:bg-[#a6562b] hover:border-[#a6562b] text-white font-sans text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-semibold py-4 px-8 transition-custom min-w-[200px] text-center shadow-lg"
+          class="bg-[#8C4723] border border-[#8C4723] hover:bg-[#a6562b] hover:border-[#a6562b] text-white font-navigation text-[10.5px] sm:text-[11.5px] uppercase tracking-[0.25em] font-semibold py-4 px-8 transition-all duration-300 min-w-[210px] text-center shadow-lg"
           href="#quiz-v2"
         >
-          Iniciar Diagnóstico B2B
+          COTIZAR MARCA PROPIA
         </a>
         <a
-          class="border border-white/35 hover:border-white hover:bg-white/5 text-white font-sans text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-semibold py-4 px-8 transition-custom min-w-[200px] text-center"
+          class="border border-white/60 hover:bg-[#8C4723] hover:border-[#8C4723] text-white font-navigation text-[10.5px] sm:text-[11.5px] uppercase tracking-[0.25em] font-semibold py-4 px-8 transition-all duration-300 min-w-[210px] text-center"
           href="#contact-scheduler"
         >
-          Reservar Llamada Técnica
+          AGENDAR LLAMADA
         </a>
       </div>
     </div>
@@ -162,1885 +341,863 @@
   <div class="bg-[#EDE7DE]/60 border-y border-outline-variant/40 py-5">
     <div class="max-w-[1400px] mx-auto px-6 md:px-12">
       <div class="flex flex-wrap lg:flex-nowrap justify-center items-center gap-y-3 gap-x-5 text-center">
-        <span class="font-sans text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-primary">NOM 1633 CRT</span>
+        <span class="font-navigation text-[10.5px] md:text-[11.5px] font-bold uppercase tracking-widest text-primary">NOM 1633 CRT</span>
         <span class="text-primary text-xs font-semibold select-none hidden lg:inline">✦</span>
-        <span class="font-sans text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-[#1C1C1C]">Grupo Orbe XXI (60+ Años)</span>
+        <span class="font-navigation text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-[#1C1C1C]">Grupo Orbe XXI (60+ Años)</span>
         <span class="text-primary text-xs font-semibold select-none hidden lg:inline">✦</span>
-        <span class="font-sans text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-[#1C1C1C]">3,600 Has. Agave Propio</span>
+        <span class="font-navigation text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-[#1C1C1C]">3,600 Has. Agave Propio</span>
         <span class="text-primary text-xs font-semibold select-none hidden lg:inline">✦</span>
-        <span class="font-sans text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-[#1C1C1C]">10.8M Plantas en Inventario</span>
+        <span class="font-navigation text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-[#1C1C1C]">10.8M Plantas en Inventario</span>
         <span class="text-primary text-xs font-semibold select-none hidden lg:inline">✦</span>
-        <span class="font-sans text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-[#1C1C1C]">13.5M L / Año Capacidad</span>
+        <span class="font-navigation text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-[#1C1C1C]">13.5M L / Año Capacidad</span>
         <span class="text-primary text-xs font-semibold select-none hidden lg:inline">✦</span>
-        <span class="font-sans text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-[#1C1C1C]">1.2M L en Cava de Barricas</span>
+        <span class="font-navigation text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-[#1C1C1C]">1.2M L en Cava de Barricas</span>
         <span class="text-primary text-xs font-semibold select-none hidden lg:inline">✦</span>
-        <span class="font-sans text-[10.5px] md:text-[11.5px] font-semibold uppercase tracking-widest text-primary">Certificado 100% Additive Free</span>
+        <span class="font-navigation text-[10.5px] md:text-[11.5px] font-bold uppercase tracking-widest text-primary">Certificado 100% Additive Free</span>
       </div>
     </div>
   </div>
 
-  <!-- INSTITUTIONAL BACKING: GRUPO ORBE XXI -->
-  <section class="py-20 md:py-28 bg-[#f6f1eb] border-b border-outline-variant/30">
+  <!-- ============================================================
+       BLOQUE 2: QUIZ DE DIAGNÓSTICO RÁPIDO B2B (Captura Inmediata de Leads)
+       Ubicado estratégicamente arriba para máxima conversión
+       ============================================================ -->
+  <section class="relative py-16 md:py-24 bg-[#1E1A17] text-white overflow-hidden" id="quiz-v2">
+    <!-- Warm Agave Piñas Background Overlay -->
+    <div class="absolute inset-0 z-0 opacity-20 pointer-events-none">
+      <img
+        src="/Piñas de Agave Tequilana Weber.webp"
+        alt="Agave Weber"
+        class="w-full h-full object-cover brightness-75 filter"
+      />
+      <div class="absolute inset-0 bg-gradient-to-b from-[#1E1A17] via-transparent to-[#1E1A17]"></div>
+    </div>
+
+    <div class="relative z-10 max-w-4xl mx-auto px-6 text-left">
+      <!-- Section Header -->
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <span class="font-navigation text-[#FDA377] font-semibold tracking-[0.3em] text-[11px] uppercase block mb-2">
+          Diagnóstico Estratégico · 3 Preguntas
+        </span>
+        <h2 class="font-serif text-3xl md:text-4xl text-white font-light leading-tight">
+          Diseñemos el tequila ideal para tu mercado.
+        </h2>
+        <p class="font-sans text-white/75 text-xs md:text-sm font-normal mt-3 leading-relaxed">
+          Completa este breve diagnóstico para evaluar la viabilidad operativa de tu proyecto y recibir una propuesta técnica personalizada.
+        </p>
+      </div>
+
+      <!-- Quiz Form Container -->
+      <div class="bg-white/5 border border-white/15 backdrop-blur-md p-6 md:p-10 shadow-2xl relative">
+        <!-- Progress Bar -->
+        <div class="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+          <div class="flex items-center gap-2">
+            <span class="font-navigation text-xs text-[#FDA377] font-bold tracking-widest uppercase" id="quiz-step-indicator">Paso 1 de 4</span>
+          </div>
+          <div class="flex gap-1.5" id="quiz-progress-dots">
+            <span class="w-8 h-1 bg-[#8C4723] rounded-full"></span>
+            <span class="w-8 h-1 bg-white/20 rounded-full"></span>
+            <span class="w-8 h-1 bg-white/20 rounded-full"></span>
+            <span class="w-8 h-1 bg-white/20 rounded-full"></span>
+          </div>
+        </div>
+
+        <!-- Paso 1: Solución Requerida -->
+        <div id="quiz-step-1" class="space-y-6">
+          <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">
+            ¿Qué tipo de solución requiere tu proyecto?
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button
+              type="button"
+              onclick="setQuizAnswer('solution', 'Desarrollo Integral de Marca Propia', 2)"
+              class="text-left p-5 border border-white/15 bg-white/5 hover:bg-[#8C4723]/30 hover:border-[#FDA377] transition-all group cursor-pointer"
+            >
+              <div class="font-navigation text-xs text-[#FDA377] font-bold uppercase tracking-wider mb-1">01 · Llave en Mano</div>
+              <div class="font-serif text-base text-white font-semibold group-hover:text-[#FDA377] transition-colors">Marca Propia Integral</div>
+              <p class="font-sans text-xs text-white/70 font-normal mt-1 leading-relaxed">Desde el registro CRT, formulación, botella y envasado hasta la exportación.</p>
+            </button>
+
+            <button
+              type="button"
+              onclick="setQuizAnswer('solution', 'Compra de Tequila a Granel', 2)"
+              class="text-left p-5 border border-white/15 bg-white/5 hover:bg-[#8C4723]/30 hover:border-[#FDA377] transition-all group cursor-pointer"
+            >
+              <div class="font-navigation text-xs text-[#FDA377] font-bold uppercase tracking-wider mb-1">02 · Volumen Continuo</div>
+              <div class="font-serif text-base text-white font-semibold group-hover:text-[#FDA377] transition-colors">Tequila a Granel (Bulk)</div>
+              <p class="font-sans text-xs text-white/70 font-normal mt-1 leading-relaxed">Suministro constante 100% Agave o Mixto para embotelladoras globales.</p>
+            </button>
+
+            <button
+              type="button"
+              onclick="setQuizAnswer('solution', 'Servicio de Envasado y Co-Packing', 2)"
+              class="text-left p-5 border border-white/15 bg-white/5 hover:bg-[#8C4723]/30 hover:border-[#FDA377] transition-all group cursor-pointer"
+            >
+              <div class="font-navigation text-xs text-[#FDA377] font-bold uppercase tracking-wider mb-1">03 · Acondicionamiento</div>
+              <div class="font-serif text-base text-white font-semibold group-hover:text-[#FDA377] transition-colors">Envasado & Co-Packing</div>
+              <p class="font-sans text-xs text-white/70 font-normal mt-1 leading-relaxed">Llenado, sellado, etiquetado e inspección de luz para marcas existentes.</p>
+            </button>
+
+            <button
+              type="button"
+              onclick="setQuizAnswer('solution', 'Desarrollo de Perfil de Autor en Barricas', 2)"
+              class="text-left p-5 border border-white/15 bg-white/5 hover:bg-[#8C4723]/30 hover:border-[#FDA377] transition-all group cursor-pointer"
+            >
+              <div class="font-navigation text-xs text-[#FDA377] font-bold uppercase tracking-wider mb-1">04 · Alta Gama</div>
+              <div class="font-serif text-base text-white font-semibold group-hover:text-[#FDA377] transition-colors">Perfil de Autor & Cava</div>
+              <p class="font-sans text-xs text-white/70 font-normal mt-1 leading-relaxed">Crianza a la medida en roble americano, bourbon o roble francés.</p>
+            </button>
+          </div>
+        </div>
+
+        <!-- Paso 2: Etapa y Volumen -->
+        <div id="quiz-step-2" class="space-y-6 hidden">
+          <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">
+            ¿En qué etapa se encuentra tu proyecto?
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button
+              type="button"
+              onclick="setQuizAnswer('stage', 'Idea inicial / Nuevo lanzamiento', 3)"
+              class="text-left p-5 border border-white/15 bg-white/5 hover:bg-[#8C4723]/30 hover:border-[#FDA377] transition-all group cursor-pointer"
+            >
+              <div class="font-serif text-base text-white font-semibold group-hover:text-[#FDA377]">Idea Inicial / Lanzamiento</div>
+              <p class="font-sans text-xs text-white/70 font-normal mt-1">Busco asesoría técnica completa y lotes mínimos viables.</p>
+            </button>
+
+            <button
+              type="button"
+              onclick="setQuizAnswer('stage', 'Marca existente buscando mejor proveedor', 3)"
+              class="text-left p-5 border border-white/15 bg-white/5 hover:bg-[#8C4723]/30 hover:border-[#FDA377] transition-all group cursor-pointer"
+            >
+              <div class="font-serif text-base text-white font-semibold group-hover:text-[#FDA377]">Marca Existente / Cambio</div>
+              <p class="font-sans text-xs text-white/70 font-normal mt-1">Requiero replicar mi perfil sensorial con mayor consistencia y stock.</p>
+            </button>
+
+            <button
+              type="button"
+              onclick="setQuizAnswer('stage', 'Distribuidor o Importador de Gran Escala', 3)"
+              class="text-left p-5 border border-white/15 bg-white/5 hover:bg-[#8C4723]/30 hover:border-[#FDA377] transition-all group cursor-pointer"
+            >
+              <div class="font-serif text-base text-white font-semibold group-hover:text-[#FDA377]">Distribuidor / Retail</div>
+              <p class="font-sans text-xs text-white/70 font-normal mt-1">Requiero suministro de alto volumen continuo y precios directos de fábrica.</p>
+            </button>
+
+            <button
+              type="button"
+              onclick="setQuizAnswer('stage', 'Comparando costos y opciones de maquila', 3)"
+              class="text-left p-5 border border-white/15 bg-white/5 hover:bg-[#8C4723]/30 hover:border-[#FDA377] transition-all group cursor-pointer"
+            >
+              <div class="font-serif text-base text-white font-semibold group-hover:text-[#FDA377]">Comparando Opciones</div>
+              <p class="font-sans text-xs text-white/70 font-normal mt-1">Quiero conocer cotización, tiempos de entrega y capacidades técnicas.</p>
+            </button>
+          </div>
+          <button type="button" onclick="goToStep(1)" class="font-navigation text-xs text-white/60 hover:text-white uppercase tracking-wider flex items-center gap-1 mt-4">
+            ← Volver a la pregunta anterior
+          </button>
+        </div>
+
+        <!-- Paso 3: Mercado Objetivo y Destino -->
+        <div id="quiz-step-3" class="space-y-6 hidden">
+          <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">
+            ¿Cuál es el mercado objetivo principal de tu tequila?
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button
+              type="button"
+              onclick="setQuizAnswer('market', 'Estados Unidos (Normativa TTB / COLA)', 4)"
+              class="text-left p-5 border border-white/15 bg-white/5 hover:bg-[#8C4723]/30 hover:border-[#FDA377] transition-all group cursor-pointer"
+            >
+              <div class="font-serif text-base text-white font-semibold group-hover:text-[#FDA377]">Estados Unidos (USA)</div>
+              <p class="font-sans text-xs text-white/70 font-normal mt-1">Cumplimiento TTB, fórmulas certificadas y exportación directa.</p>
+            </button>
+
+            <button
+              type="button"
+              onclick="setQuizAnswer('market', 'México (Nacional)', 4)"
+              class="text-left p-5 border border-white/15 bg-white/5 hover:bg-[#8C4723]/30 hover:border-[#FDA377] transition-all group cursor-pointer"
+            >
+              <div class="font-serif text-base text-white font-semibold group-hover:text-[#FDA377]">México (Mercado Nacional)</div>
+              <p class="font-sans text-xs text-white/70 font-normal mt-1">Marbetes SAT, alta ante CRT y distribución en retail/HORECA.</p>
+            </button>
+
+            <button
+              type="button"
+              onclick="setQuizAnswer('market', 'Europa / Reino Unido / Asia', 4)"
+              class="text-left p-5 border border-white/15 bg-white/5 hover:bg-[#8C4723]/30 hover:border-[#FDA377] transition-all group cursor-pointer"
+            >
+              <div class="font-serif text-base text-white font-semibold group-hover:text-[#FDA377]">Europa / Reino Unido / Asia</div>
+              <p class="font-sans text-xs text-white/70 font-normal mt-1">Certificación EU Organic, análisis cromatográfico y logística marítima.</p>
+            </button>
+
+            <button
+              type="button"
+              onclick="setQuizAnswer('market', 'Canadá / Sudamérica / Otro', 4)"
+              class="text-left p-5 border border-white/15 bg-white/5 hover:bg-[#8C4723]/30 hover:border-[#FDA377] transition-all group cursor-pointer"
+            >
+              <div class="font-serif text-base text-white font-semibold group-hover:text-[#FDA377]">Canadá u Otros Mercados</div>
+              <p class="font-sans text-xs text-white/70 font-normal mt-1">Soporte arancelario y documentación fitosanitaria internacional.</p>
+            </button>
+          </div>
+          <button type="button" onclick="goToStep(2)" class="font-navigation text-xs text-white/60 hover:text-white uppercase tracking-wider flex items-center gap-1 mt-4">
+            ← Volver a la pregunta anterior
+          </button>
+        </div>
+
+        <!-- Paso 4: Captura de Datos de Contacto (Lead Conversion) -->
+        <div id="quiz-step-4" class="space-y-6 hidden">
+          <div>
+            <span class="font-navigation text-xs text-[#FDA377] font-bold uppercase tracking-widest block mb-1">Último Paso</span>
+            <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">
+              ¿A dónde enviamos tu propuesta técnica y diagnóstico?
+            </h3>
+            <p class="font-sans text-xs text-white/70 font-normal mt-1">
+              Un maestro tequilero o especialista de producción revisará los parámetros de tu proyecto sin compromiso.
+            </p>
+          </div>
+
+          <form id="lead-quiz-form" onsubmit="handleLeadSubmit(event)" class="space-y-4 pt-2">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block font-navigation text-[11px] uppercase tracking-wider text-white/70 mb-1">Nombre completo *</label>
+                <input
+                  type="text"
+                  id="lead-name"
+                  required
+                  placeholder="Ej. Carlos Mendoza"
+                  class="w-full bg-white/10 border border-white/20 px-4 py-3 text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#FDA377] transition-colors"
+                />
+              </div>
+
+              <div>
+                <label class="block font-navigation text-[11px] uppercase tracking-wider text-white/70 mb-1">Empresa o Marca</label>
+                <input
+                  type="text"
+                  id="lead-company"
+                  placeholder="Ej. Tequila Don Carlos LLC"
+                  class="w-full bg-white/10 border border-white/20 px-4 py-3 text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#FDA377] transition-colors"
+                />
+              </div>
+
+              <div>
+                <label class="block font-navigation text-[11px] uppercase tracking-wider text-white/70 mb-1">Teléfono / WhatsApp *</label>
+                <input
+                  type="tel"
+                  id="lead-phone"
+                  required
+                  placeholder="+52 33 1234 5678"
+                  class="w-full bg-white/10 border border-white/20 px-4 py-3 text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#FDA377] transition-colors"
+                />
+              </div>
+
+              <div>
+                <label class="block font-navigation text-[11px] uppercase tracking-wider text-white/70 mb-1">Correo corporativo *</label>
+                <input
+                  type="email"
+                  id="lead-email"
+                  required
+                  placeholder="carlos@empresa.com"
+                  class="w-full bg-white/10 border border-white/20 px-4 py-3 text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#FDA377] transition-colors"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label class="block font-navigation text-[11px] uppercase tracking-wider text-white/70 mb-1">Detalles o requerimientos adicionales (opcional)</label>
+              <textarea
+                id="lead-notes"
+                rows="2"
+                placeholder="Platícanos sobre tu visión, fecha tentativa de lanzamiento o perfil deseado..."
+                class="w-full bg-white/10 border border-white/20 px-4 py-2.5 text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#FDA377] transition-colors resize-none"
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              id="lead-submit-btn"
+              class="w-full py-4 bg-[#8C4723] hover:bg-[#a6562b] text-white font-navigation text-xs uppercase tracking-[0.25em] font-semibold transition-all duration-300 shadow-xl cursor-pointer"
+            >
+              RECIBIR PROPUESTA Y ASESORÍA TÉCNICA →
+            </button>
+          </form>
+          <button type="button" onclick="goToStep(3)" class="font-navigation text-xs text-white/60 hover:text-white uppercase tracking-wider flex items-center gap-1 mt-3">
+            ← Volver a la pregunta anterior
+          </button>
+        </div>
+
+        <!-- Pantalla de Éxito / Confirmación -->
+        <div id="quiz-step-success" class="py-10 text-center space-y-4 hidden">
+          <div class="w-16 h-16 rounded-full bg-emerald-900/40 border border-emerald-500/50 flex items-center justify-center mx-auto text-emerald-400">
+            <span class="material-symbols-outlined text-4xl">check_circle</span>
+          </div>
+          <h3 class="font-serif text-2xl md:text-3xl text-white font-semibold">¡Diagnóstico recibido con éxito!</h3>
+          <p class="font-sans text-xs md:text-sm text-white/80 max-w-md mx-auto leading-relaxed">
+            Gracias por compartir los detalles de tu proyecto. Un especialista de producción de Casa Loy revisará tus especificaciones y se comunicará en menos de 24 horas.
+          </p>
+          <div class="pt-4">
+            <a
+              href="#contact-scheduler"
+              class="inline-block py-3 px-6 border border-[#FDA377] text-[#FDA377] hover:bg-[#FDA377] hover:text-[#1E1A17] font-navigation text-xs uppercase tracking-widest font-semibold transition-colors"
+            >
+              O agenda directamente una llamada técnica aquí ↓
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       BLOQUE 3: RESPALDO INSTITUCIONAL & CAPACIDADES INDUSTRIALES (13.5M L)
+       Fusión elegante de Grupo Orbe XXI + Infraestructura
+       ============================================================ -->
+  <section class="py-16 md:py-24 bg-[#FAF6F0] border-b border-outline-variant/30">
     <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        <div class="lg:col-span-7 space-y-6">
-          <span class="font-sans text-primary font-bold tracking-[0.25em] uppercase text-xs block">
-            Respaldo Corporativo & Trayectoria
+      <!-- Section Header -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-14">
+        <div class="lg:col-span-8">
+          <span class="font-navigation text-xs text-primary font-bold tracking-[0.25em] uppercase block mb-3">
+            Solidez Corporativa & Capacidad Instalada
           </span>
           <h2 class="font-serif text-3xl md:text-5xl text-[#1c1c18] font-light leading-tight">
-            ORBE XXI GROUP: Más de 60 años de solidez institucional.
+            Respaldo de Grupo Orbe XXI: Más de 60 años de trayectoria empresarial.
           </h2>
-          <p class="font-sans text-secondary text-sm md:text-base leading-relaxed font-light">
-            Tu marca de tequila no depende de intermediarios vulnerables ni de productores improvisados. Detrás de Casa Loy Tequilera opera <strong>Grupo Orbe XXI</strong>, un consorcio empresarial multinacional con más de seis décadas de experiencia agroindustrial, presencia global y solvencia garantizada.
+        </div>
+        <div class="lg:col-span-4">
+          <p class="font-sans text-secondary text-xs md:text-sm leading-relaxed font-normal">
+            Detrás de Casa Loy opera un consorcio agroindustrial multinacional con más de 2,900 colaboradores, presencia global y solvencia que blindan tu inversión y tu suministro de agave.
           </p>
-          
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
-            <div class="border-l-2 border-primary pl-5 space-y-1.5">
-              <div class="font-serif text-3xl md:text-4xl text-primary font-light">60+ Años</div>
-              <div class="font-sans text-xs font-semibold uppercase tracking-wider text-[#1c1c18]">Legado Empresarial</div>
-              <p class="font-sans text-xs text-secondary font-light leading-relaxed">
-                Grupo corporativo consolidado con liderazgo en agroindustria, alimentos y comercio global.
-              </p>
-            </div>
-            <div class="border-l-2 border-primary pl-5 space-y-1.5">
-              <div class="font-serif text-3xl md:text-4xl text-primary font-light">2,900+</div>
-              <div class="font-sans text-xs font-semibold uppercase tracking-wider text-[#1c1c18]">Colaboradores Globales</div>
-              <p class="font-sans text-xs text-secondary font-light leading-relaxed">
-                Fuerza operativa y técnica internacional con estándares de gobierno corporativo de clase mundial.
-              </p>
-            </div>
-            <div class="border-l-2 border-primary pl-5 space-y-1.5">
-              <div class="font-serif text-3xl md:text-4xl text-primary font-light">Desde 1992</div>
-              <div class="font-sans text-xs font-semibold uppercase tracking-wider text-[#1c1c18]">Especialistas en Agave (TeknoAgrox)</div>
-              <p class="font-sans text-xs text-secondary font-light leading-relaxed">
-                Más de tres décadas cultivando, seleccionando y perfeccionando la genética del Agave Tequilana Weber azul.
-              </p>
-            </div>
-            <div class="border-l-2 border-primary pl-5 space-y-1.5">
-              <div class="font-serif text-3xl md:text-4xl text-primary font-light">Nutriagaves (2003)</div>
-              <div class="font-sans text-xs font-semibold uppercase tracking-wider text-[#1c1c18]">Presencia en USA, Europa & Asia</div>
-              <p class="font-sans text-xs text-secondary font-light leading-relaxed">
-                Líder en jarabe e inulina de agave orgánico, con rutas de exportación y certificaciones globales activas.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="lg:col-span-5 bg-white border border-outline-variant/40 p-8 md:p-10 shadow-sm flex flex-col justify-between space-y-8">
-          <div>
-            <span class="font-sans text-[10px] text-primary font-bold tracking-widest uppercase block mb-3">
-              División Tequilera del Consorcio
-            </span>
-            <h3 class="font-serif text-2xl text-[#1c1c18] font-semibold leading-snug">
-              Casa Loy Tequilera — Fundada en 2019
-            </h3>
-            <p class="font-sans text-xs text-secondary leading-relaxed font-light mt-3">
-              Creada para integrar el control total de la cadena de valor: desde nuestras 3,600 hectáreas de agave propio hasta una destilería de vanguardia con capacidad de 13.5 millones de litros anuales.
-            </p>
-          </div>
-
-          <div class="border-t border-outline-variant/30 pt-6">
-            <span class="font-sans text-[10px] text-stone-500 uppercase tracking-widest block mb-4">Empresas & Sinergias del Grupo</span>
-            <div class="flex flex-wrap items-center gap-4 text-xs font-sans text-[#1c1c18] font-medium">
-              <span class="bg-[#EDE7DE]/50 px-3 py-1.5 border border-outline-variant/30">Casa Loy Tequilera</span>
-              <span class="bg-[#EDE7DE]/50 px-3 py-1.5 border border-outline-variant/30">Nutriagaves Group</span>
-              <span class="bg-[#EDE7DE]/50 px-3 py-1.5 border border-outline-variant/30">TeknoAgrox</span>
-              <span class="bg-[#EDE7DE]/50 px-3 py-1.5 border border-outline-variant/30">Loydeal</span>
-              <span class="bg-[#EDE7DE]/50 px-3 py-1.5 border border-outline-variant/30">OMEX Alimentaria</span>
-              <span class="bg-[#EDE7DE]/50 px-3 py-1.5 border border-outline-variant/30">IPASA</span>
-              <span class="bg-[#EDE7DE]/50 px-3 py-1.5 border border-outline-variant/30">PAOSA</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5.2 WHY CASA LOY (Bento Grid) -->
-  <section class="py-20 md:py-32">
-    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
-      <div class="mb-12">
-        <span class="font-sans text-secondary font-semibold tracking-widest uppercase mb-4 block text-xs">
-          Ventajas Diferenciales
-        </span>
-        <h2 class="font-serif text-4xl md:text-5xl mb-6 text-[#1c1c18] font-light leading-tight">
-          Por qué producir tu tequila con Casa Loy.
-        </h2>
-        <p class="font-sans text-secondary text-sm md:text-base font-light max-w-2xl leading-relaxed">
-          Unimos la escala industrial de un gran consorcio con la devoción artesanal y la trazabilidad de un productor que siembra cada una de sus plantas de agave.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- 1. NOM 1633 Card -->
-        <div class="border border-outline-variant bg-[#EDE7DE]/40 p-8 flex flex-col justify-between min-h-[220px] md:col-span-2 relative transition-custom hover:border-primary">
-          <div>
-            <span class="font-sans text-primary text-[10px] font-bold tracking-widest block mb-4 uppercase">Origen & Denominación</span>
-            <h3 class="font-serif text-2xl text-[#1c1c18] font-bold leading-tight max-w-xl">NOM 1633, Ayotlán, Los Altos de Jalisco</h3>
-            <p class="font-sans text-xs text-secondary mt-3 max-w-lg leading-relaxed font-light">
-              Destilería oficial inscrita y supervisada permanentemente por el Consejo Regulador del Tequila (CRT), garantizando autenticidad y trazabilidad de cada litro envasado.
-            </p>
-          </div>
-          <div class="absolute right-8 bottom-4 font-serif text-6xl text-primary/10 select-none font-bold">1633</div>
-        </div>
-
-        <!-- 2. Family Structure Card -->
-        <div class="bg-zinc-950 text-white p-8 flex flex-col justify-between min-h-[220px]">
-          <div>
-            <span class="font-sans text-[#FDA377] text-[10px] font-bold tracking-widest block mb-4 uppercase">Estructura</span>
-            <h3 class="font-serif text-xl text-white font-semibold leading-snug">Empresa familiar, tres generaciones agaveras</h3>
-            <p class="font-sans text-xs text-white/70 mt-3 leading-relaxed font-light">
-              Compromiso a largo plazo, sin cambios de dirección intempestivos ni presiones de fondos especulativos.
-            </p>
-          </div>
-          <span class="material-symbols-outlined text-[#FDA377] text-3xl opacity-20 self-end">diversity_3</span>
-        </div>
-
-        <!-- 3. Own Agave Card -->
-        <div class="border border-outline-variant bg-white p-8 flex flex-col justify-between min-h-[220px] transition-custom hover:border-primary">
-          <div>
-            <span class="font-sans text-primary text-[10px] font-bold tracking-widest block mb-4 uppercase">Poder Agavero</span>
-            <h3 class="font-serif text-xl text-[#1c1c18] font-semibold leading-snug">3,600 Has. & 10.8 Millones de Plantas</h3>
-            <p class="font-sans text-xs text-secondary mt-3 leading-relaxed font-light">
-              Inventario propio en Jalisco, Michoacán y Guanajuato. Tu marca nunca sufrirá desabasto de piñas de agave.
-            </p>
-          </div>
-          <div class="font-mono text-xs text-primary font-semibold tracking-wider">10.8M Agaves</div>
-        </div>
-
-        <!-- 4. Infrastructure Card -->
-        <div class="border border-outline-variant bg-white p-8 flex flex-col justify-between min-h-[220px] md:col-span-2 relative transition-custom hover:border-primary">
-          <div>
-            <span class="font-sans text-primary text-[10px] font-bold tracking-widest block mb-4 uppercase">Capacidad Instalada</span>
-            <h3 class="font-serif text-2xl text-[#1c1c18] font-bold leading-tight max-w-xl">13.5 Millones de Litros / Año de Destilación</h3>
-            <p class="font-sans text-xs text-secondary mt-3 max-w-lg leading-relaxed font-light">
-              Alambiques de cobre artesanales (4.5M L/año) y columnas continuas europeas (9M L/año) para satisfacer desde lotes boutique numerados hasta suministros comerciales a gran escala.
-            </p>
-          </div>
-          <span class="material-symbols-outlined text-stone-200 text-5xl absolute right-8 bottom-6 select-none">precision_manufacturing</span>
-        </div>
-
-        <!-- 5. Team Card -->
-        <div class="border border-outline-variant bg-white p-8 flex flex-col justify-between min-h-[220px] transition-custom hover:border-primary group">
-          <div>
-            <span class="font-sans text-primary text-[10px] font-bold tracking-widest block mb-4 uppercase">Equipo & Acompañamiento</span>
-            <h3 class="font-serif text-xl text-[#1c1c18] font-semibold leading-snug">Atención directa con ingenieros y maestros tequileros</h3>
-            <p class="font-sans text-xs text-secondary mt-3 leading-relaxed font-light">
-              Sin burocracia ni intermediarios. Comunicación técnica directa con quienes formulan tu destilado.
-            </p>
-          </div>
-          <div class="w-8 h-[1px] bg-primary/20 group-hover:w-16 transition-all duration-300"></div>
-        </div>
-
-        <!-- 6. Lab Quality Card -->
-        <div class="border border-outline-variant bg-[#EDE7DE]/20 p-8 flex flex-col justify-between min-h-[220px] md:col-span-2 transition-custom hover:border-primary">
-          <div>
-            <span class="font-sans text-primary text-[10px] font-bold tracking-widest block mb-4 uppercase">Control Científico & Tasting Lab</span>
-            <h3 class="font-serif text-2xl text-[#1c1c18] font-bold leading-tight max-w-xl">Laboratorio cromatográfico in-house y cabinas de cata</h3>
-            <p class="font-sans text-xs text-secondary mt-3 max-w-lg leading-relaxed font-light">
-              Validación físico-química lote por lote, pruebas de panel sensorial y certificación 100% libre de aditivos para mercados ultra-premium.
-            </p>
-          </div>
-          <span class="material-symbols-outlined text-primary text-4xl opacity-35 self-end">biotech</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- INFRAESTRUCTURA DE CLASE MUNDIAL (Capacidades Verificadas) -->
-  <section class="py-20 md:py-32 bg-white border-y border-outline-variant/30">
-    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
-      <div class="mb-14">
-        <span class="font-sans text-primary font-bold tracking-[0.25em] uppercase text-xs block mb-4">
-          Infraestructura Industrial Auditada
-        </span>
-        <h2 class="font-serif text-4xl md:text-5xl text-[#1c1c18] font-light leading-tight">
-          Capacidades instaladas para proyectos de cualquier escala.
-        </h2>
-        <p class="font-sans text-secondary text-sm md:text-base font-light max-w-3xl mt-4 leading-relaxed">
-          Nuestra planta en Ayotlán combina la destilación artesanal en alambiques de cobre y extracción en tahona ancestral con tecnología europea automatizada de alta eficiencia, respaldada por pozo profundo propio.
-        </p>
-      </div>
-
-      <!-- Grid de 8 Capacidades Clave -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        
-        <!-- 1. Hornos de Mampostería -->
-        <div class="border border-outline-variant/40 bg-[#fcf9f3] p-7 flex flex-col justify-between min-h-[260px] transition-custom hover:border-primary hover:shadow-md">
-          <div class="space-y-3">
-            <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase">Cocción Tradicional</span>
-            <div class="font-serif text-3xl md:text-4xl text-[#1c1c18] font-semibold">240 Tons</div>
-            <h3 class="font-sans text-sm font-bold uppercase tracking-wider text-[#1c1c18]">4 Hornos de Mampostería</h3>
-            <p class="font-sans text-xs text-secondary leading-relaxed font-light">
-              60 toneladas de capacidad por horno. Cocción lenta con vapor (vape) que hidroliza almidones y resalta los aromas dulces naturales del agave.
-            </p>
-          </div>
-          <span class="font-mono text-[10px] text-stone-400 uppercase pt-4 border-t border-outline-variant/20">60 Ton. cada horno</span>
-        </div>
-
-        <!-- 2. Autoclaves -->
-        <div class="border border-outline-variant/40 bg-[#fcf9f3] p-7 flex flex-col justify-between min-h-[260px] transition-custom hover:border-primary hover:shadow-md">
-          <div class="space-y-3">
-            <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase">Cocción Rápida</span>
-            <div class="font-serif text-3xl md:text-4xl text-[#1c1c18] font-semibold">80 Tons</div>
-            <h3 class="font-sans text-sm font-bold uppercase tracking-wider text-[#1c1c18]">2 Autoclaves de Acero</h3>
-            <p class="font-sans text-xs text-secondary leading-relaxed font-light">
-              40 toneladas cada autoclave. Cocción rápida y altamente eficiente que maximiza el rendimiento y preserva las notas herbales frescas.
-            </p>
-          </div>
-          <span class="font-mono text-[10px] text-stone-400 uppercase pt-4 border-t border-outline-variant/20">40 Ton. cada autoclave</span>
-        </div>
-
-        <!-- 3. Extracción Verde & Tahona -->
-        <div class="border border-outline-variant/40 bg-[#fcf9f3] p-7 flex flex-col justify-between min-h-[260px] transition-custom hover:border-primary hover:shadow-md">
-          <div class="space-y-3">
-            <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase">Extracción Noble</span>
-            <div class="font-serif text-3xl md:text-4xl text-[#1c1c18] font-semibold">200 Tn. / 500k L</div>
-            <h3 class="font-sans text-sm font-bold uppercase tracking-wider text-[#1c1c18]">Extracción Verde & Tahona</h3>
-            <p class="font-sans text-xs text-secondary leading-relaxed font-light">
-              500,000 litros anuales en Tahona tradicional de piedra volcánica, molino de tornillo que cuida las fibras sin machacarlas amargas y difusor.
-            </p>
-          </div>
-          <span class="font-mono text-[10px] text-stone-400 uppercase pt-4 border-t border-outline-variant/20">Tahona + Molino + Difusor</span>
-        </div>
-
-        <!-- 4. Alambiques de Cobre -->
-        <div class="border border-outline-variant/40 bg-[#fcf9f3] p-7 flex flex-col justify-between min-h-[260px] transition-custom hover:border-primary hover:shadow-md">
-          <div class="space-y-3">
-            <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase">Destilación Artesanal</span>
-            <div class="font-serif text-3xl md:text-4xl text-[#1c1c18] font-semibold">4.5M L / Año</div>
-            <h3 class="font-sans text-sm font-bold uppercase tracking-wider text-[#1c1c18]">Alambiques con Serpentín de Cobre</h3>
-            <p class="font-sans text-xs text-secondary leading-relaxed font-light">
-              15,000 litros al día a 55° Alc. Vol. Destilación pausada que elimina impurezas pesadas y potencia el carácter mineral del terruño alteño.
-            </p>
-          </div>
-          <span class="font-mono text-[10px] text-stone-400 uppercase pt-4 border-t border-outline-variant/20">15,000 L/día · 55° Alc. Vol.</span>
-        </div>
-
-        <!-- 5. Columnas de Destilación -->
-        <div class="border border-outline-variant/40 bg-[#fcf9f3] p-7 flex flex-col justify-between min-h-[260px] transition-custom hover:border-primary hover:shadow-md">
-          <div class="space-y-3">
-            <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase">Alta Escala Comercial</span>
-            <div class="font-serif text-3xl md:text-4xl text-[#1c1c18] font-semibold">9.0M L / Año</div>
-            <h3 class="font-sans text-sm font-bold uppercase tracking-wider text-[#1c1c18]">Columnas Automatizadas</h3>
-            <p class="font-sans text-xs text-secondary leading-relaxed font-light">
-              30,000 litros al día a 55° Alc. Vol. con ingeniería europea automatizada para marcas globales de alto volumen y rotación constante.
-            </p>
-          </div>
-          <span class="font-mono text-[10px] text-stone-400 uppercase pt-4 border-t border-outline-variant/20">30,000 L/día · 13.5M L Total/Año</span>
-        </div>
-
-        <!-- 6. Cava de Añejamiento -->
-        <div class="border border-outline-variant/40 bg-[#fcf9f3] p-7 flex flex-col justify-between min-h-[260px] transition-custom hover:border-primary hover:shadow-md">
-          <div class="space-y-3">
-            <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase">Maduración Controlada</span>
-            <div class="font-serif text-3xl md:text-4xl text-[#1c1c18] font-semibold">1.2M Litros</div>
-            <h3 class="font-sans text-sm font-bold uppercase tracking-wider text-[#1c1c18]">Cava de Barricas Climatizada</h3>
-            <p class="font-sans text-xs text-secondary leading-relaxed font-light">
-              Humedad relativa y temperatura controladas para mantener la hidratación del poro y minimizar la merma. Roble blanco americano, bourbon y roble francés.
-            </p>
-          </div>
-          <span class="font-mono text-[10px] text-stone-400 uppercase pt-4 border-t border-outline-variant/20">American Oak · Bourbon · French</span>
-        </div>
-
-        <!-- 7. Capacidad de Inventario -->
-        <div class="border border-outline-variant/40 bg-[#fcf9f3] p-7 flex flex-col justify-between min-h-[260px] transition-custom hover:border-primary hover:shadow-md">
-          <div class="space-y-3">
-            <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase">Tanques de Almacén</span>
-            <div class="font-serif text-3xl md:text-4xl text-[#1c1c18] font-semibold">1.3M Litros</div>
-            <h3 class="font-sans text-sm font-bold uppercase tracking-wider text-[#1c1c18]">Capacidad de Tanquería Inox</h3>
-            <p class="font-sans text-xs text-secondary leading-relaxed font-light">
-              Almacenamiento de destilado en reposo en tanques de acero inoxidable grado alimenticio para amortiguar pedidos masivos sin retrasos.
-            </p>
-          </div>
-          <span class="font-mono text-[10px] text-stone-400 uppercase pt-4 border-t border-outline-variant/20">Grado Alimenticio Certificado</span>
-        </div>
-
-        <!-- 8. Almacén de Tarimas -->
-        <div class="border border-outline-variant/40 bg-[#fcf9f3] p-7 flex flex-col justify-between min-h-[260px] transition-custom hover:border-primary hover:shadow-md">
-          <div class="space-y-3">
-            <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase">Logística & Exportación</span>
-            <div class="font-serif text-3xl md:text-4xl text-[#1c1c18] font-semibold">2,000 Tarimas</div>
-            <h3 class="font-sans text-sm font-bold uppercase tracking-wider text-[#1c1c18]">Almacén de Distribución</h3>
-            <p class="font-sans text-xs text-secondary leading-relaxed font-light">
-              1,000 tarimas para almacenamiento de insumos secos (botellas, tapas, cajas) y 1,000 tarimas para producto terminado listo para contenedores y aduana.
-            </p>
-          </div>
-          <span class="font-mono text-[10px] text-stone-400 uppercase pt-4 border-t border-outline-variant/20">1,000 Insumos + 1,000 Terminado</span>
-        </div>
-
-      </div>
-
-      <!-- Resumen de Agua de Pozo Profundo -->
-      <div class="mt-8 p-6 bg-[#EDE7DE]/40 border border-outline-variant/40 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="flex items-center gap-4">
-          <span class="material-symbols-outlined text-primary text-3xl">water_drop</span>
-          <div>
-            <h4 class="font-sans text-sm font-bold text-[#1c1c18] uppercase tracking-wider">Agua de Pozo Profundo de Origen Natural</h4>
-            <p class="font-sans text-xs text-secondary font-light mt-0.5">Extracción directa dentro de nuestras instalaciones para asegurar pureza microbiológica y estabilidad iónica en cada fermentación y dilución.</p>
-          </div>
-        </div>
-        <span class="font-mono text-xs font-bold text-primary border border-primary/30 px-3 py-1 bg-white whitespace-nowrap">NOM-006 Cumplimiento</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5.3 INTERACTIVE PROCESS EXPLORER -->
-  <section class="bg-[#1C1A19] text-white py-20 md:py-32 relative overflow-hidden">
-    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left relative z-10">
-      <div class="mb-12">
-        <span class="font-sans text-[#FDA377] font-semibold tracking-widest uppercase mb-4 block text-xs">
-          Dentro de la Destilería
-        </span>
-        <h2 class="font-serif text-4xl md:text-5xl text-white font-light">
-          De la tierra a la botella: Nuestro Proceso.
-        </h2>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 mt-10">
-        <!-- Steps Tab List -->
-        <div class="lg:col-span-4 flex flex-col gap-2" id="process-tab-list">
-          <!-- Populated by JavaScript -->
-        </div>
-
-        <!-- Step Detail Display Card -->
-        <div class="lg:col-span-8 bg-zinc-950 border border-white/10 grid grid-cols-1 md:grid-cols-2 overflow-hidden shadow-2xl relative">
-          <div class="w-full h-full min-h-[300px] overflow-hidden order-1 md:order-2">
-            <img id="process-active-img" src="" alt="Proceso" class="w-full h-full object-cover transition-all duration-500">
-          </div>
-
-          <div class="p-8 md:p-10 flex flex-col justify-center text-left order-2 md:order-1 border-t md:border-t-0 md:border-r border-white/10">
-            <div class="space-y-4">
-              <span id="process-active-num" class="font-mono text-xs font-bold text-[#FDA377]">ETAPA 01</span>
-              <h3 id="process-active-title" class="font-serif text-2xl text-white font-semibold">Carga...</h3>
-              <p id="process-active-desc" class="font-sans text-sm text-[#B7C4BA] leading-relaxed font-light">Cargando detalles...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5.4 RUTAS DE SOLUCIÓN -->
-  <section class="py-20 md:py-32">
-    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
-      <div>
-        <span class="font-sans text-secondary font-semibold tracking-widest uppercase mb-4 block text-xs">
-          Soluciones de Producción
-        </span>
-        <h2 class="font-serif text-4xl md:text-5xl mb-12 text-[#1c1c18] font-light">
-          Elige la ruta de producción adecuada.
-        </h2>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-        <!-- Card 1 -->
-        <div class="border border-outline-variant bg-white p-8 flex flex-col justify-between min-h-[250px] cursor-pointer group transition-custom hover:-translate-y-1 hover:border-primary hover:shadow-lg" onclick="selectSolution('Tequila de Marca Propia')">
-          <div class="space-y-4">
-            <div class="font-sans text-xs text-primary font-bold">01</div>
-            <h3 class="font-serif text-lg font-semibold text-[#1c1c18] group-hover:text-primary transition-colors">Tequila de Marca Propia</h3>
-            <p class="font-sans text-xs text-[#53443a] leading-relaxed font-light">Crea, envasa y comercializa tequila bajo tu propia marca desde cero.</p>
-          </div>
-          <div class="flex items-center justify-between mt-6">
-            <span class="font-mono text-[9px] text-stone-500 uppercase tracking-widest bg-stone-100 py-1 px-2.5 rounded group-hover:bg-amber-50 group-hover:text-amber-800 transition-colors">private_label</span>
-            <span class="material-symbols-outlined text-sm text-stone-400 group-hover:text-primary group-hover:translate-x-1 transition-all">arrow_forward</span>
-          </div>
-        </div>
-        <!-- Card 2 -->
-        <div class="border border-outline-variant bg-white p-8 flex flex-col justify-between min-h-[250px] cursor-pointer group transition-custom hover:-translate-y-1 hover:border-primary hover:shadow-lg" onclick="selectSolution('Maquila / Producción por Contrato')">
-          <div class="space-y-4">
-            <div class="font-sans text-xs text-primary font-bold">02</div>
-            <h3 class="font-serif text-lg font-semibold text-[#1c1c18] group-hover:text-primary transition-colors">Maquila / Contrato</h3>
-            <p class="font-sans text-xs text-[#53443a] leading-relaxed font-light">Producción a la medida bajo tus especificaciones y fórmulas requeridas.</p>
-          </div>
-          <div class="flex items-center justify-between mt-6">
-            <span class="font-mono text-[9px] text-stone-500 uppercase tracking-widest bg-stone-100 py-1 px-2.5 rounded group-hover:bg-amber-50 group-hover:text-amber-800 transition-colors">contract_mfg</span>
-            <span class="material-symbols-outlined text-sm text-stone-400 group-hover:text-primary group-hover:translate-x-1 transition-all">arrow_forward</span>
-          </div>
-        </div>
-        <!-- Card 3 -->
-        <div class="border border-outline-variant bg-white p-8 flex flex-col justify-between min-h-[250px] cursor-pointer group transition-custom hover:-translate-y-1 hover:border-primary hover:shadow-lg" onclick="selectSolution('Tequila a Granel')">
-          <div class="space-y-4">
-            <div class="font-sans text-xs text-primary font-bold">03</div>
-            <h3 class="font-serif text-lg font-semibold text-[#1c1c18] group-hover:text-primary transition-colors">Tequila a Granel</h3>
-            <p class="font-sans text-xs text-[#53443a] leading-relaxed font-light">Suministro de volumen constante para embotelladoras, importadores o distribuidores.</p>
-          </div>
-          <div class="flex items-center justify-between mt-6">
-            <span class="font-mono text-[9px] text-stone-500 uppercase tracking-widest bg-stone-100 py-1 px-2.5 rounded group-hover:bg-amber-50 group-hover:text-amber-800 transition-colors">bulk_tequila</span>
-            <span class="material-symbols-outlined text-sm text-stone-400 group-hover:text-primary group-hover:translate-x-1 transition-all">arrow_forward</span>
-          </div>
-        </div>
-        <!-- Card 4 -->
-        <div class="border border-outline-variant bg-white p-8 flex flex-col justify-between min-h-[250px] cursor-pointer group transition-custom hover:-translate-y-1 hover:border-primary hover:shadow-lg" onclick="selectSolution('Servicio de Envasado y Co-packing')">
-          <div class="space-y-4">
-            <div class="font-sans text-xs text-primary font-bold">04</div>
-            <h3 class="font-serif text-lg font-semibold text-[#1c1c18] group-hover:text-primary transition-colors">Envasado & Co-packing</h3>
-            <p class="font-sans text-xs text-[#53443a] leading-relaxed font-light">Embotellado, etiquetado y embalaje para proyectos que ya tienen líquido o botellas.</p>
-          </div>
-          <div class="flex items-center justify-between mt-6">
-            <span class="font-mono text-[9px] text-stone-500 uppercase tracking-widest bg-stone-100 py-1 px-2.5 rounded group-hover:bg-amber-50 group-hover:text-amber-800 transition-colors">copacking</span>
-            <span class="material-symbols-outlined text-sm text-stone-400 group-hover:text-primary group-hover:translate-x-1 transition-all">arrow_forward</span>
-          </div>
-        </div>
-        <!-- Card 5 -->
-        <div class="border border-outline-variant bg-white p-8 flex flex-col justify-between min-h-[250px] cursor-pointer group transition-custom hover:-translate-y-1 hover:border-primary hover:shadow-lg" onclick="selectSolution('Desarrollo de Perfil de Autor')">
-          <div class="space-y-4">
-            <div class="font-sans text-xs text-primary font-bold">05</div>
-            <h3 class="font-serif text-lg font-semibold text-[#1c1c18] group-hover:text-primary transition-colors">Perfil de Autor</h3>
-            <p class="font-sans text-xs text-[#53443a] leading-relaxed font-light">Ajuste de perfiles organolépticos exclusivos guiado por nuestros maestros tequileros.</p>
-          </div>
-          <div class="flex items-center justify-between mt-6">
-            <span class="font-mono text-[9px] text-stone-500 uppercase tracking-widest bg-stone-100 py-1 px-2.5 rounded group-hover:bg-amber-50 group-hover:text-amber-800 transition-colors">custom_profile</span>
-            <span class="material-symbols-outlined text-sm text-stone-400 group-hover:text-primary group-hover:translate-x-1 transition-all">arrow_forward</span>
-          </div>
         </div>
       </div>
 
-      <p class="mt-12 font-serif italic text-base text-primary max-w-2xl leading-relaxed">
-        * Todas las rutas están certificadas bajo la <strong>NOM 1633</strong> garantizando el estricto cumplimiento ante el Consejo Regulador del Tequila.
-      </p>
-    </div>
-  </section>
-
-  <!-- CATEGORÍAS Y CLASES OFICIALES (NOM-006-SCFI) -->
-  <section class="py-20 md:py-28 bg-[#EDE7DE]/30 border-t border-outline-variant/30">
-    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
-      <div class="mb-14">
-        <span class="font-sans text-primary font-bold tracking-[0.25em] uppercase text-xs block mb-4">
-          Marco Regulatorio Oficial NOM-006
-        </span>
-        <h2 class="font-serif text-4xl md:text-5xl text-[#1c1c18] font-light leading-tight">
-          Categorías y Clases Oficiales de Tequila.
-        </h2>
-        <p class="font-sans text-secondary text-sm md:text-base font-light max-w-3xl mt-4 leading-relaxed">
-          Diseñamos y envasamos perfiles en cualquiera de las categorías y clases reconocidas por la legislación mexicana y el Consejo Regulador del Tequila, adaptándonos al paladar y posicionamiento de tu mercado meta.
-        </p>
-      </div>
-
-      <!-- 2 Categorías Oficiales -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-        
-        <div class="bg-white border-2 border-primary/20 p-8 flex flex-col justify-between shadow-sm relative overflow-hidden group hover:border-primary transition-custom">
-          <div class="space-y-4">
-            <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase">Categoría 01 · 100% Puro</span>
-            <h3 class="font-serif text-2xl md:text-3xl text-[#1c1c18] font-bold">Tequila 100% de Agave</h3>
-            <p class="font-sans text-xs text-secondary leading-relaxed font-light">
-              Elaborado con 100% de azúcares procedentes exclusivamente del Agave Tequilana Weber Variedad Azul cosechado en parcelas autorizadas dentro de la Denominación de Origen. Envasado de origen en nuestra planta de Ayotlán, Jalisco, garantizando máxima pureza y prestigio internacional.
-            </p>
-          </div>
-          <div class="mt-6 pt-4 border-t border-outline-variant/30 flex items-center justify-between text-xs font-mono text-primary font-semibold">
-            <span>Envasado en Origen (NOM 1633)</span>
-            <span>✦ 100% Pureza</span>
-          </div>
-        </div>
-
-        <div class="bg-white border border-outline-variant/50 p-8 flex flex-col justify-between shadow-sm relative overflow-hidden group hover:border-primary transition-custom">
-          <div class="space-y-4">
-            <span class="font-mono text-xs text-stone-500 font-bold tracking-widest uppercase">Categoría 02 · Volumen & Granel</span>
-            <h3 class="font-serif text-2xl md:text-3xl text-[#1c1c18] font-bold">Tequila (Mixto)</h3>
-            <p class="font-sans text-xs text-secondary leading-relaxed font-light">
-              Elaborado con al menos 51% de azúcares de agave tequilana Weber azul y hasta un 49% de otros azúcares naturales. Es la categoría idónea para suministro a granel en contenedores o flexitanques, permitiendo el envasado en destino en plantas embotelladoras de EE.UU., Europa o Asia.
-            </p>
-          </div>
-          <div class="mt-6 pt-4 border-t border-outline-variant/30 flex items-center justify-between text-xs font-mono text-secondary font-semibold">
-            <span>Apto para Envasado en Destino</span>
-            <span>✦ 51% Mínimo Agave</span>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- 5 Clases Oficiales -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
-        
-        <!-- Blanco -->
-        <div class="bg-white border border-outline-variant/40 p-6 flex flex-col justify-between min-h-[230px] hover:border-primary transition-custom">
-          <div class="space-y-2">
-            <span class="font-mono text-[10px] text-primary font-bold uppercase">Clase 01</span>
-            <h4 class="font-serif text-xl font-bold text-[#1c1c18]">Blanco / Plata</h4>
-            <div class="text-[11px] font-mono text-stone-500 uppercase tracking-wider">Directo del alambique</div>
-            <p class="font-sans text-xs text-secondary font-light leading-relaxed mt-2">
-              Sin paso por barrica. Destilado cristalino que expresa con total nitidez el agave cocido dulce, notas herbáceas, cítricos y pimienta.
-            </p>
-          </div>
-          <span class="font-mono text-[10px] text-primary font-semibold mt-4">Unaged · Pure Agave</span>
-        </div>
-
-        <!-- Joven u Oro -->
-        <div class="bg-white border border-outline-variant/40 p-6 flex flex-col justify-between min-h-[230px] hover:border-primary transition-custom">
-          <div class="space-y-2">
-            <span class="font-mono text-[10px] text-primary font-bold uppercase">Clase 02</span>
-            <h4 class="font-serif text-xl font-bold text-[#1c1c18]">Joven u Oro</h4>
-            <div class="text-[11px] font-mono text-stone-500 uppercase tracking-wider">Gold Blend</div>
-            <p class="font-sans text-xs text-secondary font-light leading-relaxed mt-2">
-              Mezcla y balance entre Tequila Blanco y tequilas reposados, añejos o extra añejos. Aporta suavidad y versatilidad para coctelería y barra.
-            </p>
-          </div>
-          <span class="font-mono text-[10px] text-primary font-semibold mt-4">Suave & Versátil</span>
-        </div>
-
-        <!-- Reposado -->
-        <div class="bg-white border border-outline-variant/40 p-6 flex flex-col justify-between min-h-[230px] hover:border-primary transition-custom">
-          <div class="space-y-2">
-            <span class="font-mono text-[10px] text-primary font-bold uppercase">Clase 03</span>
-            <h4 class="font-serif text-xl font-bold text-[#1c1c18]">Reposado</h4>
-            <div class="text-[11px] font-mono text-stone-500 uppercase tracking-wider">2 a 11 Meses</div>
-            <p class="font-sans text-xs text-secondary font-light leading-relaxed mt-2">
-              Madurado en barricas de roble durante al menos 2 meses y menos de 12 meses. Roble americano virgen, bourbon o roble francés con notas de vainilla.
-            </p>
-          </div>
-          <span class="font-mono text-[10px] text-primary font-semibold mt-4">Mínimo 2 Meses Barrica</span>
-        </div>
-
-        <!-- Añejo -->
-        <div class="bg-white border border-outline-variant/40 p-6 flex flex-col justify-between min-h-[230px] hover:border-primary transition-custom">
-          <div class="space-y-2">
-            <span class="font-mono text-[10px] text-primary font-bold uppercase">Clase 04</span>
-            <h4 class="font-serif text-xl font-bold text-[#1c1c18]">Añejo</h4>
-            <div class="text-[11px] font-mono text-stone-500 uppercase tracking-wider">12 a 35 Meses</div>
-            <p class="font-sans text-xs text-secondary font-light leading-relaxed mt-2">
-              Madurado en barricas de roble (máximo 600 L) durante al menos 12 meses y menos de 3 años. Tonalidades ámbar, caramelo, cacao y roble tostado.
-            </p>
-          </div>
-          <span class="font-mono text-[10px] text-primary font-semibold mt-4">Mínimo 1 Año Barrica</span>
-        </div>
-
-        <!-- Extra Añejo -->
-        <div class="bg-white border border-outline-variant/40 p-6 flex flex-col justify-between min-h-[230px] hover:border-primary transition-custom">
-          <div class="space-y-2">
-            <span class="font-mono text-[10px] text-primary font-bold uppercase">Clase 05</span>
-            <h4 class="font-serif text-xl font-bold text-[#1c1c18]">Extra Añejo</h4>
-            <div class="text-[11px] font-mono text-stone-500 uppercase tracking-wider">3+ Años</div>
-            <p class="font-sans text-xs text-secondary font-light leading-relaxed mt-2">
-              Madurado pacientemente en barricas de roble por al menos 3 años o más. Perfil de lujo para sipping, con sedosidad y bouquet supremo.
-            </p>
-          </div>
-          <span class="font-mono text-[10px] text-primary font-semibold mt-4">Mínimo 3 Años Barrica</span>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- 5.5 TARGET AUDIENCE INTERACTIVE TABS -->
-  <section class="bg-[#EDE7DE]/20 py-20 md:py-32 border-y border-outline-variant/30">
-    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
-      <div>
-        <span class="font-sans text-secondary font-semibold tracking-widest uppercase mb-2 block text-xs">
-          Rutas por Negocio
-        </span>
-        <h2 class="font-serif text-4xl md:text-5xl text-[#1c1c18] font-light">
-          Soluciones diseñadas a la medida de tu rol.
-        </h2>
-        <p class="text-sm text-[#53443a] font-light mt-3 mb-10 max-w-xl leading-relaxed">
-          Selecciona tu perfil de negocio para conocer los beneficios y la ruta sugerida:
-        </p>
-      </div>
-
-      <!-- Navigation Tabs -->
-      <div class="flex flex-wrap gap-2 border-b border-outline-variant/30 pb-px mb-8" id="audience-tab-list">
-        <!-- Populated by JavaScript -->
-      </div>
-
-      <!-- Selected Audience Details -->
-      <div class="bg-white border border-outline-variant/40 p-8 md:p-12 shadow-sm min-h-[300px] flex flex-col justify-between">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <div class="lg:col-span-7 space-y-4">
-            <span id="aud-active-tag" class="font-sans text-xs text-primary font-bold">Carga...</span>
-            <h3 id="aud-active-title" class="font-serif text-2xl md:text-3xl text-[#1c1c18] font-bold">Cargando...</h3>
-            <p id="aud-active-desc" class="font-sans text-sm text-[#53443a] leading-relaxed font-light">...</p>
-          </div>
-
-          <div class="lg:col-span-5 bg-[#EDE7DE]/15 p-6 border-l-2 border-primary space-y-4">
-            <div class="font-sans text-[10px] text-[#8C4723] font-bold tracking-widest uppercase">
-              Beneficios Clave
-            </div>
-            <ul class="space-y-3" id="aud-active-benefits">
-              <!-- Populated by JavaScript -->
-            </ul>
-          </div>
-        </div>
-
-        <div class="mt-8 pt-6 border-t border-outline-variant/20 flex flex-col sm:flex-row gap-4 items-center justify-between">
-          <span class="font-serif italic text-xs text-stone-500">
-            * Evaluaremos tu factibilidad técnica en base a este perfil.
-          </span>
-          <a 
-            href="#quiz-v2"
-            class="bg-[#8C4723] text-white hover:bg-[#a6562b] py-3.5 px-8 font-sans text-[10px] uppercase tracking-widest font-semibold text-center transition-all min-w-[200px]"
-          >
-            Comenzar Proyecto
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5.6 PROBLEMAS QUE RESOLVEMOS (Accordion) -->
-  <section class="py-20 md:py-32">
-    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
-      <div>
-        <span class="font-sans text-secondary font-semibold tracking-widest uppercase mb-4 block text-xs">
-          Mitigación de Riesgo
-        </span>
-        <h2 class="font-serif text-4xl md:text-5xl mb-12 text-[#1c1c18] font-light">
-          Tu proyecto de tequila conlleva riesgos comerciales reales. Te ayudamos a mitigarlos.
-        </h2>
-      </div>
-
-      <div class="max-w-4xl space-y-2 border-t border-outline-variant/40 pt-4 mt-6" id="risks-accordion-container">
-        <!-- Populated by JavaScript -->
-      </div>
-    </div>
-  </section>
-
-  <!-- 5.7 QUIZ INTERACTIVO -->
-  <section id="quiz-v2" class="relative py-20 md:py-32 bg-[#1C1A19] text-white overflow-hidden">
-    <div class="absolute inset-0 z-0">
-      <img
-        alt="Agave Hearts Background"
-        class="w-full h-full object-cover brightness-[0.45] opacity-45"
-        src="/Piñas de Agave Tequilana Weber.webp"
-      />
-    </div>
-    <div class="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        
-        <div class="lg:col-span-5 text-left space-y-6">
-          <span class="font-sans text-[#FDA377] font-semibold tracking-widest uppercase block text-xs">
-            Diagnóstico Operativo
-          </span>
-          <h2 class="font-serif text-4xl md:text-5xl text-white leading-tight font-light">
-            ¿En qué etapa se encuentra tu proyecto de tequila?
-          </h2>
-          <p class="font-sans text-white/80 font-light leading-relaxed text-sm md:text-base">
-            Diagnóstico estratégico de 8 pasos para calificar tu ruta de producción, volumen y viabilidad operativa.
+      <!-- 4 Core Capacity Pillar Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <!-- Pillar 1: Cocción -->
+        <div class="p-6 bg-white border border-outline-variant/40 space-y-3 hover:border-primary transition-all shadow-sm">
+          <div class="font-navigation text-[10px] text-primary font-bold uppercase tracking-widest">Cocción Dual</div>
+          <div class="font-serif text-3xl md:text-4xl text-[#1c1c18] font-semibold">320 Tons</div>
+          <h3 class="font-sans text-xs font-bold uppercase tracking-wider text-[#1c1c18]">4 Hornos + 2 Autoclaves</h3>
+          <p class="font-sans text-xs text-secondary leading-relaxed font-normal">
+            4 hornos de mampostería tradicional a vapor lento (240t) y 2 autoclaves rápidas de acero (80t) que maximizan rendimiento y frescura.
           </p>
-          
-          <div class="flex flex-col gap-2 pt-2" id="quiz-step-indicator-box">
-            <div class="text-xs text-white/40 font-mono" id="quiz-step-counter">
-              Paso 1 de 8
-            </div>
-            <button 
-              id="quiz-back-btn"
-              onclick="prevQuizStep()"
-              class="text-[#FDA377] text-xs font-sans uppercase tracking-wider text-left border-b border-[#FDA377] max-w-fit pb-0.5 hover:text-white hover:border-white transition-colors cursor-pointer bg-transparent hidden"
-            >
-              ← Regresar
-            </button>
-          </div>
         </div>
 
-        <!-- Glassmorphic Quiz Container -->
-        <div class="lg:col-span-7 p-8 md:p-10 bg-white/10 backdrop-blur-2xl border border-white/15 rounded-none shadow-2xl min-h-[440px] flex flex-col justify-center text-left relative">
-          
-          <!-- Step 1: Solution -->
-          <div id="quiz-step-1" class="quiz-step-pane space-y-6">
-            <span class="font-sans text-[#FDA377] font-bold tracking-wider text-[10px] block">01 / 08 · SOLUCIÓN</span>
-            <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">¿Qué solución de producción buscas?</h3>
-            <div class="grid grid-cols-1 gap-2.5">
-              <button onclick="setQuizAnswer('solution', 'Tequila de Marca Propia', 2)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>Tequila de Marca Propia</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">01</span>
-              </button>
-              <button onclick="setQuizAnswer('solution', 'Maquila / Producción por Contrato', 2)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>Maquila / Producción por Contrato</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">02</span>
-              </button>
-              <button onclick="setQuizAnswer('solution', 'Tequila a Granel', 2)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>Tequila a Granel</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">03</span>
-              </button>
-              <button onclick="setQuizAnswer('solution', 'Servicio de Envasado y Co-packing', 2)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>Servicio de Envasado y Co-packing</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">04</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Step 2: Stage -->
-          <div id="quiz-step-2" class="quiz-step-pane space-y-6 hidden">
-            <span class="font-sans text-[#FDA377] font-bold tracking-wider text-[10px] block">02 / 08 · ETAPA</span>
-            <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">¿En qué etapa se encuentra tu proyecto?</h3>
-            <div class="grid grid-cols-1 gap-2.5">
-              <button onclick="setQuizAnswer('stage', 'Idea Inicial', 3)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>Idea Inicial o Conceptualización</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">01</span>
-              </button>
-              <button onclick="setQuizAnswer('stage', 'Marca Registrada', 3)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>Concepto Definido / Marca Registrada</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">02</span>
-              </button>
-              <button onclick="setQuizAnswer('stage', 'Marca Operando', 3)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>Marca Operando / Buscando cambio de proveedor</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">03</span>
-              </button>
-              <button onclick="setQuizAnswer('stage', 'Inmediata', 3)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>Compra inmediata o producción de urgencia</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">04</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Step 3: Market -->
-          <div id="quiz-step-3" class="quiz-step-pane space-y-6 hidden">
-            <span class="font-sans text-[#FDA377] font-bold tracking-wider text-[10px] block">03 / 08 · MERCADO</span>
-            <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">¿Cuál es tu mercado objetivo principal?</h3>
-            <div class="grid grid-cols-1 gap-2.5">
-              <button onclick="setQuizAnswer('market', 'EE.UU.', 4)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>Estados Unidos (USA)</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">01</span>
-              </button>
-              <button onclick="setQuizAnswer('market', 'México', 4)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>México</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">02</span>
-              </button>
-              <button onclick="setQuizAnswer('market', 'Europa', 4)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>Europa</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">03</span>
-              </button>
-              <button onclick="setQuizAnswer('market', 'Canadá y LatAm', 4)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>Canadá y Sudamérica</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">04</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Step 4: Contact -->
-          <div id="quiz-step-4" class="quiz-step-pane space-y-6 hidden">
-            <span class="font-sans text-[#FDA377] font-bold tracking-wider text-[10px] block">04 / 08 · CONTACTO</span>
-            <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">Por favor ingresa tus datos de contacto</h3>
-            <div class="space-y-4">
-              <div class="border-b border-white/30 focus-within:border-primary transition-all">
-                <input required type="text" id="contact-name" placeholder="Nombre Completo *" class="w-full border-0 bg-transparent py-2.5 text-white placeholder:text-white/40 focus:outline-none text-sm font-sans">
-              </div>
-              <div class="border-b border-white/30 focus-within:border-primary transition-all">
-                <input required type="text" id="contact-company" placeholder="Nombre de la Empresa *" class="w-full border-0 bg-transparent py-2.5 text-white placeholder:text-white/40 focus:outline-none text-sm font-sans">
-              </div>
-              <div class="grid grid-cols-3 gap-4 border-b border-white/30 focus-within:border-primary transition-all">
-                <input required type="text" id="contact-lada" placeholder="LADA" class="border-0 bg-transparent py-2.5 text-white placeholder:text-white/40 focus:outline-none text-sm text-center font-sans">
-                <input required type="tel" id="contact-phone" placeholder="Teléfono *" class="col-span-2 border-0 bg-transparent py-2.5 text-white placeholder:text-white/40 focus:outline-none text-sm font-sans">
-              </div>
-              <div class="border-b border-white/30 focus-within:border-primary transition-all">
-                <input required type="email" id="contact-email" placeholder="Correo Electrónico *" class="w-full border-0 bg-transparent py-2.5 text-white placeholder:text-white/40 focus:outline-none text-sm font-sans">
-              </div>
-              
-              <button type="button" onclick="submitContactStep()" class="w-full mt-4 py-4 bg-[#8C4723] hover:bg-[#a6562b] text-white font-sans text-xs uppercase tracking-widest font-semibold transition-all">
-                Siguiente Paso →
-              </button>
-            </div>
-          </div>
-
-          <!-- Step 5: Volume -->
-          <div id="quiz-step-5" class="quiz-step-pane space-y-6 hidden">
-            <span class="font-sans text-[#FDA377] font-bold tracking-wider text-[10px] block">05 / 08 · VOLUMEN</span>
-            <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">¿Cuál es tu volumen anual estimado?</h3>
-            <div class="grid grid-cols-1 gap-2.5">
-              <button onclick="setQuizAnswer('volume', '<10k Litros', 6)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>Menos de 10,000 litros (Volumen inicial)</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">01</span>
-              </button>
-              <button onclick="setQuizAnswer('volume', '10k-50k Litros', 6)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>10,000 a 50,000 litros</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">02</span>
-              </button>
-              <button onclick="setQuizAnswer('volume', '50k-100k Litros', 6)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>50,000 a 100,000 litros</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">03</span>
-              </button>
-              <button onclick="setQuizAnswer('volume', '>100k Litros', 6)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>Más de 100,000 litros (Alta escala)</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">04</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Step 6: Distillate -->
-          <div id="quiz-step-6" class="quiz-step-pane space-y-6 hidden">
-            <span class="font-sans text-[#FDA377] font-bold tracking-wider text-[10px] block">06 / 08 · DESTILADO</span>
-            <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">¿Qué tipo de tequila requieres producir?</h3>
-            <div class="grid grid-cols-1 gap-2.5">
-              <button onclick="setQuizAnswer('tequilaType', 'Blanco', 7)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>Blanco / Plata (Sin paso por barrica)</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">01</span>
-              </button>
-              <button onclick="setQuizAnswer('tequilaType', 'Reposado', 7)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>Reposado</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">02</span>
-              </button>
-              <button onclick="setQuizAnswer('tequilaType', 'Añejo', 7)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>Añejo</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">03</span>
-              </button>
-              <button onclick="setQuizAnswer('tequilaType', 'Especial/Cristalino', 7)" class="w-full text-left p-4 border border-white/15 bg-white/5 hover:bg-white hover:text-black transition-all flex justify-between items-center group font-sans text-sm font-light">
-                <span>Cristalino o perfil organoléptico especial</span><span class="text-[10px] font-mono border border-white/20 group-hover:border-black/20 px-2 py-0.5 rounded opacity-60">04</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Step 7: Assets -->
-          <div id="quiz-step-7" class="quiz-step-pane space-y-6 hidden">
-            <span class="font-sans text-[#FDA377] font-bold tracking-wider text-[10px] block">07 / 08 · ACTIVOS</span>
-            <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">¿Con qué activos cuenta tu marca actualmente?</h3>
-            <div class="grid grid-cols-1 gap-2" id="assets-checkboxes-container">
-              <!-- Populated by JavaScript -->
-            </div>
-            <button type="button" onclick="submitAssetsStep()" class="w-full mt-4 py-4 bg-[#8C4723] hover:bg-[#a6562b] text-white font-sans text-xs uppercase tracking-widest font-semibold transition-all">
-              Siguiente Paso →
-            </button>
-          </div>
-
-          <!-- Step 8: Timeline & Notes -->
-          <div id="quiz-step-8" class="quiz-step-pane space-y-6 hidden">
-            <span class="font-sans text-[#FDA377] font-bold tracking-wider text-[10px] block">08 / 08 · CRONOGRAMA</span>
-            <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">¿Cuándo tienes planeado lanzar tu tequila?</h3>
-            <form onsubmit="handleFinalFormSubmit(event)" class="space-y-4">
-              <div class="border-b border-white/35 focus-within:border-primary transition-all">
-                <select required id="quiz-timeline" class="w-full border-0 bg-transparent py-2.5 text-white/80 focus:outline-none text-sm font-sans">
-                  <option value="" class="text-black">-- Selecciona fecha de lanzamiento -- *</option>
-                  <option value="Inmediato (<3 meses)" class="text-black">Urgente / Inmediato (Menos de 3 meses)</option>
-                  <option value="Corto Plazo (3-6 meses)" class="text-black">Corto Plazo (3 a 6 meses)</option>
-                  <option value="Mediano Plazo (6-12 meses)" class="text-black">Mediano Plazo (6 a 12 meses)</option>
-                  <option value="Planeación (>12 meses)" class="text-black">Planeación futura (Más de 12 meses)</option>
-                </select>
-              </div>
-
-              <div class="border-b border-white/35 focus-within:border-primary transition-all">
-                <textarea rows="3" id="quiz-notes" placeholder="Notas adicionales, requerimientos o comentarios sobre tu proyecto..." class="w-full border-0 bg-transparent py-2 text-white placeholder:text-white/40 focus:outline-none text-sm font-sans resize-none"></textarea>
-              </div>
-
-              <button type="submit" id="quiz-submit-button" class="w-full mt-4 py-4 bg-amber-600 hover:bg-amber-700 text-white font-sans text-xs uppercase tracking-widest font-semibold transition-all shadow-lg">
-                Enviar y Recibir Diagnóstico
-              </button>
-            </form>
-          </div>
-
-          <!-- Step 9: Success -->
-          <div id="quiz-step-9" class="quiz-step-pane text-center py-6 space-y-5 hidden">
-            <span class="material-symbols-outlined text-5xl text-[#FDA377] block mb-2">check_circle</span>
-            <h3 class="font-serif text-2xl text-white">¡Diagnóstico Recibido!</h3>
-            <p class="font-sans text-white/70 max-w-md mx-auto text-sm leading-relaxed font-light">
-              Gracias por completar tu diagnóstico. Un especialista técnico revisará tu proyecto y se comunicará en un lapso menor a 24 horas.
-            </p>
-            <button onclick="resetQuizForm()" class="text-[#FDA377] font-sans uppercase border-b border-[#FDA377] pb-0.5 hover:text-white hover:border-white transition-all mt-6 text-xs bg-transparent">
-              Realizar otro diagnóstico
-            </button>
-          </div>
-
+        <!-- Pillar 2: Molienda & Tahona -->
+        <div class="p-6 bg-white border border-outline-variant/40 space-y-3 hover:border-primary transition-all shadow-sm">
+          <div class="font-navigation text-[10px] text-primary font-bold uppercase tracking-widest">Extracción Noble</div>
+          <div class="font-serif text-3xl md:text-4xl text-[#1c1c18] font-semibold">Tahona & Molino</div>
+          <h3 class="font-sans text-xs font-bold uppercase tracking-wider text-[#1c1c18]">Extracción Verde</h3>
+          <p class="font-sans text-xs text-secondary leading-relaxed font-normal">
+            500,000 L/año en Tahona ancestral de piedra volcánica para perfiles artesanales, más molienda de rodillos que no machaca fibras amargas.
+          </p>
         </div>
+
+        <!-- Pillar 3: Destilación 13.5M L -->
+        <div class="p-6 bg-white border border-outline-variant/40 space-y-3 hover:border-primary transition-all shadow-sm">
+          <div class="font-navigation text-[10px] text-primary font-bold uppercase tracking-widest">Destilación Total</div>
+          <div class="font-serif text-3xl md:text-4xl text-primary font-semibold">13.5M Litros</div>
+          <h3 class="font-sans text-xs font-bold uppercase tracking-wider text-[#1c1c18]">Alambiques & Columnas</h3>
+          <p class="font-sans text-xs text-secondary leading-relaxed font-normal">
+            Alambiques de cobre tradicionales (4.5M L/año) y columnas continuas europeas (9M L/año). Agua purísima de pozo profundo propio.
+          </p>
+        </div>
+
+        <!-- Pillar 4: Cava & Inventario -->
+        <div class="p-6 bg-white border border-outline-variant/40 space-y-3 hover:border-primary transition-all shadow-sm">
+          <div class="font-navigation text-[10px] text-primary font-bold uppercase tracking-widest">Crianza & Bodega</div>
+          <div class="font-serif text-3xl md:text-4xl text-[#1c1c18] font-semibold">1.2M Litros</div>
+          <h3 class="font-sans text-xs font-bold uppercase tracking-wider text-[#1c1c18]">Cava Climatizada</h3>
+          <p class="font-sans text-xs text-secondary leading-relaxed font-normal">
+            Roble blanco americano, bourbon y roble francés con humedad controlada, 1.3M L en tanques de acero y almacén para 2,000 tarimas.
+          </p>
+        </div>
+      </div>
+
+      <!-- Consortium Synergies Strip -->
+      <div class="p-6 bg-[#EDE7DE]/50 border border-outline-variant/30 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-primary text-2xl">verified_user</span>
+          <span class="font-navigation text-xs font-bold uppercase tracking-wider text-[#1c1c18]">Empresas del Grupo:</span>
+          <span class="font-sans text-xs text-secondary">TeknoAgrox (Agave desde 1992) · Nutriagaves (Presencia USA/EU/Asia) · Casa Loy Tequilera (NOM 1633)</span>
+        </div>
+        <span class="font-mono text-[11px] text-primary font-semibold bg-white px-3 py-1 border border-primary/20">NOM 1633 CRT</span>
       </div>
     </div>
   </section>
 
-  <!-- 5.8 PROCESO DE TRABAJO -->
-  <section class="bg-zinc-950 text-white py-20 md:py-32">
+  <!-- ============================================================
+       BLOQUE 4: AUTOSUFICIENCIA DE CAMPO & TERRUÑO (Ayotlán, Jalisco)
+       ============================================================ -->
+  <section class="py-16 md:py-24 bg-[#F5EFEB] border-b border-outline-variant/30">
     <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
-      <div>
-        <span class="font-sans text-[#FDA377] font-semibold tracking-widest uppercase mb-4 block text-xs">
-          Ruta de Trabajo
-        </span>
-        <h2 class="font-serif text-4xl md:text-5xl mb-12 text-white font-light">
-          De la idea a la producción: Un camino claro antes de comprometerte.
-        </h2>
-      </div>
-      
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6" id="roadmap-grid">
-        <!-- Populated by JavaScript -->
-      </div>
-    </div>
-  </section>
-
-  <!-- 5.9 MÉTODOS POR RESULTADO -->
-  <section class="py-20 md:py-32">
-    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
-      <div>
-        <span class="font-sans text-secondary font-semibold tracking-widest uppercase mb-4 block text-xs">
-          Tipos de Líquido
-        </span>
-        <h2 class="font-serif text-4xl md:text-5xl mb-12 text-[#1c1c18] font-light">
-          El perfil de tequila que tu marca requiere, y cómo lo construimos.
-        </h2>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="liquids-grid">
-        <!-- Populated by JavaScript -->
-      </div>
-    </div>
-  </section>
-
-  <!-- 5.10 AGAVE, AUTOSUFICIENCIA & EL CORREDOR DORADO -->
-  <section class="py-20 md:py-32 bg-[#f6f1eb] border-y border-outline-variant/30">
-    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
-      <div class="mb-14">
-        <span class="font-sans text-primary font-bold tracking-[0.25em] uppercase text-xs block mb-4">
-          Autosuficiencia Agrícola & Terruño
-        </span>
-        <h2 class="font-serif text-4xl md:text-5xl text-[#1c1c18] font-light leading-tight">
-          Tu tequila nace en el campo: 3,600 Has. y 10.8 millones de agaves.
-        </h2>
-        <p class="font-sans text-secondary text-sm md:text-base font-light max-w-3xl mt-4 leading-relaxed">
-          En una industria vulnerable a la especulación y escasez del agave, Casa Loy garantiza estabilidad de precios y suministro permanente gracias a tres décadas de experiencia como productores agaveros autosuficientes.
-        </p>
-      </div>
-
-      <!-- Métricas Agrícolas en Grid -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-        <div class="bg-white border border-outline-variant/40 p-6 space-y-2">
-          <div class="font-serif text-3xl md:text-4xl text-primary font-semibold">3,600 Has.</div>
-          <div class="font-sans text-xs font-bold uppercase tracking-wider text-[#1c1c18]">Superficie Cultivada</div>
-          <p class="font-sans text-[11px] text-secondary font-light leading-relaxed">8,649 acres de tierra propia en Jalisco, Michoacán y Guanajuato.</p>
-        </div>
-        <div class="bg-white border border-outline-variant/40 p-6 space-y-2">
-          <div class="font-serif text-3xl md:text-4xl text-primary font-semibold">10.8M</div>
-          <div class="font-sans text-xs font-bold uppercase tracking-wider text-[#1c1c18]">Plantas en Inventario</div>
-          <p class="font-sans text-[11px] text-secondary font-light leading-relaxed">Plantaciones escalonadas por edades para garantizar jima continua.</p>
-        </div>
-        <div class="bg-white border border-outline-variant/40 p-6 space-y-2">
-          <div class="font-serif text-3xl md:text-4xl text-primary font-semibold">31+ Años</div>
-          <div class="font-sans text-xs font-bold uppercase tracking-wider text-[#1c1c18]">Experiencia Agavera</div>
-          <p class="font-sans text-[11px] text-secondary font-light leading-relaxed">Cultivando y seleccionando hijuelos de élite desde 1992 (TeknoAgrox).</p>
-        </div>
-        <div class="bg-white border border-outline-variant/40 p-6 space-y-2">
-          <div class="font-serif text-3xl md:text-4xl text-primary font-semibold">Orgánico</div>
-          <div class="font-sans text-xs font-bold uppercase tracking-wider text-[#1c1c18]">Capacidad Certificada</div>
-          <p class="font-sans text-[11px] text-secondary font-light leading-relaxed">Cultivo libre de pesticidas sintéticos apto para certificación USDA / UE.</p>
-        </div>
-      </div>
-
-      <!-- Terroir & El Corredor Dorado de Los Altos -->
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- Visual Column -->
         <div class="lg:col-span-6 overflow-hidden shadow-md border border-outline-variant/40">
-          <img 
-            src="/Jimado Agave Tequilana Weber.webp" 
-            alt="Jimador trabajando en campos de agave de Casa Loy Tequilera" 
-            class="w-full aspect-[4/3] object-cover transition-transform duration-500 hover:scale-105"
+          <img
+            src="/Jimado Agave Tequilana Weber.webp"
+            alt="Campos de Agave Casa Loy en Ayotlán"
+            class="w-full aspect-[4/3] object-cover transition-transform duration-700 hover:scale-105"
           />
         </div>
-        
+
+        <!-- Content Column -->
         <div class="lg:col-span-6 space-y-6">
-          <div class="border-l-2 border-primary pl-6 space-y-2">
-            <span class="font-mono text-xs text-primary font-bold tracking-widest uppercase">Ubicación Estratégica</span>
-            <h3 class="font-serif text-2xl md:text-3xl text-[#1c1c18] font-semibold">Ayotlán: En el Corazón de Los Altos de Jalisco</h3>
-            <p class="font-sans text-xs text-secondary leading-relaxed font-light">
-              Nuestra destilería y campos se ubican a más de 2,000 metros sobre el nivel del mar en Ayotlán, Jalisco. Esta altitud, combinada con tierras rojas arcillosas ricas en hierro y minerales, somete al agave azul a un estrés térmico natural que concentra niveles excepcionales de Azúcares Reductores Totales (ART).
-            </p>
-          </div>
-
-          <div class="p-6 bg-white border border-outline-variant/40 space-y-3">
-            <div class="font-mono text-xs text-[#8C4723] font-bold uppercase tracking-wider">
-              ✦ El Corredor Dorado de los Grandes Tequilas
-            </div>
-            <p class="font-sans text-xs text-secondary leading-relaxed font-light">
-              Ayotlán forma parte de la ruta tequilera más prestigiosa y codiciada a nivel internacional, compartiendo terruño con destilerías legendarias:
-            </p>
-            <div class="flex flex-wrap items-center gap-2 pt-2 text-[11px] font-mono text-[#1c1c18]">
-              <span class="bg-stone-100 px-2.5 py-1 rounded">Guadalajara</span>
-              <span>→</span>
-              <span class="bg-stone-100 px-2.5 py-1 rounded">Casamigos</span>
-              <span>→</span>
-              <span class="bg-stone-100 px-2.5 py-1 rounded">Patrón</span>
-              <span>→</span>
-              <span class="bg-stone-100 px-2.5 py-1 rounded">Don Julio</span>
-              <span>→</span>
-              <span class="bg-amber-100 text-amber-900 font-bold px-2.5 py-1 rounded border border-amber-300">Ayotlán (CASA LOY)</span>
-              <span>→</span>
-              <span class="bg-stone-100 px-2.5 py-1 rounded">Tequila Ocho / Teremana</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5.11 CALIDAD, TASTING LAB & ÁREA DE ENVASADO -->
-  <section class="py-20 md:py-32 bg-white border-b border-outline-variant/30">
-    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
-      <div class="mb-14">
-        <span class="font-sans text-primary font-bold tracking-[0.25em] uppercase text-xs block mb-4">
-          Garantía Analítica & Sensorial
-        </span>
-        <h2 class="font-serif text-4xl md:text-5xl text-[#1c1c18] font-light leading-tight">
-          Aseguramiento de Calidad: Del Laboratorio a la Botella.
-        </h2>
-        <p class="font-sans text-secondary text-sm md:text-base font-light max-w-3xl mt-4 leading-relaxed">
-          Cada lote de producción es validado en nuestro laboratorio químico in-house y en cabinas especializadas de cata antes de pasar por nuestra línea de envasado con triple punto de inspección.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        
-        <!-- Tasting Lab -->
-        <div class="border border-outline-variant/40 bg-[#fcf9f3] p-8 flex flex-col justify-between space-y-6 hover:border-primary transition-custom shadow-sm">
-          <div class="space-y-4">
-            <span class="material-symbols-outlined text-primary text-4xl">local_bar</span>
-            <h3 class="font-serif text-2xl text-[#1c1c18] font-bold">Tasting Lab Profesional</h3>
-            <p class="font-sans text-xs text-secondary leading-relaxed font-light">
-              Cabinas individuales de evaluación organoléptica aisladas para paneles de catadores profesionales. Validamos el perfil sensorial (aroma, balance alcohólico, notas de retrogusto) contra tu perfil patrón antes de embotellar.
-            </p>
-          </div>
-          <ul class="space-y-2 text-xs font-sans text-[#1c1c18] border-t border-outline-variant/30 pt-4 font-light">
-            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-xs text-primary">check</span> Cabinas sensoriales normalizadas</li>
-            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-xs text-primary">check</span> Blind tests y paneles de expertos</li>
-            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-xs text-primary">check</span> Aprobación formal previa de muestra</li>
-          </ul>
-        </div>
-
-        <!-- Laboratorio Químico -->
-        <div class="border border-outline-variant/40 bg-[#fcf9f3] p-8 flex flex-col justify-between space-y-6 hover:border-primary transition-custom shadow-sm">
-          <div class="space-y-4">
-            <span class="material-symbols-outlined text-primary text-4xl">science</span>
-            <h3 class="font-serif text-2xl text-[#1c1c18] font-bold">Laboratorio Fisicoquímico</h3>
-            <p class="font-sans text-xs text-secondary leading-relaxed font-light">
-              Equipamiento analítico avanzado y cromatografía de gases in-house. Monitoreamos alcoholímetro, acidez total, ésteres, aldehídos, furfural y metanol conforme a la NOM-006-SCFI y normativas TTB de EE.UU.
-            </p>
-          </div>
-          <ul class="space-y-2 text-xs font-sans text-[#1c1c18] border-t border-outline-variant/30 pt-4 font-light">
-            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-xs text-primary">check</span> Cromatografía de gases por lote</li>
-            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-xs text-primary">check</span> Certificados analíticos oficiales</li>
-            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-xs text-primary">check</span> Confirmación 100% Additive Free</li>
-          </ul>
-        </div>
-
-        <!-- Envasado & QA -->
-        <div class="border border-outline-variant/40 bg-[#fcf9f3] p-8 flex flex-col justify-between space-y-6 hover:border-primary transition-custom shadow-sm">
-          <div class="space-y-4">
-            <span class="material-symbols-outlined text-primary text-4xl">inventory</span>
-            <h3 class="font-serif text-2xl text-[#1c1c18] font-bold">Línea de Envasado & QA</h3>
-            <p class="font-sans text-xs text-secondary leading-relaxed font-light">
-              Área de envasado y acondicionamiento con estricto aseguramiento de calidad: llenado volumétrico automatizado, etiquetado de alta precisión e inspección visual en mesa de luz para asegurar botellas perfectas.
-            </p>
-          </div>
-          <ul class="space-y-2 text-xs font-sans text-[#1c1c18] border-t border-outline-variant/30 pt-4 font-light">
-            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-xs text-primary">check</span> Llenado automatizado de precisión</li>
-            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-xs text-primary">check</span> Etiquetado automatizado y manual premium</li>
-            <li class="flex items-center gap-2"><span class="material-symbols-outlined text-xs text-primary">check</span> Inspección visual botella por botella</li>
-          </ul>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- SOSTENIBILIDAD & ECONOMÍA CIRCULAR (Page 20 del PDF) -->
-  <section class="py-20 md:py-32 bg-[#1C1A19] text-white relative overflow-hidden">
-    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left relative z-10">
-      <div class="mb-14">
-        <span class="font-sans text-[#FDA377] font-bold tracking-[0.25em] uppercase text-xs block mb-4">
-          Responsabilidad Ambiental & Clean Tech
-        </span>
-        <h2 class="font-serif text-4xl md:text-5xl text-white font-light leading-tight">
-          Sostenibilidad: Destilación con respeto por el planeta.
-        </h2>
-        <p class="font-sans text-white/70 text-sm md:text-base font-light max-w-3xl mt-4 leading-relaxed">
-          Los consumidores globales exigen marcas auténticamente sustentables. En Casa Loy implementamos un modelo de economía circular integral para minimizar la huella de carbono y optimizar el uso de recursos naturales.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        
-        <!-- Paneles Solares -->
-        <div class="bg-white/5 border border-white/10 p-8 space-y-4 hover:border-primary transition-custom">
-          <div class="font-serif text-3xl md:text-4xl text-[#FDA377] font-medium">Hasta 45%</div>
-          <h3 class="font-serif text-xl text-white font-semibold">Energía Solar Fotovoltaica</h3>
-          <p class="font-sans text-sm text-stone-200 leading-relaxed font-normal">
-            Parque de paneles solares instalado en naves que abastece hasta el 45% de la demanda energética total de la planta en operación a plena capacidad.
-          </p>
-        </div>
-
-        <!-- Caldera de Biomasa -->
-        <div class="bg-white/5 border border-white/10 p-8 space-y-4 hover:border-primary transition-custom">
-          <div class="font-serif text-3xl md:text-4xl text-[#FDA377] font-medium">Biomasa</div>
-          <h3 class="font-serif text-xl text-white font-semibold">Cero Combustibles Fósiles</h3>
-          <p class="font-sans text-sm text-stone-200 leading-relaxed font-normal">
-            Caldera de biomasa de última generación que aprovecha el bagazo residual del agave cocido para generar vapor limpio, erradicando el combustóleo y gas fósil.
-          </p>
-        </div>
-
-        <!-- Compostaje de Fibras -->
-        <div class="bg-white/5 border border-white/10 p-8 space-y-4 hover:border-primary transition-custom">
-          <div class="font-serif text-3xl md:text-4xl text-[#FDA377] font-medium">100% Circular</div>
-          <h3 class="font-serif text-xl text-white font-semibold">Compostaje de Fibras de Agave</h3>
-          <p class="font-sans text-sm text-stone-200 leading-relaxed font-normal">
-            Aprovechamiento total de las fibras de agave desechadas durante la extracción para elaborar composta orgánica que regresa como fertilizante a nuestros propios campos.
-          </p>
-        </div>
-
-        <!-- Reciclaje de Agua -->
-        <div class="bg-white/5 border border-white/10 p-8 space-y-4 hover:border-primary transition-custom">
-          <div class="font-serif text-3xl md:text-4xl text-[#FDA377] font-medium">Reúso 100%</div>
-          <h3 class="font-serif text-xl text-white font-semibold">Reciclaje de Agua para Riego</h3>
-          <p class="font-sans text-sm text-stone-200 leading-relaxed font-normal">
-            Planta de tratamiento de efluentes que recupera y depura el agua utilizada en procesos industriales para ser reintegrada en el riego de parcelas agrícolas.
-          </p>
-        </div>
-
-        <!-- Tratamiento de Vinazas -->
-        <div class="bg-white/5 border border-white/10 p-8 space-y-4 hover:border-primary transition-custom">
-          <div class="font-serif text-3xl md:text-4xl text-[#FDA377] font-medium">Tratamiento Integral</div>
-          <h3 class="font-serif text-xl text-white font-semibold">Aprovechamiento de Vinazas</h3>
-          <p class="font-sans text-sm text-stone-200 leading-relaxed font-normal">
-            Sistema avanzado de tratamiento y neutralización de vinazas residuales para su transformación en fertilizante orgánico rico en minerales para la tierra.
-          </p>
-        </div>
-
-        <!-- Ventaja Comercial B2B -->
-        <div class="bg-[#8C4723]/20 border border-primary/40 p-8 space-y-4 flex flex-col justify-between">
-          <div class="space-y-3">
-            <span class="font-mono text-xs text-[#FDA377] font-bold uppercase tracking-wider">Valor para tu Marca</span>
-            <h3 class="font-serif text-xl text-white font-semibold">Storytelling Ecológico Auténtico</h3>
-            <p class="font-sans text-sm text-stone-200 leading-relaxed font-normal">
-              Comunica con orgullo a tus distribuidores y consumidores finales que tu tequila es producido en una de las destilerías más ecológicas y sostenibles de México.
-            </p>
-          </div>
-          <div class="pt-4 border-t border-white/20 font-mono text-[10px] text-[#FDA377] uppercase">ESG Compliance Ready</div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- CERTIFICACIONES DE CLASE MUNDIAL (Page 21 del PDF) -->
-  <section class="py-20 md:py-28 bg-[#EDE7DE]/40 border-b border-outline-variant/30">
-    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <span class="font-sans text-primary font-bold tracking-[0.25em] uppercase text-xs block mb-3">
-          Acreditaciones Internacionales
-        </span>
-        <h2 class="font-serif text-4xl md:text-5xl text-[#1c1c18] font-light leading-tight">
-          Certificaciones de clase mundial que abren fronteras.
-        </h2>
-        <p class="font-sans text-secondary text-sm md:text-base font-light mt-4 leading-relaxed">
-          Tu marca contará con el respaldo técnico y los sellos oficiales exigidos por los retailers y distribuidores más rigurosos de Estados Unidos, Europa y mercados globales.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-        
-        <!-- USDA Organic -->
-        <div class="bg-white border border-outline-variant/40 p-6 flex flex-col justify-between min-h-[220px] text-center shadow-sm hover:border-primary transition-custom">
-          <div>
-            <div class="w-12 h-12 rounded-full border border-stone-200 mx-auto flex items-center justify-center mb-4 text-xs font-mono font-bold text-green-800 bg-green-50">
-              USDA
-            </div>
-            <h3 class="font-serif text-lg font-bold text-[#1c1c18]">USDA Organic</h3>
-            <p class="font-sans text-[11px] text-secondary font-light mt-2 leading-relaxed">
-              Certificación de producción orgánica para exportación directa al mercado de EE.UU.
-            </p>
-          </div>
-          <span class="font-mono text-[9px] text-primary font-bold uppercase mt-4">Mercado Norteamericano</span>
-        </div>
-
-        <!-- EU Organic -->
-        <div class="bg-white border border-outline-variant/40 p-6 flex flex-col justify-between min-h-[220px] text-center shadow-sm hover:border-primary transition-custom">
-          <div>
-            <div class="w-12 h-12 rounded-full border border-stone-200 mx-auto flex items-center justify-center mb-4 text-xs font-mono font-bold text-green-800 bg-green-50">
-              BIO
-            </div>
-            <h3 class="font-serif text-lg font-bold text-[#1c1c18]">EU Organic</h3>
-            <p class="font-sans text-[11px] text-secondary font-light mt-2 leading-relaxed">
-              Sello orgánico de la Unión Europea (Euro-leaf) para distribución en los 27 países miembros.
-            </p>
-          </div>
-          <span class="font-mono text-[9px] text-primary font-bold uppercase mt-4">Unión Europea</span>
-        </div>
-
-        <!-- KMD Kosher -->
-        <div class="bg-white border border-outline-variant/40 p-6 flex flex-col justify-between min-h-[220px] text-center shadow-sm hover:border-primary transition-custom">
-          <div>
-            <div class="w-12 h-12 rounded-full border border-stone-200 mx-auto flex items-center justify-center mb-4 text-xs font-mono font-bold text-blue-800 bg-blue-50">
-              KMD
-            </div>
-            <h3 class="font-serif text-lg font-bold text-[#1c1c18]">KMD Kosher</h3>
-            <p class="font-sans text-[11px] text-secondary font-light mt-2 leading-relaxed">
-              Certificación de pureza Kosher México con validez y reconocimiento internacional.
-            </p>
-          </div>
-          <span class="font-mono text-[9px] text-primary font-bold uppercase mt-4">Pureza Garantizada</span>
-        </div>
-
-        <!-- Confirmed Additive Free -->
-        <div class="bg-white border border-outline-variant/40 p-6 flex flex-col justify-between min-h-[220px] text-center shadow-sm hover:border-primary transition-custom">
-          <div>
-            <div class="w-12 h-12 rounded-full border border-amber-200 mx-auto flex items-center justify-center mb-4 text-xs font-mono font-bold text-amber-800 bg-amber-50">
-              100%
-            </div>
-            <h3 class="font-serif text-lg font-bold text-[#1c1c18]">Additive Free</h3>
-            <p class="font-sans text-[11px] text-secondary font-light mt-2 leading-relaxed">
-              Confirmado libre de aditivos por Tequila Matchmaker. Cero colorantes, abocantes o aromas.
-            </p>
-          </div>
-          <span class="font-mono text-[9px] text-primary font-bold uppercase mt-4">Tequila Matchmaker</span>
-        </div>
-
-        <!-- FSSC 22000 -->
-        <div class="bg-white border border-outline-variant/40 p-6 flex flex-col justify-between min-h-[220px] text-center shadow-sm hover:border-primary transition-custom">
-          <div>
-            <div class="w-12 h-12 rounded-full border border-stone-200 mx-auto flex items-center justify-center mb-4 text-xs font-mono font-bold text-stone-800 bg-stone-100">
-              FSSC
-            </div>
-            <h3 class="font-serif text-lg font-bold text-[#1c1c18]">FSSC 22000</h3>
-            <p class="font-sans text-[11px] text-secondary font-light mt-2 leading-relaxed">
-              Food Safety System Certification. Máximo estándar global en inocuidad y seguridad alimentaria.
-            </p>
-          </div>
-          <span class="font-mono text-[9px] text-primary font-bold uppercase mt-4">Inocuidad Global</span>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- 5.12b NDA PRIVACIDAD BANNER -->
-  <section class="bg-zinc-950 text-white py-12 md:py-16">
-    <div class="max-w-[1400px] mx-auto px-6 md:px-12">
-      <div class="border border-white/10 bg-zinc-900/60 p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 text-left">
-        <div class="w-14 h-14 border border-[#FDA377] rounded-full flex items-center justify-center flex-shrink-0">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FDA377" stroke-width="1.5">
-            <path d="M12 2 L20 6 V12 C20 17 16.5 20.5 12 22 C7.5 20.5 4 17 4 12 V6 Z" />
-          </svg>
-        </div>
-        <div class="flex-1 space-y-2">
-          <h3 class="font-serif text-xl md:text-2xl text-white font-semibold">Tu Marca. Tu Proyecto. Protegido bajo Contrato.</h3>
-          <p class="font-sans text-sm text-white/70 leading-relaxed font-light">Tu fórmula es tuya. Cada proyecto inicia bajo un Acuerdo de Confidencialidad (NDA) firmado, con propiedad intelectual clara y documentación resguardada contra fugas de información.</p>
-          <div class="border border-white/20 text-[#FDA377] px-3.5 py-1 rounded-full text-[10px] font-mono tracking-wider inline-block uppercase font-normal">NDA Disponible Inmediatamente</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5.13 PRUEBA SOCIAL -->
-  <section class="py-20 md:py-32 bg-[#EDE7DE]/20 border-b border-outline-variant/30">
-    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        
-        <!-- Left side Quote -->
-        <div class="lg:col-span-5 space-y-6">
-          <span class="font-sans text-secondary font-semibold tracking-widest uppercase block text-xs">
-            Pruebas, no promesas.
+          <span class="font-navigation text-xs text-primary font-bold tracking-[0.25em] uppercase block">
+            Abastecimiento Garantizado de Campo
           </span>
-          <h2 class="font-serif italic text-3xl md:text-4xl text-[#8C4723] font-light leading-snug">
-            "La confianza se construye lote a lote. Diseñamos procesos comerciales transparentes y trazables."
+          <h2 class="font-serif text-3xl md:text-5xl text-[#1c1c18] font-light leading-tight">
+            3,600 Hectáreas y 10.8 Millones de Agaves Propios.
           </h2>
-          <div class="w-16 h-[2px] bg-primary"></div>
-        </div>
+          <p class="font-sans text-secondary text-xs md:text-sm leading-relaxed font-normal">
+            A diferencia de destilerías que dependen de intermediarios coyotes y volatilidad de precios en el mercado abierto, Casa Loy es autosuficiente. Cultivamos nuestras propias tierras en Jalisco, Michoacán y Guanajuato desde 1992, blindando tu costo por litro a largo plazo.
+          </p>
 
-        <!-- Right side list -->
-        <div class="lg:col-span-7 divide-y divide-outline-variant/30 text-left" id="proof-items-list">
-          <!-- Populated by JavaScript -->
-        </div>
+          <div class="grid grid-cols-2 gap-4 pt-2">
+            <div class="border-l-2 border-primary pl-4">
+              <div class="font-serif text-2xl text-primary font-bold">10.8M</div>
+              <div class="font-navigation text-[11px] font-semibold text-[#1c1c18] uppercase">Plantas en Inventario</div>
+              <p class="font-sans text-[11px] text-secondary">Cosecha escalonada garantizada.</p>
+            </div>
+            <div class="border-l-2 border-primary pl-4">
+              <div class="font-serif text-2xl text-primary font-bold">>2,000 msnm</div>
+              <div class="font-navigation text-[11px] font-semibold text-[#1c1c18] uppercase">Terruño de Ayotlán</div>
+              <p class="font-sans text-[11px] text-secondary">Tierra roja rica en hierro y azúcares ART.</p>
+            </div>
+          </div>
 
+          <div class="p-4 bg-white border border-outline-variant/40 font-navigation text-xs text-[#1c1c18] space-y-1">
+            <span class="text-primary font-bold uppercase tracking-wider block text-[10px]">El Corredor Dorado de Los Altos:</span>
+            <p class="font-sans text-xs text-secondary">Guadalajara → Casamigos → Patrón → Don Julio → <strong>Ayotlán (Casa Loy)</strong> → Tequila Ocho / Teremana</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- 5.14 FAQ -->
-  <section id="faq-v2" class="py-20 md:py-32">
+  <!-- ============================================================
+       BLOQUE 5: CALIDAD IN-HOUSE, CLEAN TECH & CERTIFICACIONES GLOBALES
+       ============================================================ -->
+  <section class="py-16 md:py-24 bg-white border-b border-outline-variant/30">
     <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-left">
-      <div>
-        <span class="font-sans text-secondary font-semibold tracking-widest uppercase mb-4 block text-xs">
-          FAQ
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <span class="font-navigation text-xs text-primary font-bold tracking-[0.25em] uppercase block mb-3">
+          Estándares Internacionales
         </span>
-        <h2 class="font-serif text-4xl md:text-5xl mb-12 text-[#1c1c18] font-light">
-          Respuestas directas para decisiones informadas.
+        <h2 class="font-serif text-3xl md:text-5xl text-[#1c1c18] font-light leading-tight">
+          Calidad científica y sellos que abren fronteras.
         </h2>
-      </div>
-      
-      <div class="max-w-4xl" id="faqs-accordion-container">
-        <!-- Populated by JavaScript -->
-      </div>
-    </div>
-  </section>
-
-  <!-- FINAL CTA + CAL.COM SCHEDULER -->
-  <section class="bg-zinc-950 text-white py-20 md:py-32" id="contact-scheduler">
-    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-center">
-      <div>
-        <span class="font-sans text-[#FDA377] font-semibold tracking-widest uppercase mb-4 block text-xs">
-          Siguiente Paso
-        </span>
-        <h2 class="font-serif text-4xl md:text-5xl text-white max-w-3xl mx-auto mb-6 font-light">
-          Agenda una videollamada técnica de 20 minutos.
-        </h2>
-        <p class="font-sans text-white/75 text-sm md:text-base max-w-2xl mx-auto mb-10 leading-relaxed font-light">
-          Sin compromisos ni discursos comerciales agresivos. Evaluaremos la viabilidad operativa de tu proyecto con un especialista de producción.
+        <p class="font-sans text-secondary text-xs md:text-sm font-normal mt-3 leading-relaxed">
+          Diseñado para superar las inspecciones más estrictas del CRT, FDA, TTB de EE.UU. y normativas de la Unión Europea.
         </p>
       </div>
-      
-      <div class="flex flex-col sm:flex-row gap-5 items-center justify-center w-full max-w-md sm:max-w-none pt-2 mb-16">
-        <a
-          class="bg-[#8C4723] border border-[#8C4723] hover:bg-[#a6562b] hover:border-[#a6562b] text-white font-sans text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-semibold py-4 px-8 transition-all min-w-[200px] text-center shadow-lg"
-          href="#cal-inline-v2"
-        >
-          Agendar Llamada →
-        </a>
-        <a
-          class="border border-white/35 hover:border-white hover:bg-white/5 text-white font-sans text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-semibold py-4 px-8 transition-all min-w-[200px] text-center"
-          href="#quiz-v2"
-        >
-          Enviar Detalles de Proyecto
-        </a>
+
+      <!-- 3 Pillars Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-14">
+        <!-- 1. Tasting Lab & Control Químico -->
+        <div class="p-8 bg-[#FAF6F0] border border-outline-variant/40 space-y-4 shadow-sm hover:border-primary transition-all">
+          <span class="material-symbols-outlined text-primary text-3xl">science</span>
+          <h3 class="font-serif text-xl text-[#1c1c18] font-bold">Tasting Lab & Cromatografía</h3>
+          <p class="font-sans text-xs text-secondary leading-relaxed font-normal">
+            Laboratorio in-house con cromatografía de gases lote a lote para garantizar perfiles sensoriales idénticos y cumplimiento estricto de metanol y ésteres.
+          </p>
+        </div>
+
+        <!-- 2. Clean Tech & Sostenibilidad -->
+        <div class="p-8 bg-[#FAF6F0] border border-outline-variant/40 space-y-4 shadow-sm hover:border-primary transition-all">
+          <span class="material-symbols-outlined text-primary text-3xl">solar_power</span>
+          <h3 class="font-serif text-xl text-[#1c1c18] font-bold">Energía Limpia & Economía Circular</h3>
+          <p class="font-sans text-xs text-secondary leading-relaxed font-normal">
+            Paneles solares (hasta 45% de energía), caldera de biomasa de bagazo que elimina combustibles fósiles, compostaje 100% de fibras y tratamiento de vinazas.
+          </p>
+        </div>
+
+        <!-- 3. Pureza 100% Libre de Aditivos -->
+        <div class="p-8 bg-[#FAF6F0] border border-outline-variant/40 space-y-4 shadow-sm hover:border-primary transition-all">
+          <span class="material-symbols-outlined text-primary text-3xl">verified</span>
+          <h3 class="font-serif text-xl text-[#1c1c18] font-bold">100% Additive Free Verified</h3>
+          <p class="font-sans text-xs text-secondary leading-relaxed font-normal">
+            Capacidad auditada para producir tequilas completamente libres de abocantes, colorantes o saborizantes artificiales, ideal para el segmento ultra-premium.
+          </p>
+        </div>
+      </div>
+
+      <!-- 5 Certification Badges Row -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-center">
+        <div class="p-4 border border-outline-variant/50 bg-[#EDE7DE]/20 space-y-1">
+          <div class="font-navigation text-[11px] font-bold text-[#1c1c18] uppercase">USDA Organic</div>
+          <span class="font-mono text-[9px] text-primary block">Mercado USA</span>
+        </div>
+        <div class="p-4 border border-outline-variant/50 bg-[#EDE7DE]/20 space-y-1">
+          <div class="font-navigation text-[11px] font-bold text-[#1c1c18] uppercase">EU Organic</div>
+          <span class="font-mono text-[9px] text-primary block">27 Países UE</span>
+        </div>
+        <div class="p-4 border border-outline-variant/50 bg-[#EDE7DE]/20 space-y-1">
+          <div class="font-navigation text-[11px] font-bold text-[#1c1c18] uppercase">KMD Kosher</div>
+          <span class="font-mono text-[9px] text-primary block">Pureza Global</span>
+        </div>
+        <div class="p-4 border border-outline-variant/50 bg-[#EDE7DE]/20 space-y-1">
+          <div class="font-navigation text-[11px] font-bold text-[#1c1c18] uppercase">Additive Free</div>
+          <span class="font-mono text-[9px] text-primary block">Tequila Matchmaker</span>
+        </div>
+        <div class="p-4 border border-outline-variant/50 bg-[#EDE7DE]/20 space-y-1">
+          <div class="font-navigation text-[11px] font-bold text-[#1c1c18] uppercase">FSSC 22000</div>
+          <span class="font-mono text-[9px] text-primary block">Inocuidad Máxima</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       BLOQUE 6: AGENDA TU VIDEOLLAMADA TÉCNICA (Cal.com)
+       ============================================================ -->
+  <section class="py-16 md:py-24 bg-[#1E1A17] text-white" id="contact-scheduler">
+    <div class="max-w-[1400px] mx-auto px-6 md:px-12 text-center">
+      <div class="max-w-2xl mx-auto mb-10">
+        <span class="font-navigation text-[#FDA377] font-semibold tracking-[0.3em] text-[11px] uppercase block mb-2">
+          Paso Directo · Sin Intermediarios
+        </span>
+        <h2 class="font-serif text-3xl md:text-5xl text-white font-light leading-tight">
+          Conversaciones que destilan negocios.
+        </h2>
+        <p class="font-sans text-white/75 text-xs md:text-sm font-normal mt-3 leading-relaxed">
+          Agenda una videollamada técnica de 20 minutos para revisar requerimientos, costos por litro y disponibilidad de producción con un especialista de Casa Loy.
+        </p>
       </div>
 
       <!-- Cal.com Embed Container -->
-      <div class="w-full max-w-5xl mx-auto bg-white border border-outline-variant/20 p-4 md:p-8 shadow-2xl relative text-left">
-        <div class="mb-6 border-b border-stone-200/50 pb-4 text-center md:text-left">
-          <h4 class="font-serif text-2xl mb-1 text-zinc-900 font-semibold">Reserva tu videollamada técnica</h4>
-          <p class="text-xs text-stone-500 font-light font-sans">Selecciona un espacio libre en nuestra agenda oficial de Cal.com.</p>
+      <div class="w-full max-w-4xl mx-auto bg-white border border-outline-variant/20 p-4 md:p-8 shadow-2xl relative text-left">
+        <div class="mb-4 border-b border-stone-200/50 pb-3 flex items-center justify-between">
+          <div>
+            <h4 class="font-serif text-xl text-zinc-900 font-semibold">Reserva tu espacio en la agenda oficial</h4>
+            <p class="text-xs text-stone-500 font-normal font-sans">Selecciona fecha y hora disponible vía Cal.com.</p>
+          </div>
+          <span class="font-navigation text-[10px] text-primary font-bold uppercase bg-amber-50 px-2 py-1 border border-amber-200">20 Minutos</span>
         </div>
-        <div id="cal-inline-v2" class="w-full h-[620px]"></div>
+        <div id="cal-inline-v2" class="w-full h-[580px]"></div>
       </div>
     </div>
   </section>
+  <!-- ============================================================
+       CASA LOY OFFICIAL LUXURY FOOTER (Synchronized with the site)
+       ============================================================ -->
+  <footer class="pt-24 pb-12 bg-[#EDE7DE] text-[#1A1615] border-t border-[#1A1615]/15 relative overflow-hidden text-left">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-10 relative z-10">
+      
+      <!-- Main Grid Content -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-20">
+        
+        <!-- Column 1: Institutional Block -->
+        <div class="lg:col-span-4 space-y-6 text-center flex flex-col items-center">
+          <a href="/" class="flex items-center justify-center select-none cursor-pointer focus:outline-none">
+            <img
+              alt="Logo Casa Loy Tequilera"
+              class="h-12 w-auto object-contain transition-opacity duration-300 hover:opacity-80 mx-auto"
+              src="/Logotipo Casa Loy Tequilera.webp"
+            />
+          </a>
+          <p class="font-navigation text-[13px] text-[#1A1615]/75 leading-relaxed font-normal max-w-sm">
+            Destilería mexicana con visión global, especializada en la producción, desarrollo y comercialización de tequila 100% agave. Integramos tradición, innovación y capacidad operativa para impulsar marcas propias, experiencias premium y proyectos estratégicos dentro de la industria tequilera.
+          </p>
+          <div class="pt-2">
+            <a
+              href="/quienes-somos"
+              class="group inline-flex items-center gap-3 font-navigation text-[12px] font-semibold text-[#8C4723] hover:text-[#2F403E] transition-colors duration-300 uppercase tracking-widest focus:outline-none"
+            >
+              <span>Conoce nuestra historia</span>
+              <span class="material-symbols-outlined text-sm font-light group-hover:translate-x-1.5 transition-transform duration-300">
+                arrow_right_alt
+              </span>
+            </a>
+          </div>
+        </div>
 
-  <!-- FOOTER WATERMARK -->
-  <div class="bg-[#EDE7DE] border-t border-outline-variant/30 py-8 text-center">
-    <div class="max-w-[1400px] mx-auto px-6 md:px-12">
-      <p class="font-mono text-[10px] text-[#53443a] uppercase tracking-wider margin-0">
-        CASA LOY TEQUILERA — B2B PRIVATE LABEL GUIDE v2 · NOM 1633 · TODOS LOS DERECHOS RESERVADOS
-      </p>
+        <!-- Column 2: Casa Loy Portfolio -->
+        <div class="lg:col-span-3 space-y-6 text-left">
+          <h4 class="font-serif text-[18px] font-bold text-[#2F403E] tracking-wide border-b border-[#1A1615]/10 pb-3">
+            Portafolio Casa Loy
+          </h4>
+          <ul class="space-y-3 font-navigation text-[13.5px] font-medium text-[#1A1615]/80">
+            <li>
+              <a href="https://casaloytequila.com/" target="_blank" rel="noopener noreferrer" class="hover:text-[#8C4723] transition-colors duration-300 block">
+                Casa Loy Tequila
+              </a>
+            </li>
+            <li>
+              <a href="https://reservatequila.com/" target="_blank" rel="noopener noreferrer" class="hover:text-[#8C4723] transition-colors duration-300 block">
+                Reserva Casa Loy
+              </a>
+            </li>
+            <li>
+              <a href="https://TADDELtequila.com/" target="_blank" rel="noopener noreferrer" class="hover:text-[#8C4723] transition-colors duration-300 block">
+                TADDEL Tequila
+              </a>
+            </li>
+            <li>
+              <a href="https://TierraZafirotequila.com/" target="_blank" rel="noopener noreferrer" class="hover:text-[#8C4723] transition-colors duration-300 block">
+                Tierra Zafiro Tequila
+              </a>
+            </li>
+            <li>
+              <a href="/marca-propia" class="hover:text-[#8C4723] transition-colors duration-300 block font-bold text-[#8C4723]">
+                Marca Propia B2B
+              </a>
+            </li>
+            <li>
+              <a href="/turismo" class="hover:text-[#8C4723] transition-colors duration-300 block">
+                Experiencias Casa Loy
+              </a>
+            </li>
+            <li>
+              <a href="/nativo" class="hover:text-[#8C4723] transition-colors duration-300 block">
+                Restaurante 1937 Nativo
+              </a>
+            </li>
+            <li>
+              <a href="/blog" class="hover:text-[#8C4723] transition-colors duration-300 block">
+                Blog Tequilero
+              </a>
+            </li>
+            <li>
+              <a href="/bolsa-de-trabajo" class="hover:text-[#8C4723] transition-colors duration-300 block">
+                Bolsa de Trabajo
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Contáctanos -->
+        <div class="lg:col-span-2 space-y-6 text-left">
+          <h4 class="font-serif text-[18px] font-bold text-[#2F403E] tracking-wide border-b border-[#1A1615]/10 pb-3">
+            Contáctanos
+          </h4>
+          <div class="space-y-4 font-navigation text-[13.5px]">
+            <div>
+              <span class="block text-[#1A1615]/50 text-[11px] uppercase tracking-wider font-semibold">Atención / WhatsApp:</span>
+              <a href="https://wa.me/523312345678" target="_blank" rel="noopener noreferrer" class="hover:text-[#8C4723] transition-colors duration-300 font-medium text-[#1A1615]/85">
+                +52 (33) 1234 5678
+              </a>
+            </div>
+            <div>
+              <span class="block text-[#1A1615]/50 text-[11px] uppercase tracking-wider font-semibold">Correo institucional:</span>
+              <a href="mailto:contacto@casaloy.com" class="hover:text-[#8C4723] transition-colors duration-300 font-medium text-[#1A1615]/85">
+                contacto@casaloy.com
+              </a>
+            </div>
+            <div>
+              <span class="block text-[#1A1615]/50 text-[11px] uppercase tracking-wider font-semibold">Ubicación:</span>
+              <p class="font-normal text-[#1A1615]/75 leading-snug">
+                Carretera Ayotlán–Atotonilco km 6.5, Las Villas, Jalisco, México
+              </p>
+              <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" class="inline-block mt-2 text-[12px] font-semibold text-[#8C4723] hover:underline uppercase tracking-wider">
+                Cómo llegar →
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 4: Newsletter & Comunidad -->
+        <div class="lg:col-span-3 space-y-6 text-left">
+          <h4 class="font-serif text-[18px] font-bold text-[#2F403E] tracking-wide border-b border-[#1A1615]/10 pb-3">
+            Únete a la Comunidad
+          </h4>
+          <p class="font-navigation text-[13px] text-[#1A1615]/75 leading-relaxed font-normal">
+            Recibe noticias, experiencias, lanzamientos y artículos exclusivos del mundo del tequila.
+          </p>
+          <form class="space-y-2" onsubmit="event.preventDefault(); alert('¡Gracias por unirte a la comunidad Casa Loy!');">
+            <div class="flex">
+              <input
+                type="email"
+                required
+                placeholder="Correo electrónico"
+                class="w-full bg-white border border-[#1A1615]/20 px-4 py-2.5 font-navigation text-[13px] text-[#1A1615] placeholder-[#1A1615]/40 focus:outline-none focus:border-[#8C4723]"
+              />
+              <button
+                type="submit"
+                class="bg-[#8C4723] hover:bg-[#a6562b] text-white px-4 py-2.5 font-navigation text-[11px] font-semibold tracking-wider uppercase transition-colors whitespace-nowrap cursor-pointer"
+              >
+                SUSCRIBIRME
+              </button>
+            </div>
+            <p class="font-navigation text-[10.5px] text-[#1A1615]/50 leading-normal">
+              Al suscribirte aceptas recibir comunicaciones de Casa Loy Tequilera y reconoces nuestro aviso de privacidad.
+            </p>
+          </form>
+        </div>
+
+      </div>
+
+      <!-- Legal Links & Copyright Watermark -->
+      <div class="border-t border-[#1A1615]/15 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+        <div class="flex flex-wrap justify-center md:justify-start gap-x-6 gap-y-2 font-navigation text-[11.5px] text-[#1A1615]/60 uppercase tracking-wider">
+          <a href="/quienes-somos" class="hover:text-[#8C4723] transition-colors">Quiénes Somos</a>
+          <a href="/marca-propia" class="hover:text-[#8C4723] transition-colors">Marca Propia</a>
+          <a href="/aviso-de-privacidad" class="hover:text-[#8C4723] transition-colors">Aviso de Privacidad</a>
+          <a href="/cookies" class="hover:text-[#8C4723] transition-colors">Política de Cookies</a>
+          <a href="/terminos-y-condiciones" class="hover:text-[#8C4723] transition-colors">Términos y Condiciones</a>
+          <a href="http://alcoholinformate.org.mx/" target="_blank" rel="noopener noreferrer" class="hover:text-[#8C4723] transition-colors">Evita el Exceso</a>
+          <span class="text-[#8C4723] font-bold">Solo mayores de edad</span>
+        </div>
+        <p class="font-navigation text-[11px] text-[#1A1615]/60 tracking-wider uppercase">
+          © 2026 Casa Loy Tequilera. Todos los derechos reservados · NOM 1633 CRT
+        </p>
+      </div>
+
     </div>
-  </div>
+  </footer>
 
-  <!-- JAVASCRIPT LOGIC (Interactive features & states) -->
+  <!-- JAVASCRIPT LOGIC (Lead Diagnostic & Interactive Features) -->
   <script>
-    // Data structures matching MaquilasV2.jsx & PDF Oficial
-    const insideSteps = [
-      { num: "01", name: "Agave Propio", desc: "3,600 Hectáreas propias y más de 10.8 millones de plantas en Jalisco, Michoacán y Guanajuato. Jima selectiva con alta concentración de azúcares reductores totales (ART) y certificación orgánica.", img: "/Piñas de Agave Tequilana Weber.webp" },
-      { num: "02", name: "Cocción (2 Métodos)", desc: "Flexibilidad total: 4 hornos de mampostería tradicionales (240 tons de capacidad total a vapor lento) o 2 autoclaves rápidas de acero (80 tons total) que maximizan el rendimiento y frescura.", img: "/Agave cocido.webp" },
-      { num: "03", name: "Extracción (3 Métodos)", desc: "3 sistemas a elegir: Tahona ancestral de piedra volcánica (500,000 L/año), molino de rodillos/tornillo noble sin macerar fibras amargas, o sistema de difusor para alta escala.", img: "/Tahona Agave Molienda.webp" },
-      { num: "04", name: "Fermentación (2 Métodos)", desc: "Fermentación lenta al aire libre en tinas abiertas de acero inoxidable o fermentación técnica en tanques cerrados con control de temperatura y levaduras exclusivas de la casa.", img: "/Fermentación.webp" },
-      { num: "05", name: "Destilación (2 Métodos)", desc: "Alambiques tradicionales con serpentín de cobre (15,000 L/día a 55° · 4.5M L/año) o columnas europeas automatizadas (30,000 L/día · 9M L/año). Agua de pozo profundo propio.", img: "/Destilación.webp" },
-      { num: "06", name: "Cava de Barricas", desc: "Capacidad de 1.2 Millones de Litros en cava climatizada con humedad relativa controlada. Crianza en Roble Americano Virgen, Barricas de Bourbon y Roble Francés.", img: "/Cava de Añejamiento.webp" },
-      { num: "07", name: "Tasting Lab & Control Químico", desc: "Cabinas sensoriales de cata profesional y laboratorio fisicoquímico in-house con cromatografía de gases para certificar perfiles 100% Additive Free y cumplimiento NOM-006 / TTB.", img: "/Laboratorio.webp" },
-      { num: "08", name: "Envasado & QA", desc: "Línea de envasado con triple punto de aseguramiento de calidad: llenado automatizado, etiquetado de alta precisión e inspección visual en mesa lumínica botella por botella.", img: "/Embotellado 2.webp" }
-    ];
+    // Lead Quiz State
+    const quizData = {
+      solution: "",
+      stage: "",
+      market: "",
+      name: "",
+      company: "",
+      phone: "",
+      email: "",
+      notes: ""
+    };
 
-    const whoAudiences = [
-      {
-        tag: "Fundadores",
-        title: "Creando una marca de tequila desde cero",
-        desc: "Guiamos tu entrada a una categoría altamente regulada. Te ayudamos con el registro ante el CRT, desarrollo del líquido, diseño de envase y conexión con proveedores autorizados de botellas.",
-        benefits: ["Acompañamiento CRT paso a paso", "Lotes mínimos viables optimizados", "Propiedad garantizada de tu fórmula"]
-      },
-      {
-        tag: "Marcas Existentes",
-        title: "Buscando un socio de maquila más consistente",
-        desc: "Evita quiebres de stock y variaciones en el sabor. Analizamos químicamente tu líquido actual para replicar su perfil sensorial con total precisión en nuestra destilería.",
-        benefits: ["Transición sin variaciones de sabor", "Reserva de agave para contratos anuales", "Logística y cesión ante el CRT en tiempo récord"]
-      },
-      {
-        tag: "Distribuidores",
-        title: "Introduciendo el tequila a tu portafolio global",
-        desc: "Añade una categoría de alto valor comercial. Proveemos marcas blancas listas para exportar o líquidos a la medida con soporte completo en regulaciones internacionales.",
-        benefits: ["Cumplimiento TTB y aduanas internacionales", "Fórmulas adaptadas al gusto de tu mercado", "Certificados de exportación oficiales"]
-      },
-      {
-        tag: "Compradores a Granel",
-        title: "Asegurando volumen constante y perfiles estables",
-        desc: "Suministro continuo de tequila 100% de agave o mixto. Ideal para embotelladoras y distribuidores que buscan estabilidad de precio y consistencia química.",
-        benefits: ["Cromatografía y reporte de laboratorio por lote", "Logística de cisternas y contenedores IBC", "Contratos de suministro a largo plazo"]
+    let currentStep = 1;
+
+    function setQuizAnswer(key, value, nextStep) {
+      quizData[key] = value;
+      goToStep(nextStep);
+    }
+
+    function goToStep(step) {
+      currentStep = step;
+      // Hide all steps
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById(`quiz-step-${i}`);
+        if (el) el.classList.add("hidden");
       }
-    ];
+      const successEl = document.getElementById("quiz-step-success");
+      if (successEl) successEl.classList.add("hidden");
 
-    const problems = [
-      { num: "01", title: "Empezar desde cero", desc: "Guiamos tu entrada a una categoría compleja con normativas estrictas de denominación de origen.", fullDesc: "Desarrollar una marca desde el concepto inicial requiere estructuración ante el IMPI, trámites ante el CRT, registro de marca y diseño técnico de envases. Te damos acompañamiento en toda la ruta crítica regulatoria para evitar retrasos costosos." },
-      { num: "02", title: "Cambiar de productor", desc: "Garantizamos una transición suave sin quiebres de inventario o variaciones en el sabor.", fullDesc: "Mapeamos tu perfil organoléptico mediante cromatografía de gases para replicar el sabor de tu tequila actual en nuestra destilería. Además, gestionamos la cesión de marca o alta de co-producción en el CRT de forma ágil para proteger tu cadena de suministro." },
-      { num: "03", title: "Escalamiento y distribución", desc: "Aumentamos el volumen conforme tu marca crece, manteniendo la calidad en cada lote.", fullDesc: "Nuestra capacidad instalada y reservas de agave propio nos permiten garantizar un suministro continuo y escalable. Crecemos con tu marca, ofreciendo el mismo estándar premium en lotes iniciales pequeños y en pedidos comerciales masivos." },
-      { num: "04", title: "Exportación internacional", desc: "Simplificamos la burocracia, logística y aduanas con soporte especializado.", fullDesc: "Conectamos tu marca con agentes aduanales y distribuidores con experiencia. Preparamos certificados de exportación oficiales del CRT, hojas analíticas de laboratorio, y cumplimos con los estándares TTB (EE.UU.), aduanas de la UE y de Asia." }
-    ];
+      // Show current step
+      const currentEl = document.getElementById(`quiz-step-${step}`);
+      if (currentEl) currentEl.classList.remove("hidden");
 
-    const processSteps = [
-      { num: "01", title: "Diagnóstico Inicial" },
-      { num: "02", title: "Llamada Técnica Directa" },
-      { num: "03", title: "Definición de Producto" },
-      { num: "04", title: "Cumplimiento Legal" },
-      { num: "05", title: "Producción & Control" },
-      { num: "06", title: "Envío & Exportación" }
-    ];
+      // Update indicator & dots
+      const indicator = document.getElementById("quiz-step-indicator");
+      if (indicator) indicator.innerText = `Paso ${step} de 4`;
 
-    const methods = [
-      { idx: "01", name: "Tradicional / Ultra-Premium (Tahona)", desc: "Molienda con tahona de piedra volcánica ancestral, cocción en hornos de mampostería y alambiques de cobre. 100% Additive Free." },
-      { idx: "02", name: "Premium Consistente (Autoclave)", desc: "Cocción en autoclaves de acero inoxidable, extracción noble sin machacar fibras y fermentación con control estricto de temperatura." },
-      { idx: "03", name: "Comercial Escalable (Columnas)", desc: "Destilación eficiente en columnas europeas continuas (hasta 9M L/año) para marcas de alto volumen y rotación competitiva." },
-      { idx: "04", name: "Firma del Autor & Barricas Selectas", desc: "Levaduras exclusivas de la casa y crianza en barricas seleccionadas de Roble Blanco Americano Virgen, Bourbon o Roble Francés." }
-    ];
-
-    const proofItems = [
-      { label: "Atención", val: "Contacto directo con los ingenieros y productores a cargo" },
-      { label: "Proceso", val: "Trazabilidad química y documental verificable por el CRT" },
-      { label: "Casos de éxito", val: "Casos de éxito autorizados — Próximamente" },
-      { label: "Privacidad", val: "Testimonios publicados estrictamente con autorización escrita" }
-    ];
-
-    const faqs = [
-      { group: "founders", q: "¿Cómo empiezo mi propia marca de tequila?", a: "Comienza definiendo el perfil organoléptico (sabor), mercado destino y presupuesto inicial. Nosotros te guiamos en la ruta de certificación oficial ante el CRT." },
-      { group: "founders", q: "¿Quién es el dueño de la fórmula de mi tequila?", a: "Tú. Tu marca es dueña de su perfil y receta. Firmamos contratos de propiedad intelectual que te blindan legalmente." },
-      { group: "founders", q: "¿Puedo visitar las instalaciones de la destilería?", a: "Sí. Damos la bienvenida a visitas técnicas de proyectos calificados. Ver la destilería en persona es la mejor forma de iniciar un lazo de confianza." },
-      { group: "brands", q: "¿Puedo cambiar de productor sin que se detenga mi cadena de suministro?", a: "Sí. Trazamos un plan de transición coordinado, produciendo lotes de seguridad antes del cambio legal de marca ante el CRT." },
-      { group: "brands", q: "¿Pueden fabricar perfiles de forma exclusiva para mí?", a: "Sí. Desarrollamos recetas y perfiles organolépticos exclusivos protegidos bajo contrato de exclusividad." },
-      { group: "bulk", q: "¿Ofrecen tequila a granel certificado?", a: "Sí. Suministramos tequila 100% agave y mixto a granel con perfiles consistentes listos para ser envasados en destino." },
-      { group: "bulk", q: "¿Puedo proveer mis propias botellas y etiquetas?", a: "Sí. Recibimos insumos proporcionados por tu marca o coordinamos el desarrollo y compra de vidrio local con nuestros proveedores autorizados." },
-      { group: "distributors", q: "¿Qué permisos y aduanas se requieren para exportar desde México?", a: "Se requiere padrón de exportadores, certificado de exportación del CRT, factura comercial y cumplir con las regulaciones del país destino (como TTB/COLA en EE.UU.)." },
-      { group: "compliance", q: "¿Qué significa que Casa Loy sea NOM 1633?", a: "La NOM (Norma Oficial Mexicana) 1633 es nuestro registro único autorizado ante el CRT, certificando que destilamos bajo las normas oficiales en la región geográfica protegida por la denominación de origen." }
-    ];
-
-    // Initialization functions
-    document.addEventListener("DOMContentLoaded", () => {
-      renderProcessTabs();
-      updateProcessDisplay(0);
-      
-      renderAudienceTabs();
-      updateAudienceDisplay(0);
-
-      renderRisksAccordion();
-      
-      renderRoadmap();
-      renderLiquids();
-      if (document.getElementById("agave-details-box")) renderAgaveDetails();
-      if (document.getElementById("quality-bullets-box")) renderQualityBullets();
-      if (document.getElementById("compliance-bullets-box")) renderComplianceBullets();
-      renderProofItems();
-      renderFaqs();
-      renderAssetsCheckboxes();
-    });
-
-    // Process Explorer Tabs
-    function renderProcessTabs() {
-      const container = document.getElementById("process-tab-list");
-      if (!container) return;
-      container.innerHTML = insideSteps.map((step, idx) => `
-        <button
-          onclick="updateProcessDisplay(${idx})"
-          id="process-tab-btn-${idx}"
-          class="w-full text-left p-4 flex items-center gap-5 border transition-all duration-300 bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white"
-        >
-          <span class="font-mono text-xs font-bold text-[#FDA377]">${step.num}</span>
-          <span class="font-sans text-sm font-semibold tracking-wider uppercase">${step.name}</span>
-        </button>
-      `).join('');
-    }
-
-    function updateProcessDisplay(idx) {
-      insideSteps.forEach((_, i) => {
-        const btn = document.getElementById(`process-tab-btn-${i}`);
-        if (btn) {
-          if (i === idx) {
-            btn.className = "w-full text-left p-4 flex items-center gap-5 border transition-all duration-300 bg-primary border-primary text-white pl-6";
-          } else {
-            btn.className = "w-full text-left p-4 flex items-center gap-5 border transition-all duration-300 bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white";
-          }
-        }
-      });
-
-      const imgEl = document.getElementById("process-active-img");
-      const numEl = document.getElementById("process-active-num");
-      const titleEl = document.getElementById("process-active-title");
-      const descEl = document.getElementById("process-active-desc");
-
-      if (imgEl) imgEl.src = insideSteps[idx].img;
-      if (numEl) numEl.innerText = `ETAPA ${insideSteps[idx].num}`;
-      if (titleEl) titleEl.innerText = insideSteps[idx].name;
-      if (descEl) descEl.innerText = insideSteps[idx].desc;
-    }
-
-    // Audience tabs
-    function renderAudienceTabs() {
-      const container = document.getElementById("audience-tab-list");
-      if (!container) return;
-      container.innerHTML = whoAudiences.map((aud, idx) => `
-        <button
-          onclick="updateAudienceDisplay(${idx})"
-          id="aud-tab-btn-${idx}"
-          class="py-3.5 px-6 font-sans text-xs uppercase tracking-wider font-semibold border-b-2 transition-all cursor-pointer border-transparent text-stone-500 hover:text-[#1c1c18]"
-        >
-          ${aud.tag}
-        </button>
-      `).join('');
-    }
-
-    function updateAudienceDisplay(idx) {
-      whoAudiences.forEach((_, i) => {
-        const btn = document.getElementById(`aud-tab-btn-${i}`);
-        if (btn) {
-          if (i === idx) {
-            btn.className = "py-3.5 px-6 font-sans text-xs uppercase tracking-wider font-semibold border-b-2 transition-all cursor-pointer border-primary text-primary bg-white/40";
-          } else {
-            btn.className = "py-3.5 px-6 font-sans text-xs uppercase tracking-wider font-semibold border-b-2 transition-all cursor-pointer border-transparent text-stone-500 hover:text-[#1c1c18]";
-          }
-        }
-      });
-
-      const aud = whoAudiences[idx];
-      const tagEl = document.getElementById("aud-active-tag");
-      const titleEl = document.getElementById("aud-active-title");
-      const descEl = document.getElementById("aud-active-desc");
-      const bulletsBox = document.getElementById("aud-active-benefits");
-
-      if (tagEl) tagEl.innerText = aud.tag;
-      if (titleEl) titleEl.innerText = aud.title;
-      if (descEl) descEl.innerText = aud.desc;
-
-      if (bulletsBox) {
-        bulletsBox.innerHTML = aud.benefits.map(b => `
-          <li class="flex items-center gap-2.5 text-xs text-[#1c1c18] font-light">
-            <span class="material-symbols-outlined text-sm text-primary">check</span>
-            <span>${b}</span>
-          </li>
+      const dotsContainer = document.getElementById("quiz-progress-dots");
+      if (dotsContainer) {
+        dotsContainer.innerHTML = [1, 2, 3, 4].map(s => `
+          <span class="w-8 h-1 ${s <= step ? 'bg-[#8C4723]' : 'bg-white/20'} rounded-full transition-colors"></span>
         `).join('');
       }
     }
 
-    // Risks accordion
-    function renderRisksAccordion() {
-      const container = document.getElementById("risks-accordion-container");
-      if (!container) return;
-      container.innerHTML = problems.map((prob, idx) => `
-        <div class="py-4 border-b border-outline-variant/30 transition-all duration-300" id="risk-row-${idx}">
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center cursor-pointer" onclick="toggleRisk(${idx})">
-            <span class="font-serif text-3xl font-semibold md:col-span-1 text-primary/30" id="risk-num-${idx}">${prob.num}</span>
-            <h3 class="font-sans text-lg font-bold text-[#1c1c18] md:col-span-4 flex items-center justify-between">
-              <span>${prob.title}</span>
-              <span class="material-symbols-outlined md:hidden text-primary" id="risk-icon-${idx}">add</span>
-            </h3>
-            <p class="font-sans text-sm text-secondary leading-relaxed md:col-span-7 font-light">${prob.desc}</p>
-          </div>
-          <div class="hidden overflow-hidden mt-4 pl-6" id="risk-detail-${idx}">
-            <p class="font-sans text-xs text-secondary bg-white p-4 border border-outline-variant/40 leading-relaxed font-light">
-              ${prob.fullDesc}
-            </p>
-          </div>
-        </div>
-      `).join('');
-      toggleRisk(0);
-    }
-
-    let activeRiskIndex = -1;
-    function toggleRisk(idx) {
-      if (activeRiskIndex !== -1 && activeRiskIndex !== idx) {
-        const prevDetail = document.getElementById(`risk-detail-${activeRiskIndex}`);
-        const prevRow = document.getElementById(`risk-row-${activeRiskIndex}`);
-        const prevNum = document.getElementById(`risk-num-${activeRiskIndex}`);
-        const prevIcon = document.getElementById(`risk-icon-${activeRiskIndex}`);
-        if (prevDetail) prevDetail.classList.add("hidden");
-        if (prevRow) prevRow.classList.remove("px-6", "bg-[#EDE7DE]/20");
-        if (prevNum) prevNum.className = "font-serif text-3xl font-semibold md:col-span-1 text-primary/30";
-        if (prevIcon) prevIcon.innerText = "add";
+    async function handleLeadSubmit(event) {
+      event.preventDefault();
+      const submitBtn = document.getElementById("lead-submit-btn");
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = "ENVIANDO INFORMACIÓN...";
       }
 
-      const el = document.getElementById(`risk-detail-${idx}`);
-      const row = document.getElementById(`risk-row-${idx}`);
-      const num = document.getElementById(`risk-num-${idx}`);
-      const icon = document.getElementById(`risk-icon-${idx}`);
-      
-      if (el && el.classList.contains("hidden")) {
-        el.classList.remove("hidden");
-        if (row) row.classList.add("px-6", "bg-[#EDE7DE]/20");
-        if (num) num.className = "font-serif text-3xl font-semibold md:col-span-1 text-primary scale-105";
-        if (icon) icon.innerText = "remove";
-        activeRiskIndex = idx;
-      } else if (el) {
-        el.classList.add("hidden");
-        if (row) row.classList.remove("px-6", "bg-[#EDE7DE]/20");
-        if (num) num.className = "font-serif text-3xl font-semibold md:col-span-1 text-primary/30";
-        if (icon) icon.innerText = "add";
-        activeRiskIndex = -1;
-      }
-    }
+      quizData.name = document.getElementById("lead-name")?.value || "";
+      quizData.company = document.getElementById("lead-company")?.value || "";
+      quizData.phone = document.getElementById("lead-phone")?.value || "";
+      quizData.email = document.getElementById("lead-email")?.value || "";
+      quizData.notes = document.getElementById("lead-notes")?.value || "";
 
-    // Dynamic Lists & Renderers
-    function renderRoadmap() {
-      const container = document.getElementById("roadmap-grid");
-      if (!container) return;
-      container.innerHTML = processSteps.map(step => `
-        <div class="bg-white/5 border border-white/10 p-8 flex flex-col justify-between min-h-[180px] transition-custom hover:bg-white/10 hover:border-primary">
-          <span class="font-sans text-xs text-[#FDA377] font-bold block mb-4">${step.num}</span>
-          <h3 class="font-serif text-base font-semibold text-white leading-tight">${step.title}</h3>
-        </div>
-      `).join('');
-    }
-
-    function renderLiquids() {
-      const container = document.getElementById("liquids-grid");
-      if (!container) return;
-      container.innerHTML = methods.map(method => `
-        <div class="border border-outline-variant bg-white flex flex-col min-h-[220px] transition-custom hover:border-primary/40 hover:-translate-y-1 hover:shadow-md">
-          <div class="p-8 border-b border-outline-variant/30 flex-grow text-left">
-            <div class="font-sans text-[10px] text-primary font-bold tracking-widest uppercase mb-2">Perfil ${method.idx}</div>
-            <h3 class="font-serif text-lg font-bold text-[#1c1c18] leading-tight">${method.name}</h3>
-          </div>
-          <div class="bg-[#EDE7DE]/30 p-6 text-xs text-secondary leading-relaxed font-sans font-light text-left min-h-[88px] flex items-center">
-            ${method.desc}
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function renderAgaveDetails() {
-      const container = document.getElementById("agave-details-box");
-      if (!container) return;
-      const list = [
-        { k: "Origen", v: "Ayotlán, Los Altos de Jalisco" },
-        { k: "Desde", v: "Raíces agaveras cultivando la tierra desde 1992" },
-        { k: "Trazabilidad", v: "Planeación de suministro a nivel de parcela y jima controlada" }
-      ];
-      container.innerHTML = list.map(item => `
-        <div class="border-l-2 border-primary pl-6 py-1">
-          <div class="font-sans text-[10px] text-primary font-bold tracking-widest uppercase">${item.k}</div>
-          <div class="font-sans text-sm text-[#1c1c18] font-normal mt-1">${item.v}</div>
-        </div>
-      `).join('');
-    }
-
-    function renderQualityBullets() {
-      const container = document.getElementById("quality-bullets-box");
-      if (!container) return;
-      const bullets = ["Laboratorio in-house en cada lote", "Firma y aprobación del cliente previa", "Trazabilidad completa de principio a fin"];
-      container.innerHTML = bullets.map(b => `
-        <span class="flex items-center gap-2 text-[11px] text-[#1c1c18] font-light font-sans">
-          <span class="material-symbols-outlined text-xs text-primary">check</span>
-          <span>${b}</span>
-        </span>
-      `).join('');
-    }
-
-    function renderComplianceBullets() {
-      const container = document.getElementById("compliance-bullets-box");
-      if (!container) return;
-      const bullets = ["NOM 1633 autorizada por el CRT", "Documentación de exportación completa", "Soporte legal con agentes aduanales y distribuidores"];
-      container.innerHTML = bullets.map(b => `
-        <span class="flex items-center gap-2 text-[11px] text-[#1c1c18] font-light font-sans">
-          <span class="material-symbols-outlined text-xs text-primary">check</span>
-          <span>${b}</span>
-        </span>
-      `).join('');
-    }
-
-    function renderProofItems() {
-      const container = document.getElementById("proof-items-list");
-      container.innerHTML = proofItems.map((item, idx) => `
-        <div class="py-5 flex gap-5 items-start">
-          <span class="font-mono text-xs font-bold text-primary pt-0.5">0${idx+1}</span>
-          <div class="space-y-1">
-            <h4 class="font-sans text-xs font-semibold uppercase tracking-wider text-[#1c1c18]">${item.label}</h4>
-            <p class="font-sans text-xs text-secondary font-light leading-relaxed">${item.val}</p>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function renderFaqs() {
-      const container = document.getElementById("faqs-accordion-container");
-      const groups = {
-        founders: "Fundadores e Inversionistas",
-        brands: "Marcas Existentes",
-        bulk: "Compradores a Granel",
-        distributors: "Distribuidores e Importadores",
-        compliance: "Regulación y Cumplimiento"
-      };
-
-      let html = "";
-      Object.keys(groups).forEach(gKey => {
-        const name = groups[gKey];
-        const list = faqs.filter(f => f.group === gKey);
-        
-        html += `
-          <div class="mb-10 text-left">
-            <div class="font-sans text-xs text-primary font-bold tracking-wider uppercase border-b border-outline-variant/30 pb-2 mb-3 mt-6">
-              ${name}
-            </div>
-        `;
-        list.forEach(faq => {
-          html += `
-            <details class="border-b border-outline-variant/20 py-4 group">
-              <summary class="cursor-pointer font-serif text-base font-semibold flex justify-between items-center text-[#1c1c18] select-none list-none group-open:text-primary transition-colors">
-                <span>${faq.q}</span>
-                <span class="material-symbols-outlined text-primary text-xl group-open:rotate-180 transition-transform duration-200">expand_more</span>
-              </summary>
-              <p class="mt-3 text-sm text-secondary leading-relaxed font-light pl-2">
-                ${faq.a}
-              </p>
-            </details>
-          `;
+      try {
+        await fetch("/api/leads/maquilas", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...quizData,
+            source: "maquilas-v2-streamlined",
+            createdAt: new Date().toISOString()
+          })
         });
-        html += `</div>`;
-      });
-      container.innerHTML = html;
-    }
-
-    function renderAssetsCheckboxes() {
-      const container = document.getElementById("assets-checkboxes-container");
-      const list = [
-        "Marca registrada legalmente ante el IMPI u organismo equivalente",
-        "Diseño de botella y etiqueta finalizado",
-        "Permiso de importación en mercado destino listo",
-        "Ninguno aún, requiero soporte de consultoría integral"
-      ];
-      container.innerHTML = list.map((item, idx) => `
-        <label class="flex items-center gap-3 p-4 border border-white/10 bg-white/5 hover:bg-white/10 transition-all cursor-pointer text-xs font-sans text-white/95">
-          <input type="checkbox" value="${item}" id="asset-chk-${idx}" class="w-4 h-4 text-primary rounded focus:ring-0 bg-transparent border-white/30">
-          <span>${item}</span>
-        </label>
-      `).join('');
-    }
-
-    // 8-step Quiz Interactive Flow
-    let quizAnswersLocal = {
-      solution: "",
-      stage: "",
-      market: "",
-      volume: "",
-      tequilaType: "",
-      assetsReady: [],
-      timeline: "",
-      notes: ""
-    };
-    let currentQuizStepLocal = 1;
-
-    function selectSolution(solName) {
-      setQuizAnswer('solution', solName, 2);
-      document.getElementById("quiz-v2").scrollIntoView({ behavior: "smooth" });
-    }
-
-    function setQuizAnswer(field, value, nextStep) {
-      quizAnswersLocal[field] = value;
-      changeQuizStep(nextStep);
-    }
-
-    function prevQuizStep() {
-      if (currentQuizStepLocal > 1) {
-        changeQuizStep(currentQuizStepLocal - 1);
+      } catch (err) {
+        console.warn("API lead submission note:", err);
       }
-    }
 
-    function changeQuizStep(step) {
-      // Hide all steps
-      for (let i = 1; i <= 9; i++) {
+      // Show success screen
+      for (let i = 1; i <= 4; i++) {
         const el = document.getElementById(`quiz-step-${i}`);
         if (el) el.classList.add("hidden");
       }
+      const successEl = document.getElementById("quiz-step-success");
+      if (successEl) successEl.classList.remove("hidden");
 
-      // Show current step
-      document.getElementById(`quiz-step-${step}`).classList.remove("hidden");
-      currentQuizStepLocal = step;
+      const indicator = document.getElementById("quiz-step-indicator");
+      if (indicator) indicator.innerText = "Completado ✓";
 
-      // Update counters & buttons
-      const counter = document.getElementById("quiz-step-counter");
-      const backBtn = document.getElementById("quiz-back-btn");
-      const indicatorBox = document.getElementById("quiz-step-indicator-box");
+      const dotsContainer = document.getElementById("quiz-progress-dots");
+      if (dotsContainer) {
+        dotsContainer.innerHTML = [1, 2, 3, 4].map(() => `
+          <span class="w-8 h-1 bg-emerald-500 rounded-full"></span>
+        `).join('');
+      }
+    }
 
-      if (step < 9) {
-        indicatorBox.classList.remove("hidden");
-        counter.innerText = `Paso ${step} de 8`;
-        if (step > 1) {
-          backBtn.classList.remove("hidden");
-        } else {
-          backBtn.classList.add("hidden");
+    // Official Casa Loy Header Scroll & Mobile Navigation
+    const siteHeader = document.getElementById("site-header");
+    const headerLogo = document.getElementById("header-logo");
+    const headerLogoMobile = document.getElementById("header-logo-mobile");
+    const navLinks = document.querySelectorAll(".nav-link");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
+    const mobileMenuClose = document.getElementById("mobile-menu-close");
+
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 20) {
+        siteHeader.classList.remove("header-unscrolled");
+        siteHeader.classList.add("header-scrolled");
+        if (headerLogo) headerLogo.src = "/Logotipo Casa Loy Tequilera.webp";
+        if (headerLogoMobile) headerLogoMobile.src = "/Logotipo Casa Loy Tequilera.webp";
+        navLinks.forEach(link => {
+          if (!link.querySelector(".bg-primary")) {
+            link.classList.remove("text-white/90", "text-white");
+            link.classList.add("text-[#1c1c18]");
+          } else {
+            link.classList.remove("text-white");
+            link.classList.add("text-primary");
+          }
+        });
+        if (mobileMenuToggle) {
+          mobileMenuToggle.classList.remove("text-white");
+          mobileMenuToggle.classList.add("text-[#1c1c18]");
         }
       } else {
-        // Success step
-        indicatorBox.classList.add("hidden");
-      }
-    }
-
-    function submitContactStep() {
-      const name = document.getElementById("contact-name").value.trim();
-      const company = document.getElementById("contact-company").value.trim();
-      const lada = document.getElementById("contact-lada").value.trim();
-      const phone = document.getElementById("contact-phone").value.trim();
-      const email = document.getElementById("contact-email").value.trim();
-
-      if (!name || !company || !phone || !email) {
-        alert("Por favor completa los campos requeridos (*)");
-        return;
-      }
-      changeQuizStep(5);
-    }
-
-    function submitAssetsStep() {
-      const selected = [];
-      for (let i = 0; i < 4; i++) {
-        const chk = document.getElementById(`asset-chk-${i}`);
-        if (chk && chk.checked) {
-          selected.push(chk.value);
-        }
-      }
-      quizAnswersLocal.assetsReady = selected;
-      changeQuizStep(8);
-    }
-
-    async function handleFinalFormSubmit(event) {
-      event.preventDefault();
-      
-      const timeline = document.getElementById("quiz-timeline").value;
-      const notes = document.getElementById("quiz-notes").value.trim();
-
-      if (!timeline) {
-        alert("Por favor selecciona un cronograma estimado.");
-        return;
-      }
-
-      quizAnswersLocal.timeline = timeline;
-      quizAnswersLocal.notes = notes;
-
-      const submitBtn = document.getElementById("quiz-submit-button");
-      submitBtn.disabled = true;
-      submitBtn.innerText = "Procesando...";
-
-      const commentsMarkdown = `
-**[Diagnóstico B2B Maquilas V2 - HTML Standalone]**
-- **Mercado Objetivo:** ${quizAnswersLocal.market}
-- **Volumen Estimado:** ${quizAnswersLocal.volume}
-- **Tipo de Tequila:** ${quizAnswersLocal.tequilaType}
-- **Activos Listos:** ${quizAnswersLocal.assetsReady.join(", ") || "Ninguno"}
-- **Lanzamiento Estimado:** ${quizAnswersLocal.timeline}
-- **Notas del Proyecto:** ${quizAnswersLocal.notes || "Sin comentarios adicionales"}
-- **Modo:** HTML Estático Compartido
-      `.trim();
-
-      const payload = {
-        name: document.getElementById("contact-name").value.trim(),
-        company: document.getElementById("contact-company").value.trim(),
-        email: document.getElementById("contact-email").value.trim(),
-        lada: document.getElementById("contact-lada").value.trim(),
-        phone: document.getElementById("contact-phone").value.trim(),
-        solution: quizAnswersLocal.solution,
-        objective: quizAnswersLocal.market,
-        stage: quizAnswersLocal.stage,
-        comments: commentsMarkdown,
-        origin: "html_shared"
-      };
-
-      try {
-        const response = await fetch("/api/maquila", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
+        siteHeader.classList.remove("header-scrolled");
+        siteHeader.classList.add("header-unscrolled");
+        if (headerLogo) headerLogo.src = "/Logotipo Casa Loy Tequilera Color Blanco.webp";
+        if (headerLogoMobile) headerLogoMobile.src = "/Logotipo Casa Loy Tequilera Color Blanco.webp";
+        navLinks.forEach(link => {
+          if (!link.querySelector(".bg-primary")) {
+            link.classList.remove("text-[#1c1c18]");
+            link.classList.add("text-white/90");
+          } else {
+            link.classList.remove("text-primary");
+            link.classList.add("text-white");
+          }
         });
-
-        if (response.ok) {
-          changeQuizStep(9);
-        } else {
-          // Fallback simulation in offline/standalone mode if API is unreachable
-          console.log("Submit failed or offline, simulating local success. Payload:", payload);
-          changeQuizStep(9);
+        if (mobileMenuToggle) {
+          mobileMenuToggle.classList.remove("text-[#1c1c18]");
+          mobileMenuToggle.classList.add("text-white");
         }
-      } catch (error) {
-        console.warn("Connection error to API. Simulating success locally for shared demo.", error);
-        changeQuizStep(9);
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerText = "Enviar y Recibir Diagnóstico";
       }
+    });
+
+    if (mobileMenuToggle && mobileMenu) {
+      mobileMenuToggle.addEventListener("click", () => {
+        mobileMenu.classList.remove("translate-x-full");
+      });
     }
-
-    function resetQuizForm() {
-      quizAnswersLocal = {
-        solution: "",
-        stage: "",
-        market: "",
-        volume: "",
-        tequilaType: "",
-        assetsReady: [],
-        timeline: "",
-        notes: ""
-      };
-      document.getElementById("contact-name").value = "";
-      document.getElementById("contact-company").value = "";
-      document.getElementById("contact-lada").value = "";
-      document.getElementById("contact-phone").value = "";
-      document.getElementById("contact-email").value = "";
-      document.getElementById("quiz-timeline").value = "";
-      document.getElementById("quiz-notes").value = "";
-
-      for (let i = 0; i < 4; i++) {
-        const chk = document.getElementById(`asset-chk-${i}`);
-        if (chk) chk.checked = false;
-      }
-
-      changeQuizStep(1);
+    if (mobileMenuClose && mobileMenu) {
+      mobileMenuClose.addEventListener("click", () => {
+        mobileMenu.classList.add("translate-x-full");
+      });
     }
   </script>
 
