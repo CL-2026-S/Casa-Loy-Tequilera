@@ -1212,16 +1212,13 @@ export default function WhereToBuy({ lang, country }) {
                           key={brand.id}
                           type="button"
                           onClick={() => handleBrandToggle(brand.id)}
-                          className={`text-[9px] uppercase tracking-widest px-2.5 py-1.5 border transition-all duration-300 font-bold cursor-pointer flex items-center gap-1.5 ${
+                          className={`text-[9px] uppercase tracking-widest px-3 py-1.5 border transition-all duration-300 font-bold cursor-pointer flex items-center justify-center ${
                             isSelected
                               ? "bg-primary border-primary text-white shadow-sm"
                               : "border-outline-variant/30 hover:border-primary/50 text-on-surface-variant/85 bg-white"
                           }`}
                         >
                           <span>{brand.name}</span>
-                          <span className={`text-[8px] px-1 py-0.2 rounded font-mono font-bold ${isSelected ? 'bg-white/25 text-white' : 'bg-stone-100 text-stone-600'}`}>
-                            {brand.code}
-                          </span>
                         </button>
                       );
                     })}
