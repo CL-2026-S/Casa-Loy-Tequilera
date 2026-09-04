@@ -358,7 +358,7 @@ export default function WhereToBuy({ lang, country }) {
       attributionControl: false
     });
 
-    // OpenStreetMap standard tiles - 100% free, no API key required, highly reliable
+    // OpenStreetMap standard tiles with custom CSS luxury filter to eliminate line saturation and avoid any API key watermarks
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       maxZoom: 19
@@ -721,15 +721,17 @@ export default function WhereToBuy({ lang, country }) {
             <line x1="10.5" y1="7.2" x2="11.5" y2="11" stroke="${markerColor}" stroke-width="0.8" />
           `;
         } else {
-          // Storefront (tienda) symbol centered at (12, 9.5)
+          // Storefront (tienda comercial con toldo y vitrinas)
           symbolSvg = `
-            <path d="M16 9.5 L12 5.5 L8 9.5 V13.5 H16 V9.5 Z M13 13.5 H11 V10.5 H13 V13.5 Z" fill="#FFFFFF" />
+            <g transform="translate(12, 8.8) scale(0.52) translate(-12, -11.5)" fill="#FFFFFF">
+              <path d="M21 4H3c-.55 0-1 .45-1 1v3c0 .55.45 1 1 1h1v10c0 .55.45 1 1 1h14c.55 0 1-.45 1-1V9h1c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1zm-9 14H6v-6h6v6zm6 0h-4v-6h4v6zm2-11H4V6h16v1z"/>
+            </g>
           `;
         }
         
-        // Teardrop custom SVG pin in Leaflet
+        // Teardrop custom SVG pin in Leaflet with drop-shadow for contrast
         const iconHtml = `
-          <svg viewBox="0 0 24 24" width="30" height="30" style="display: block;">
+          <svg viewBox="0 0 24 24" width="32" height="32" style="display: block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35));">
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" 
                   fill="${markerColor}" 
                   stroke="#FFFFFF" 
@@ -741,9 +743,9 @@ export default function WhereToBuy({ lang, country }) {
         const pinIcon = L.divIcon({
           html: iconHtml,
           className: "custom-store-pin",
-          iconSize: [30, 30],
-          iconAnchor: [15, 30],
-          popupAnchor: [0, -30]
+          iconSize: [32, 32],
+          iconAnchor: [16, 32],
+          popupAnchor: [0, -32]
         });
 
         // Compute distance label if user is geolocated
@@ -879,6 +881,9 @@ export default function WhereToBuy({ lang, country }) {
     .leaflet-container {
       background-color: #EDE7DE !important;
       font-family: inherit;
+    }
+    .leaflet-tile-pane .leaflet-tile {
+      filter: grayscale(92%) contrast(80%) brightness(106%) sepia(6%);
     }
     .custom-leaflet-popup .leaflet-popup-content-wrapper {
       border-radius: 0px !important;
