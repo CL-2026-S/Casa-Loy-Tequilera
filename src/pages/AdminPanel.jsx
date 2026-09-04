@@ -1854,6 +1854,7 @@ export default function AdminPanel({
     // Convert checkbox string values to booleans
     const booleanFields = [
       'is_active', 'pdv', 'cdc',
+      'cl', 'td', 'tz',
       'casa_loy_blanco', 'casa_loy_reposado', 'casa_loy_cristalino', 'casa_loy_anejo', 'casa_loy_piedra_y_agave_blanco', 'casa_loy_piedra_y_agave_reposado',
       'taddel_plata', 'taddel_reposado', 'taddel_cristalino',
       'tierra_zafiro_blanco', 'tierra_zafiro_blanco_100_pure', 'tierra_zafiro_reposado', 'tierra_zafiro_cristalino'
@@ -4540,7 +4541,7 @@ export default function AdminPanel({
                       <p className="text-xs text-stone-400 mt-1">Permite a los Key Account Managers (KAMs) dar de alta y editar su catálogo de distribución de forma interactiva.</p>
                     </div>
                     <button
-                      onClick={() => setEditingPos({ retailer: "", name: "", address: "", region: "mx", is_active: true, pdv: true, cdc: false })}
+                      onClick={() => setEditingPos({ retailer: "", name: "", address: "", region: "mx", is_active: true, pdv: true, cdc: false, cl: false, td: false, tz: false })}
                       className="text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white px-3.5 py-2 font-semibold"
                     >
                       + Registrar Punto
@@ -4572,7 +4573,12 @@ export default function AdminPanel({
                       <div className="grid grid-cols-3 gap-3">
                         <div>
                           <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Región *</label>
-                          <select name="region" defaultValue={editingPos.region} className="w-full bg-white border border-stone-200 p-2.5 text-xs">
+                          <select 
+                            name="region" 
+                            value={editingPos.region || "mx"} 
+                            onChange={(e) => setEditingPos({ ...editingPos, region: e.target.value })}
+                            className="w-full bg-white border border-stone-200 p-2.5 text-xs"
+                          >
                             <option value="mx">México (MX)</option>
                             <option value="usa">Estados Unidos (USA)</option>
                           </select>
@@ -4627,40 +4633,100 @@ export default function AdminPanel({
                         </div>
                       </div>
 
-                      {/* Brands check lists */}
-                      <div className="border-t border-stone-200 pt-3 space-y-2">
-                        <span className="text-[10px] font-bold text-stone-500 uppercase block">Existencia de Producto por Marca:</span>
-                        
-                        <div className="grid grid-cols-3 gap-3 text-xs bg-white p-3 border border-stone-200/40">
-                          {/* Casa Loy products */}
-                          <div className="space-y-1">
-                            <span className="font-bold text-[#8C4723] block text-[10px] uppercase">CASA LOY</span>
-                            <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_blanco" value="true" defaultChecked={editingPos.casa_loy_blanco}/> Blanco</label>
-                            <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_reposado" value="true" defaultChecked={editingPos.casa_loy_reposado}/> Reposado</label>
-                            <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_cristalino" value="true" defaultChecked={editingPos.casa_loy_cristalino}/> Cristalino</label>
-                            <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_anejo" value="true" defaultChecked={editingPos.casa_loy_anejo}/> Añejo</label>
-                            <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_piedra_y_agave_blanco" value="true" defaultChecked={editingPos.casa_loy_piedra_y_agave_blanco}/> Piedra/Agave B.</label>
-                            <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_piedra_y_agave_reposado" value="true" defaultChecked={editingPos.casa_loy_piedra_y_agave_reposado}/> Piedra/Agave R.</label>
+                      {/* Region-aware Product/Brand existence */}
+                      {editingPos.region === "usa" ? (
+                        <div className="border-t border-stone-200 pt-3 space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-[10px] font-bold text-stone-500 uppercase block">Existencia por Marca (USA):</span>
+                            <span className="text-[9px] bg-blue-50 text-blue-700 font-semibold px-2 py-0.5 rounded border border-blue-200/50">
+                              Búsqueda por Marca activa (sin categorías en USA)
+                            </span>
                           </div>
+                          
+                          <div className="grid grid-cols-3 gap-3 text-xs bg-white p-3 border border-stone-200/40">
+                            <label className="flex items-center gap-2 p-2 border border-stone-200 rounded cursor-pointer hover:bg-stone-50 transition-colors">
+                              <input 
+                                type="checkbox" 
+                                name="cl" 
+                                value="true" 
+                                defaultChecked={editingPos.cl || editingPos.casa_loy_blanco || editingPos.casa_loy_reposado || (editingPos.brands && editingPos.brands.includes('casa-loy'))} 
+                                className="accent-[#8C4723] w-4 h-4 cursor-pointer"
+                              />
+                              <div>
+                                <span className="font-bold text-[#8C4723] block text-xs">CL</span>
+                                <span className="text-[10px] text-stone-500">Casa Loy</span>
+                              </div>
+                            </label>
 
-                          {/* Taddel products */}
-                          <div className="space-y-1">
-                            <span className="font-bold text-[#2F403E] block text-[10px] uppercase">TADDEL</span>
-                            <label className="flex items-center gap-1.5"><input type="checkbox" name="taddel_plata" value="true" defaultChecked={editingPos.taddel_plata}/> Plata</label>
-                            <label className="flex items-center gap-1.5"><input type="checkbox" name="taddel_reposado" value="true" defaultChecked={editingPos.taddel_reposado}/> Reposado</label>
-                            <label className="flex items-center gap-1.5"><input type="checkbox" name="taddel_cristalino" value="true" defaultChecked={editingPos.taddel_cristalino}/> Cristalino</label>
-                          </div>
+                            <label className="flex items-center gap-2 p-2 border border-stone-200 rounded cursor-pointer hover:bg-stone-50 transition-colors">
+                              <input 
+                                type="checkbox" 
+                                name="td" 
+                                value="true" 
+                                defaultChecked={editingPos.td || editingPos.taddel_plata || editingPos.taddel_reposado || (editingPos.brands && editingPos.brands.includes('taddel'))} 
+                                className="accent-[#2F403E] w-4 h-4 cursor-pointer"
+                              />
+                              <div>
+                                <span className="font-bold text-[#2F403E] block text-xs">TD</span>
+                                <span className="text-[10px] text-stone-500">TADDEL</span>
+                              </div>
+                            </label>
 
-                          {/* Tierra Zafiro products */}
-                          <div className="space-y-1">
-                            <span className="font-bold text-stone-700 block text-[10px] uppercase">TIERRA ZAFIRO</span>
-                            <label className="flex items-center gap-1.5"><input type="checkbox" name="tierra_zafiro_blanco" value="true" defaultChecked={editingPos.tierra_zafiro_blanco}/> Blanco</label>
-                            <label className="flex items-center gap-1.5"><input type="checkbox" name="tierra_zafiro_blanco_100_pure" value="true" defaultChecked={editingPos.tierra_zafiro_blanco_100_pure}/> Blanco 100% P.</label>
-                            <label className="flex items-center gap-1.5"><input type="checkbox" name="tierra_zafiro_reposado" value="true" defaultChecked={editingPos.tierra_zafiro_reposado}/> Reposado</label>
-                            <label className="flex items-center gap-1.5"><input type="checkbox" name="tierra_zafiro_cristalino" value="true" defaultChecked={editingPos.tierra_zafiro_cristalino}/> Cristalino</label>
+                            <label className="flex items-center gap-2 p-2 border border-stone-200 rounded cursor-pointer hover:bg-stone-50 transition-colors">
+                              <input 
+                                type="checkbox" 
+                                name="tz" 
+                                value="true" 
+                                defaultChecked={editingPos.tz || editingPos.tierra_zafiro_blanco || editingPos.tierra_zafiro_reposado || (editingPos.brands && editingPos.brands.includes('tierra-zafiro'))} 
+                                className="accent-stone-700 w-4 h-4 cursor-pointer"
+                              />
+                              <div>
+                                <span className="font-bold text-stone-700 block text-xs">TZ</span>
+                                <span className="text-[10px] text-stone-500">Tierra Zafiro</span>
+                              </div>
+                            </label>
                           </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="border-t border-stone-200 pt-3 space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-[10px] font-bold text-stone-500 uppercase block">Existencia de Producto por Categoría (México):</span>
+                            <span className="text-[9px] bg-amber-50 text-[#8C4723] font-semibold px-2 py-0.5 rounded border border-amber-200/50">
+                              Categorías activas para MX
+                            </span>
+                          </div>
+                          
+                          <div className="grid grid-cols-3 gap-3 text-xs bg-white p-3 border border-stone-200/40">
+                            {/* Casa Loy products */}
+                            <div className="space-y-1">
+                              <span className="font-bold text-[#8C4723] block text-[10px] uppercase">CASA LOY (CL)</span>
+                              <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_blanco" value="true" defaultChecked={editingPos.casa_loy_blanco}/> Blanco</label>
+                              <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_reposado" value="true" defaultChecked={editingPos.casa_loy_reposado}/> Reposado</label>
+                              <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_cristalino" value="true" defaultChecked={editingPos.casa_loy_cristalino}/> Cristalino</label>
+                              <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_anejo" value="true" defaultChecked={editingPos.casa_loy_anejo}/> Añejo</label>
+                              <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_piedra_y_agave_blanco" value="true" defaultChecked={editingPos.casa_loy_piedra_y_agave_blanco}/> Piedra/Agave B.</label>
+                              <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_piedra_y_agave_reposado" value="true" defaultChecked={editingPos.casa_loy_piedra_y_agave_reposado}/> Piedra/Agave R.</label>
+                            </div>
+
+                            {/* Taddel products */}
+                            <div className="space-y-1">
+                              <span className="font-bold text-[#2F403E] block text-[10px] uppercase">TADDEL (TD)</span>
+                              <label className="flex items-center gap-1.5"><input type="checkbox" name="taddel_plata" value="true" defaultChecked={editingPos.taddel_plata}/> Plata</label>
+                              <label className="flex items-center gap-1.5"><input type="checkbox" name="taddel_reposado" value="true" defaultChecked={editingPos.taddel_reposado}/> Reposado</label>
+                              <label className="flex items-center gap-1.5"><input type="checkbox" name="taddel_cristalino" value="true" defaultChecked={editingPos.taddel_cristalino}/> Cristalino</label>
+                            </div>
+
+                            {/* Tierra Zafiro products */}
+                            <div className="space-y-1">
+                              <span className="font-bold text-stone-700 block text-[10px] uppercase">TIERRA ZAFIRO (TZ)</span>
+                              <label className="flex items-center gap-1.5"><input type="checkbox" name="tierra_zafiro_blanco" value="true" defaultChecked={editingPos.tierra_zafiro_blanco}/> Blanco</label>
+                              <label className="flex items-center gap-1.5"><input type="checkbox" name="tierra_zafiro_blanco_100_pure" value="true" defaultChecked={editingPos.tierra_zafiro_blanco_100_pure}/> Blanco 100% P.</label>
+                              <label className="flex items-center gap-1.5"><input type="checkbox" name="tierra_zafiro_reposado" value="true" defaultChecked={editingPos.tierra_zafiro_reposado}/> Reposado</label>
+                              <label className="flex items-center gap-1.5"><input type="checkbox" name="tierra_zafiro_cristalino" value="true" defaultChecked={editingPos.tierra_zafiro_cristalino}/> Cristalino</label>
+                            </div>
+                          </div>
+                        </div>
+                      )}
 
                       <div className="flex gap-2 justify-end pt-3">
                         <button type="button" onClick={() => setEditingPos(null)} className="px-3.5 py-1.5 text-xs border border-stone-200 cursor-pointer">Cancelar</button>
@@ -4678,6 +4744,7 @@ export default function AdminPanel({
                           <th className="p-3">Cadena</th>
                           <th className="p-3">Dirección</th>
                           <th className="p-3">Región</th>
+                          <th className="p-3 text-center">Marcas</th>
                           <th className="p-3">KAM / Asesor</th>
                           <th className="p-3 text-center">Tipo</th>
                           <th className="p-3 text-center">Acciones</th>
@@ -4686,30 +4753,52 @@ export default function AdminPanel({
                       <tbody className="divide-y divide-stone-100">
                         {posList.length === 0 ? (
                           <tr>
-                            <td colSpan="7" className="p-8 text-center text-stone-400 italic">No hay distribuidores registrados en Supabase (mostrando fallbacks locales).</td>
+                            <td colSpan="8" className="p-8 text-center text-stone-400 italic">No hay distribuidores registrados en Supabase (mostrando fallbacks locales).</td>
                           </tr>
                         ) : (
-                          posList.map(store => (
-                            <tr key={store.id} className="hover:bg-stone-50/40 text-stone-700">
-                              <td className="p-3 font-semibold text-stone-900">{store.name}</td>
-                              <td className="p-3 font-medium">{store.retailer}</td>
-                              <td className="p-3 text-stone-500 max-w-xs truncate" title={store.address}>{store.address}</td>
-                              <td className="p-3 uppercase font-bold text-stone-500">{store.region}</td>
-                              <td className="p-3 text-stone-600 font-medium">{store.fase}</td>
-                              <td className="p-3 text-center">
-                                <span className="bg-[#8C4723]/10 text-[#8C4723] px-2 py-0.5 text-[10px] font-bold rounded-sm mr-1">
-                                  {store.pdv ? 'PDV' : ''}
-                                </span>
-                                <span className="bg-[#2F403E]/10 text-[#2F403E] px-2 py-0.5 text-[10px] font-bold rounded-sm">
-                                  {store.cdc ? 'CDC' : ''}
-                                </span>
-                              </td>
-                              <td className="p-3 text-center space-x-2 whitespace-nowrap">
-                                <button onClick={() => setEditingPos(store)} className="text-blue-700 hover:underline font-bold uppercase cursor-pointer">Editar</button>
-                                <button onClick={() => handleDeletePos(store.id)} className="text-red-700 hover:underline font-bold uppercase cursor-pointer">Eliminar</button>
-                              </td>
-                            </tr>
-                          ))
+                          posList.map(store => {
+                            const hasCl = Boolean(store.cl || store.casa_loy_blanco || store.casa_loy_reposado || store.casa_loy_cristalino || store.casa_loy_anejo || store.casa_loy_piedra_y_agave_blanco || store.casa_loy_piedra_y_agave_reposado || (store.brands && store.brands.includes('casa-loy')));
+                            const hasTd = Boolean(store.td || store.taddel_plata || store.taddel_reposado || store.taddel_cristalino || (store.brands && store.brands.includes('taddel')));
+                            const hasTz = Boolean(store.tz || store.tierra_zafiro_blanco || store.tierra_zafiro_blanco_100_pure || store.tierra_zafiro_reposado || store.tierra_zafiro_cristalino || (store.brands && store.brands.includes('tierra-zafiro')));
+
+                            return (
+                              <tr key={store.id} className="hover:bg-stone-50/40 text-stone-700">
+                                <td className="p-3 font-semibold text-stone-900">{store.name}</td>
+                                <td className="p-3 font-medium">{store.retailer}</td>
+                                <td className="p-3 text-stone-500 max-w-xs truncate" title={store.address}>{store.address}</td>
+                                <td className="p-3 uppercase font-bold text-stone-500">{store.region}</td>
+                                <td className="p-3 text-center whitespace-nowrap">
+                                  <div className="inline-flex gap-1 items-center justify-center">
+                                    {hasCl && (
+                                      <span className="bg-[#8C4723]/15 text-[#8C4723] font-bold text-[9px] px-1.5 py-0.5 rounded" title="Casa Loy">CL</span>
+                                    )}
+                                    {hasTd && (
+                                      <span className="bg-[#2F403E]/15 text-[#2F403E] font-bold text-[9px] px-1.5 py-0.5 rounded" title="TADDEL">TD</span>
+                                    )}
+                                    {hasTz && (
+                                      <span className="bg-stone-600/15 text-stone-700 font-bold text-[9px] px-1.5 py-0.5 rounded" title="Tierra Zafiro">TZ</span>
+                                    )}
+                                    {!hasCl && !hasTd && !hasTz && (
+                                      <span className="text-stone-300 text-[9px] italic">-</span>
+                                    )}
+                                  </div>
+                                </td>
+                                <td className="p-3 text-stone-600 font-medium">{store.fase}</td>
+                                <td className="p-3 text-center">
+                                  <span className="bg-[#8C4723]/10 text-[#8C4723] px-2 py-0.5 text-[10px] font-bold rounded-sm mr-1">
+                                    {store.pdv ? 'PDV' : ''}
+                                  </span>
+                                  <span className="bg-[#2F403E]/10 text-[#2F403E] px-2 py-0.5 text-[10px] font-bold rounded-sm">
+                                    {store.cdc ? 'CDC' : ''}
+                                  </span>
+                                </td>
+                                <td className="p-3 text-center space-x-2 whitespace-nowrap">
+                                  <button onClick={() => setEditingPos(store)} className="text-blue-700 hover:underline font-bold uppercase cursor-pointer">Editar</button>
+                                  <button onClick={() => handleDeletePos(store.id)} className="text-red-700 hover:underline font-bold uppercase cursor-pointer">Eliminar</button>
+                                </td>
+                              </tr>
+                            );
+                          })
                         )}
                       </tbody>
                     </table>

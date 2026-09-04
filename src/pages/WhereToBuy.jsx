@@ -76,7 +76,7 @@ function getHaversineDistance(lat1, lon1, lat2, lon2) {
 }
 
 export default function WhereToBuy({ lang, country }) {
-  const [region, setRegion] = useState("all");
+  const [region, setRegion] = useState(() => (country === "usa" ? "usa" : "mx"));
   const [stores, setStores] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -94,7 +94,7 @@ export default function WhereToBuy({ lang, country }) {
   const markersRef = useRef([]);
   const [userLocation, setUserLocation] = useState(null);
   const [distanceSorted, setDistanceSorted] = useState(false);
-  const [filterByMap, setFilterByMap] = useState(true);
+  const [filterByMap, setFilterByMap] = useState(false);
   const [mapBounds, setMapBounds] = useState(null);
 
   // Alliances Form states
@@ -158,9 +158,9 @@ export default function WhereToBuy({ lang, country }) {
   ];
 
   const brandOptions = [
-    { id: "casa-loy", name: "Casa Loy" },
-    { id: "taddel", name: "TADDEL" },
-    { id: "tierra-zafiro", name: "Tierra Zafiro" },
+    { id: "casa-loy", code: "CL", name: "Casa Loy" },
+    { id: "taddel", code: "TD", name: "TADDEL" },
+    { id: "tierra-zafiro", code: "TZ", name: "Tierra Zafiro" },
   ];
 
   const brandCategories = {
@@ -312,12 +312,20 @@ export default function WhereToBuy({ lang, country }) {
         const res = await fetch("/api/points-of-sale");
         if (!res.ok) throw new Error("Error loading stores");
         const data = await res.json();
-        const parsed = data.map((s, index) => ({
-          ...s,
-          id: s.id && s.id.trim() !== "" ? s.id : `pos-${index}-${s.name ? s.name.replace(/\s+/g, '-').toLowerCase() : 'store'}`,
-          latitude: s.latitude ? parseFloat(s.latitude) : null,
-          longitude: s.longitude ? parseFloat(s.longitude) : null,
-        }));
+        const parsed = data.map((s, index) => {
+          const brands = Array.isArray(s.brands) ? [...s.brands] : [];
+          if (s.cl && !brands.includes("casa-loy")) brands.push("casa-loy");
+          if (s.td && !brands.includes("taddel")) brands.push("taddel");
+          if (s.tz && !brands.includes("tierra-zafiro")) brands.push("tierra-zafiro");
+          return {
+            ...s,
+            id: s.id && s.id.trim() !== "" ? s.id : `pos-${index}-${s.name ? s.name.replace(/\s+/g, '-').toLowerCase() : 'store'}`,
+            latitude: s.latitude ? parseFloat(s.latitude) : null,
+            longitude: s.longitude ? parseFloat(s.longitude) : null,
+            brands,
+            categories: s.region === "usa" ? [] : (s.categories || [])
+          };
+        });
         setStores(parsed);
 
         const initialStore = parsed.find((s) => region === "all" ? true : s.region === region);
@@ -350,11 +358,10 @@ export default function WhereToBuy({ lang, country }) {
       attributionControl: false
     });
 
-    // CartoDB Positron - clean, minimalist tiles matching the quiet luxury theme
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      subdomains: "abcd",
-      maxZoom: 20
+    // OpenStreetMap standard tiles - 100% free, no API key required, highly reliable
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19
     }).addTo(map);
 
     mapRef.current = map;
@@ -416,14 +423,18 @@ export default function WhereToBuy({ lang, country }) {
         ? prev.filter((id) => id !== brandId)
         : [...prev, brandId];
 
-      const newAvailable =
-        next.length === 0
-          ? Array.from(new Set(Object.values(brandCategories).flat()))
-          : Array.from(new Set(next.flatMap((b) => brandCategories[b] || [])));
+      if (region === "mx") {
+        const newAvailable =
+          next.length === 0
+            ? Array.from(new Set(Object.values(brandCategories).flat()))
+            : Array.from(new Set(next.flatMap((b) => brandCategories[b] || [])));
 
-      setSelectedCategories((cats) =>
-        cats.filter((c) => newAvailable.includes(c))
-      );
+        setSelectedCategories((cats) =>
+          cats.filter((c) => newAvailable.includes(c))
+        );
+      } else {
+        setSelectedCategories([]);
+      }
       return next;
     });
   };
@@ -487,34 +498,72 @@ export default function WhereToBuy({ lang, country }) {
 
   // Filter criteria before viewport mapping - MEMOIZED to prevent map scroll bounce loops!
   const storesFilteredByCriteria = useMemo(() => {
+    const normalize = (str) =>
+      (str || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+
+    const q = normalize(searchQuery);
+
     return stores.filter((store) => {
       const matchesRegion = region === "all" ? true : store.region === region;
+      if (!matchesRegion) return false;
 
       const matchesTypes =
         selectedTypes.length > 0
           ? (selectedTypes.includes("pdv") && store.pdv) ||
             (selectedTypes.includes("cdc") && store.cdc)
           : true;
+      if (!matchesTypes) return false;
 
-      const matchesSearch = searchQuery
-        ? store.postal_code?.includes(searchQuery) ||
-          store.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          store.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          store.retailer.toLowerCase().includes(searchQuery.toLowerCase())
-        : true;
-
+      // Brand filter: check both direct brand flags and brand array
       const matchesBrands =
         selectedBrands.length > 0
-          ? store.brands && store.brands.some((b) => selectedBrands.includes(b))
+          ? selectedBrands.some((brandId) => {
+              if (brandId === "casa-loy") return Boolean(store.cl || store.brands?.includes("casa-loy"));
+              if (brandId === "taddel") return Boolean(store.td || store.brands?.includes("taddel"));
+              if (brandId === "tierra-zafiro") return Boolean(store.tz || store.brands?.includes("tierra-zafiro"));
+              return false;
+            })
           : true;
+      if (!matchesBrands) return false;
 
+      // In USA, categories do not apply (search/filtering is purely by brand).
+      // Categories apply only to MX.
       const matchesCategories =
-        selectedCategories.length > 0
-          ? store.categories &&
-            store.categories.some((c) => selectedCategories.includes(c))
-          : true;
+        region === "usa" || store.region === "usa" || selectedCategories.length === 0
+          ? true
+          : store.categories &&
+            store.categories.some((c) => selectedCategories.includes(c));
+      if (!matchesCategories) return false;
 
-      return matchesRegion && matchesTypes && matchesSearch && matchesBrands && matchesCategories;
+      // Search input matching store name, retailer, address, city, postal code, brand
+      if (q) {
+        const storeName = normalize(store.name);
+        const storeRetailer = normalize(store.retailer);
+        const storeAddress = normalize(store.address);
+        const storePostal = normalize(store.postal_code);
+
+        const isBrandMatch =
+          (q === "cl" && (store.cl || store.brands?.includes("casa-loy"))) ||
+          (q === "td" && (store.td || store.brands?.includes("taddel"))) ||
+          (q === "tz" && (store.tz || store.brands?.includes("tierra-zafiro"))) ||
+          (q.includes("casa loy") && (store.cl || store.brands?.includes("casa-loy"))) ||
+          (q.includes("taddel") && (store.td || store.brands?.includes("taddel"))) ||
+          (q.includes("tierra zafiro") && (store.tz || store.brands?.includes("tierra-zafiro")));
+
+        const isTextMatch =
+          storeName.includes(q) ||
+          storeRetailer.includes(q) ||
+          storeAddress.includes(q) ||
+          storePostal.includes(q);
+
+        if (!isTextMatch && !isBrandMatch) return false;
+      }
+
+      return true;
     });
   }, [stores, region, selectedTypes, searchQuery, selectedBrands, selectedCategories]);
 
@@ -737,12 +786,10 @@ export default function WhereToBuy({ lang, country }) {
       hasCoords = true;
     }
 
-    if (userLocation) {
-      map.setView([userLocation.latitude, userLocation.longitude], 10);
-    } else if (hasCoords && storesFilteredByCriteria.length > 0) {
-      map.fitBounds(bounds, { padding: [50, 50] });
+    if (hasCoords && storesFilteredByCriteria.length > 0) {
+      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 12 });
     }
-  }, [storesFilteredByCriteria, userLocation]);
+  }, [storesFilteredByCriteria]);
 
   // Attempt automatic geolocation on mount once stores are loaded
   useEffect(() => {
@@ -943,43 +990,117 @@ export default function WhereToBuy({ lang, country }) {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Sidebar list panel */}
           <div className="lg:w-1/3 flex flex-col h-[580px]">
-            <h2 className="font-headline-md text-headline-md text-2xl md:text-3xl font-bold mb-4">
-              {activeT.physicalStores}
-            </h2>
+            <div className="flex justify-between items-end mb-3">
+              <h2 className="font-headline-md text-headline-md text-2xl font-bold">
+                {activeT.physicalStores}
+              </h2>
+              <span className="text-[10px] text-on-surface-variant/60 font-semibold">
+                {finalSidebarStores.length} {lang === "es" ? "tiendas" : "stores"}
+              </span>
+            </div>
 
-            {/* Combined Geolocator Search Input */}
-            <div className="flex gap-2 mb-3">
+            {/* Country Selector Tabs (México / USA) directly in the locator */}
+            <div className="flex items-center gap-2 mb-3 bg-white p-1 border border-outline-variant/20 shadow-sm">
+              <button
+                type="button"
+                onClick={() => handleRegionChange("mx")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 transition-all duration-300 font-label-caps text-[10px] tracking-wider font-bold cursor-pointer ${
+                  region === "mx"
+                    ? "bg-primary text-white shadow-sm"
+                    : "text-on-surface-variant/60 hover:text-primary hover:bg-stone-50"
+                }`}
+              >
+                <span className="text-sm">🇲🇽</span>
+                <span>MÉXICO</span>
+                <span className={`text-[9px] px-1.5 py-0.2 rounded-full ${region === "mx" ? "bg-white/20 text-white" : "bg-stone-100 text-stone-600 font-normal"}`}>
+                  {stores.filter(s => s.region === 'mx').length}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleRegionChange("usa")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 transition-all duration-300 font-label-caps text-[10px] tracking-wider font-bold cursor-pointer ${
+                  region === "usa"
+                    ? "bg-primary text-white shadow-sm"
+                    : "text-on-surface-variant/60 hover:text-primary hover:bg-stone-50"
+                }`}
+              >
+                <span className="text-sm">🇺🇸</span>
+                <span>USA</span>
+                <span className={`text-[9px] px-1.5 py-0.2 rounded-full ${region === "usa" ? "bg-white/20 text-white" : "bg-stone-100 text-stone-600 font-normal"}`}>
+                  {stores.filter(s => s.region === 'usa').length}
+                </span>
+              </button>
+            </div>
+
+            {/* Dedicated Search Input: allows typing store name, retailer, city or postal code */}
+            <div className="relative mb-2">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-[18px]">
+                search
+              </span>
+              <input
+                className="w-full bg-white border border-outline-variant/30 pl-10 pr-9 py-2.5 text-xs focus:outline-none focus:border-primary transition-all duration-300 shadow-sm placeholder:text-on-surface-variant/45 font-sans"
+                placeholder={
+                  lang === "es"
+                    ? (region === "usa" ? "Buscar por nombre de tienda, cadena, ciudad o ZIP..." : "Buscar por nombre de tienda, cadena, ciudad o CP...")
+                    : (region === "usa" ? "Search by store name, chain, city or ZIP..." : "Search by store name, chain, city or postal code...")
+                }
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant/40 hover:text-primary transition-colors cursor-pointer text-[16px]"
+                  title={lang === "es" ? "Limpiar búsqueda" : "Clear search"}
+                >
+                  close
+                </button>
+              )}
+            </div>
+
+            {/* Actions: Geolocator & Filters Toggle */}
+            <div className="flex gap-2 mb-2">
               <button
                 type="button"
                 onClick={handleGeolocate}
-                className="flex-1 flex items-center justify-center gap-2 bg-[#C58B58] text-white hover:bg-[#A66C3E] font-label-caps text-[9px] tracking-widest font-bold py-3.5 px-4 shadow-sm transition-all active:scale-98 duration-300 cursor-pointer"
-                title={lang === "es" ? "Buscar tiendas cercanas" : "Find nearby stores"}
+                className="flex-1 flex items-center justify-center gap-1.5 bg-[#C58B58] text-white hover:bg-[#A66C3E] font-label-caps text-[9px] tracking-widest font-bold py-2.5 px-3 shadow-sm transition-all active:scale-98 duration-300 cursor-pointer"
+                title={lang === "es" ? "Buscar tiendas cercanas a tu ubicación actual" : "Find stores near your current location"}
               >
-                <span className="material-symbols-outlined text-[15px] animate-pulse">my_location</span>
+                <span className="material-symbols-outlined text-[15px]">my_location</span>
                 <span>{lang === "es" ? "CERCA DE MÍ" : "NEAR ME"}</span>
               </button>
-              
-              <div className="relative w-44">
-                <input
-                  className="w-full h-full bg-white border border-outline-variant/30 px-3 py-3 focus:outline-none focus:border-primary transition-all duration-300 font-body-md placeholder:text-outline-variant/50 text-xs"
-                  placeholder={lang === "es" ? "O busca CP/Ciudad" : "Or ZIP/City..."}
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                {searchQuery && (
-                  <span
-                    onClick={() => setSearchQuery("")}
-                    className="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors cursor-pointer text-[14px]"
-                  >
-                    close
+
+              <button 
+                type="button"
+                onClick={() => setShowFilters(!showFilters)}
+                className={`flex items-center justify-center gap-1.5 px-3 py-2.5 border transition-all duration-300 font-label-caps text-[9px] tracking-widest font-bold select-none cursor-pointer shadow-sm ${
+                  showFilters || selectedTypes.length > 0 || selectedBrands.length > 0 || selectedCategories.length > 0
+                    ? "bg-stone-100 border-primary/50 text-primary"
+                    : "bg-white border-outline-variant/30 hover:border-primary/50 text-on-surface-variant"
+                }`}
+              >
+                <span className="material-symbols-outlined text-[15px]">tune</span>
+                <span>{lang === "es" ? "FILTROS" : "FILTERS"}</span>
+                {(selectedTypes.length > 0 || selectedBrands.length > 0 || selectedCategories.length > 0) && (
+                  <span className="bg-primary text-white text-[8px] px-1.5 py-0.2 rounded-full font-bold">
+                    {selectedTypes.length + selectedBrands.length + selectedCategories.length}
                   </span>
                 )}
-              </div>
+                <span 
+                  className="material-symbols-outlined text-[15px] transition-transform duration-300"
+                  style={{ transform: showFilters ? 'rotate(180deg)' : 'none' }}
+                >
+                  keyboard_arrow_down
+                </span>
+              </button>
             </div>
 
             {/* Toggle Map Viewport Filtering */}
-            <div className="flex items-center gap-2 mb-3 select-none">
+            <div className="flex items-center gap-2 mb-2.5 select-none">
               <input
                 type="checkbox"
                 id="filter-by-map-checkbox"
@@ -995,36 +1116,13 @@ export default function WhereToBuy({ lang, country }) {
               </label>
             </div>
 
-            {/* Collapsable Dynamic Filter Trigger */}
-            <button 
-              type="button"
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center justify-between w-full py-2.5 px-4 bg-white border border-outline-variant/20 hover:border-primary/50 transition-all duration-300 font-label-caps text-[9px] tracking-widest font-bold text-on-surface-variant select-none cursor-pointer mb-3 shadow-sm"
-            >
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[15px]">tune</span>
-                <span>{lang === "es" ? "FILTROS" : "FILTERS"}</span>
-                {(selectedTypes.length > 0 || selectedBrands.length > 0 || selectedCategories.length > 0) && (
-                  <span className="bg-primary text-white text-[8px] px-1.5 py-0.2 rounded-full font-bold ml-1">
-                    {selectedTypes.length + selectedBrands.length + selectedCategories.length}
-                  </span>
-                )}
-              </div>
-              <span 
-                className="material-symbols-outlined text-[15px] transition-transform duration-300"
-                style={{ transform: showFilters ? 'rotate(180deg)' : 'none' }}
-              >
-                keyboard_arrow_down
-              </span>
-            </button>
-
             {/* Dynamic Filter Panel */}
             {showFilters && (
-              <div className="bg-white/40 border border-outline-variant/15 p-4 mb-4 space-y-4 animate-fade-in shadow-sm">
+              <div className="bg-white/90 border border-outline-variant/20 p-3.5 mb-3 space-y-3.5 animate-fade-in shadow-sm">
                 
                 {/* Filter pills for Establishment Types */}
                 <div>
-                  <div className="flex justify-between items-center mb-2">
+                  <div className="flex justify-between items-center mb-1.5">
                     <span className="text-[9px] uppercase font-bold tracking-widest text-on-surface-variant/50">
                       {activeT.filterTypes}
                     </span>
@@ -1065,57 +1163,102 @@ export default function WhereToBuy({ lang, country }) {
                   </div>
                 </div>
 
-                {/* Filter pills for Brands */}
+                {/* Filter pills for Brands (Casa Loy, TADDEL, Tierra Zafiro) */}
                 <div>
-                  <span className="text-[9px] uppercase font-bold tracking-widest text-on-surface-variant/50 mb-2 block">
-                    {activeT.filterBrands}
-                  </span>
+                  <div className="flex justify-between items-center mb-1.5">
+                    <span className="text-[9px] uppercase font-bold tracking-widest text-on-surface-variant/60 block">
+                      {region === "usa" ? (lang === "es" ? "Búsqueda por Marca (USA)" : "Search by Brand (USA)") : activeT.filterBrands}
+                    </span>
+                    {region === "usa" && (
+                      <span className="text-[8px] bg-primary/10 text-primary font-bold px-1.5 py-0.5 uppercase tracking-wider">
+                        Solo Marcas
+                      </span>
+                    )}
+                  </div>
+
+                  {region === "usa" && (
+                    <p className="text-[10px] text-on-surface-variant/70 mb-2 leading-tight">
+                      {lang === "es"
+                        ? "En EE. UU. los puntos de venta se consultan por marca. Selecciona una marca para ver sus tiendas:"
+                        : "In USA points of sale are searched by brand. Select a brand to view stores:"}
+                    </p>
+                  )}
+
                   <div className="flex flex-wrap gap-1.5">
                     {brandOptions.map((brand) => {
                       const isSelected = selectedBrands.includes(brand.id);
+                      // Dynamic store count for this brand in current region
+                      const countInRegion = stores.filter((s) => {
+                        const matchesReg = region === "all" ? true : s.region === region;
+                        if (!matchesReg) return false;
+                        if (brand.id === "casa-loy") return Boolean(s.cl || s.brands?.includes("casa-loy"));
+                        if (brand.id === "taddel") return Boolean(s.td || s.brands?.includes("taddel"));
+                        if (brand.id === "tierra-zafiro") return Boolean(s.tz || s.brands?.includes("tierra-zafiro"));
+                        return false;
+                      }).length;
+
                       return (
                         <button
                           key={brand.id}
                           type="button"
                           onClick={() => handleBrandToggle(brand.id)}
-                          className={`text-[9px] uppercase tracking-widest px-2.5 py-1 border transition-all duration-300 font-bold cursor-pointer ${
+                          className={`text-[9px] uppercase tracking-widest px-2.5 py-1.5 border transition-all duration-300 font-bold cursor-pointer flex items-center gap-1.5 ${
                             isSelected
-                              ? "bg-primary border-primary text-white"
-                              : "border-outline-variant/30 hover:border-primary/50 text-on-surface-variant/75 bg-white"
+                              ? "bg-primary border-primary text-white shadow-sm"
+                              : "border-outline-variant/30 hover:border-primary/50 text-on-surface-variant/85 bg-white"
                           }`}
                         >
-                          {brand.name}
+                          <span>{brand.name}</span>
+                          <span className={`text-[8px] px-1 py-0.2 rounded font-mono font-bold ${isSelected ? 'bg-white/25 text-white' : 'bg-stone-100 text-stone-600'}`}>
+                            {brand.code}
+                          </span>
+                          <span className={`text-[8px] opacity-75 ml-0.5`}>
+                            ({countInRegion})
+                          </span>
                         </button>
                       );
                     })}
                   </div>
                 </div>
 
-                {/* Filter pills for Categories */}
-                <div>
-                  <span className="text-[9px] uppercase font-bold tracking-widest text-on-surface-variant/50 mb-2 block">
-                    {activeT.filterCategories}
-                  </span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {availableCategories.map((category) => {
-                      const isSelected = selectedCategories.includes(category);
-                      return (
+                {/* Filter pills for Categories (ONLY FOR MEXICO - strictly hidden in USA) */}
+                {region === "mx" && (
+                  <div>
+                    <div className="flex justify-between items-center mb-1.5">
+                      <span className="text-[9px] uppercase font-bold tracking-widest text-on-surface-variant/60 block">
+                        {activeT.filterCategories}
+                      </span>
+                      {selectedCategories.length > 0 && (
                         <button
-                          key={category}
                           type="button"
-                          onClick={() => handleCategoryToggle(category)}
-                          className={`text-[9px] px-2.5 py-1 border transition-all duration-300 cursor-pointer ${
-                            isSelected
-                              ? "bg-primary border-primary text-white font-bold"
-                              : "border-outline-variant/20 hover:border-primary/30 text-on-surface-variant/65 bg-white"
-                          }`}
+                          onClick={() => setSelectedCategories([])}
+                          className="text-[8px] text-primary hover:underline cursor-pointer uppercase font-bold"
                         >
-                          {category}
+                          Limpiar
                         </button>
-                      );
-                    })}
+                      )}
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {availableCategories.map((category) => {
+                        const isSelected = selectedCategories.includes(category);
+                        return (
+                          <button
+                            key={category}
+                            type="button"
+                            onClick={() => handleCategoryToggle(category)}
+                            className={`text-[9px] px-2 py-1 border transition-all duration-300 cursor-pointer ${
+                              isSelected
+                                ? "bg-primary border-primary text-white font-bold"
+                                : "border-outline-variant/20 hover:border-primary/30 text-on-surface-variant/70 bg-white"
+                            }`}
+                          >
+                            {category}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
+                )}
 
               </div>
             )}
@@ -1207,7 +1350,7 @@ export default function WhereToBuy({ lang, country }) {
                             <span>{store.brands.map(b => brandOptions.find(o => o.id === b)?.name || b).join(", ")}</span>
                           </div>
                         )}
-                        {store.categories && store.categories.length > 0 && (
+                        {store.region === "mx" && store.categories && store.categories.length > 0 && (
                           <div>
                             <span className="font-semibold text-primary">{lang === "es" ? "Categorías: " : "Categories: "}</span>
                             <span>{store.categories.join(", ")}</span>

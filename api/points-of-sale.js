@@ -3,74 +3,88 @@ import { getAuthUser, auditLog, userHasRole } from './_utils/auth.js';
 
 // Helper to map DB row (or mock data) to include brands and categories arrays for frontend compatibility
 function mapStoreForFrontend(store) {
-  const brands = [];
-  if (
+  // Direct brand flags: cl = Casa Loy, td = TADDEL, tz = Tierra Zafiro
+  const cl = Boolean(
+    store.cl ||
     store.casa_loy_blanco ||
     store.casa_loy_reposado ||
     store.casa_loy_cristalino ||
     store.casa_loy_anejo ||
     store.casa_loy_piedra_y_agave_blanco ||
     store.casa_loy_piedra_y_agave_reposado
-  ) {
-    brands.push('casa-loy');
-  }
-  if (store.taddel_plata || store.taddel_reposado || store.taddel_cristalino) {
-    brands.push('taddel');
-  }
-  if (
+  );
+
+  const td = Boolean(
+    store.td ||
+    store.taddel_plata ||
+    store.taddel_reposado ||
+    store.taddel_cristalino
+  );
+
+  const tz = Boolean(
+    store.tz ||
     store.tierra_zafiro_blanco ||
     store.tierra_zafiro_blanco_100_pure ||
     store.tierra_zafiro_reposado ||
     store.tierra_zafiro_cristalino
-  ) {
-    brands.push('tierra-zafiro');
-  }
+  );
+
+  const brands = [];
+  if (cl) brands.push('casa-loy');
+  if (td) brands.push('taddel');
+  if (tz) brands.push('tierra-zafiro');
 
   const categories = [];
-  // Casa Loy categories
-  if (store.casa_loy_blanco) {
-    if (!categories.includes('Blanco')) categories.push('Blanco');
-  }
-  if (store.casa_loy_reposado) {
-    if (!categories.includes('Reposado')) categories.push('Reposado');
-  }
-  if (store.casa_loy_cristalino) {
-    if (!categories.includes('Cristalino')) categories.push('Cristalino');
-  }
-  if (store.casa_loy_anejo) {
-    if (!categories.includes('Añejo')) categories.push('Añejo');
-  }
-  if (store.casa_loy_piedra_y_agave_blanco) {
-    categories.push('Piedra y Agave Blanco');
-  }
-  if (store.casa_loy_piedra_y_agave_reposado) {
-    categories.push('Piedra y Agave Reposado');
-  }
+  // Categories apply only to MX (in USA search and display is strictly by brand, not category)
+  if (store.region !== 'usa') {
+    // Casa Loy categories
+    if (store.casa_loy_blanco) {
+      if (!categories.includes('Blanco')) categories.push('Blanco');
+    }
+    if (store.casa_loy_reposado) {
+      if (!categories.includes('Reposado')) categories.push('Reposado');
+    }
+    if (store.casa_loy_cristalino) {
+      if (!categories.includes('Cristalino')) categories.push('Cristalino');
+    }
+    if (store.casa_loy_anejo) {
+      if (!categories.includes('Añejo')) categories.push('Añejo');
+    }
+    if (store.casa_loy_piedra_y_agave_blanco) {
+      categories.push('Piedra y Agave Blanco');
+    }
+    if (store.casa_loy_piedra_y_agave_reposado) {
+      categories.push('Piedra y Agave Reposado');
+    }
 
-  // Taddel categories
-  if (store.taddel_plata) {
-    categories.push('Plata');
-  }
-  if (store.taddel_reposado) {
-    if (!categories.includes('Reposado')) categories.push('Reposado');
-  }
-  if (store.taddel_cristalino) {
-    if (!categories.includes('Cristalino')) categories.push('Cristalino');
-  }
+    // Taddel categories
+    if (store.taddel_plata) {
+      categories.push('Plata');
+    }
+    if (store.taddel_reposado) {
+      if (!categories.includes('Reposado')) categories.push('Reposado');
+    }
+    if (store.taddel_cristalino) {
+      if (!categories.includes('Cristalino')) categories.push('Cristalino');
+    }
 
-  // Tierra Zafiro categories
-  if (store.tierra_zafiro_blanco || store.tierra_zafiro_blanco_100_pure) {
-    if (!categories.includes('Blanco')) categories.push('Blanco');
-  }
-  if (store.tierra_zafiro_reposado) {
-    if (!categories.includes('Reposado')) categories.push('Reposado');
-  }
-  if (store.tierra_zafiro_cristalino) {
-    if (!categories.includes('Cristalino')) categories.push('Cristalino');
+    // Tierra Zafiro categories
+    if (store.tierra_zafiro_blanco || store.tierra_zafiro_blanco_100_pure) {
+      if (!categories.includes('Blanco')) categories.push('Blanco');
+    }
+    if (store.tierra_zafiro_reposado) {
+      if (!categories.includes('Reposado')) categories.push('Reposado');
+    }
+    if (store.tierra_zafiro_cristalino) {
+      if (!categories.includes('Cristalino')) categories.push('Cristalino');
+    }
   }
 
   return {
     ...store,
+    cl,
+    td,
+    tz,
     brands,
     categories,
   };
@@ -147,7 +161,44 @@ export default async function handler(req, res) {
         tierra_zafiro_blanco: true,
         tierra_zafiro_blanco_100_pure: true,
         tierra_zafiro_reposado: true,
-        tierra_zafiro_cristalino: true
+        tierra_zafiro_cristalino: true,
+        cl: true,
+        td: false,
+        tz: true
+      },
+      {
+        id: "mock-3",
+        retailer: "Remedy Liquor",
+        name: "Glendale",
+        address: "820 S Glendale Ave, Glendale, CA 91205, USA",
+        region: "usa",
+        postal_code: "91205",
+        latitude: 34.1352,
+        longitude: -118.2435,
+        maps_url: "https://maps.google.com/?q=820+S+Glendale+Ave,+Glendale,+CA+91205",
+        fase: "John Doe",
+        pdv: true,
+        cdc: false,
+        cl: true,
+        td: true,
+        tz: false
+      },
+      {
+        id: "mock-4",
+        retailer: "Old Town Tequila",
+        name: "San Diego",
+        address: "2304 San Diego Ave, San Diego, CA 92110, USA",
+        region: "usa",
+        postal_code: "92110",
+        latitude: 32.7533,
+        longitude: -117.1952,
+        maps_url: "https://maps.google.com/?q=2304+San+Diego+Ave,+San+Diego,+CA+92110",
+        fase: "John Doe",
+        pdv: true,
+        cdc: false,
+        cl: false,
+        td: true,
+        tz: true
       }
     ];
 
@@ -231,6 +282,9 @@ export default async function handler(req, res) {
         fase,
         pdv,
         cdc,
+        cl,
+        td,
+        tz,
         casa_loy_blanco,
         casa_loy_reposado,
         casa_loy_cristalino,
@@ -250,6 +304,31 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Faltan campos obligatorios: distribuidor, nombre, dirección y región.' });
       }
 
+      // Determine brand flags: if CL/TD/TZ are provided directly (e.g. for USA), use them.
+      // Otherwise fallback to individual product flags if checked.
+      const isCl = Boolean(
+        cl ||
+        casa_loy_blanco ||
+        casa_loy_reposado ||
+        casa_loy_cristalino ||
+        casa_loy_anejo ||
+        casa_loy_piedra_y_agave_blanco ||
+        casa_loy_piedra_y_agave_reposado
+      );
+      const isTd = Boolean(
+        td ||
+        taddel_plata ||
+        taddel_reposado ||
+        taddel_cristalino
+      );
+      const isTz = Boolean(
+        tz ||
+        tierra_zafiro_blanco ||
+        tierra_zafiro_blanco_100_pure ||
+        tierra_zafiro_reposado ||
+        tierra_zafiro_cristalino
+      );
+
       const storeData = {
         retailer,
         name,
@@ -264,6 +343,9 @@ export default async function handler(req, res) {
         fase: fase || currentUser.name || 'KAM', // fase represents Key Account Manager
         pdv: pdv || false,
         cdc: cdc || false,
+        cl: isCl,
+        td: isTd,
+        tz: isTz,
         casa_loy_blanco: casa_loy_blanco || false,
         casa_loy_reposado: casa_loy_reposado || false,
         casa_loy_cristalino: casa_loy_cristalino || false,

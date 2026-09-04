@@ -4,6 +4,10 @@
 ALTER TABLE points_of_sale ADD COLUMN IF NOT EXISTS kam TEXT;
 ALTER TABLE points_of_sale ADD COLUMN IF NOT EXISTS brands TEXT[] DEFAULT '{}';
 ALTER TABLE points_of_sale ADD COLUMN IF NOT EXISTS categories TEXT[] DEFAULT '{}';
+-- Direct brand indicators (CL = Casa Loy, TD = TADDEL, TZ = Tierra Zafiro)
+ALTER TABLE points_of_sale ADD COLUMN IF NOT EXISTS cl BOOLEAN DEFAULT false;
+ALTER TABLE points_of_sale ADD COLUMN IF NOT EXISTS td BOOLEAN DEFAULT false;
+ALTER TABLE points_of_sale ADD COLUMN IF NOT EXISTS tz BOOLEAN DEFAULT false;
 
 -- Create index for array columns using GIN or general index for queries
 CREATE INDEX IF NOT EXISTS idx_points_of_sale_brands ON points_of_sale USING gin(brands) WHERE brands IS NOT NULL;
