@@ -447,6 +447,8 @@ export default function WhereToBuy({ lang, country }) {
     );
   };
 
+  const [geolocating, setGeolocating] = useState(false);
+
   // Geolocator button click
   const handleGeolocate = () => {
     if (!navigator.geolocation) {
@@ -457,24 +459,68 @@ export default function WhereToBuy({ lang, country }) {
       );
       return;
     }
+
+    setGeolocating(true);
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        setGeolocating(false);
         const { latitude, longitude } = position.coords;
         setUserLocation({ latitude, longitude });
         setDistanceSorted(true);
+
+        // Auto-switch region if user is in Mexico or USA
+        const inMexico = latitude >= 14 && latitude <= 33 && longitude >= -118 && longitude <= -86;
+        const targetRegion = inMexico ? "mx" : "usa";
+        if (region !== targetRegion && region !== "all") {
+          setRegion(targetRegion);
+        }
+
+        // Find closest store in target region
+        const candidateStores = stores.filter((s) => (targetRegion === "all" ? true : s.region === targetRegion));
+        let closestStore = null;
+        let minDistance = Infinity;
+
+        candidateStores.forEach((s) => {
+          if (s.latitude && s.longitude) {
+            const d = getHaversineDistance(latitude, longitude, s.latitude, s.longitude);
+            if (d < minDistance) {
+              minDistance = d;
+              closestStore = s;
+            }
+          }
+        });
+
         if (mapRef.current) {
-          mapRef.current.setCenter({ lat: latitude, lng: longitude });
-          mapRef.current.setZoom(11);
+          const map = mapRef.current;
+          if (closestStore && closestStore.latitude && closestStore.longitude) {
+            setActiveStore(closestStore);
+            const fit = L.latLngBounds([
+              [latitude, longitude],
+              [closestStore.latitude, closestStore.longitude]
+            ]);
+            map.fitBounds(fit, { padding: [60, 60], maxZoom: 14 });
+          } else {
+            map.setView([latitude, longitude], 13);
+          }
+        }
+
+        // Scroll sidebar to top so the nearest store is visible
+        const listEl = document.getElementById("stores-scroll-list");
+        if (listEl) {
+          listEl.scrollTo({ top: 0, behavior: "smooth" });
         }
       },
       (err) => {
+        setGeolocating(false);
         console.error("Error geolocating:", err);
         alert(
           lang === "es"
-            ? "No se pudo obtener tu ubicación. Por favor concede permisos de geolocalización."
-            : "Could not fetch location. Please enable location permissions."
+            ? "No se pudo obtener tu ubicación. Por favor verifica que tu navegador tenga los permisos de ubicación permitidos."
+            : "Could not fetch location. Please ensure location permissions are enabled in your browser."
         );
-      }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
     );
   };
 
@@ -787,9 +833,11 @@ export default function WhereToBuy({ lang, country }) {
     }
 
     if (hasCoords && storesFilteredByCriteria.length > 0) {
-      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 12 });
+      if (!distanceSorted) {
+        map.fitBounds(bounds, { padding: [40, 40], maxZoom: 12 });
+      }
     }
-  }, [storesFilteredByCriteria]);
+  }, [storesFilteredByCriteria, userLocation]);
 
   // Attempt automatic geolocation on mount once stores are loaded
   useEffect(() => {
@@ -999,41 +1047,6 @@ export default function WhereToBuy({ lang, country }) {
               </span>
             </div>
 
-            {/* Country Selector Tabs (México / USA) directly in the locator */}
-            <div className="flex items-center gap-2 mb-3 bg-white p-1 border border-outline-variant/20 shadow-sm">
-              <button
-                type="button"
-                onClick={() => handleRegionChange("mx")}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 transition-all duration-300 font-label-caps text-[10px] tracking-wider font-bold cursor-pointer ${
-                  region === "mx"
-                    ? "bg-primary text-white shadow-sm"
-                    : "text-on-surface-variant/60 hover:text-primary hover:bg-stone-50"
-                }`}
-              >
-                <span className="text-sm">🇲🇽</span>
-                <span>MÉXICO</span>
-                <span className={`text-[9px] px-1.5 py-0.2 rounded-full ${region === "mx" ? "bg-white/20 text-white" : "bg-stone-100 text-stone-600 font-normal"}`}>
-                  {stores.filter(s => s.region === 'mx').length}
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleRegionChange("usa")}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 transition-all duration-300 font-label-caps text-[10px] tracking-wider font-bold cursor-pointer ${
-                  region === "usa"
-                    ? "bg-primary text-white shadow-sm"
-                    : "text-on-surface-variant/60 hover:text-primary hover:bg-stone-50"
-                }`}
-              >
-                <span className="text-sm">🇺🇸</span>
-                <span>USA</span>
-                <span className={`text-[9px] px-1.5 py-0.2 rounded-full ${region === "usa" ? "bg-white/20 text-white" : "bg-stone-100 text-stone-600 font-normal"}`}>
-                  {stores.filter(s => s.region === 'usa').length}
-                </span>
-              </button>
-            </div>
-
             {/* Dedicated Search Input: allows typing store name, retailer, city or postal code */}
             <div className="relative mb-2">
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-[18px]">
@@ -1067,11 +1080,18 @@ export default function WhereToBuy({ lang, country }) {
               <button
                 type="button"
                 onClick={handleGeolocate}
-                className="flex-1 flex items-center justify-center gap-1.5 bg-[#C58B58] text-white hover:bg-[#A66C3E] font-label-caps text-[9px] tracking-widest font-bold py-2.5 px-3 shadow-sm transition-all active:scale-98 duration-300 cursor-pointer"
+                disabled={geolocating}
+                className="flex-1 flex items-center justify-center gap-1.5 bg-[#C58B58] text-white hover:bg-[#A66C3E] disabled:opacity-75 font-label-caps text-[9px] tracking-widest font-bold py-2.5 px-3 shadow-sm transition-all active:scale-98 duration-300 cursor-pointer"
                 title={lang === "es" ? "Buscar tiendas cercanas a tu ubicación actual" : "Find stores near your current location"}
               >
-                <span className="material-symbols-outlined text-[15px]">my_location</span>
-                <span>{lang === "es" ? "CERCA DE MÍ" : "NEAR ME"}</span>
+                <span className={`material-symbols-outlined text-[15px] ${geolocating ? "animate-spin" : ""}`}>
+                  {geolocating ? "progress_activity" : "my_location"}
+                </span>
+                <span>
+                  {geolocating 
+                    ? (lang === "es" ? "LOCALIZANDO..." : "LOCATING...") 
+                    : (lang === "es" ? "CERCA DE MÍ" : "NEAR ME")}
+                </span>
               </button>
 
               <button 
@@ -1187,16 +1207,6 @@ export default function WhereToBuy({ lang, country }) {
                   <div className="flex flex-wrap gap-1.5">
                     {brandOptions.map((brand) => {
                       const isSelected = selectedBrands.includes(brand.id);
-                      // Dynamic store count for this brand in current region
-                      const countInRegion = stores.filter((s) => {
-                        const matchesReg = region === "all" ? true : s.region === region;
-                        if (!matchesReg) return false;
-                        if (brand.id === "casa-loy") return Boolean(s.cl || s.brands?.includes("casa-loy"));
-                        if (brand.id === "taddel") return Boolean(s.td || s.brands?.includes("taddel"));
-                        if (brand.id === "tierra-zafiro") return Boolean(s.tz || s.brands?.includes("tierra-zafiro"));
-                        return false;
-                      }).length;
-
                       return (
                         <button
                           key={brand.id}
@@ -1211,9 +1221,6 @@ export default function WhereToBuy({ lang, country }) {
                           <span>{brand.name}</span>
                           <span className={`text-[8px] px-1 py-0.2 rounded font-mono font-bold ${isSelected ? 'bg-white/25 text-white' : 'bg-stone-100 text-stone-600'}`}>
                             {brand.code}
-                          </span>
-                          <span className={`text-[8px] opacity-75 ml-0.5`}>
-                            ({countInRegion})
                           </span>
                         </button>
                       );
@@ -1264,7 +1271,7 @@ export default function WhereToBuy({ lang, country }) {
             )}
 
             {/* Scroll list wrapper */}
-            <div className="flex-1 overflow-y-auto pr-2 space-y-3">
+            <div id="stores-scroll-list" className="flex-1 overflow-y-auto pr-2 space-y-3">
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-12 text-on-surface-variant/60">
                   <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mb-3"></div>
