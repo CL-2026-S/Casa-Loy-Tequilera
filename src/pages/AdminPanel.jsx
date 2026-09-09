@@ -74,9 +74,31 @@ export default function AdminPanel({
   const [resetSuccessMsg, setResetSuccessMsg] = useState("");
   const [isResetting, setIsResetting] = useState(false);
 
+  // Get default tab depending on user role (Dashboard is strictly for admin)
+  const getDefaultTabForUser = (userObj) => {
+    if (!userObj || !userObj.role) return "log";
+    const roles = String(userObj.role).split(',').map(r => r.trim());
+    if (roles.includes('admin')) return "dashboard";
+    if (roles.includes('experience_manager')) return "calendar";
+    if (roles.includes('restaurant_manager')) return "restaurant";
+    if (roles.includes('lead_maquila')) return "maquila_leads";
+    if (roles.includes('rh')) return "cms";
+    if (roles.includes('editor')) return "cms";
+    return "log";
+  };
+
   // Layout tabs (adaptable by role)
-  // Roles: admin | editor | experience_manager | restaurant_manager | viewer
-  const [activeTab, setActiveTab] = useState("dashboard");
+  // Dashboard is strictly for admin role unless explicitly permitted
+  const [activeTab, setActiveTab] = useState(() => {
+    const savedUser = sessionStorage.getItem("casa_loy_admin_user");
+    if (savedUser) {
+      try {
+        const u = JSON.parse(savedUser);
+        return getDefaultTabForUser(u);
+      } catch (e) {}
+    }
+    return "dashboard";
+  });
   const [sidebarOpen, setSidebarOpen] = useState(false); // Mobile drawer state
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false); // Desktop compact mode
   const [isRefreshing, setIsRefreshing] = useState(false); // Quick refresh state
@@ -96,6 +118,10 @@ export default function AdminPanel({
   useEffect(() => {
     if (user) {
       setProfileNameInput(user.name || "");
+      // Restrict dashboard strictly to admin
+      if (!userHasRole("admin") && activeTab === "dashboard") {
+        setActiveTab(getDefaultTabForUser(user));
+      }
     }
   }, [user]);
 
@@ -583,6 +609,7 @@ export default function AdminPanel({
         setToken(data.token);
         setUser(data.user);
         setIsLoggedIn(true);
+        setActiveTab(getDefaultTabForUser(data.user));
         sessionStorage.setItem("casa_loy_admin_token", data.token);
         sessionStorage.setItem("casa_loy_admin_user", JSON.stringify(data.user));
         setEmailInput("");
@@ -2634,7 +2661,7 @@ export default function AdminPanel({
           id: "dashboard",
           label: "Dashboard Analítico",
           icon: "query_stats",
-          roles: ["admin", "experience_manager", "restaurant_manager", "editor", "rh", "lead_maquila", "viewer", "cuentas_por_cobrar"],
+          roles: ["admin"],
           onClick: () => { setActiveTab("dashboard"); setSidebarOpen(false); },
           isActive: activeTab === "dashboard",
         },
@@ -3050,8 +3077,8 @@ export default function AdminPanel({
             {/* TAB CONTENT PANEL */}
             <div className="bg-white border border-stone-200/80 rounded-xl shadow-xs p-6 sm:p-8">
           
-          {/* TAB: Dashboard Analítico */}
-          {activeTab === "dashboard" && (() => {
+          {/* TAB: Dashboard Analítico (Exclusivo para rol admin) */}
+          {activeTab === "dashboard" && userHasRole("admin") && (() => {
             // Analytics Calculations
             const totalTours = bookingsLog.length;
             const totalTourPax = bookingsLog.reduce((sum, b) => sum + (parseInt(b.guests) || 1), 0);
