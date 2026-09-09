@@ -131,6 +131,7 @@ export default function Nativo1937({ lang = "es", t }) {
   }, [selectedModalIndex, filteredGallery.length]);
   
   // Booking States
+  const [bookingMethod, setBookingMethod] = useState(null); // null: selector cerrado, 'whatsapp': formulario abierto
   const [bookingStep, setBookingStep] = useState(1); // 1: Form, 2: Success
   const [bookingData, setBookingData] = useState({
     name: "",
@@ -1017,129 +1018,194 @@ export default function Nativo1937({ lang = "es", t }) {
             {/* Interactive Form Area */}
             <div className="max-w-xl w-full">
 
-              {/* Step 1: Formulario directo para enviar a WhatsApp */}
+              {/* Step 1: Selector de opciones (WhatsApp o Llamada) */}
               {bookingStep === 1 && (
-                <form onSubmit={handleDirectWhatsAppBooking} className="space-y-4 text-left">
+                <div className="space-y-6 text-left">
+                  {/* Option 1 and Option 2 Cards */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     
-                    {/* Name Input */}
-                    <div className="space-y-1.5">
-                      <label className="block text-[11px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/70">
-                        {currentT.booking.nameLabel} *
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full bg-[#fcfbf9] border border-[#1c1c18]/12 px-4 py-3 text-sm focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-sans font-light text-[#1c1c18] transition-all duration-300 placeholder:text-[#1c1c18]/30 rounded-none"
-                        placeholder={lang === "es" ? "Ej. Emmanuel Vázquez" : "e.g. John Doe"}
-                        value={bookingData.name}
-                        onChange={(e) => setBookingData({ ...bookingData, name: e.target.value })}
-                      />
-                      {errors.name && <p className="text-xs text-red-600 font-sans">{errors.name}</p>}
-                    </div>
-
-                    {/* Phone Input */}
-                    <div className="space-y-1.5">
-                      <label className="block text-[11px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/70">
-                        {currentT.booking.phoneLabel} *
-                      </label>
-                      <input
-                        type="tel"
-                        className="w-full bg-[#fcfbf9] border border-[#1c1c18]/12 px-4 py-3 text-sm focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-sans font-light text-[#1c1c18] transition-all duration-300 placeholder:text-[#1c1c18]/30 rounded-none"
-                        placeholder={lang === "es" ? "Ej. 33 3142 7585" : "e.g. +1 555 123 4567"}
-                        value={bookingData.phone}
-                        onChange={(e) => setBookingData({ ...bookingData, phone: e.target.value })}
-                      />
-                      {errors.phone && <p className="text-xs text-red-600 font-sans">{errors.phone}</p>}
-                    </div>
-
-                    {/* Number of Guests */}
-                    <div className="space-y-1.5">
-                      <label className="block text-[11px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/70 flex justify-between">
-                        <span>{currentT.booking.guestsLabel} *</span>
-                        <span className="text-[10px] text-[#1c1c18]/45 italic normal-case font-normal">(1-75 pax)</span>
-                      </label>
-                      <input
-                        type="number"
-                        min="1"
-                        max="75"
-                        className="w-full bg-[#fcfbf9] border border-[#1c1c18]/12 px-4 py-3 text-sm focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-sans font-light text-[#1c1c18] transition-all duration-300 rounded-none"
-                        value={bookingData.guests}
-                        onChange={(e) => setBookingData({ ...bookingData, guests: parseInt(e.target.value, 10) || "" })}
-                      />
-                      {errors.guests && <p className="text-xs text-red-600 font-sans">{errors.guests}</p>}
-                    </div>
-
-                    {/* Reason for Visit */}
-                    <div className="space-y-1.5">
-                      <label className="block text-[11px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/70">
-                        {currentT.booking.reasonLabel} *
-                      </label>
-                      <select
-                        className="w-full bg-[#fcfbf9] border border-[#1c1c18]/12 px-4 py-3 text-sm focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-sans font-light text-[#1c1c18] transition-all duration-300 rounded-none"
-                        value={bookingData.reason}
-                        onChange={(e) => setBookingData({ ...bookingData, reason: e.target.value })}
-                      >
-                        <option value="">{currentT.booking.reasonPlaceholder}</option>
-                        {Object.entries(currentT.booking.reasons).map(([key, label]) => (
-                          <option key={key} value={key} className="bg-white text-[#1c1c18]">{label}</option>
-                        ))}
-                      </select>
-                      {errors.reason && <p className="text-xs text-red-600 font-sans">{errors.reason}</p>}
-                    </div>
-
-                    {/* Date Input */}
-                    <div className="space-y-1.5">
-                      <label className="block text-[11px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/70 flex justify-between">
-                        <span>{currentT.booking.dateLabel} *</span>
-                        <span className="text-[10px] text-[#1c1c18]/45 italic normal-case font-normal">{lang === "es" ? "(Mar - Dom)" : "(Tue - Sun)"}</span>
-                      </label>
-                      <input
-                        type="date"
-                        className="w-full bg-[#fcfbf9] border border-[#1c1c18]/12 px-4 py-3 text-sm focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-sans font-light text-[#1c1c18] transition-all duration-300 rounded-none"
-                        value={bookingData.date}
-                        onChange={(e) => setBookingData({ ...bookingData, date: e.target.value })}
-                      />
-                      {errors.date && <p className="text-xs text-red-600 font-sans">{errors.date}</p>}
-                    </div>
-
-                    {/* Time Input */}
-                    <div className="space-y-1.5">
-                      <label className="block text-[11px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/70 flex justify-between">
-                        <span>{currentT.booking.timeLabel} *</span>
-                        <span className="text-[10px] text-[#1c1c18]/45 italic normal-case font-normal">(12:00 - 20:00)</span>
-                      </label>
-                      <input
-                        type="time"
-                        className="w-full bg-[#fcfbf9] border border-[#1c1c18]/12 px-4 py-3 text-sm focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-sans font-light text-[#1c1c18] transition-all duration-300 rounded-none"
-                        value={bookingData.time}
-                        onChange={(e) => setBookingData({ ...bookingData, time: e.target.value })}
-                      />
-                      {errors.time && <p className="text-xs text-red-600 font-sans">{errors.time}</p>}
-                    </div>
-
-                  </div>
-
-                  <div className="pt-2">
+                    {/* Opción 1: WhatsApp */}
                     <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full bg-[#25D366] hover:bg-[#20b855] text-white font-navigation text-[11px] sm:text-[12px] uppercase tracking-[0.2em] font-semibold py-4 px-6 transition-all cursor-pointer shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 rounded-none"
+                      type="button"
+                      onClick={() => setBookingMethod(bookingMethod === "whatsapp" ? null : "whatsapp")}
+                      className={`p-5 text-left border transition-all duration-300 flex items-center gap-4 cursor-pointer rounded-none relative ${
+                        bookingMethod === "whatsapp"
+                          ? "bg-white border-[#25D366] shadow-md ring-1 ring-[#25D366]"
+                          : "bg-[#fcfbf9] border-[#1c1c18]/15 hover:border-[#25D366]/60 hover:bg-white"
+                      }`}
                     >
-                      <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.805-9.805.001-2.621-1.013-5.086-2.86-6.936C16.37 1.947 13.907 1.01 11.996 1.01c-5.41 0-9.813 4.402-9.815 9.813-.001 1.638.455 3.236 1.32 4.654L2.46 19.95l4.187-1.096L6.647 19.16zM17.15 14.5c-.282-.141-1.664-.822-1.921-.916-.257-.094-.445-.141-.631.141-.188.281-.727.916-.891 1.101-.164.186-.328.21-.61.07-2.8-.14-4.88-1.22-6.52-3.08-.282-.482.282-.447.805-1.492.083-.164.041-.309-.021-.45-.062-.141-.563-1.36-.77-1.859-.203-.489-.407-.423-.563-.431-.145-.007-.312-.009-.48-.009-.168 0-.441.063-.672.312-.23.25-1.012.988-1.012 2.41 0 1.42 1.031 2.793 1.17 2.98.14.188 2.03 3.102 4.921 4.35.688.297 1.224.474 1.644.607.69.219 1.319.188 1.816.114.553-.082 1.664-.68 1.898-1.336.234-.656.234-1.219.164-1.336-.07-.117-.258-.188-.54-.328z"/>
-                      </svg>
-                      <span>{lang === "es" ? "Reservar Mesa por WhatsApp" : "Book Table via WhatsApp"}</span>
+                      <div className={`w-11 h-11 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                        bookingMethod === "whatsapp" ? "bg-[#25D366] text-white" : "bg-[#25D366]/10 text-[#25D366]"
+                      }`}>
+                        <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                          <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.805-9.805.001-2.621-1.013-5.086-2.86-6.936C16.37 1.947 13.907 1.01 11.996 1.01c-5.41 0-9.813 4.402-9.815 9.813-.001 1.638.455 3.236 1.32 4.654L2.46 19.95l4.187-1.096L6.647 19.16zM17.15 14.5c-.282-.141-1.664-.822-1.921-.916-.257-.094-.445-.141-.631.141-.188.281-.727.916-.891 1.101-.164.186-.328.21-.61.07-2.8-.14-4.88-1.22-6.52-3.08-.282-.482.282-.447.805-1.492.083-.164.041-.309-.021-.45-.062-.141-.563-1.36-.77-1.859-.203-.489-.407-.423-.563-.431-.145-.007-.312-.009-.48-.009-.168 0-.441.063-.672.312-.23.25-1.012.988-1.012 2.41 0 1.42 1.031 2.793 1.17 2.98.14.188 2.03 3.102 4.921 4.35.688.297 1.224.474 1.644.607.69.219 1.319.188 1.816.114.553-.082 1.664-.68 1.898-1.336.234-.656.234-1.219.164-1.336-.07-.117-.258-.188-.54-.328z"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <span className="text-[10px] tracking-wider uppercase font-semibold text-[#25D366] block font-sans">
+                          {lang === "es" ? "Opción 1" : "Option 1"}
+                        </span>
+                        <h3 className="font-navigation text-xs sm:text-sm uppercase tracking-wider font-bold text-[#1c1c18]">
+                          {lang === "es" ? "Reservar por WhatsApp" : "Book via WhatsApp"}
+                        </h3>
+                        <p className="text-[11px] text-[#1c1c18]/60 font-sans font-light mt-0.5">
+                          {lang === "es" ? "Llena tus datos y envía tu reserva" : "Fill details & send reservation"}
+                        </p>
+                      </div>
                     </button>
 
-                    <div className="pt-3 flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#1c1c18]/60 font-sans">
-                      <span>{lang === "es" ? "WhatsApp Oficial: +52 33 1333 4751" : "Official WhatsApp: +52 33 1333 4751"}</span>
-                      <a href="tel:+5213313334751" className="hover:text-[#8C4723] underline flex items-center gap-1">
-                        <span className="material-symbols-outlined text-xs">call</span>
-                        {lang === "es" ? "Llamar por teléfono" : "Call by phone"}
-                      </a>
-                    </div>
+                    {/* Opción 2: Llamada Directa */}
+                    <a
+                      href="tel:+5213313334751"
+                      className="p-5 text-left border border-[#1c1c18]/15 bg-[#fcfbf9] hover:bg-white hover:border-[#8C4723] hover:shadow-md transition-all duration-300 flex items-center gap-4 cursor-pointer rounded-none group"
+                    >
+                      <div className="w-11 h-11 rounded-full bg-[#8C4723]/10 group-hover:bg-[#8C4723] text-[#8C4723] group-hover:text-white flex items-center justify-center shrink-0 transition-colors">
+                        <span className="material-symbols-outlined text-[20px]">call</span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] tracking-wider uppercase font-semibold text-[#8C4723] block font-sans">
+                          {lang === "es" ? "Opción 2" : "Option 2"}
+                        </span>
+                        <h3 className="font-navigation text-xs sm:text-sm uppercase tracking-wider font-bold text-[#1c1c18] group-hover:text-[#8C4723] transition-colors">
+                          {lang === "es" ? "Llamar por Teléfono" : "Direct Phone Call"}
+                        </h3>
+                        <p className="text-[11px] text-[#1c1c18]/60 font-sans font-light mt-0.5">
+                          +52 33 1333 4751 • {lang === "es" ? "Marcar directo" : "Call immediately"}
+                        </p>
+                      </div>
+                    </a>
                   </div>
-                </form>
+
+                  {/* Formulario que se despliega al seleccionar Opción 1: WhatsApp */}
+                  {bookingMethod === "whatsapp" && (
+                    <form onSubmit={handleDirectWhatsAppBooking} className="space-y-4 pt-4 border-t border-[#1c1c18]/10">
+                      <div className="flex items-center justify-between pb-1">
+                        <span className="font-navigation text-[10px] uppercase tracking-widest font-bold text-[#25D366]">
+                          {lang === "es" ? "Datos de la Reservación" : "Reservation Details"}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setBookingMethod(null)}
+                          className="text-[10px] text-[#1c1c18]/50 hover:text-[#1c1c18] underline font-sans cursor-pointer"
+                        >
+                          {lang === "es" ? "Cerrar formulario" : "Close form"}
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        
+                        {/* Name Input */}
+                        <div className="space-y-1.5">
+                          <label className="block text-[11px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/70">
+                            {currentT.booking.nameLabel} *
+                          </label>
+                          <input
+                            type="text"
+                            className="w-full bg-[#fcfbf9] border border-[#1c1c18]/12 px-4 py-3 text-sm focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-sans font-light text-[#1c1c18] transition-all duration-300 placeholder:text-[#1c1c18]/30 rounded-none"
+                            placeholder={lang === "es" ? "Ej. Emmanuel Vázquez" : "e.g. John Doe"}
+                            value={bookingData.name}
+                            onChange={(e) => setBookingData({ ...bookingData, name: e.target.value })}
+                          />
+                          {errors.name && <p className="text-xs text-red-600 font-sans">{errors.name}</p>}
+                        </div>
+
+                        {/* Phone Input */}
+                        <div className="space-y-1.5">
+                          <label className="block text-[11px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/70">
+                            {currentT.booking.phoneLabel} *
+                          </label>
+                          <input
+                            type="tel"
+                            className="w-full bg-[#fcfbf9] border border-[#1c1c18]/12 px-4 py-3 text-sm focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-sans font-light text-[#1c1c18] transition-all duration-300 placeholder:text-[#1c1c18]/30 rounded-none"
+                            placeholder={lang === "es" ? "Ej. 33 3142 7585" : "e.g. +1 555 123 4567"}
+                            value={bookingData.phone}
+                            onChange={(e) => setBookingData({ ...bookingData, phone: e.target.value })}
+                          />
+                          {errors.phone && <p className="text-xs text-red-600 font-sans">{errors.phone}</p>}
+                        </div>
+
+                        {/* Number of Guests */}
+                        <div className="space-y-1.5">
+                          <label className="block text-[11px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/70 flex justify-between">
+                            <span>{currentT.booking.guestsLabel} *</span>
+                            <span className="text-[10px] text-[#1c1c18]/45 italic normal-case font-normal">(1-75 pax)</span>
+                          </label>
+                          <input
+                            type="number"
+                            min="1"
+                            max="75"
+                            className="w-full bg-[#fcfbf9] border border-[#1c1c18]/12 px-4 py-3 text-sm focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-sans font-light text-[#1c1c18] transition-all duration-300 rounded-none"
+                            value={bookingData.guests}
+                            onChange={(e) => setBookingData({ ...bookingData, guests: parseInt(e.target.value, 10) || "" })}
+                          />
+                          {errors.guests && <p className="text-xs text-red-600 font-sans">{errors.guests}</p>}
+                        </div>
+
+                        {/* Reason for Visit */}
+                        <div className="space-y-1.5">
+                          <label className="block text-[11px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/70">
+                            {currentT.booking.reasonLabel} *
+                          </label>
+                          <select
+                            className="w-full bg-[#fcfbf9] border border-[#1c1c18]/12 px-4 py-3 text-sm focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-sans font-light text-[#1c1c18] transition-all duration-300 rounded-none"
+                            value={bookingData.reason}
+                            onChange={(e) => setBookingData({ ...bookingData, reason: e.target.value })}
+                          >
+                            <option value="">{currentT.booking.reasonPlaceholder}</option>
+                            {Object.entries(currentT.booking.reasons).map(([key, label]) => (
+                              <option key={key} value={key} className="bg-white text-[#1c1c18]">{label}</option>
+                            ))}
+                          </select>
+                          {errors.reason && <p className="text-xs text-red-600 font-sans">{errors.reason}</p>}
+                        </div>
+
+                        {/* Date Input */}
+                        <div className="space-y-1.5">
+                          <label className="block text-[11px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/70 flex justify-between">
+                            <span>{currentT.booking.dateLabel} *</span>
+                            <span className="text-[10px] text-[#1c1c18]/45 italic normal-case font-normal">{lang === "es" ? "(Mar - Dom)" : "(Tue - Sun)"}</span>
+                          </label>
+                          <input
+                            type="date"
+                            className="w-full bg-[#fcfbf9] border border-[#1c1c18]/12 px-4 py-3 text-sm focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-sans font-light text-[#1c1c18] transition-all duration-300 rounded-none"
+                            value={bookingData.date}
+                            onChange={(e) => setBookingData({ ...bookingData, date: e.target.value })}
+                          />
+                          {errors.date && <p className="text-xs text-red-600 font-sans">{errors.date}</p>}
+                        </div>
+
+                        {/* Time Input */}
+                        <div className="space-y-1.5">
+                          <label className="block text-[11px] uppercase tracking-wider font-semibold font-sans text-[#1c1c18]/70 flex justify-between">
+                            <span>{currentT.booking.timeLabel} *</span>
+                            <span className="text-[10px] text-[#1c1c18]/45 italic normal-case font-normal">(12:00 - 20:00)</span>
+                          </label>
+                          <input
+                            type="time"
+                            className="w-full bg-[#fcfbf9] border border-[#1c1c18]/12 px-4 py-3 text-sm focus:outline-none focus:border-[#8C4723] focus:ring-1 focus:ring-[#8C4723] font-sans font-light text-[#1c1c18] transition-all duration-300 rounded-none"
+                            value={bookingData.time}
+                            onChange={(e) => setBookingData({ ...bookingData, time: e.target.value })}
+                          />
+                          {errors.time && <p className="text-xs text-red-600 font-sans">{errors.time}</p>}
+                        </div>
+
+                      </div>
+
+                      <div className="pt-2">
+                        <button
+                          type="submit"
+                          disabled={isSubmitting}
+                          className="w-full bg-[#25D366] hover:bg-[#20b855] text-white font-navigation text-[11px] sm:text-[12px] uppercase tracking-[0.2em] font-semibold py-4 px-6 transition-all cursor-pointer shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 rounded-none"
+                        >
+                          <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.805-9.805.001-2.621-1.013-5.086-2.86-6.936C16.37 1.947 13.907 1.01 11.996 1.01c-5.41 0-9.813 4.402-9.815 9.813-.001 1.638.455 3.236 1.32 4.654L2.46 19.95l4.187-1.096L6.647 19.16zM17.15 14.5c-.282-.141-1.664-.822-1.921-.916-.257-.094-.445-.141-.631.141-.188.281-.727.916-.891 1.101-.164.186-.328.21-.61.07-2.8-.14-4.88-1.22-6.52-3.08-.282-.482.282-.447.805-1.492.083-.164.041-.309-.021-.45-.062-.141-.563-1.36-.77-1.859-.203-.489-.407-.423-.563-.431-.145-.007-.312-.009-.48-.009-.168 0-.441.063-.672.312-.23.25-1.012.988-1.012 2.41 0 1.42 1.031 2.793 1.17 2.98.14.188 2.03 3.102 4.921 4.35.688.297 1.224.474 1.644.607.69.219 1.319.188 1.816.114.553-.082 1.664-.68 1.898-1.336.234-.656.234-1.219.164-1.336-.07-.117-.258-.188-.54-.328z"/>
+                          </svg>
+                          <span>{lang === "es" ? "Enviar Reservación a WhatsApp" : "Send Reservation to WhatsApp"}</span>
+                        </button>
+                      </div>
+                    </form>
+                  )}
+                </div>
               )}
 
               {/* Step 2: Pantalla de Éxito / Confirmación */}
@@ -1189,6 +1255,7 @@ export default function Nativo1937({ lang = "es", t }) {
                       onClick={() => {
                         setBookingData({ name: "", phone: "", guests: 2, date: "", time: "", reason: "" });
                         setBookingStep(1);
+                        setBookingMethod(null);
                         setBookingCode("");
                         setErrors({});
                       }}
