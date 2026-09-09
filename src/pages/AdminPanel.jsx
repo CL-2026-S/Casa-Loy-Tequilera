@@ -574,43 +574,41 @@ export default function AdminPanel({
       const res = await fetch("/api/auth?action=login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: emailInput, password: passwordInput })
+        body: JSON.stringify({ email: emailInput.trim(), password: passwordInput })
       });
 
-      if (res.ok) {
-        const data = await res.json();
-        if (data.success) {
-          setToken(data.token);
-          setUser(data.user);
-          setIsLoggedIn(true);
-          sessionStorage.setItem("casa_loy_admin_token", data.token);
-          sessionStorage.setItem("casa_loy_admin_user", JSON.stringify(data.user));
-          setEmailInput("");
-          setPasswordInput("");
-          return;
-        } else {
-          setErrorMsg(data.message || (lang === "es" ? "Credenciales incorrectas." : "Incorrect credentials."));
-          return;
-        }
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && data.success) {
+        setToken(data.token);
+        setUser(data.user);
+        setIsLoggedIn(true);
+        sessionStorage.setItem("casa_loy_admin_token", data.token);
+        sessionStorage.setItem("casa_loy_admin_user", JSON.stringify(data.user));
+        setEmailInput("");
+        setPasswordInput("");
+        return;
+      } else {
+        setErrorMsg(data.message || (lang === "es" ? "Credenciales incorrectas." : "Incorrect credentials."));
+        return;
       }
     } catch (e) {
       console.error("Login request error:", e);
+      if (import.meta.env.DEV && (emailInput.toLowerCase().includes("admin") || passwordInput.length > 0)) {
+        const devUser = { name: "Administrador Casa Loy", email: emailInput || "admin@casaloy.com", role: "admin" };
+        setToken("dev_admin_token");
+        setUser(devUser);
+        setIsLoggedIn(true);
+        sessionStorage.setItem("casa_loy_admin_token", "dev_admin_token");
+        sessionStorage.setItem("casa_loy_admin_user", JSON.stringify(devUser));
+        setEmailInput("");
+        setPasswordInput("");
+        return;
+      }
+      setErrorMsg(lang === "es" ? "Error al conectar con el servidor." : "Server connection error.");
+    } finally {
+      setIsLoggingIn(false);
     }
-
-    // Dev environment fallback when Vite runs without Vercel CLI serverless
-    if (import.meta.env.DEV && (emailInput.toLowerCase().includes("admin") || passwordInput.length > 0)) {
-      const devUser = { name: "Administrador Casa Loy", email: emailInput || "admin@casaloy.com", role: "admin" };
-      setToken("dev_admin_token");
-      setUser(devUser);
-      setIsLoggedIn(true);
-      sessionStorage.setItem("casa_loy_admin_token", "dev_admin_token");
-      sessionStorage.setItem("casa_loy_admin_user", JSON.stringify(devUser));
-      setEmailInput("");
-      setPasswordInput("");
-      return;
-    }
-
-    setErrorMsg(lang === "es" ? "Error al conectar con el servidor." : "Server connection error.");
   };
 
   const handleLogout = () => {
