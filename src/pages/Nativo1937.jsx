@@ -597,180 +597,224 @@ export default function Nativo1937({ lang = "es", t }) {
         </div>
       </section>
 
-      {/* Apple-Style Fresh & Inviting Gallery Section */}
-      <section className="py-24 md:py-32 bg-[#FAF9F6] text-[#1D1D1F] text-left relative overflow-hidden border-b border-black/5" id="heritage">
+      {/* Premium Haute-Cuisine Restaurant Gallery Section */}
+      <section 
+        className="py-20 md:py-28 bg-[#FAF8F5] text-[#1C1C18] text-left relative overflow-hidden border-b border-[#8C4723]/10" 
+        id="heritage"
+      >
+        {/* Subtle Ambient Lighting Texture */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(ellipse_at_top_right,rgba(140,71,35,0.06),transparent_70%)] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[radial-gradient(ellipse_at_bottom_left,rgba(47,64,62,0.05),transparent_70%)] pointer-events-none" />
+
         <div className="max-w-container-max mx-auto px-margin-desktop relative z-10">
           
           {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-14">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12">
             <div className="space-y-3 max-w-2xl">
-              <span className="inline-block px-3.5 py-1 bg-[#8C4723]/10 text-[#8C4723] font-navigation text-[10px] uppercase tracking-[0.25em] font-semibold rounded-full">
-                {lang === "es" ? "Experiencia Gastronómica" : "Gastronomic Experience"}
-              </span>
-              <h2 className="font-sans text-[clamp(30px,4vw,52px)] font-bold leading-[1.1] tracking-tight text-[#1D1D1F]">
+              <div className="flex items-center gap-2">
+                <span className="w-6 h-[1.5px] bg-[#8C4723]" />
+                <span className="font-navigation text-[11px] uppercase tracking-[0.25em] text-[#8C4723] font-semibold">
+                  {lang === "es" ? "Atmósfera & Galería Gastronómica" : "Atmosphere & Culinary Gallery"}
+                </span>
+              </div>
+              <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[48px] font-normal leading-[1.14] tracking-tight text-[#1C1C18]">
                 {lang === "es" 
-                  ? "Fresco, auténtico y antojable en cada detalle." 
-                  : "Fresh, authentic, and appetizing in every detail."}
+                  ? "El encanto de las brasas, el arte agavero y la calidez de nuestra mesa." 
+                  : "The charm of open flame, agave heritage, and the warmth of our table."}
               </h2>
-              <p className="font-sans text-base md:text-lg text-[#1D1D1F]/70 font-normal leading-relaxed pt-1">
+              <p className="font-sans text-base md:text-lg text-[#53443A] font-light leading-relaxed pt-1">
                 {lang === "es"
                   ? "Descubre la atmósfera, la brasa y la mixología de Restaurante 1937 Nativo antes de explorar nuestra carta."
                   : "Discover the atmosphere, wood fire, and mixology of Restaurante 1937 Nativo before exploring our menu."}
               </p>
             </div>
 
-            {/* Apple Segmented Pill Filter Bar */}
-            <div className="flex items-center gap-1.5 bg-[#EBEAE7] p-1.5 rounded-full shadow-inner border border-black/5 self-start md:self-auto overflow-x-auto max-w-full">
+            {/* Culinary Category Filter Tabs (NO SCROLLBAR) */}
+            <div className="flex flex-wrap items-center gap-2 md:gap-2.5 self-start lg:self-end">
               {[
                 { key: "all", label: { es: "Todos", en: "All" } },
                 { key: "platillos", label: { es: "Brasas & Cocina", en: "Grill & Kitchen" } },
                 { key: "ambiente", label: { es: "Mixología & Barra", en: "Mixology & Bar" } },
-                { key: "espacios", label: { es: "Espacios & Terrazas", en: "Spaces & Terraces" } }
-              ].map((tab) => (
-                <button
-                  key={tab.key}
-                  onClick={() => {
-                    setGalleryCategory(tab.key);
-                    setActiveGalleryIndex(0);
-                  }}
-                  className={`px-4 md:px-5 py-2 rounded-full font-navigation text-[11px] font-semibold tracking-wider transition-all duration-300 whitespace-nowrap ${
-                    galleryCategory === tab.key
-                      ? "bg-white text-[#8C4723] shadow-md scale-100 font-bold"
-                      : "text-[#1D1D1F]/60 hover:text-[#1D1D1F]"
-                  }`}
-                >
-                  {tab.label[lang === "es" ? "es" : "en"]}
-                </button>
-              ))}
+                { key: "espacios", label: { es: "Terrazas & Salones", en: "Terraces & Lounges" } }
+              ].map((tab) => {
+                const isActive = galleryCategory === tab.key;
+                return (
+                  <button
+                    key={tab.key}
+                    onClick={() => {
+                      setGalleryCategory(tab.key);
+                      setActiveGalleryIndex(0);
+                    }}
+                    className={`px-4 md:px-5 py-2.5 rounded-full font-navigation text-[11px] md:text-xs tracking-[0.14em] uppercase transition-all duration-300 ${
+                      isActive
+                        ? "bg-[#8C4723] text-white font-semibold shadow-md shadow-[#8C4723]/25 border border-[#8C4723]"
+                        : "bg-white/90 hover:bg-white text-[#53443A] hover:text-[#8C4723] font-medium border border-[#8C4723]/15 hover:border-[#8C4723]/35 shadow-sm"
+                    }`}
+                  >
+                    {tab.label[lang === "es" ? "es" : "en"]}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          {/* Featured Hero Stage + Cards Grid */}
-          <div className="space-y-8">
-            
-            {/* Primary Featured Card (Apple Pro Style) */}
-            <div className="group relative bg-white rounded-3xl p-4 md:p-6 border border-black/[0.06] shadow-[0_20px_50px_rgba(0,0,0,0.06)] overflow-hidden transition-all duration-500 hover:shadow-[0_30px_60px_rgba(0,0,0,0.09)]">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-                
-                {/* Main Hero Image */}
-                <div 
-                  className="lg:col-span-8 relative overflow-hidden rounded-2xl aspect-[16/10] md:aspect-[16/9] bg-zinc-100 cursor-pointer"
-                  onClick={() => setSelectedModalIndex(activeGalleryIndex)}
-                >
-                  <img
-                    src={filteredGallery[activeGalleryIndex]?.img || nativoGallery[0].img}
-                    alt={filteredGallery[activeGalleryIndex]?.title[lang === "es" ? "es" : "en"]}
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-                  />
-                  <div className="absolute top-4 left-4">
-                    <span className="px-3.5 py-1 bg-white/90 backdrop-blur-md text-[#8C4723] font-navigation text-[10px] uppercase tracking-[0.2em] font-bold rounded-full shadow-sm">
-                      {filteredGallery[activeGalleryIndex]?.badge[lang === "es" ? "es" : "en"]}
-                    </span>
-                  </div>
-                  <div className="absolute bottom-4 right-4 bg-black/60 hover:bg-[#8C4723] backdrop-blur-md p-3 rounded-full text-white transition-all shadow-md">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4" />
-                    </svg>
-                  </div>
-                </div>
+          {/* Gallery Presentation */}
+          {galleryCategory === "all" ? (
+            /* Editorial Mosaic Grid (6 items) */
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5 md:gap-6">
+              {filteredGallery.map((item, idx) => {
+                // Layout classes for each card in the curated mosaic:
+                let colSpanClass = "lg:col-span-4";
+                let aspectClass = "aspect-[4/3] md:aspect-[16/11]";
 
-                {/* Hero Info & Controls */}
-                <div className="lg:col-span-4 p-4 space-y-6">
-                  <div className="space-y-3">
-                    <span className="font-navigation text-[11px] uppercase tracking-[0.3em] font-bold text-[#8C4723]">
-                      0{activeGalleryIndex + 1} / 0{filteredGallery.length}
-                    </span>
-                    <h3 className="font-sans text-2xl md:text-3xl font-bold text-[#1D1D1F] leading-tight">
-                      {filteredGallery[activeGalleryIndex]?.title[lang === "es" ? "es" : "en"]}
-                    </h3>
-                    <p className="font-sans text-sm text-[#1D1D1F]/70 font-normal leading-relaxed">
-                      {filteredGallery[activeGalleryIndex]?.subtitle[lang === "es" ? "es" : "en"]}
-                    </p>
-                  </div>
+                if (idx === 0) {
+                  colSpanClass = "lg:col-span-7";
+                  aspectClass = "aspect-[16/10] md:aspect-[16/10]";
+                } else if (idx === 1) {
+                  colSpanClass = "lg:col-span-5";
+                  aspectClass = "aspect-[16/10] md:aspect-[16/10]";
+                } else if (idx === 5) {
+                  colSpanClass = "lg:col-span-12";
+                  aspectClass = "aspect-[16/9] md:aspect-[21/9]";
+                }
 
-                  {/* Navigation Arrows & Action CTA */}
-                  <div className="flex items-center justify-between pt-4 border-t border-black/5">
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => setActiveGalleryIndex((prev) => (prev > 0 ? prev - 1 : filteredGallery.length - 1))}
-                        className="w-10 h-10 rounded-full border border-black/10 hover:border-[#8C4723] hover:text-[#8C4723] flex items-center justify-center transition-colors bg-[#F5F5F7]"
-                        aria-label="Anterior"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => setActiveGalleryIndex((prev) => (prev < filteredGallery.length - 1 ? prev + 1 : 0))}
-                        className="w-10 h-10 rounded-full border border-black/10 hover:border-[#8C4723] hover:text-[#8C4723] flex items-center justify-center transition-colors bg-[#F5F5F7]"
-                        aria-label="Siguiente"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                      </button>
+                return (
+                  <div
+                    key={item.id || idx}
+                    onClick={() => setSelectedModalIndex(idx)}
+                    className={`group relative ${colSpanClass} rounded-2xl overflow-hidden cursor-pointer bg-[#EDE7DE] border border-[#8C4723]/15 shadow-[0_8px_24px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(140,71,35,0.14)] transition-all duration-500`}
+                  >
+                    <div className={`relative w-full ${aspectClass} overflow-hidden`}>
+                      <img
+                        src={item.img}
+                        alt={item.title[lang === "es" ? "es" : "en"]}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      />
+
+                      {/* Vignette & Contrast Gradient Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent transition-opacity duration-500" />
+                      
+                      {/* Top Badges & Zoom Action */}
+                      <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
+                        <span className="px-3.5 py-1 bg-black/40 backdrop-blur-md text-white/95 border border-white/20 font-navigation text-[9px] uppercase tracking-[0.2em] font-semibold rounded-full shadow-sm">
+                          {item.badge[lang === "es" ? "es" : "en"]}
+                        </span>
+                        
+                        <div className="w-8 h-8 rounded-full bg-white/25 group-hover:bg-[#8C4723] backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-md">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4" />
+                          </svg>
+                        </div>
+                      </div>
+
+                      {/* Bottom Editorial Caption */}
+                      <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6 text-white space-y-1.5 transition-transform duration-300">
+                        <div className="flex items-center gap-2">
+                          <span className="font-navigation text-[10px] uppercase tracking-[0.2em] text-[#E0A97C] font-semibold">
+                            0{idx + 1}
+                          </span>
+                          <span className="w-1 h-1 rounded-full bg-[#E0A97C]" />
+                          <span className="font-navigation text-[10px] uppercase tracking-[0.18em] text-white/75">
+                            Restaurante 1937 Nativo
+                          </span>
+                        </div>
+                        <h3 className="font-serif text-xl md:text-2xl font-medium tracking-wide leading-tight group-hover:text-[#F3E2D4] transition-colors">
+                          {item.title[lang === "es" ? "es" : "en"]}
+                        </h3>
+                        <p className="font-sans text-xs md:text-sm text-white/80 font-light line-clamp-2 leading-relaxed max-w-xl">
+                          {item.subtitle[lang === "es" ? "es" : "en"]}
+                        </p>
+                      </div>
                     </div>
-
-                    <a
-                      href="#menu"
-                      className="inline-flex items-center gap-2 text-xs font-navigation uppercase tracking-[0.2em] font-bold text-[#8C4723] hover:text-[#a6562b] transition-colors"
-                    >
-                      {lang === "es" ? "Ver Menú" : "View Menu"}
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </a>
                   </div>
-                </div>
-
-              </div>
+                );
+              })}
             </div>
-
-            {/* Apple-Style Cards Carousel Reel (All 6 cards) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
+          ) : (
+            /* Filtered Clean Grid */
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredGallery.map((item, idx) => (
                 <div
-                  key={idx}
-                  onClick={() => {
-                    setActiveGalleryIndex(idx);
-                    setSelectedModalIndex(idx);
-                  }}
-                  className={`group relative bg-white rounded-2xl p-3 border transition-all duration-500 cursor-pointer hover:shadow-xl ${
-                    activeGalleryIndex === idx
-                      ? "border-[#8C4723] ring-2 ring-[#8C4723]/20 shadow-lg"
-                      : "border-black/[0.06] shadow-sm hover:border-black/20"
-                  }`}
+                  key={item.id || idx}
+                  onClick={() => setSelectedModalIndex(idx)}
+                  className="group relative rounded-2xl overflow-hidden cursor-pointer bg-[#EDE7DE] border border-[#8C4723]/15 shadow-[0_8px_24px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(140,71,35,0.14)] transition-all duration-500"
                 >
-                  <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-zinc-100 mb-3">
+                  <div className="relative w-full aspect-[4/3] overflow-hidden">
                     <img
                       src={item.img}
                       alt={item.title[lang === "es" ? "es" : "en"]}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                       loading="lazy"
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
-                    <div className="absolute top-3 left-3">
-                      <span className="px-2.5 py-0.5 bg-white/90 backdrop-blur-md text-[#8C4723] font-navigation text-[9px] uppercase tracking-wider font-bold rounded-full shadow-sm">
+
+                    {/* Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+
+                    {/* Badges */}
+                    <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
+                      <span className="px-3.5 py-1 bg-black/40 backdrop-blur-md text-white/95 border border-white/20 font-navigation text-[9px] uppercase tracking-[0.2em] font-semibold rounded-full shadow-sm">
                         {item.badge[lang === "es" ? "es" : "en"]}
                       </span>
+                      <div className="w-8 h-8 rounded-full bg-white/25 group-hover:bg-[#8C4723] backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-md">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4" />
+                        </svg>
+                      </div>
                     </div>
-                  </div>
-                  <div className="p-2 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-sans text-base font-bold text-[#1D1D1F] group-hover:text-[#8C4723] transition-colors">
+
+                    {/* Bottom Caption */}
+                    <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6 text-white space-y-1.5">
+                      <div className="flex items-center gap-2">
+                        <span className="font-navigation text-[10px] uppercase tracking-[0.2em] text-[#E0A97C] font-semibold">
+                          0{idx + 1}
+                        </span>
+                        <span className="w-1 h-1 rounded-full bg-[#E0A97C]" />
+                        <span className="font-navigation text-[10px] uppercase tracking-[0.18em] text-white/75">
+                          Restaurante 1937 Nativo
+                        </span>
+                      </div>
+                      <h3 className="font-serif text-xl md:text-2xl font-medium tracking-wide leading-tight group-hover:text-[#F3E2D4] transition-colors">
                         {item.title[lang === "es" ? "es" : "en"]}
-                      </h4>
-                      <span className="font-mono text-xs font-semibold text-[#8C4723]">
-                        0{idx + 1}
-                      </span>
+                      </h3>
+                      <p className="font-sans text-xs md:text-sm text-white/80 font-light line-clamp-2 leading-relaxed">
+                        {item.subtitle[lang === "es" ? "es" : "en"]}
+                      </p>
                     </div>
-                    <p className="font-sans text-xs text-[#1D1D1F]/65 line-clamp-2 font-normal">
-                      {item.subtitle[lang === "es" ? "es" : "en"]}
-                    </p>
                   </div>
                 </div>
               ))}
             </div>
+          )}
 
+          {/* Quick Action Footer Banner */}
+          <div className="mt-12 pt-8 border-t border-[#8C4723]/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+            <div className="space-y-0.5">
+              <p className="font-serif text-lg text-[#1C1C18] font-medium">
+                {lang === "es" 
+                  ? "¿Deseas degustar nuestra propuesta gastronómica?" 
+                  : "Ready to taste our culinary offerings?"}
+              </p>
+              <p className="font-sans text-xs text-[#53443A]">
+                {lang === "es"
+                  ? "Cortes a las brasas, mixología con Tequila Casa Loy y vistas al paisaje agavero."
+                  : "Wood-fired steaks, artisanal Casa Loy mixology, and agave field vistas."}
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <a
+                href="#menu"
+                className="px-5 py-2.5 rounded-full font-navigation text-xs uppercase tracking-[0.16em] font-semibold text-[#8C4723] hover:text-white bg-white hover:bg-[#8C4723] border border-[#8C4723]/30 transition-all shadow-sm"
+              >
+                {lang === "es" ? "Ver la Carta" : "View Menu"}
+              </a>
+              <a
+                href="#reservaciones"
+                className="px-5 py-2.5 rounded-full font-navigation text-xs uppercase tracking-[0.16em] font-semibold text-white bg-[#8C4723] hover:bg-[#723606] transition-all shadow-md shadow-[#8C4723]/20"
+              >
+                {lang === "es" ? "Reservar Mesa" : "Book a Table"}
+              </a>
+            </div>
           </div>
 
 
@@ -1435,14 +1479,14 @@ export default function Nativo1937({ lang = "es", t }) {
           {/* Bottom Bar Info */}
           <div className="border-t border-white/10 pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 z-10" onClick={(e) => e.stopPropagation()}>
             <div>
-              <h3 className="font-sans text-xl md:text-2xl text-white font-bold">
+              <h3 className="font-serif text-2xl md:text-3xl text-white font-medium tracking-wide">
                 {filteredGallery[selectedModalIndex].title[lang === "es" ? "es" : "en"]}
               </h3>
-              <p className="font-sans text-xs md:text-sm text-white/60 font-normal mt-1">
+              <p className="font-sans text-xs md:text-sm text-white/70 font-light mt-1 max-w-2xl leading-relaxed">
                 {filteredGallery[selectedModalIndex].subtitle[lang === "es" ? "es" : "en"]}
               </p>
             </div>
-            <div className="font-navigation text-[10px] uppercase tracking-[0.2em] text-[#D4A373] hidden md:block">
+            <div className="font-navigation text-[10px] uppercase tracking-[0.2em] text-[#E0A97C] hidden md:block">
               {lang === "es" ? "Navega con flechas o clic" : "Navigate with arrows or click"}
             </div>
           </div>
