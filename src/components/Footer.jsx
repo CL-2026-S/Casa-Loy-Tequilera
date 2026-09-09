@@ -62,7 +62,7 @@ export default function Footer({ lang = "es", setPage }) {
   // Content dictionary for Spanish and English
   const content = {
     es: {
-      desc: "Destilería mexicana con visión global, especializada en la producción, desarrollo y comercialización de tequila 100% agave. Integramos tradición, innovación y capacidad operativa para impulsar marcas propias, experiencias premium y proyectos estratégicos dentro de la industria tequilera.",
+      desc: "Destilería mexicana con visión global, especializada en la producción, desarrollo y comercialización de tequila 100% agave. Integramos tradición, innovación y capacidad operativa para impulsar marcas privadas, experiencias premium y proyectos estratégicos dentro de la industria tequilera.",
       aboutCTA: "Conoce nuestra historia",
       portfolioTitle: "Portafolio Casa Loy",
       brands: [
@@ -70,7 +70,7 @@ export default function Footer({ lang = "es", setPage }) {
         { name: "Reserva Casa Loy", url: "https://reservatequila.com/", external: true },
         { name: "TADDEL Tequila", url: "https://TADDELtequila.com/", external: true },
         { name: "Tierra Zafiro Tequila", url: "https://TierraZafirotequila.com/", external: true },
-        { name: "Marca Propia", page: "maquilas", external: false },
+        { name: "Marca Privada", page: "maquilas", external: false },
         { name: "Experiencias Casa Loy", page: "turismo", external: false },
         { name: "Restaurante 1937 Nativo", page: "nativo", external: false },
         { name: "Blog", page: "blog", external: false },
@@ -186,7 +186,7 @@ export default function Footer({ lang = "es", setPage }) {
                 const getPageRoute = (p) => {
                   const paths = {
                     es: {
-                      maquilas: "/marca-propia",
+                      maquilas: "/marca-privada",
                       turismo: "/turismo",
                       nativo: "/nativo",
                       blog: "/blog",

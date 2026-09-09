@@ -16,7 +16,7 @@ export default function CookiePolicy({ lang = "es" }) {
       sec2Bullets: [
         "<strong>Cookies Técnicas y Esenciales:</strong> Son obligatorias para el correcto funcionamiento del sitio. Por ejemplo, almacenamos el estado de validación del filtro de edad para garantizar que solo usuarios mayores de edad ingresen a las secciones de la destilería.",
         "<strong>Cookies de Personalización:</strong> Permiten recordar sus preferencias de idioma (Español o Inglés) durante la navegación por las diferentes vistas del portal.",
-        "<strong>Cookies de Análisis Estadístico:</strong> Nos permiten medir el número de visitantes, la duración de la sesión y qué apartados comerciales (como el desarrollo de marcas propias o gastronomía) captan mayor atención estratégica de inversionistas y aliados."
+        "<strong>Cookies de Análisis Estadístico:</strong> Nos permiten medir el número de visitantes, la duración de la sesión y qué apartados comerciales (como el desarrollo de marcas privadas o gastronomía) captan mayor atención estratégica de inversionistas y aliados."
       ],
       sec3Title: "3. Control y Desactivación",
       sec3Text: "Usted puede modificar la configuración de su navegador para restringir, bloquear o borrar las cookies del sitio web de Casa Loy Tequilera en cualquier momento. Si decide inhabilitar las cookies técnicas, tenga en cuenta que el filtro de verificación de edad y ciertas funciones de reserva interactiva podrían no operar de forma correcta.",

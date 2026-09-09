@@ -3,7 +3,7 @@ export const translations = {
     nav: {
       home: "Inicio",
       about: "Quiénes Somos",
-      bottling: "Marca Propia",
+      bottling: "Marca Privada",
       brands: "Nuestras Marcas",
       tourism: "Tours & Experiencias",
       nativo: "1937 Nativo Gastronomía",

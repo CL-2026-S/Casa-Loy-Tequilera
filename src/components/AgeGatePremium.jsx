@@ -663,7 +663,7 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
                         Los datos personales recabados serán utilizados de manera confidencial para las siguientes finalidades esenciales:
                       </p>
                       <ul className="list-disc pl-4 space-y-1.5">
-                        <li>Atender solicitudes de información técnica, comercial o B2B de desarrollo de marca propia (Maquila).</li>
+                        <li>Atender solicitudes de información técnica, comercial o B2B de desarrollo de marca privada (Maquila).</li>
                         <li>Gestionar reservas para nuestras visitas de turismo destilado y el Restaurante 1937 Nativo.</li>
                         <li>Enviar boletines comerciales, oportunidades de negocio e invitaciones a lanzamientos exclusivos si decide suscribirse a nuestra comunidad.</li>
                         <li>Evaluar perfiles para vacantes profesionales dentro de nuestra destilería.</li>

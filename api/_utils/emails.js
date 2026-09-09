@@ -1059,8 +1059,80 @@ export async function sendJobApplicationEmail(appDetails) {
     return { success: false, error: "Resend not initialized" };
   }
 
-  const { name, email, phone, cv_name, job_title } = appDetails;
+  const { name, email, phone, cv_name, cv_url, cv_base64, job_title, is_spontaneous } = appDetails;
   const fromEmail = getFromEmail();
+
+  // Determine if this is a general spontaneous talent pool registration or applying to a specific job opening
+  const isSpontaneousProfile = Boolean(
+    is_spontaneous || 
+    !job_title || 
+    job_title.toLowerCase().includes('espont') || 
+    job_title.toLowerCase().includes('cartera') || 
+    job_title.toLowerCase().includes('sin vacante') ||
+    job_title.toLowerCase().includes('general')
+  );
+
+  const emailSubject = isSpontaneousProfile
+    ? `[Cartera de Talento / Dejó su CV] ${name}`
+    : `[Postulación a Vacante: ${job_title}] ${name}`;
+
+  const headingTitle = isSpontaneousProfile
+    ? `Nuevo CV Registrado en Cartera de Talento`
+    : `Nueva Postulación a Vacante: ${job_title}`;
+
+  const infoBanner = isSpontaneousProfile
+    ? `
+      <div style="background-color: #fbf6ef; border: 1px solid #ebd5be; border-left: 4px solid #8C4723; padding: 14px 18px; margin: 20px 0; border-radius: 4px;">
+        <div style="color: #8C4723; font-weight: bold; font-size: 14px; margin-bottom: 4px;">
+          📌 Registro en Bolsa de Trabajo (Sin vacante específica)
+        </div>
+        <div style="color: #4a453e; font-size: 13px; line-height: 1.5;">
+          El candidato <strong>no se postuló a una vacante activa</strong>; dejó su currículum de manera voluntaria a través del formulario web para formar parte de la <strong>Cartera de Talento de Casa Loy</strong> y ser considerado en futuras oportunidades laborales afines a su perfil.
+        </div>
+      </div>
+    `
+    : `
+      <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-left: 4px solid #16a34a; padding: 14px 18px; margin: 20px 0; border-radius: 4px;">
+        <div style="color: #166534; font-weight: bold; font-size: 14px; margin-bottom: 4px;">
+          💼 Postulación para Vacante Abierta
+        </div>
+        <div style="color: #14532d; font-size: 13px; line-height: 1.5;">
+          El candidato ha aplicado formalmente para la posición: <strong>${job_title}</strong>.
+        </div>
+      </div>
+    `;
+
+  const tipoRegistro = isSpontaneousProfile
+    ? "Cartera de Talento General (CV para futuras vacantes)"
+    : "Postulación a Vacante Activa";
+
+  const vacanteDetalle = isSpontaneousProfile
+    ? "Ninguna (Registro proactivo / Bolsa General)"
+    : `<strong>${job_title}</strong>`;
+
+  const cvDownloadSection = cv_url
+    ? `
+      <table border="0" cellspacing="0" cellpadding="0" style="margin-top: 10px;">
+        <tr>
+          <td align="center" bgcolor="#8C4723" style="background-color: #8C4723; border-radius: 4px; padding: 10px 20px;">
+            <a href="${cv_url}" target="_blank" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; color: #ffffff !important; text-decoration: none !important; font-weight: bold; display: inline-block; text-transform: uppercase; letter-spacing: 0.06em;">
+              <span style="color: #ffffff !important; text-decoration: none !important; font-weight: bold;">📄 VER / DESCARGAR CURRÍCULUM ONLINE</span>
+            </a>
+          </td>
+        </tr>
+      </table>
+      <div style="font-size: 11px; color: #78716c; margin-top: 8px;">
+        * El archivo también se encuentra adjunto físicamente a este correo.
+      </div>
+    `
+    : `
+      <div style="font-size: 11px; color: #78716c; margin-top: 6px;">
+        * Archivo adjunto a este correo para su consulta.
+      </div>
+    `;
+
+  const cellHeaderStyle = "text-align: left; padding: 12px 10px; border-bottom: 1px solid #f0eee8; color: #8C4723; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; width: 35%; vertical-align: top; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;";
+  const cellDataStyle = "text-align: left; padding: 12px 10px; border-bottom: 1px solid #f0eee8; font-size: 14px; color: #1c1c18; vertical-align: top; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;";
 
   const html = `
     <!DOCTYPE html>
@@ -1073,23 +1145,45 @@ export async function sendJobApplicationEmail(appDetails) {
         .logo { max-height: 40px; width: auto; margin-bottom: 20px; display: block; }
         h2 { font-family: Georgia, serif; font-size: 20px; color: #8C4723; font-weight: normal; margin-top: 0; border-bottom: 1px solid #e5e2dc; padding-bottom: 15px; }
         .info-table { width: 100%; border-collapse: collapse; margin: 24px 0; }
-        .info-table th { text-align: left; padding: 12px 8px; border-bottom: 1px solid #f0eee8; color: #8C4723; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; width: 35%; }
-        .info-table td { padding: 12px 8px; border-bottom: 1px solid #f0eee8; font-size: 14px; color: #1c1c18; }
         .footer { font-size: 11px; color: #8a8a82; margin-top: 30px; border-top: 1px solid #e5e2dc; padding-top: 20px; text-align: center; }
+        a.btn-white, a.btn-white span { color: #ffffff !important; text-decoration: none !important; }
       </style>
     </head>
     <body>
       <div class="container">
         <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsI1CK1zDTaSkEhtFNd7gFs0Br7ZXW2rKE6mtXNlOgTpveNdFqRSK2aREIwDEFz2pNbAMxdM8OBUebW2gToScRYF1Q-TmhbHUos5e3w1fOey3coasOccOtVC4bzvDGydMpNF2wf6Q6Mt3FsJZRCihsNaG2kM2hluZ5hkMnIRqzGfCNnIgQCUk8l3pxlAgWZcH9ZqrbWcx3BD1-oHbu3TuTW9SKgwmqAzXcaSv6qTNhx6pJvTmykqnAVLEaPpvw8UHbNpl7z0SLcNA7" alt="Casa Loy Tequilera" class="logo">
-        <h2>Nueva Candidatura Registrada (Bolsa de Trabajo)</h2>
-        <p>Se ha recibido una nueva postulación a través de la plataforma web de Casa Loy:</p>
+        <h2>${headingTitle}</h2>
         
-        <table class="info-table">
-          <tr><th>Nombre</th><td><strong>${name}</strong></td></tr>
-          <tr><th>Correo</th><td><a href="mailto:${email}">${email}</a></td></tr>
-          <tr><th>Teléfono</th><td>${phone}</td></tr>
-          <tr><th>Vacante / Interés</th><td><strong>${job_title}</strong></td></tr>
-          <tr><th>CV Recibido (Nombre)</th><td>${cv_name}</td></tr>
+        ${infoBanner}
+        
+        <table class="info-table" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin: 24px 0;">
+          <tr>
+            <th style="${cellHeaderStyle}">Nombre</th>
+            <td style="${cellDataStyle}"><strong>${name}</strong></td>
+          </tr>
+          <tr>
+            <th style="${cellHeaderStyle}">Correo</th>
+            <td style="${cellDataStyle}"><a href="mailto:${email}" style="color: #8C4723; text-decoration: underline;">${email}</a></td>
+          </tr>
+          <tr>
+            <th style="${cellHeaderStyle}">Teléfono</th>
+            <td style="${cellDataStyle}">${phone}</td>
+          </tr>
+          <tr>
+            <th style="${cellHeaderStyle}">Tipo de Solicitud</th>
+            <td style="${cellDataStyle}"><strong>${tipoRegistro}</strong></td>
+          </tr>
+          <tr>
+            <th style="${cellHeaderStyle}">Vacante / Interés</th>
+            <td style="${cellDataStyle}">${vacanteDetalle}</td>
+          </tr>
+          <tr>
+            <th style="${cellHeaderStyle}">Currículum Vitae</th>
+            <td style="${cellDataStyle}">
+              <div style="font-weight: 600; color: #1c1c18; margin-bottom: 4px;">📎 ${cv_name || 'Curriculum Vitae'}</div>
+              ${cvDownloadSection}
+            </td>
+          </tr>
         </table>
         
         <div class="footer">
@@ -1100,22 +1194,129 @@ export async function sendJobApplicationEmail(appDetails) {
     </html>
   `;
 
+  // Prepare attachments array for Resend
+  const attachments = [];
+  if (cv_base64) {
+    const fileExtension = (cv_name && cv_name.split('.').pop()?.toLowerCase()) || 'pdf';
+    attachments.push({
+      filename: cv_name || 'Curriculum_Vitae.pdf',
+      content: Buffer.from(cv_base64, 'base64'),
+      contentType: fileExtension === 'pdf' ? 'application/pdf' : 'application/octet-stream'
+    });
+  }
+
   try {
-    const { data, error } = await resend.emails.send({
+    const emailPayload = {
       from: fromEmail,
       to: ['rh@casaloy.com'],
-      bcc: ['jgutierrez@casaloy.com'],
-      subject: `Nuevo interesado en Bolsa de Trabajo: ${name}`,
+      bcc: ['jgutierrez@casaloy.com', 'reclutamiento@teknoagrox.com'],
+      subject: emailSubject,
       html: html,
-    });
+    };
+
+    if (attachments.length > 0) {
+      emailPayload.attachments = attachments;
+    }
+
+    const { data, error } = await resend.emails.send(emailPayload);
 
     if (error) {
       console.error("Resend API error sending job application email:", error);
       return { success: false, error };
     }
-    return { success: true, messageId: data.id };
+    return { success: true, messageId: data?.id };
   } catch (err) {
     console.error("Exception in sendJobApplicationEmail:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Sends an automated confirmation email to the applicant acknowledging receipt of their CV/application,
+ * clarifying that their profile is saved in the talent bank without committing to individualized follow-up.
+ * @param {object} candidateDetails
+ */
+export async function sendCandidateConfirmationEmail(candidateDetails) {
+  if (!resend) {
+    console.warn("Resend client not configured. Skipping candidate confirmation email.");
+    return { success: false, error: "Resend not initialized" };
+  }
+
+  const { name, email, job_title, is_spontaneous } = candidateDetails;
+  const fromEmail = getFromEmail();
+
+  const isSpontaneousProfile = Boolean(
+    is_spontaneous || 
+    !job_title || 
+    job_title.toLowerCase().includes('espont') || 
+    job_title.toLowerCase().includes('cartera') || 
+    job_title.toLowerCase().includes('sin vacante') ||
+    job_title.toLowerCase().includes('general')
+  );
+
+  const subject = isSpontaneousProfile
+    ? `Hemos recibido tu información | Casa Loy Tequilera`
+    : `Hemos recibido tu postulación: ${job_title} | Casa Loy Tequilera`;
+
+  const html = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style>
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #fcf9f3; color: #1c1c18; padding: 24px 16px; margin: 0; }
+        .container { max-width: 560px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e2dc; padding: 44px 36px; box-sizing: border-box; }
+        .logo-box { text-align: center; margin-bottom: 32px; }
+        .logo { max-height: 44px; width: auto; margin: 0 auto; display: inline-block; }
+        .greeting { font-size: 16px; color: #1c1c18; margin-bottom: 20px; }
+        p { font-size: 14px; line-height: 1.7; color: #374151; margin: 16px 0; }
+        .disclaimer-auto { font-size: 12px; font-style: italic; color: #78716c; margin: 28px 0 20px 0; text-align: center; }
+        .signature-box { border-top: 1px solid #e5e2dc; padding-top: 22px; margin-top: 24px; text-align: center; }
+        .team-title { font-size: 14px; color: #1c1c18; margin-bottom: 10px; font-weight: bold; text-align: center; }
+        .security-notice { font-size: 11px; color: #8a8a82; line-height: 1.5; margin: 0; text-align: center; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="logo-box">
+          <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsI1CK1zDTaSkEhtFNd7gFs0Br7ZXW2rKE6mtXNlOgTpveNdFqRSK2aREIwDEFz2pNbAMxdM8OBUebW2gToScRYF1Q-TmhbHUos5e3w1fOey3coasOccOtVC4bzvDGydMpNF2wf6Q6Mt3FsJZRCihsNaG2kM2hluZ5hkMnIRqzGfCNnIgQCUk8l3pxlAgWZcH9ZqrbWcx3BD1-oHbu3TuTW9SKgwmqAzXcaSv6qTNhx6pJvTmykqnAVLEaPpvw8UHbNpl7z0SLcNA7" alt="Casa Loy Tequilera" class="logo">
+        </div>
+        
+        <p class="greeting">Hola <strong>${name}</strong>:</p>
+        
+        <p>Agradecemos tu interés en <strong>Casa Loy Tequilera</strong>. Hemos recibido correctamente tu CV y tus datos, los cuales han sido integrados a nuestra <strong>Base de datos de Talento</strong>.</p>
+        
+        <p>Tu información permanecerá disponible para ser considerada en oportunidades profesionales que correspondan con tu perfil y experiencia.</p>
+        
+        <p>En caso de que exista una oportunidad alineada con tu trayectoria, nuestro equipo se pondrá en contacto contigo para dar seguimiento al proceso correspondiente.</p>
+        
+        <p class="disclaimer-auto" style="text-align: center; font-size: 12px; font-style: italic; color: #78716c; margin: 28px 0 20px 0;"><em>Este es un acuse de recibo automático; por favor, no respondas a este correo.</em></p>
+        
+        <div class="signature-box" style="border-top: 1px solid #e5e2dc; padding-top: 22px; margin-top: 24px; text-align: center;">
+          <div class="team-title" style="font-size: 14px; color: #1c1c18; margin-bottom: 10px; font-weight: bold; text-align: center;">Equipo de Talento y Selección | Casa Loy Tequilera</div>
+          <p class="security-notice" style="font-size: 11px; color: #8a8a82; line-height: 1.5; margin: 0; text-align: center;"><strong>Aviso de seguridad:</strong> Las vacantes oficiales de Casa Loy se publican únicamente en nuestro sitio web, LinkedIn e Indeed.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: fromEmail,
+      to: [email],
+      subject: subject,
+      html: html,
+    });
+
+    if (error) {
+      console.error("Resend error sending candidate confirmation email:", error);
+      return { success: false, error };
+    }
+    return { success: true, messageId: data?.id };
+  } catch (err) {
+    console.error("Exception in sendCandidateConfirmationEmail:", err);
     return { success: false, error: err.message };
   }
 }

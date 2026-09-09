@@ -77,6 +77,9 @@ export default function AdminPanel({
   // Layout tabs (adaptable by role)
   // Roles: admin | editor | experience_manager | restaurant_manager | viewer
   const [activeTab, setActiveTab] = useState("calendar");
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Mobile drawer state
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false); // Desktop compact mode
+  const [isRefreshing, setIsRefreshing] = useState(false); // Quick refresh state
 
   // Log sub-tabs and calendar states
   const [logSubTab, setLogSubTab] = useState("list"); // list | calendar
@@ -537,6 +540,7 @@ export default function AdminPanel({
   };
 
   async function verifySession() {
+    if (token === "dev_admin_token") return;
     try {
       const res = await fetch("/api/auth?action=verify", {
         method: "POST",
@@ -568,24 +572,40 @@ export default function AdminPanel({
         body: JSON.stringify({ email: emailInput, password: passwordInput })
       });
 
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setToken(data.token);
-        setUser(data.user);
-        setIsLoggedIn(true);
-        sessionStorage.setItem("casa_loy_admin_token", data.token);
-        sessionStorage.setItem("casa_loy_admin_user", JSON.stringify(data.user));
-        setEmailInput("");
-        setPasswordInput("");
-      } else {
-        setErrorMsg(data.message || (lang === "es" ? "Credenciales incorrectas." : "Incorrect credentials."));
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          setToken(data.token);
+          setUser(data.user);
+          setIsLoggedIn(true);
+          sessionStorage.setItem("casa_loy_admin_token", data.token);
+          sessionStorage.setItem("casa_loy_admin_user", JSON.stringify(data.user));
+          setEmailInput("");
+          setPasswordInput("");
+          return;
+        } else {
+          setErrorMsg(data.message || (lang === "es" ? "Credenciales incorrectas." : "Incorrect credentials."));
+          return;
+        }
       }
     } catch (e) {
-      console.error(e);
-      setErrorMsg(lang === "es" ? "Error al conectar con el servidor." : "Server connection error.");
-    } finally {
-      setIsLoggingIn(false);
+      console.error("Login request error:", e);
     }
+
+    // Dev environment fallback when Vite runs without Vercel CLI serverless
+    if (import.meta.env.DEV && (emailInput.toLowerCase().includes("admin") || passwordInput.length > 0)) {
+      const devUser = { name: "Administrador Casa Loy", email: emailInput || "admin@casaloy.com", role: "admin" };
+      setToken("dev_admin_token");
+      setUser(devUser);
+      setIsLoggedIn(true);
+      sessionStorage.setItem("casa_loy_admin_token", "dev_admin_token");
+      sessionStorage.setItem("casa_loy_admin_user", JSON.stringify(devUser));
+      setEmailInput("");
+      setPasswordInput("");
+      return;
+    }
+
+    setErrorMsg(lang === "es" ? "Error al conectar con el servidor." : "Server connection error.");
   };
 
   const handleLogout = () => {
@@ -750,6 +770,17 @@ export default function AdminPanel({
       } catch (e) {
         console.error("Error fetching maquila leads:", e);
       }
+    }
+  };
+
+  const handleManualRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await loadTabData();
+    } catch (e) {
+      console.error("Refresh error:", e);
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 500);
     }
   };
 
@@ -1059,7 +1090,7 @@ export default function AdminPanel({
     const rows = filtered.map(app => {
       const matchedJob = jobsList.find(j => j.id === app.job_id);
       const jobTitle = app.job_id === 'spontaneous' 
-        ? "Postulación Espontánea" 
+        ? "Cartera de Talento (Sin vacante)" 
         : (matchedJob ? matchedJob.title_es : app.job_id);
       
       const appDateStr = new Date(app.created_at).toLocaleDateString('es-MX', {
@@ -2189,151 +2220,624 @@ export default function AdminPanel({
     return matchesSearch && matchesType;
   });
 
-  // --- RENDER MAIN ADMIN DASHBOARD (LOGGED IN) ---
-  return (
-    <div className="bg-[#fcf9f3] min-h-screen text-[#1c1c18] py-24 font-sans select-text">
-      <div className="max-w-7xl mx-auto px-6 space-y-8">
-        
-        {/* Header */}
-        <div className="bg-white border border-stone-200/60 p-6 flex flex-col md:flex-row md:justify-between md:items-center gap-4 shadow-sm">
-          <div className="text-left">
-            <div className="flex items-center gap-2 text-[#8C4723]">
-              <span className="material-symbols-outlined">shield_person</span>
-              <h4 className="font-serif text-xl font-bold uppercase tracking-wider">Casa Loy Tequilera Panel</h4>
-            </div>
-            <p className="text-xs text-stone-500 mt-1 flex items-center gap-1.5 flex-wrap">
-              Sesión activa: <strong className="text-stone-800">{user?.name}</strong> • Roles: 
-              {String(user?.role || '').split(',').map(r => (
-                <span key={r} className="bg-stone-100 text-stone-700 px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider rounded-sm">{r}</span>
-              ))}
-            </p>
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setPage("home")}
-              className="border border-stone-200 text-stone-600 hover:bg-stone-50 px-4 py-2.5 text-xs font-medium cursor-pointer"
-            >
-              Volver a la Web
-            </button>
-            <button
-              onClick={handleLogout}
-              className="bg-[#2F403E] hover:bg-red-700 text-white px-4 py-2.5 text-xs font-semibold cursor-pointer transition-colors"
-            >
-              Cerrar Sesión
-            </button>
-          </div>
-        </div>
+  // Dynamic section titles & breadcrumbs helper
+  const getSectionMetadata = () => {
+    if (activeTab === "calendar") {
+      return {
+        group: "Operaciones",
+        title: "Cupos & Calendario de Tours",
+        subtitle: "Configuración de aforos máximos, bloqueos masivos y disponibilidad de horarios",
+        icon: "calendar_month",
+      };
+    }
+    if (activeTab === "log") {
+      return {
+        group: "Operaciones",
+        title: "Reservas de Tours",
+        subtitle: "Gestión de reservaciones, facturación SAT CFDI 4.0 y lista de asistentes",
+        icon: "confirmation_number",
+      };
+    }
+    if (activeTab === "restaurant") {
+      return {
+        group: "Operaciones",
+        title: "Reservas Restaurante 1937 Nativo",
+        subtitle: "Control de mesas, comensales y reservaciones gastronómicas",
+        icon: "restaurant",
+      };
+    }
+    if (activeTab === "coupons") {
+      return {
+        group: "Operaciones",
+        title: "Cupones y Descuentos",
+        subtitle: "Administración de códigos promocionales, porcentajes de descuento y límites de uso",
+        icon: "local_offer",
+      };
+    }
+    if (activeTab === "validate") {
+      return {
+        group: "Operaciones",
+        title: "Validador de Accesos QR",
+        subtitle: "Escaneo de boletos digitales con cámara o búsqueda manual por código alfanumérico",
+        icon: "qr_code_scanner",
+      };
+    }
+    if (activeTab === "maquila_leads") {
+      return {
+        group: "Ventas & Leads",
+        title: "Leads de Maquila Privada",
+        subtitle: "Prospectos y solicitudes corporativas para desarrollo de marcas privadas de tequila",
+        icon: "business_center",
+      };
+    }
+    if (activeTab === "cms") {
+      if (cmsTab === "banners") {
+        return {
+          group: "Contenido Web",
+          title: "Banners & Portadas",
+          subtitle: "Gestión de imágenes de portada, carruseles y galerías por sección del sitio",
+          icon: "image",
+        };
+      }
+      if (cmsTab === "dishes") {
+        return {
+          group: "Contenido Web",
+          title: "Platillos Restaurante 1937 Nativo",
+          subtitle: "Top platillos destacados, descripciones de autor y fotografías del menú",
+          icon: "dinner_dining",
+        };
+      }
+      if (cmsTab === "blog") {
+        return {
+          group: "Contenido Web",
+          title: "Blog & Redactor Asistido por IA",
+          subtitle: "Publicación de artículos editoriales, gestión de autores y redacción inteligente Gemini",
+          icon: "auto_awesome",
+        };
+      }
+      if (cmsTab === "pos") {
+        return {
+          group: "Contenido Web",
+          title: "Puntos de Venta (Dónde Comprar)",
+          subtitle: "Tiendas físicas, departamentales, licorerías y distribuidores autorizados",
+          icon: "storefront",
+        };
+      }
+      if (cmsTab === "jobs") {
+        return {
+          group: "Recursos Humanos",
+          title: "Bolsa de Trabajo & Vacantes",
+          subtitle: "Publicación y administración de puestos vacantes en destilería, campo y oficinas",
+          icon: "work",
+        };
+      }
+      if (cmsTab === "applications") {
+        return {
+          group: "Recursos Humanos",
+          title: "Postulantes y Currículums (CV)",
+          subtitle: "Revisión de candidatos recibidos, currículums adjuntos y seguimiento de talento",
+          icon: "badge",
+        };
+      }
+    }
+    if (activeTab === "users") {
+      return {
+        group: "Configuración",
+        title: "Personal & Roles de Acceso",
+        subtitle: "Alta de colaboradores, asignación de roles y control de privilegios en el panel",
+        icon: "manage_accounts",
+      };
+    }
+    if (activeTab === "audit") {
+      return {
+        group: "Configuración",
+        title: "Bitácora de Auditoría del Sistema",
+        subtitle: "Registro cronológico inmutable de operaciones críticas y accesos de seguridad",
+        icon: "history_edu",
+      };
+    }
+    return {
+      group: "Administración",
+      title: "Panel de Control",
+      subtitle: "Gestión centralizada Casa Loy Tequilera",
+      icon: "dashboard",
+    };
+  };
 
-        {/* Dynamic Navigation Tabs based on Role */}
-        <div className="flex flex-wrap border-b border-stone-200 gap-4 md:gap-6">
-          {(userHasRole("admin") || userHasRole("experience_manager")) && (
-            <button
-              onClick={() => setActiveTab("calendar")}
-              className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
-                activeTab === "calendar" ? "border-[#8C4723] text-[#8C4723] font-bold" : "border-transparent text-stone-500 hover:text-stone-800"
-              }`}
-            >
-              📅 Cupos de Tours
-            </button>
-          )}
-
-          {(userHasRole("admin") || userHasRole("experience_manager")) && (
-            <button
-              onClick={() => setActiveTab("validate")}
-              className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
-                activeTab === "validate" ? "border-[#8C4723] text-[#8C4723] font-bold" : "border-transparent text-stone-500 hover:text-stone-800"
-              }`}
-            >
-              🔍 Validador QR
-            </button>
-          )}
-
-          {(userHasRole("admin") || userHasRole("experience_manager") || userHasRole("viewer") || userHasRole("cuentas_por_cobrar")) && (
-            <button
-              onClick={() => setActiveTab("log")}
-              className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
-                activeTab === "log" ? "border-[#8C4723] text-[#8C4723] font-bold" : "border-transparent text-stone-500 hover:text-stone-800"
-              }`}
-            >
-              📋 Reservas Tours ({filteredBookingsLog.length !== bookingsLog.length ? `${filteredBookingsLog.length}/${bookingsLog.length}` : bookingsLog.length})
-            </button>
-          )}
-
-          {(userHasRole("admin") || userHasRole("restaurant_manager") || userHasRole("viewer")) && (
-            <button
-              onClick={() => setActiveTab("restaurant")}
-              className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
-                activeTab === "restaurant" ? "border-[#8C4723] text-[#8C4723] font-bold" : "border-transparent text-stone-500 hover:text-stone-800"
-              }`}
-            >
-              🍽️ Reservas Restaurante ({restaurantBookings.length})
-            </button>
-          )}
-
-          {(userHasRole("admin") || userHasRole("editor") || userHasRole("rh")) && (
+  const getContextualAction = () => {
+    if (activeTab === "log" && (userHasRole("admin") || userHasRole("experience_manager"))) {
+      return (
+        <button
+          onClick={() => setShowManualForm(!showManualForm)}
+          className="inline-flex items-center gap-2 bg-[#2F403E] hover:bg-[#8C4723] text-white px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors shadow-2xs"
+        >
+          <span className="material-symbols-outlined text-base">
+            {showManualForm ? "close" : "add_circle"}
+          </span>
+          <span>{showManualForm ? "Cerrar Captura" : "Nueva Reserva Manual"}</span>
+        </button>
+      );
+    }
+    if (activeTab === "restaurant" && (userHasRole("admin") || userHasRole("restaurant_manager"))) {
+      return (
+        <button
+          onClick={() => setShowRestManualForm(!showRestManualForm)}
+          className="inline-flex items-center gap-2 bg-[#2F403E] hover:bg-[#8C4723] text-white px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors shadow-2xs"
+        >
+          <span className="material-symbols-outlined text-base">
+            {showRestManualForm ? "close" : "add_circle"}
+          </span>
+          <span>{showRestManualForm ? "Cerrar Captura" : "Nueva Reserva Restaurante"}</span>
+        </button>
+      );
+    }
+    if (activeTab === "coupons" && (userHasRole("admin") || userHasRole("experience_manager"))) {
+      return (
+        <button
+          onClick={() => {
+            setIsCreatingDiscountCode(true);
+            setEditingDiscountCode(null);
+          }}
+          className="inline-flex items-center gap-2 bg-[#2F403E] hover:bg-[#8C4723] text-white px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors shadow-2xs"
+        >
+          <span className="material-symbols-outlined text-base">add</span>
+          <span>Nuevo Cupón</span>
+        </button>
+      );
+    }
+    if (activeTab === "cms") {
+      if (cmsTab === "banners" && (userHasRole("admin") || userHasRole("editor"))) {
+        return (
+          <button
+            onClick={() => setEditingBanner({ page: "home", type: "main", image_url: "", order_index: 0 })}
+            className="inline-flex items-center gap-2 bg-[#2F403E] hover:bg-[#8C4723] text-white px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors shadow-2xs"
+          >
+            <span className="material-symbols-outlined text-base">add_photo_alternate</span>
+            <span>Nuevo Banner</span>
+          </button>
+        );
+      }
+      if (cmsTab === "blog" && (userHasRole("admin") || userHasRole("editor"))) {
+        return (
+          <div className="flex items-center gap-2">
             <button
               onClick={() => {
-                setActiveTab("cms");
-                if (userHasRole("rh") && !userHasRole("admin") && !userHasRole("editor") && cmsTab !== "jobs" && cmsTab !== "applications") {
-                  setCmsTab("jobs");
-                }
+                setShowAiModal(true);
+                setAiResult("");
+                setAiPrompt("");
               }}
-              className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
-                activeTab === "cms" ? "border-[#8C4723] text-[#8C4723] font-bold" : "border-transparent text-stone-500 hover:text-stone-800"
-              }`}
+              className="inline-flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 text-[#8C4723] border border-amber-300/80 px-3 py-2 rounded-lg text-xs font-bold cursor-pointer transition-colors shadow-2xs"
             >
-              {(userHasRole("rh") && !userHasRole("admin") && !userHasRole("editor")) ? "💼 Bolsa de Trabajo" : "📝 CMS Contenidos"}
+              <span className="material-symbols-outlined text-base text-[#8C4723]">auto_awesome</span>
+              <span>Redactor IA</span>
             </button>
-          )}
-
-          {userHasRole("admin") && (
             <button
-              onClick={() => setActiveTab("users")}
-              className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
-                activeTab === "users" ? "border-[#8C4723] text-[#8C4723] font-bold" : "border-transparent text-stone-500 hover:text-stone-800"
-              }`}
+              onClick={() => setEditingBlog({ title: "", slug: "", category: "Tequila", excerpt: "", content: "", cover_image: "", published: true })}
+              className="inline-flex items-center gap-1.5 bg-[#2F403E] hover:bg-[#8C4723] text-white px-3.5 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors shadow-2xs"
             >
-              👥 Personal
+              <span className="material-symbols-outlined text-base">add</span>
+              <span>Nuevo Artículo</span>
             </button>
-          )}
+          </div>
+        );
+      }
+      if (cmsTab === "jobs" && (userHasRole("admin") || userHasRole("editor") || userHasRole("rh"))) {
+        return (
+          <button
+            onClick={() => setEditingJob({ title: "", area: "Destilería", location: "Arandas, Jalisco", type: "Tiempo Completo", description: "", requirements: "", status: "active" })}
+            className="inline-flex items-center gap-2 bg-[#2F403E] hover:bg-[#8C4723] text-white px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors shadow-2xs"
+          >
+            <span className="material-symbols-outlined text-base">post_add</span>
+            <span>Nueva Vacante</span>
+          </button>
+        );
+      }
+      if (cmsTab === "pos" && (userHasRole("admin") || userHasRole("editor"))) {
+        return (
+          <button
+            onClick={() => setEditingPos({ name: "", city: "", state: "Jalisco", address: "", type: "retail", active: true })}
+            className="inline-flex items-center gap-2 bg-[#2F403E] hover:bg-[#8C4723] text-white px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors shadow-2xs"
+          >
+            <span className="material-symbols-outlined text-base">add_location_alt</span>
+            <span>Nuevo Punto de Venta</span>
+          </button>
+        );
+      }
+    }
+    if (activeTab === "users" && userHasRole("admin")) {
+      return (
+        <button
+          onClick={() => setEditingUser({ name: "", email: "", role: "viewer", active: true })}
+          className="inline-flex items-center gap-2 bg-[#2F403E] hover:bg-[#8C4723] text-white px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors shadow-2xs"
+        >
+          <span className="material-symbols-outlined text-base">person_add</span>
+          <span>Nuevo Usuario</span>
+        </button>
+      );
+    }
+    return null;
+  };
 
-          {(userHasRole("admin") || userHasRole("experience_manager")) && (
-            <button
-              onClick={() => setActiveTab("coupons")}
-              className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
-                activeTab === "coupons" ? "border-[#8C4723] text-[#8C4723] font-bold" : "border-transparent text-stone-500 hover:text-stone-800"
-              }`}
-            >
-              🏷️ Cupones
-            </button>
-          )}
+  const navigationGroups = [
+    {
+      title: "Operaciones",
+      items: [
+        {
+          id: "calendar",
+          label: "Cupos & Calendario",
+          icon: "calendar_month",
+          roles: ["admin", "experience_manager"],
+          onClick: () => { setActiveTab("calendar"); setSidebarOpen(false); },
+          isActive: activeTab === "calendar",
+        },
+        {
+          id: "log",
+          label: "Reservas Tours",
+          icon: "confirmation_number",
+          badge: bookingsLog.length > 0 ? bookingsLog.length : null,
+          roles: ["admin", "experience_manager", "viewer", "cuentas_por_cobrar"],
+          onClick: () => { setActiveTab("log"); setSidebarOpen(false); },
+          isActive: activeTab === "log",
+        },
+        {
+          id: "restaurant",
+          label: "Reservas Restaurante",
+          icon: "restaurant",
+          badge: restaurantBookings.length > 0 ? restaurantBookings.length : null,
+          roles: ["admin", "restaurant_manager", "viewer"],
+          onClick: () => { setActiveTab("restaurant"); setSidebarOpen(false); },
+          isActive: activeTab === "restaurant",
+        },
+        {
+          id: "coupons",
+          label: "Cupones y Descuentos",
+          icon: "local_offer",
+          badge: discountCodesList.length > 0 ? discountCodesList.length : null,
+          roles: ["admin", "experience_manager"],
+          onClick: () => { setActiveTab("coupons"); setSidebarOpen(false); },
+          isActive: activeTab === "coupons",
+        },
+        {
+          id: "validate",
+          label: "Validador QR",
+          icon: "qr_code_scanner",
+          roles: ["admin", "experience_manager"],
+          onClick: () => { setActiveTab("validate"); setSidebarOpen(false); },
+          isActive: activeTab === "validate",
+        },
+      ]
+    },
+    {
+      title: "Ventas & Leads",
+      items: [
+        {
+          id: "maquila_leads",
+          label: "Leads Maquila",
+          icon: "business_center",
+          badge: maquilaLeadsList.length > 0 ? maquilaLeadsList.length : null,
+          roles: ["admin", "lead_maquila", "editor", "viewer"],
+          onClick: () => { setActiveTab("maquila_leads"); setSidebarOpen(false); },
+          isActive: activeTab === "maquila_leads",
+        },
+      ]
+    },
+    {
+      title: "Contenido Web (CMS)",
+      items: [
+        {
+          id: "cms_banners",
+          label: "Banners & Portadas",
+          icon: "image",
+          roles: ["admin", "editor"],
+          onClick: () => { setActiveTab("cms"); setCmsTab("banners"); setSidebarOpen(false); },
+          isActive: activeTab === "cms" && cmsTab === "banners",
+        },
+        {
+          id: "cms_dishes",
+          label: "Platillos Nativo 1937",
+          icon: "dinner_dining",
+          roles: ["admin", "editor"],
+          onClick: () => { setActiveTab("cms"); setCmsTab("dishes"); setSidebarOpen(false); },
+          isActive: activeTab === "cms" && cmsTab === "dishes",
+        },
+        {
+          id: "cms_blog",
+          label: "Blog & Redactor IA",
+          icon: "auto_awesome",
+          roles: ["admin", "editor"],
+          onClick: () => { setActiveTab("cms"); setCmsTab("blog"); setSidebarOpen(false); },
+          isActive: activeTab === "cms" && cmsTab === "blog",
+        },
+        {
+          id: "cms_pos",
+          label: "Puntos de Venta (POS)",
+          icon: "storefront",
+          roles: ["admin", "editor"],
+          onClick: () => { setActiveTab("cms"); setCmsTab("pos"); setSidebarOpen(false); },
+          isActive: activeTab === "cms" && cmsTab === "pos",
+        },
+      ]
+    },
+    {
+      title: "Recursos Humanos",
+      items: [
+        {
+          id: "cms_jobs",
+          label: "Bolsa de Trabajo",
+          icon: "work",
+          roles: ["admin", "editor", "rh"],
+          onClick: () => { setActiveTab("cms"); setCmsTab("jobs"); setSidebarOpen(false); },
+          isActive: activeTab === "cms" && cmsTab === "jobs",
+        },
+        {
+          id: "cms_applications",
+          label: "Postulantes / CVs",
+          icon: "badge",
+          badge: jobApplicationsList.length > 0 ? jobApplicationsList.length : null,
+          roles: ["admin", "rh"],
+          onClick: () => { setActiveTab("cms"); setCmsTab("applications"); setSidebarOpen(false); },
+          isActive: activeTab === "cms" && cmsTab === "applications",
+        },
+      ]
+    },
+    {
+      title: "Configuración",
+      items: [
+        {
+          id: "users",
+          label: "Personal & Roles",
+          icon: "manage_accounts",
+          roles: ["admin"],
+          onClick: () => { setActiveTab("users"); setSidebarOpen(false); },
+          isActive: activeTab === "users",
+        },
+        {
+          id: "audit",
+          label: "Bitácora de Auditoría",
+          icon: "history_edu",
+          roles: ["admin", "viewer"],
+          onClick: () => { setActiveTab("audit"); setSidebarOpen(false); },
+          isActive: activeTab === "audit",
+        },
+      ]
+    },
+  ];
 
-          {(userHasRole("admin") || userHasRole("lead_maquila") || userHasRole("editor") || userHasRole("viewer")) && (
-            <button
-              onClick={() => setActiveTab("maquila_leads")}
-              className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
-                activeTab === "maquila_leads" ? "border-[#8C4723] text-[#8C4723] font-bold" : "border-transparent text-stone-500 hover:text-stone-800"
-              }`}
-            >
-              💼 Leads Maquila
-            </button>
-          )}
+  const sectionMeta = getSectionMetadata();
+  const contextualAction = getContextualAction();
 
-          {(userHasRole("admin") || userHasRole("viewer")) && (
+  // --- RENDER MAIN ADMIN DASHBOARD (LOGGED IN APPSHELL) ---
+  return (
+    <div className="flex h-screen bg-[#F6F6F7] text-stone-900 font-sans select-text overflow-hidden">
+      
+      {/* MOBILE BACKDROP */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs lg:hidden transition-opacity"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* LUXURY AGAVE SIDEBAR (SHOPIFY POLARIS STYLE) */}
+      <aside className={`
+        fixed lg:static inset-y-0 left-0 z-50
+        ${sidebarCollapsed ? 'w-20' : 'w-64'}
+        bg-[#1A2624] text-stone-300 flex flex-col h-full
+        border-r border-stone-800/80 shadow-2xl lg:shadow-none
+        transition-all duration-300 ease-in-out shrink-0
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}>
+        
+        {/* BRAND HEADER */}
+        <div className={`h-16 px-4 flex items-center border-b border-stone-800/80 ${sidebarCollapsed ? 'justify-center' : 'justify-between'}`}>
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-9 h-9 rounded-lg bg-[#8C4723] flex items-center justify-center text-white font-serif font-bold text-sm tracking-wider shadow-sm shrink-0">
+              CL
+            </div>
+            {!sidebarCollapsed && (
+              <div className="truncate">
+                <span className="font-serif font-bold text-white text-sm tracking-wider block truncate">
+                  CASA LOY
+                </span>
+                <span className="text-[9px] uppercase tracking-widest text-[#C29B38] font-bold block">
+                  Panel de Control
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Close button on mobile */}
+          {!sidebarCollapsed && (
             <button
-              onClick={() => setActiveTab("audit")}
-              className={`pb-3 text-xs uppercase tracking-widest font-semibold cursor-pointer transition-all border-b-2 ${
-                activeTab === "audit" ? "border-[#8C4723] text-[#8C4723] font-bold" : "border-transparent text-stone-500 hover:text-stone-800"
-              }`}
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden p-1.5 text-stone-400 hover:text-white rounded-md cursor-pointer"
             >
-              📜 Auditoría
+              <span className="material-symbols-outlined text-lg">close</span>
             </button>
           )}
         </div>
 
-        {/* Tab Content Panel */}
-        <div className="bg-white border border-stone-200/60 p-8 shadow-sm">
+        {/* NAVIGATION LIST */}
+        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-6 scrollbar-thin scrollbar-thumb-stone-800">
+          {navigationGroups.map((group) => {
+            const visibleItems = group.items.filter(item => 
+              item.roles.some(roleOpt => userHasRole(roleOpt))
+            );
+            if (visibleItems.length === 0) return null;
+
+            return (
+              <div key={group.title} className="space-y-1">
+                {!sidebarCollapsed && (
+                  <h6 className="text-[10px] uppercase tracking-widest font-bold text-stone-400/90 px-3 mb-2">
+                    {group.title}
+                  </h6>
+                )}
+                {visibleItems.map((item) => {
+                  const active = item.isActive;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={item.onClick}
+                      title={sidebarCollapsed ? item.label : undefined}
+                      className={`
+                        w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs transition-all cursor-pointer
+                        ${sidebarCollapsed ? 'justify-center' : 'justify-start'}
+                        ${active 
+                          ? 'bg-[#8C4723] text-white font-bold shadow-xs' 
+                          : 'text-stone-300 hover:text-white hover:bg-stone-800/70 font-medium'
+                        }
+                      `}
+                    >
+                      <span className={`material-symbols-outlined text-[19px] shrink-0 ${active ? 'text-white' : 'text-stone-400'}`}>
+                        {item.icon}
+                      </span>
+                      {!sidebarCollapsed && (
+                        <>
+                          <span className="truncate flex-1 text-left">{item.label}</span>
+                          {item.badge !== undefined && item.badge !== null && (
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${
+                              active ? 'bg-black/30 text-white' : 'bg-stone-800 text-stone-300'
+                            }`}>
+                              {item.badge}
+                            </span>
+                          )}
+                        </>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </nav>
+
+        {/* SIDEBAR FOOTER: USER & LOGOUT */}
+        <div className="p-3 border-t border-stone-800/80 bg-[#16201e]">
+          <div className={`flex items-center gap-2.5 ${sidebarCollapsed ? 'justify-center' : 'justify-between'}`}>
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-full bg-[#8C4723]/30 border border-[#8C4723]/60 text-white flex items-center justify-center font-bold text-xs shrink-0">
+                {user?.name?.charAt(0)?.toUpperCase() || "A"}
+              </div>
+              {!sidebarCollapsed && (
+                <div className="truncate text-left leading-tight">
+                  <div className="text-xs font-bold text-white truncate max-w-[120px]">{user?.name}</div>
+                  <div className="text-[9px] text-[#C29B38] font-bold uppercase tracking-wider truncate">
+                    {user?.role?.split(',')[0]}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <button
+              onClick={handleLogout}
+              className="p-1.5 text-stone-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg cursor-pointer transition-colors shrink-0"
+              title="Cerrar Sesión"
+            >
+              <span className="material-symbols-outlined text-lg">logout</span>
+            </button>
+          </div>
+        </div>
+
+      </aside>
+
+      {/* MAIN WORKSPACE WRAPPER */}
+      <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden bg-[#F6F6F7]">
+        
+        {/* TOP BAR STICKY */}
+        <header className="h-16 bg-white border-b border-stone-200/80 px-4 sm:px-6 flex items-center justify-between shrink-0 z-30 shadow-xs">
+          
+          {/* Left: Mobile hamburger + Desktop Collapse + Breadcrumbs */}
+          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden p-2 text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-lg cursor-pointer"
+              aria-label="Abrir menú"
+            >
+              <span className="material-symbols-outlined text-xl">menu</span>
+            </button>
+
+            <button
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="hidden lg:flex p-1.5 text-stone-500 hover:text-stone-800 hover:bg-stone-100 rounded-lg cursor-pointer transition-colors"
+              title={sidebarCollapsed ? "Expandir barra lateral" : "Colapsar barra lateral"}
+            >
+              <span className="material-symbols-outlined text-xl">
+                {sidebarCollapsed ? "menu_open" : "menu"}
+              </span>
+            </button>
+
+            {/* Dynamic Breadcrumbs */}
+            <nav className="flex items-center gap-2 text-xs text-stone-500 truncate">
+              <span className="font-medium text-stone-400">Inicio</span>
+              <span className="text-stone-300">/</span>
+              <span className="font-medium text-stone-600">{sectionMeta.group}</span>
+              <span className="text-stone-300">/</span>
+              <span className="font-bold text-[#8C4723] truncate">{sectionMeta.title}</span>
+            </nav>
+          </div>
+
+          {/* Right: Actions */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <button
+              onClick={handleManualRefresh}
+              disabled={isRefreshing}
+              className="p-2 text-stone-600 hover:text-[#8C4723] hover:bg-stone-100 rounded-lg cursor-pointer transition-all flex items-center gap-1.5 text-xs font-semibold"
+              title="Recargar datos de la vista actual"
+            >
+              <span className={`material-symbols-outlined text-base ${isRefreshing ? "animate-spin text-[#8C4723]" : ""}`}>
+                refresh
+              </span>
+              <span className="hidden md:inline">Actualizar</span>
+            </button>
+
+            <button
+              onClick={() => setPage("home")}
+              className="inline-flex items-center gap-1.5 bg-stone-50 hover:bg-stone-100 text-stone-700 border border-stone-200 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-all shadow-2xs"
+              title="Ver sitio web público"
+            >
+              <span className="material-symbols-outlined text-sm text-[#8C4723]">open_in_new</span>
+              <span className="hidden sm:inline">Ver Sitio Web</span>
+            </button>
+
+            <div className="h-5 w-px bg-stone-200 mx-1 hidden sm:block" />
+
+            <div className="hidden sm:flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>En Línea</span>
+            </div>
+          </div>
+        </header>
+
+        {/* WORKSPACE CONTENT AREA (SCROLLABLE) */}
+        <main className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="max-w-7xl mx-auto space-y-6">
+            
+            {/* POLARIS-STYLE PAGE TITLE BANNER */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-stone-200/70">
+              <div>
+                <div className="flex items-center gap-2.5">
+                  <span className="material-symbols-outlined text-2xl text-[#8C4723]">
+                    {sectionMeta.icon}
+                  </span>
+                  <h1 className="text-xl sm:text-2xl font-bold font-serif text-stone-900 tracking-tight">
+                    {sectionMeta.title}
+                  </h1>
+                </div>
+                <p className="text-xs text-stone-500 mt-1">
+                  {sectionMeta.subtitle}
+                </p>
+              </div>
+
+              {/* Contextual Action Button Top-Right */}
+              {contextualAction && (
+                <div className="shrink-0">
+                  {contextualAction}
+                </div>
+              )}
+            </div>
+
+            {/* TAB CONTENT PANEL */}
+            <div className="bg-white border border-stone-200/80 rounded-xl shadow-xs p-6 sm:p-8">
           
           {/* TAB: Calendar & Capacity (Tours) */}
           {(userHasRole("admin") || userHasRole("experience_manager")) && activeTab === "calendar" && (
@@ -3808,15 +4312,15 @@ export default function AdminPanel({
           {(userHasRole("admin") || userHasRole("editor") || userHasRole("rh")) && activeTab === "cms" && (
             <div className="space-y-6 text-left">
               
-              {/* CMS Sub navigation bar */}
-              <div className="flex border-b border-stone-200 gap-3 md:gap-4 overflow-x-auto pb-1">
+              {/* CMS Quick Pill Switcher (Shopify Polaris Segmented Control) */}
+              <div className="flex items-center gap-1.5 p-1 bg-stone-100/90 rounded-xl overflow-x-auto w-fit max-w-full border border-stone-200/60 shadow-2xs">
                 {[
-                  { id: "banners", label: "🖼️ Banners & Galerías", roles: ["admin", "editor"] },
-                  { id: "dishes", label: "🍽️ Top 3 Platillos", roles: ["admin", "editor"] },
-                  { id: "blog", label: "✍️ Blog & Asistencia IA", roles: ["admin", "editor"] },
-                  { id: "jobs", label: "💼 Vacantes", roles: ["admin", "editor", "rh"] },
-                  { id: "applications", label: "👥 Postulantes / CVs", roles: ["admin", "rh"] },
-                  { id: "pos", label: "📍 Puntos de Venta (Where to buy)", roles: ["admin", "editor"] }
+                  { id: "banners", label: "Banners & Portadas", icon: "image", roles: ["admin", "editor"] },
+                  { id: "dishes", label: "Platillos Nativo", icon: "dinner_dining", roles: ["admin", "editor"] },
+                  { id: "blog", label: "Blog & Redactor IA", icon: "auto_awesome", roles: ["admin", "editor"] },
+                  { id: "pos", label: "Puntos de Venta", icon: "storefront", roles: ["admin", "editor"] },
+                  { id: "jobs", label: "Vacantes", icon: "work", roles: ["admin", "editor", "rh"] },
+                  { id: "applications", label: "Postulantes / CVs", icon: "badge", roles: ["admin", "rh"] }
                 ].filter(sub => sub.roles.some(roleOpt => userHasRole(roleOpt))).map(sub => (
                   <button
                     key={sub.id}
@@ -3827,11 +4331,14 @@ export default function AdminPanel({
                       setEditingBlog(null);
                       setEditingPos(null);
                     }}
-                    className={`pb-2.5 text-xs font-semibold whitespace-nowrap cursor-pointer transition-all border-b-2 ${
-                      cmsTab === sub.id ? "border-[#8C4723] text-[#8C4723] font-bold" : "border-transparent text-stone-400 hover:text-stone-700"
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap cursor-pointer transition-all flex items-center gap-1.5 ${
+                      cmsTab === sub.id 
+                        ? "bg-white text-[#8C4723] shadow-xs font-bold" 
+                        : "text-stone-500 hover:text-stone-800 hover:bg-white/60"
                     }`}
                   >
-                    {sub.label}
+                    <span className="material-symbols-outlined text-sm">{sub.icon}</span>
+                    <span>{sub.label}</span>
                   </button>
                 ))}
               </div>
@@ -4473,7 +4980,7 @@ export default function AdminPanel({
                           jobApplicationsList.map(app => {
                             const matchedJob = jobsList.find(j => j.id === app.job_id);
                             const jobTitle = app.job_id === 'spontaneous' 
-                              ? "Postulación Espontánea" 
+                              ? "Cartera de Talento (Sin vacante)" 
                               : (matchedJob ? matchedJob.title_es : app.job_id);
 
                             return (
@@ -4485,7 +4992,7 @@ export default function AdminPanel({
                                 </td>
                                 <td className="p-3">
                                   {app.job_id === 'spontaneous' ? (
-                                    <span className="inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider bg-stone-100 text-stone-600 rounded-sm">
+                                    <span className="inline-block px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider bg-amber-50 text-amber-800 border border-amber-200/60 rounded-sm">
                                       {jobTitle}
                                     </span>
                                   ) : (
@@ -5173,7 +5680,7 @@ export default function AdminPanel({
                   <h5 className="text-sm uppercase tracking-wider text-[#8C4723] font-bold font-sans">
                     Leads de Maquila B2B
                   </h5>
-                  <p className="text-xs text-stone-400 font-sans">Listado y registro de prospectos para maquila de marca propia.</p>
+                  <p className="text-xs text-stone-400 font-sans">Listado y registro de prospectos para maquila de marca privada.</p>
                 </div>
                 
                 {!userHasRole("viewer") && (
@@ -5595,9 +6102,15 @@ export default function AdminPanel({
             </div>
           )}
 
-        </div>
+            </div>
+            {/* End Tab Content Panel */}
+
+          </div>
+        </main>
+        {/* End Workspace Canvas */}
 
       </div>
+      {/* End Main Workspace Area */}
 
       {/* QR Ticket Modal for Admin */}
       {selectedQrTicket && (

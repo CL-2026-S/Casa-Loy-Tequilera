@@ -16,7 +16,7 @@ export default function PrivacyPolicy({ lang = "es" }) {
       sec3Title: "3. Finalidades del Tratamiento",
       sec3Text: "Los datos personales recabados serán utilizados de manera confidencial para las siguientes finalidades esenciales:",
       sec3Bullets: [
-        "Atender solicitudes de información técnica, comercial o B2B de desarrollo de marca propia (Maquila).",
+        "Atender solicitudes de información técnica, comercial o B2B de desarrollo de marca privada (Maquila).",
         "Gestionar reservas para nuestras visitas de turismo destilado y el Restaurante 1937 Nativo.",
         "Enviar boletines comerciales, oportunidades de negocio e invitaciones a lanzamientos exclusivos si decide suscribirse a nuestra comunidad.",
         "Evaluar perfiles para vacantes profesionales dentro de nuestra destilería."

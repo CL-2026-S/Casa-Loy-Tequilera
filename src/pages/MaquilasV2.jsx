@@ -77,10 +77,10 @@ export default function MaquilasV2({ lang = "es" }) {
       seoTitle: "Maquila de Tequila B2B | Casa Loy Tequilera · NOM 1633",
       seoDesc: "Destilería y maquila de tequila en Los Altos de Jalisco. Respaldo de Grupo Orbe XXI, 3,600 Has. de agave propio y 13.5M L de capacidad anual.",
       heroOvertitle: "DESTILERÍA & MAQUILA TEQUILA B2B · NOM 1633",
-      heroTitle: "MAQUILA DE TEQUILA DE MARCA PROPIA",
+      heroTitle: "MAQUILA DE TEQUILA DE MARCA PRIVADA",
       heroTitleItalic: "EN LOS ALTOS DE JALISCO",
       heroSub: "Infraestructura industrial de vanguardia · 3,600 Hectáreas de agave propio · Exportación global",
-      heroBtnStart: "COTIZAR MARCA PROPIA",
+      heroBtnStart: "COTIZAR MARCA PRIVADA",
       heroBtnCall: "AGENDAR LLAMADA",
       
       trustNom: "NOM 1633 CRT",
@@ -342,7 +342,7 @@ export default function MaquilasV2({ lang = "es" }) {
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {[
-                    { title: lang === "es" ? "Marca Propia Integral" : "Turnkey Private Label", code: "01 · " + (lang === "es" ? "Llave en Mano" : "Turnkey"), desc: lang === "es" ? "Desde registro CRT, formulación, botella y envasado hasta exportación." : "From CRT registry, bottle design, formulation to export." },
+                    { title: lang === "es" ? "Marca Privada Integral" : "Turnkey Private Label", code: "01 · " + (lang === "es" ? "Llave en Mano" : "Turnkey"), desc: lang === "es" ? "Desde registro CRT, formulación, botella y envasado hasta exportación." : "From CRT registry, bottle design, formulation to export." },
                     { title: lang === "es" ? "Tequila a Granel (Bulk)" : "Bulk Tequila Supply", code: "02 · " + (lang === "es" ? "Volumen Continuo" : "Bulk Supply"), desc: lang === "es" ? "Suministro continuo 100% Agave o Mixto para embotelladoras globales." : "Continuous 100% Agave or Mixto bulk for global bottlers." },
                     { title: lang === "es" ? "Envasado & Co-Packing" : "Bottling & Co-Packing", code: "03 · " + (lang === "es" ? "Acondicionamiento" : "Packaging"), desc: lang === "es" ? "Llenado, sellado, etiquetado e inspección visual para marcas existentes." : "Filling, sealing, labeling, and QA light table inspection." },
                     { title: lang === "es" ? "Perfil de Autor & Cava" : "Custom Profile & Cask Aging", code: "04 · " + (lang === "es" ? "Alta Gama" : "High End"), desc: lang === "es" ? "Crianza a la medida en roble americano, bourbon o roble francés." : "Bespoke barrel aging in virgin American, bourbon, or French oak." }

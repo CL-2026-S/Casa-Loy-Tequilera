@@ -1,5 +1,5 @@
 import { supabase } from './_utils/clients.js';
-import { sendJobApplicationEmail } from './_utils/emails.js';
+import { sendJobApplicationEmail, sendCandidateConfirmationEmail } from './_utils/emails.js';
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -80,9 +80,11 @@ export default async function handler(req, res) {
         dbSuccess = true;
         applicationId = newApp.id;
 
-        // Fetch job title if needed
-        let jobTitle = "Postulación Espontánea";
-        if (job_id && job_id !== 'spontaneous') {
+        // Fetch job title and determine application type
+        const isSpontaneous = (!job_id || job_id === 'spontaneous');
+        let jobTitle = isSpontaneous ? "Cartera de Talento (Sin vacante específica)" : "Postulación a Vacante";
+
+        if (!isSpontaneous) {
           try {
             const { data: jobData } = await supabase
               .from('job_offers')
@@ -97,17 +99,32 @@ export default async function handler(req, res) {
           }
         }
 
-        // Send notification email to HR
+        // Send notification email to HR and Recruitment
         try {
           await sendJobApplicationEmail({
             name,
             email,
             phone,
             cv_name,
-            job_title: jobTitle
+            cv_url: (dbCvName && dbCvName.startsWith('http')) ? dbCvName : null,
+            cv_base64: cv_file_base64 || null,
+            job_title: jobTitle,
+            is_spontaneous: isSpontaneous
           });
         } catch (emailErr) {
-          console.error("Error sending job application email:", emailErr);
+          console.error("Error sending job application email to HR:", emailErr);
+        }
+
+        // Send confirmation email to applicant (acknowledging receipt without committing to follow-up)
+        try {
+          await sendCandidateConfirmationEmail({
+            name,
+            email,
+            job_title: jobTitle,
+            is_spontaneous: isSpontaneous
+          });
+        } catch (applicantEmailErr) {
+          console.error("Error sending candidate confirmation email:", applicantEmailErr);
         }
       } else {
         console.error("Could not insert into job_applications table. Error:", insertError.message);

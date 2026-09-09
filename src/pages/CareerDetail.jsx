@@ -212,7 +212,7 @@ export default function CareerDetail({ lang = "es", setPage, jobId }) {
       formFileFormat: "PDF, DOCX (MAX 10MB)",
       formFileSelected: "Archivo seleccionado: ",
       formSubmitBtn: "ENVIAR APLICACIÓN",
-      formSuccess: "¡Aplicación enviada con éxito! Nuestro comité evaluará su perfil y se pondrá en contacto en absoluta confidencialidad.",
+      formSuccess: "¡Aplicación enviada con éxito! Nuestro comité evaluará su perfil y, de avanzar a la etapa de entrevistas, se pondrá en contacto en absoluta confidencialidad.",
       disclaimerText: "En Casa Loy los únicos medios oficiales que utilizamos para publicar vacantes son Indeed y LinkedIn. Cualquier vacante publicada fuera de estos medios no corresponde a nuestra empresa y carece de validez oficial."
     },
     en: {
@@ -229,7 +229,7 @@ export default function CareerDetail({ lang = "es", setPage, jobId }) {
       formFileFormat: "PDF, DOCX (MAX 10MB)",
       formFileSelected: "Selected file: ",
       formSubmitBtn: "SUBMIT APPLICATION",
-      formSuccess: "Application successfully submitted! Our executive board will review your profile and contact you in absolute confidentiality.",
+      formSuccess: "Application successfully submitted! Our committee will review your profile and, if advancing to the interview stage, will contact you in strict confidentiality.",
       disclaimerText: "At Casa Loy, the only official channels we use to publish job vacancies are Indeed and LinkedIn. Any vacancy posted outside of these media does not correspond to us and is completely unauthorized."
     }
   };

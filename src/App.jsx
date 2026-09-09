@@ -38,6 +38,7 @@ const routesMap = {
   "/": { page: "home", lang: null }, // Shared
   "/interactivo": { page: "home-interactive", lang: null }, // Shared
   "/quienes-somos": { page: "about", lang: "es" },
+  "/marca-privada": { page: "maquilas", lang: "es" },
   "/marca-propia": { page: "maquilas", lang: "es" },
   "/maquilas": { page: "maquilas", lang: "es" },
   "/maquilas-v2": { page: "maquilas", lang: "es" },
@@ -203,8 +204,8 @@ export default function App() {
         "home": "/",
         "home-interactive": "/interactivo",
         "about": "/quienes-somos",
-        "maquilas": "/marca-propia",
-        "maquilas-v2": "/marca-propia",
+        "maquilas": "/marca-privada",
+        "maquilas-v2": "/marca-privada",
         "brands": "/marcas",
         "turismo": "/turismo",
         "experience-oro": "/turismo/oro",
@@ -254,8 +255,8 @@ export default function App() {
         home: "/",
         "home-interactive": "/interactivo",
         about: "/quienes-somos",
-        maquilas: "/marca-propia",
-        "maquilas-v2": "/marca-propia",
+        maquilas: "/marca-privada",
+        "maquilas-v2": "/marca-privada",
         brands: "/marcas",
         turismo: "/turismo",
         "experience-oro": "/turismo/oro",
@@ -450,9 +451,10 @@ export default function App() {
             <Route path="/about" element={<AboutUs t={t} lang={lang} setPage={setPage} />} />
             <Route path="/about-us" element={<AboutUs t={t} lang={lang} setPage={setPage} />} />
             
-            <Route path="/marca-propia" element={<Maquilas t={t} lang={lang} />} />
+            <Route path="/marca-privada" element={<Maquilas t={t} lang={lang} />} />
+            <Route path="/marca-propia" element={<Navigate to="/marca-privada" replace />} />
             <Route path="/private-label" element={<Maquilas t={t} lang={lang} />} />
-            <Route path="/maquilas" element={<Navigate to="/marca-propia" replace />} />
+            <Route path="/maquilas" element={<Navigate to="/marca-privada" replace />} />
             <Route path="/bottling" element={<Navigate to="/private-label" replace />} />
             <Route path="/maquilas-v2" element={<MaquilasV2 lang="es" />} />
             <Route path="/bottling-v2" element={<MaquilasV2 lang="en" />} />

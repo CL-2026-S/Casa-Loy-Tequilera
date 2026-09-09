@@ -6,7 +6,7 @@ const seoData = {
       title: "Casa Loy Tequilera | Destilería, Maquila de Tequila B2B, Tours & Restaurante 1937 Nativo",
       description: "Destilería mexicana premium en los Altos de Jalisco. Especialistas en Maquila de Tequila 100% Agave B2B, Tours Agaveros y Gastronomía de Autor en Restaurante 1937 Nativo.",
       ogTitle: "Casa Loy Tequilera - Destilería, Maquila B2B, Tours & Gastronomía",
-      ogDesc: "Maquila de Tequila para marcas propias, experiencias turísticas en destilería y alta cocina en Restaurante 1937 Nativo.",
+      ogDesc: "Maquila de Tequila para marcas privadas, experiencias turísticas en destilería y alta cocina en Restaurante 1937 Nativo.",
       ogImage: "/Casa Loy Tequilera.webp",
       schema: {
         "@context": "https://schema.org",
@@ -75,15 +75,15 @@ const seoData = {
       }
     },
     maquilas: {
-      title: "Marca Propia de Tequila 100% Agave B2B | Casa Loy Tequilera",
-      description: "Servicios integrales de producción de Tequila 100% agave, envasado, desarrollo de marca propia (Private Label) y exportación internacional. Hornos de mampostería y certificación CRT.",
-      ogTitle: "Servicio de Marca Propia de Tequila B2B - Casa Loy Tequilera",
-      ogDesc: "Lleva tu marca propia al mercado global con nuestra capacidad operativa, certificación CRT y estándares internacionales.",
+      title: "Marca Privada de Tequila 100% Agave B2B | Casa Loy Tequilera",
+      description: "Servicios integrales de producción de Tequila 100% agave, envasado, desarrollo de marca privada (Private Label) y exportación internacional. Hornos de mampostería y certificación CRT.",
+      ogTitle: "Servicio de Marca Privada de Tequila B2B - Casa Loy Tequilera",
+      ogDesc: "Lleva tu marca privada al mercado global con nuestra capacidad operativa, certificación CRT y estándares internacionales.",
       ogImage: "/Molienda.webp",
       schema: {
         "@context": "https://schema.org",
         "@type": "Service",
-        "serviceType": "Marca Propia de Tequila B2B",
+        "serviceType": "Marca Privada de Tequila B2B",
         "provider": {
           "@type": "Organization",
           "name": "Casa Loy Tequilera"
@@ -93,9 +93,9 @@ const seoData = {
     },
     "maquilas-v2": {
       title: "Guía de Maquila de Tequila B2B v2 | Casa Loy Tequilera",
-      description: "Servicios de Maquila B2B, Marca Propia y Tequila a Granel en Los Altos de Jalisco. NOM 1633.",
+      description: "Servicios de Maquila B2B, Marca Privada y Tequila a Granel en Los Altos de Jalisco. NOM 1633.",
       ogTitle: "Guía de Maquila de Tequila B2B v2 - Casa Loy Tequilera",
-      ogDesc: "Detalles y diagnóstico interactivo para proyectos de tequila de marca propia y maquila por contrato.",
+      ogDesc: "Detalles y diagnóstico interactivo para proyectos de tequila de marca privada y maquila por contrato.",
       ogImage: "/Jimado Agave Tequilana Weber.webp"
     },
     brands: {
@@ -508,7 +508,7 @@ const pathMap = {
   home: { es: "/", en: "/" },
   "home-interactive": { es: "/interactivo", en: "/interactivo" },
   about: { es: "/quienes-somos", en: "/about" },
-  maquilas: { es: "/marca-propia", en: "/private-label" },
+  maquilas: { es: "/marca-privada", en: "/private-label" },
   brands: { es: "/marcas", en: "/brands" },
   turismo: { es: "/turismo", en: "/tourism" },
   "experience-oro": { es: "/turismo/oro", en: "/tourism/gold" },

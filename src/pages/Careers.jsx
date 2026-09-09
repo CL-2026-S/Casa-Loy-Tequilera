@@ -132,7 +132,7 @@ export default function Careers({ lang = "es", setPage, setSelectedJobId }) {
       formUploadLabel: "CARGAR CURRICULUM VITAE (PDF, MAX 5MB)",
       formUploadSelected: "Archivo seleccionado: ",
       formSubmitBtn: "ENVIAR PERFIL PROFESIONAL",
-      formSuccess: "¡Gracias! Su perfil ha sido registrado con éxito en nuestro sistema de selección. Nos pondremos en contacto.",
+      formSuccess: "¡Gracias! Su perfil ha sido registrado con éxito en nuestra cartera de talento. En caso de que su perfil coincida con una oportunidad afín a su trayectoria, nos pondremos en contacto.",
       disclaimerTitle: "AVISO IMPORTANTE SOBRE NUESTRAS VACANTES",
       disclaimerText: "En Casa Loy los únicos medios oficiales que utilizamos para publicar vacantes son Indeed y LinkedIn. Cualquier vacante publicada fuera de estos medios no corresponde a nuestra empresa y carece de validez oficial."
     },
@@ -153,7 +153,7 @@ export default function Careers({ lang = "es", setPage, setSelectedJobId }) {
       formUploadLabel: "UPLOAD CURRICULUM VITAE (PDF, MAX 5MB)",
       formUploadSelected: "Selected file: ",
       formSubmitBtn: "SEND PROFESSIONAL PROFILE",
-      formSuccess: "Thank you! Your profile has been successfully registered in our recruitment system. We will be in touch.",
+      formSuccess: "Thank you! Your profile has been successfully registered in our talent pool. If an opportunity matches your background, our team will be in touch.",
       disclaimerTitle: "IMPORTANT NOTICE ABOUT VACANCIES",
       disclaimerText: "At Casa Loy, the only official channels we use to publish job vacancies are Indeed and LinkedIn. Any vacancy posted outside of these media does not correspond to us and is completely unauthorized."
     }
