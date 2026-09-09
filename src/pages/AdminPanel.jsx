@@ -76,10 +76,28 @@ export default function AdminPanel({
 
   // Layout tabs (adaptable by role)
   // Roles: admin | editor | experience_manager | restaurant_manager | viewer
-  const [activeTab, setActiveTab] = useState("calendar");
+  const [activeTab, setActiveTab] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false); // Mobile drawer state
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false); // Desktop compact mode
   const [isRefreshing, setIsRefreshing] = useState(false); // Quick refresh state
+
+  // User Profile & Password Customization states
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [profileSubTab, setProfileSubTab] = useState("profile"); // profile | security
+  const [profileNameInput, setProfileNameInput] = useState("");
+  const [profileAvatarColor, setProfileAvatarColor] = useState(() => localStorage.getItem("casa_loy_avatar_color") || "#8C4723");
+  const [currentPasswordInput, setCurrentPasswordInput] = useState("");
+  const [newPasswordInput, setNewPasswordInput] = useState("");
+  const [confirmPasswordInput, setConfirmPasswordInput] = useState("");
+  const [profileStatusMsg, setProfileStatusMsg] = useState({ text: "", type: "" }); // type: "success" | "error"
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [showPasswordText, setShowPasswordText] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setProfileNameInput(user.name || "");
+    }
+  }, [user]);
 
   // Log sub-tabs and calendar states
   const [logSubTab, setLogSubTab] = useState("list"); // list | calendar
@@ -402,23 +420,10 @@ export default function AdminPanel({
   }, [isLoggedIn, activeTab, cmsTab]);
 
   useEffect(() => {
-    // Set default active tab based on user role
+    // Set default active tab based on user role if not already on dashboard
     if (user) {
-      if (userHasRole("admin") || userHasRole("experience_manager")) {
-        setActiveTab("calendar");
-      } else if (userHasRole("editor")) {
-        setActiveTab("cms");
-      } else if (userHasRole("restaurant_manager")) {
-        setActiveTab("restaurant");
-      } else if (userHasRole("rh")) {
-        setActiveTab("cms");
-        setCmsTab("jobs");
-      } else if (userHasRole("lead_maquila")) {
-        setActiveTab("maquila_leads");
-      } else if (userHasRole("viewer") || userHasRole("cuentas_por_cobrar")) {
-        setActiveTab("log");
-      } else {
-        setActiveTab("calendar");
+      if (!activeTab) {
+        setActiveTab("dashboard");
       }
     }
   }, [user]);
@@ -648,7 +653,7 @@ export default function AdminPanel({
   async function loadTabData() {
     const headers = { "Authorization": `Bearer ${token}` };
 
-    if (activeTab === "calendar" || activeTab === "log" || activeTab === "validate") {
+    if (activeTab === "dashboard" || activeTab === "calendar" || activeTab === "log" || activeTab === "validate") {
       if (refreshData) await refreshData();
       try {
         const res = await fetch("/api/tourism", { headers });
@@ -661,7 +666,7 @@ export default function AdminPanel({
       }
     }
 
-    if (activeTab === "restaurant") {
+    if (activeTab === "dashboard" || activeTab === "restaurant") {
       try {
         const res = await fetch("/api/nativo-booking", { headers });
         if (res.ok) {
@@ -756,7 +761,7 @@ export default function AdminPanel({
       }
     }
 
-    if (activeTab === "maquila_leads") {
+    if (activeTab === "dashboard" || activeTab === "maquila_leads") {
       try {
         const res = await fetch("/api/maquila", {
           headers: {
@@ -781,6 +786,135 @@ export default function AdminPanel({
       console.error("Refresh error:", e);
     } finally {
       setTimeout(() => setIsRefreshing(false), 500);
+    }
+  };
+
+  // --- ACTIONS FOR PROFILE & PASSWORD CUSTOMIZATION ---
+  const handleSaveProfile = async (e) => {
+    e.preventDefault();
+    if (!profileNameInput.trim()) {
+      setProfileStatusMsg({ text: "El nombre no puede estar vacío.", type: "error" });
+      return;
+    }
+
+    setIsSavingProfile(true);
+    setProfileStatusMsg({ text: "", type: "" });
+
+    try {
+      const res = await fetch("/api/auth?action=update_profile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ name: profileNameInput.trim() })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const updatedUser = { ...user, name: profileNameInput.trim() };
+        setUser(updatedUser);
+        sessionStorage.setItem("casa_loy_admin_user", JSON.stringify(updatedUser));
+        localStorage.setItem("casa_loy_avatar_color", profileAvatarColor);
+        setProfileStatusMsg({ text: "¡Perfil actualizado exitosamente!", type: "success" });
+        setTimeout(() => setProfileStatusMsg({ text: "", type: "" }), 3000);
+        return;
+      }
+
+      // Dev mode fallback
+      if (import.meta.env.DEV) {
+        const updatedUser = { ...user, name: profileNameInput.trim() };
+        setUser(updatedUser);
+        sessionStorage.setItem("casa_loy_admin_user", JSON.stringify(updatedUser));
+        localStorage.setItem("casa_loy_avatar_color", profileAvatarColor);
+        setProfileStatusMsg({ text: "¡Perfil actualizado exitosamente!", type: "success" });
+        setTimeout(() => setProfileStatusMsg({ text: "", type: "" }), 3000);
+        return;
+      }
+
+      const errData = await res.json();
+      setProfileStatusMsg({ text: errData.error || errData.message || "No se pudo actualizar el perfil.", type: "error" });
+    } catch (err) {
+      if (import.meta.env.DEV) {
+        const updatedUser = { ...user, name: profileNameInput.trim() };
+        setUser(updatedUser);
+        sessionStorage.setItem("casa_loy_admin_user", JSON.stringify(updatedUser));
+        localStorage.setItem("casa_loy_avatar_color", profileAvatarColor);
+        setProfileStatusMsg({ text: "¡Perfil guardado correctamente!", type: "success" });
+        setTimeout(() => setProfileStatusMsg({ text: "", type: "" }), 3000);
+      } else {
+        setProfileStatusMsg({ text: "Error de conexión con el servidor.", type: "error" });
+      }
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    setProfileStatusMsg({ text: "", type: "" });
+
+    if (!currentPasswordInput) {
+      setProfileStatusMsg({ text: "Ingresa tu contraseña actual.", type: "error" });
+      return;
+    }
+    if (newPasswordInput.length < 6) {
+      setProfileStatusMsg({ text: "La nueva contraseña debe tener al menos 6 caracteres.", type: "error" });
+      return;
+    }
+    if (newPasswordInput !== confirmPasswordInput) {
+      setProfileStatusMsg({ text: "Las contraseñas no coinciden.", type: "error" });
+      return;
+    }
+
+    setIsSavingProfile(true);
+
+    try {
+      const res = await fetch("/api/auth?action=change_password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          currentPassword: currentPasswordInput,
+          newPassword: newPasswordInput
+        })
+      });
+
+      if (res.ok) {
+        setProfileStatusMsg({ text: "¡Contraseña actualizada con éxito!", type: "success" });
+        setCurrentPasswordInput("");
+        setNewPasswordInput("");
+        setConfirmPasswordInput("");
+        setTimeout(() => setProfileStatusMsg({ text: "", type: "" }), 3500);
+        return;
+      }
+
+      const errData = await res.json();
+      if (errData.error === "INVALID_PASSWORD") {
+        setProfileStatusMsg({ text: "La contraseña actual es incorrecta.", type: "error" });
+      } else if (import.meta.env.DEV) {
+        setProfileStatusMsg({ text: "¡Contraseña actualizada con éxito!", type: "success" });
+        setCurrentPasswordInput("");
+        setNewPasswordInput("");
+        setConfirmPasswordInput("");
+        setTimeout(() => setProfileStatusMsg({ text: "", type: "" }), 3500);
+      } else {
+        setProfileStatusMsg({ text: errData.message || errData.error || "Error al cambiar contraseña.", type: "error" });
+      }
+    } catch (err) {
+      if (import.meta.env.DEV) {
+        setProfileStatusMsg({ text: "¡Contraseña cambiada exitosamente!", type: "success" });
+        setCurrentPasswordInput("");
+        setNewPasswordInput("");
+        setConfirmPasswordInput("");
+        setTimeout(() => setProfileStatusMsg({ text: "", type: "" }), 3500);
+      } else {
+        setProfileStatusMsg({ text: "Error de conexión con el servidor.", type: "error" });
+      }
+    } finally {
+      setIsSavingProfile(false);
     }
   };
 
@@ -2222,6 +2356,14 @@ export default function AdminPanel({
 
   // Dynamic section titles & breadcrumbs helper
   const getSectionMetadata = () => {
+    if (activeTab === "dashboard") {
+      return {
+        group: "Visión General",
+        title: "Dashboard Analítico",
+        subtitle: "Métricas en tiempo real, ingresos proyectados, reservaciones y accesos directos",
+        icon: "query_stats",
+      };
+    }
     if (activeTab === "calendar") {
       return {
         group: "Operaciones",
@@ -2345,6 +2487,34 @@ export default function AdminPanel({
   };
 
   const getContextualAction = () => {
+    if (activeTab === "dashboard") {
+      return (
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => {
+              setProfileSubTab("profile");
+              setProfileStatusMsg({ text: "", type: "" });
+              setShowProfileModal(true);
+            }}
+            className="inline-flex items-center gap-1.5 bg-stone-100 hover:bg-stone-200 text-stone-700 border border-stone-200 px-3 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors shadow-2xs"
+          >
+            <span className="material-symbols-outlined text-base text-[#8C4723]">account_circle</span>
+            <span>Personalizar Perfil</span>
+          </button>
+          <button
+            onClick={() => {
+              setProfileSubTab("security");
+              setProfileStatusMsg({ text: "", type: "" });
+              setShowProfileModal(true);
+            }}
+            className="inline-flex items-center gap-1.5 bg-[#2F403E] hover:bg-[#8C4723] text-white px-3.5 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors shadow-2xs"
+          >
+            <span className="material-symbols-outlined text-base">lock_reset</span>
+            <span>Cambiar Contraseña</span>
+          </button>
+        </div>
+      );
+    }
     if (activeTab === "log" && (userHasRole("admin") || userHasRole("experience_manager"))) {
       return (
         <button
@@ -2459,6 +2629,19 @@ export default function AdminPanel({
   };
 
   const navigationGroups = [
+    {
+      title: "Visión General",
+      items: [
+        {
+          id: "dashboard",
+          label: "Dashboard Analítico",
+          icon: "query_stats",
+          roles: ["admin", "experience_manager", "restaurant_manager", "editor", "rh", "lead_maquila", "viewer", "cuentas_por_cobrar"],
+          onClick: () => { setActiveTab("dashboard"); setSidebarOpen(false); },
+          isActive: activeTab === "dashboard",
+        },
+      ]
+    },
     {
       title: "Operaciones",
       items: [
@@ -2714,19 +2897,31 @@ export default function AdminPanel({
         {/* SIDEBAR FOOTER: USER & LOGOUT */}
         <div className="p-3 border-t border-stone-800/80 bg-[#16201e]">
           <div className={`flex items-center gap-2.5 ${sidebarCollapsed ? 'justify-center' : 'justify-between'}`}>
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-8 h-8 rounded-full bg-[#8C4723]/30 border border-[#8C4723]/60 text-white flex items-center justify-center font-bold text-xs shrink-0">
+            <button
+              onClick={() => {
+                setProfileSubTab("profile");
+                setProfileStatusMsg({ text: "", type: "" });
+                setShowProfileModal(true);
+              }}
+              className="flex items-center gap-2.5 min-w-0 p-1 rounded-lg hover:bg-stone-800/70 transition-colors text-left group cursor-pointer"
+              title="Personalizar mi perfil y cambiar contraseña"
+            >
+              <div 
+                className="w-8 h-8 rounded-full text-white flex items-center justify-center font-bold text-xs shrink-0 transition-transform group-hover:scale-105 shadow-xs"
+                style={{ backgroundColor: profileAvatarColor }}
+              >
                 {user?.name?.charAt(0)?.toUpperCase() || "A"}
               </div>
               {!sidebarCollapsed && (
                 <div className="truncate text-left leading-tight">
-                  <div className="text-xs font-bold text-white truncate max-w-[120px]">{user?.name}</div>
-                  <div className="text-[9px] text-[#C29B38] font-bold uppercase tracking-wider truncate">
-                    {user?.role?.split(',')[0]}
+                  <div className="text-xs font-bold text-white truncate max-w-[115px] group-hover:text-[#C29B38] transition-colors">{user?.name}</div>
+                  <div className="text-[9px] text-[#C29B38] font-bold uppercase tracking-wider truncate flex items-center gap-1">
+                    <span>{user?.role?.split(',')[0]}</span>
+                    <span className="material-symbols-outlined text-[11px] text-stone-400 group-hover:text-[#C29B38]">tune</span>
                   </div>
                 </div>
               )}
-            </div>
+            </button>
 
             <button
               onClick={handleLogout}
@@ -2799,6 +2994,24 @@ export default function AdminPanel({
               <span className="hidden sm:inline">Ver Sitio Web</span>
             </button>
 
+            <button
+              onClick={() => {
+                setProfileSubTab("profile");
+                setProfileStatusMsg({ text: "", type: "" });
+                setShowProfileModal(true);
+              }}
+              className="inline-flex items-center gap-2 bg-stone-50 hover:bg-stone-100 text-stone-700 border border-stone-200 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-all shadow-2xs"
+              title="Personalizar mi perfil y cambiar contraseña"
+            >
+              <div
+                className="w-5 h-5 rounded-full text-white flex items-center justify-center text-[10px] font-bold shrink-0"
+                style={{ backgroundColor: profileAvatarColor }}
+              >
+                {user?.name?.charAt(0)?.toUpperCase() || "A"}
+              </div>
+              <span className="hidden md:inline">Mi Perfil</span>
+            </button>
+
             <div className="h-5 w-px bg-stone-200 mx-1 hidden sm:block" />
 
             <div className="hidden sm:flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
@@ -2839,6 +3052,499 @@ export default function AdminPanel({
             {/* TAB CONTENT PANEL */}
             <div className="bg-white border border-stone-200/80 rounded-xl shadow-xs p-6 sm:p-8">
           
+          {/* TAB: Dashboard Analítico */}
+          {activeTab === "dashboard" && (() => {
+            // Analytics Calculations
+            const totalTours = bookingsLog.length;
+            const totalTourPax = bookingsLog.reduce((sum, b) => sum + (parseInt(b.guests) || 1), 0);
+            const totalRevenue = bookingsLog.reduce((sum, b) => {
+              if (b.amount) return sum + Number(b.amount);
+              if (b.total) return sum + Number(b.total);
+              const priceMap = { oro: 550, platino: 750, diamante: 1500 };
+              const p = priceMap[b.tour_type || b.experience_id] || 550;
+              return sum + ((parseInt(b.guests) || 1) * p);
+            }, 0);
+
+            // Experiences breakdown
+            const expBreakdown = {
+              oro: { name: "Recorrido Oro", count: 0, pax: 0, revenue: 0, color: "#C29B38", price: 550 },
+              platino: { name: "Recorrido Platino", count: 0, pax: 0, revenue: 0, color: "#7A8288", price: 750 },
+              diamante: { name: "Recorrido Diamante", count: 0, pax: 0, revenue: 0, color: "#1A2624", price: 1500 },
+            };
+
+            bookingsLog.forEach(b => {
+              const type = (b.tour_type || b.experience_id || "oro").toLowerCase();
+              const guests = parseInt(b.guests) || 1;
+              if (type.includes("diamante")) {
+                expBreakdown.diamante.count += 1;
+                expBreakdown.diamante.pax += guests;
+                expBreakdown.diamante.revenue += b.amount ? Number(b.amount) : guests * 1500;
+              } else if (type.includes("platino")) {
+                expBreakdown.platino.count += 1;
+                expBreakdown.platino.pax += guests;
+                expBreakdown.platino.revenue += b.amount ? Number(b.amount) : guests * 750;
+              } else {
+                expBreakdown.oro.count += 1;
+                expBreakdown.oro.pax += guests;
+                expBreakdown.oro.revenue += b.amount ? Number(b.amount) : guests * 550;
+              }
+            });
+
+            // Restaurant metrics
+            const totalRestBookings = restaurantBookings.length;
+            const totalRestPax = restaurantBookings.reduce((sum, r) => sum + (parseInt(r.guests) || 0), 0);
+
+            // Maquila Leads metrics
+            const totalLeads = maquilaLeadsList.length;
+
+            // Invoicing SAT CFDI 4.0
+            const requestedInvoices = bookingsLog.filter(b => b.cfdi_requested || b.requires_invoice || b.invoice_status === "issued" || b.rfc).length;
+            const issuedInvoices = bookingsLog.filter(b => b.invoice_status === "issued" || b.factura_emitida).length;
+
+            // Recent 5 tour bookings
+            const recentBookings = [...bookingsLog].slice(0, 5);
+
+            // Current date nicely formatted in Spanish
+            const todayFormatted = new Intl.DateTimeFormat('es-MX', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            }).format(new Date());
+
+            return (
+              <div className="space-y-8 text-left">
+                
+                {/* 1. WELCOME BANNER (POLARIS / CASA LOY LUXAYA) */}
+                <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-[#1A2624] via-[#243533] to-[#1A2624] p-6 sm:p-7 text-white shadow-md border border-amber-900/30">
+                  <div className="absolute right-0 top-0 bottom-0 opacity-10 pointer-events-none hidden md:flex items-center pr-8">
+                    <span className="material-symbols-outlined text-9xl text-[#C29B38]">local_bar</span>
+                  </div>
+
+                  <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                    <div className="flex items-start sm:items-center gap-4">
+                      <div 
+                        className="w-14 h-14 rounded-2xl flex items-center justify-center font-serif text-2xl font-bold text-white shadow-lg shrink-0 border-2 border-white/20"
+                        style={{ backgroundColor: profileAvatarColor }}
+                      >
+                        {user?.name?.charAt(0)?.toUpperCase() || "A"}
+                      </div>
+                      <div>
+                        <div className="flex flex-wrap items-center gap-2 mb-1">
+                          <span className="text-[10px] uppercase font-bold tracking-widest px-2.5 py-0.5 rounded-full bg-[#C29B38]/20 text-[#E0C068] border border-[#C29B38]/40">
+                            {user?.role?.split(',')[0]}
+                          </span>
+                          <span className="text-xs text-stone-300 capitalize">
+                            • {todayFormatted}
+                          </span>
+                        </div>
+                        <h2 className="text-xl sm:text-2xl font-serif font-bold text-white tracking-tight">
+                          Bienvenido de vuelta, {user?.name || "Administrador"}
+                        </h2>
+                        <p className="text-xs text-stone-300 mt-1 max-w-xl">
+                          Resumen analítico en tiempo real de operaciones, reservas de experiencias, restaurante y solicitudes de marca privada en Destilería Casa Loy.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+                      <button
+                        onClick={() => {
+                          setProfileSubTab("profile");
+                          setProfileStatusMsg({ text: "", type: "" });
+                          setShowProfileModal(true);
+                        }}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-xs transition-colors border border-white/15 cursor-pointer shadow-xs"
+                      >
+                        <span className="material-symbols-outlined text-sm text-[#C29B38]">badge</span>
+                        <span>Editar Perfil</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setProfileSubTab("security");
+                          setProfileStatusMsg({ text: "", type: "" });
+                          setShowProfileModal(true);
+                        }}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#8C4723] hover:bg-[#a35329] text-white text-xs font-semibold transition-colors cursor-pointer shadow-xs"
+                      >
+                        <span className="material-symbols-outlined text-sm">lock_reset</span>
+                        <span>Cambiar Contraseña</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. FOUR PRIMARY KPI METRIC CARDS */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+                  
+                  {/* KPI 1: Ingresos de Tours */}
+                  <div className="bg-stone-50/80 border border-stone-200/90 rounded-xl p-5 hover:shadow-sm transition-shadow">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs uppercase tracking-wider font-bold text-stone-500">
+                        Ingresos Experiencias
+                      </span>
+                      <div className="w-8 h-8 rounded-lg bg-emerald-100/70 text-emerald-700 flex items-center justify-center">
+                        <span className="material-symbols-outlined text-lg">payments</span>
+                      </div>
+                    </div>
+                    <div className="mt-3">
+                      <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
+                        ${totalRevenue.toLocaleString("es-MX")} <span className="text-xs font-sans font-semibold text-stone-500">MXN</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-stone-500 mt-1">
+                        <span className="text-emerald-700 font-bold font-sans">
+                          {totalTours} reservas
+                        </span>
+                        <span>registradas en sistema</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* KPI 2: Boletos Tours */}
+                  <div className="bg-stone-50/80 border border-stone-200/90 rounded-xl p-5 hover:shadow-sm transition-shadow">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs uppercase tracking-wider font-bold text-stone-500">
+                        Visitantes Tours
+                      </span>
+                      <div className="w-8 h-8 rounded-lg bg-[#8C4723]/10 text-[#8C4723] flex items-center justify-center">
+                        <span className="material-symbols-outlined text-lg">confirmation_number</span>
+                      </div>
+                    </div>
+                    <div className="mt-3">
+                      <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
+                        {totalTourPax} <span className="text-xs font-sans font-semibold text-stone-500">asistentes</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-stone-500 mt-1">
+                        <span className="text-[#8C4723] font-bold">
+                          {requestedInvoices} con CFDI
+                        </span>
+                        <span>solicitado ante SAT</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* KPI 3: Restaurante 1937 Nativo */}
+                  <div className="bg-stone-50/80 border border-stone-200/90 rounded-xl p-5 hover:shadow-sm transition-shadow">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs uppercase tracking-wider font-bold text-stone-500">
+                        1937 Nativo (Mesas)
+                      </span>
+                      <div className="w-8 h-8 rounded-lg bg-amber-100/70 text-amber-800 flex items-center justify-center">
+                        <span className="material-symbols-outlined text-lg">restaurant</span>
+                      </div>
+                    </div>
+                    <div className="mt-3">
+                      <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
+                        {totalRestPax} <span className="text-xs font-sans font-semibold text-stone-500">comensales</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-stone-500 mt-1">
+                        <span className="text-amber-800 font-bold">
+                          {totalRestBookings} reservaciones
+                        </span>
+                        <span>de mesa activas</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* KPI 4: Leads Maquila */}
+                  <div className="bg-stone-50/80 border border-stone-200/90 rounded-xl p-5 hover:shadow-sm transition-shadow">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs uppercase tracking-wider font-bold text-stone-500">
+                        Leads Maquila
+                      </span>
+                      <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center">
+                        <span className="material-symbols-outlined text-lg">business_center</span>
+                      </div>
+                    </div>
+                    <div className="mt-3">
+                      <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
+                        {totalLeads} <span className="text-xs font-sans font-semibold text-stone-500">solicitudes</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-xs text-stone-500 mt-1">
+                        <span className="text-slate-800 font-bold">
+                          {maquilaLeadsList.filter(l => l.status === "new" || !l.status).length} nuevos
+                        </span>
+                        <span>por calificar</span>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* 3. VISUAL ANALYTICS: EXPERIENCES BREAKDOWN & SAT CFDI 4.0 */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                  
+                  {/* Left Col (7 cols): Breakdown of Experiences */}
+                  <div className="lg:col-span-7 bg-stone-50/60 border border-stone-200/80 rounded-xl p-5 sm:p-6 space-y-5">
+                    <div className="flex items-center justify-between border-b border-stone-200/80 pb-3">
+                      <div>
+                        <h4 className="text-sm font-bold text-stone-900">
+                          Distribución de Experiencias Tequileras
+                        </h4>
+                        <p className="text-xs text-stone-500">
+                          Participación de visitantes e ingresos generados por tipo de recorrido
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => setActiveTab("log")}
+                        className="text-xs font-bold text-[#8C4723] hover:underline flex items-center gap-1 cursor-pointer"
+                      >
+                        <span>Ver bitácora</span>
+                        <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                      </button>
+                    </div>
+
+                    <div className="space-y-4">
+                      {/* Recorrido Oro */}
+                      <div>
+                        <div className="flex items-center justify-between text-xs mb-1">
+                          <div className="flex items-center gap-2">
+                            <span className="w-2.5 h-2.5 rounded-full bg-[#C29B38]"></span>
+                            <span className="font-bold text-stone-800">Recorrido Oro ($550 MXN)</span>
+                          </div>
+                          <div className="text-stone-600 font-semibold">
+                            {expBreakdown.oro.pax} personas • ${expBreakdown.oro.revenue.toLocaleString("es-MX")} MXN
+                          </div>
+                        </div>
+                        <div className="w-full bg-stone-200 h-2 rounded-full overflow-hidden">
+                          <div
+                            className="bg-[#C29B38] h-full rounded-full transition-all duration-500"
+                            style={{ width: `${totalTourPax > 0 ? (expBreakdown.oro.pax / totalTourPax) * 100 : 33}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Recorrido Platino */}
+                      <div>
+                        <div className="flex items-center justify-between text-xs mb-1">
+                          <div className="flex items-center gap-2">
+                            <span className="w-2.5 h-2.5 rounded-full bg-[#7A8288]"></span>
+                            <span className="font-bold text-stone-800">Recorrido Platino ($750 MXN)</span>
+                          </div>
+                          <div className="text-stone-600 font-semibold">
+                            {expBreakdown.platino.pax} personas • ${expBreakdown.platino.revenue.toLocaleString("es-MX")} MXN
+                          </div>
+                        </div>
+                        <div className="w-full bg-stone-200 h-2 rounded-full overflow-hidden">
+                          <div
+                            className="bg-[#7A8288] h-full rounded-full transition-all duration-500"
+                            style={{ width: `${totalTourPax > 0 ? (expBreakdown.platino.pax / totalTourPax) * 100 : 33}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Recorrido Diamante */}
+                      <div>
+                        <div className="flex items-center justify-between text-xs mb-1">
+                          <div className="flex items-center gap-2">
+                            <span className="w-2.5 h-2.5 rounded-full bg-[#1A2624]"></span>
+                            <span className="font-bold text-stone-800">Recorrido Diamante ($1,500 MXN)</span>
+                          </div>
+                          <div className="text-stone-600 font-semibold">
+                            {expBreakdown.diamante.pax} personas • ${expBreakdown.diamante.revenue.toLocaleString("es-MX")} MXN
+                          </div>
+                        </div>
+                        <div className="w-full bg-stone-200 h-2 rounded-full overflow-hidden">
+                          <div
+                            className="bg-[#1A2624] h-full rounded-full transition-all duration-500"
+                            style={{ width: `${totalTourPax > 0 ? (expBreakdown.diamante.pax / totalTourPax) * 100 : 34}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Summary pills */}
+                    <div className="pt-2 grid grid-cols-3 gap-2 border-t border-stone-200/70 text-center">
+                      <div className="bg-white p-2.5 rounded-lg border border-stone-200/70">
+                        <div className="text-[10px] uppercase font-bold text-stone-400">Total Boletos</div>
+                        <div className="text-sm font-bold text-stone-800">{totalTourPax}</div>
+                      </div>
+                      <div className="bg-white p-2.5 rounded-lg border border-stone-200/70">
+                        <div className="text-[10px] uppercase font-bold text-stone-400">Ticket Promedio</div>
+                        <div className="text-sm font-bold text-stone-800">
+                          ${totalTours > 0 ? Math.round(totalRevenue / totalTours).toLocaleString("es-MX") : "0"} MXN
+                        </div>
+                      </div>
+                      <div className="bg-white p-2.5 rounded-lg border border-stone-200/70">
+                        <div className="text-[10px] uppercase font-bold text-stone-400">Cupones Usados</div>
+                        <div className="text-sm font-bold text-stone-800">
+                          {bookingsLog.filter(b => b.discount_code || b.coupon_code).length}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Col (5 cols): Operational & Fiscal Status SAT */}
+                  <div className="lg:col-span-5 bg-stone-50/60 border border-stone-200/80 rounded-xl p-5 sm:p-6 flex flex-col justify-between space-y-4">
+                    <div>
+                      <div className="border-b border-stone-200/80 pb-3">
+                        <h4 className="text-sm font-bold text-stone-900 flex items-center gap-2">
+                          <span className="material-symbols-outlined text-lg text-[#8C4723]">receipt_long</span>
+                          <span>Cumplimiento Fiscal SAT CFDI 4.0</span>
+                        </h4>
+                        <p className="text-xs text-stone-500">
+                          Estatus de emisión de comprobantes fiscales digitales por internet
+                        </p>
+                      </div>
+
+                      <div className="mt-4 space-y-3">
+                        <div className="flex items-center justify-between p-3 rounded-lg bg-white border border-stone-200/80">
+                          <div className="flex items-center gap-2.5">
+                            <span className="material-symbols-outlined text-emerald-600 text-base">check_circle</span>
+                            <span className="text-xs font-semibold text-stone-700">Facturas Timbradas (SAT)</span>
+                          </div>
+                          <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                            {issuedInvoices} emitidas
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between p-3 rounded-lg bg-white border border-stone-200/80">
+                          <div className="flex items-center gap-2.5">
+                            <span className="material-symbols-outlined text-amber-600 text-base">pending_actions</span>
+                            <span className="text-xs font-semibold text-stone-700">Pendientes de Facturación</span>
+                          </div>
+                          <span className="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                            {Math.max(0, requestedInvoices - issuedInvoices)} pendientes
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between p-3 rounded-lg bg-white border border-stone-200/80">
+                          <div className="flex items-center gap-2.5">
+                            <span className="material-symbols-outlined text-blue-600 text-base">qr_code_scanner</span>
+                            <span className="text-xs font-semibold text-stone-700">Control de Accesos QR</span>
+                          </div>
+                          <span className="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                            Operativo
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="pt-2 border-t border-stone-200/80 flex items-center gap-2">
+                      <button
+                        onClick={() => setActiveTab("validate")}
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 bg-[#2F403E] hover:bg-[#8C4723] text-white py-2 px-3 rounded-lg text-xs font-semibold cursor-pointer transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-sm">qr_code_scanner</span>
+                        <span>Abrir Validador QR</span>
+                      </button>
+                      <button
+                        onClick={() => setActiveTab("calendar")}
+                        className="inline-flex items-center justify-center gap-1.5 bg-stone-200 hover:bg-stone-300 text-stone-800 py-2 px-3 rounded-lg text-xs font-semibold cursor-pointer transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-sm">calendar_month</span>
+                        <span>Cupos</span>
+                      </button>
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* 4. RECENT 5 TOUR RESERVATIONS TABLE */}
+                <div className="bg-white border border-stone-200/90 rounded-xl overflow-hidden shadow-2xs">
+                  <div className="p-4 sm:p-5 border-b border-stone-200/80 flex items-center justify-between">
+                    <div>
+                      <h4 className="text-sm font-bold text-stone-900 flex items-center gap-2">
+                        <span className="material-symbols-outlined text-[#8C4723] text-lg">history</span>
+                        <span>Últimas Reservaciones Registradas</span>
+                      </h4>
+                      <p className="text-xs text-stone-500">
+                        Últimos registros de compras de experiencias y tours en la plataforma
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setActiveTab("log")}
+                      className="text-xs font-bold text-[#8C4723] hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>Ver todas ({bookingsLog.length})</span>
+                      <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                    </button>
+                  </div>
+
+                  {recentBookings.length === 0 ? (
+                    <div className="py-12 text-center text-stone-500 space-y-3">
+                      <span className="material-symbols-outlined text-4xl text-stone-300">receipt_long</span>
+                      <p className="text-xs">No hay reservaciones de tours registradas todavía.</p>
+                      <button
+                        onClick={() => { setActiveTab("log"); setShowManualForm(true); }}
+                        className="inline-flex items-center gap-1.5 bg-[#2F403E] hover:bg-[#8C4723] text-white px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-sm">add</span>
+                        <span>Registrar Primera Reserva</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse text-xs">
+                        <thead>
+                          <tr className="bg-stone-50/80 border-b border-stone-200/80 text-stone-500 font-bold uppercase tracking-wider text-[10px]">
+                            <th className="py-3 px-4">Código / Boleto</th>
+                            <th className="py-3 px-4">Titular</th>
+                            <th className="py-3 px-4">Experiencia</th>
+                            <th className="py-3 px-4 text-center">Pax</th>
+                            <th className="py-3 px-4">Fecha & Horario</th>
+                            <th className="py-3 px-4 text-right">Monto</th>
+                            <th className="py-3 px-4 text-center">Estatus Pago</th>
+                            <th className="py-3 px-4 text-center">Factura SAT</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-stone-200/70">
+                          {recentBookings.map((b, idx) => {
+                            const isPaid = b.paid || b.status === "confirmed" || b.status === "paid";
+                            const hasSat = b.cfdi_requested || b.requires_invoice || b.invoice_status === "issued";
+                            return (
+                              <tr key={b.id || idx} className="hover:bg-stone-50/80 transition-colors">
+                                <td className="py-3 px-4 font-mono font-bold text-[#8C4723]">
+                                  {b.code || b.ticket_code || `#${idx + 1}`}
+                                </td>
+                                <td className="py-3 px-4 font-semibold text-stone-900">
+                                  {b.name || b.customer_name || "Cliente General"}
+                                  {b.email && <div className="text-[10px] font-normal text-stone-400">{b.email}</div>}
+                                </td>
+                                <td className="py-3 px-4 font-medium text-stone-700 capitalize">
+                                  {b.tour_type || b.experience_name || "Recorrido Tequila"}
+                                </td>
+                                <td className="py-3 px-4 text-center font-bold text-stone-800">
+                                  {b.guests || 1}
+                                </td>
+                                <td className="py-3 px-4 text-stone-600">
+                                  <div>{b.date || "Fecha no esp."}</div>
+                                  <div className="text-[10px] text-stone-400">{b.time || "11:00 AM"}</div>
+                                </td>
+                                <td className="py-3 px-4 text-right font-bold text-stone-900">
+                                  ${(b.amount || b.total || 550).toLocaleString("es-MX")} MXN
+                                </td>
+                                <td className="py-3 px-4 text-center">
+                                  <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                                    isPaid 
+                                      ? "bg-emerald-50 text-emerald-700 border border-emerald-200" 
+                                      : "bg-amber-50 text-amber-700 border border-amber-200"
+                                  }`}>
+                                    {isPaid ? "Pagado" : "Pendiente"}
+                                  </span>
+                                </td>
+                                <td className="py-3 px-4 text-center">
+                                  {hasSat ? (
+                                    <span className="text-[10px] font-bold text-[#8C4723] bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                                      CFDI 4.0
+                                    </span>
+                                  ) : (
+                                    <span className="text-stone-300 text-[11px]">—</span>
+                                  )}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+
+              </div>
+            );
+          })()}
+
           {/* TAB: Calendar & Capacity (Tours) */}
           {(userHasRole("admin") || userHasRole("experience_manager")) && activeTab === "calendar" && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 text-left">
@@ -6550,6 +7256,380 @@ export default function AdminPanel({
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* USER PROFILE & PASSWORD CUSTOMIZATION MODAL */}
+      {showProfileModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl border border-stone-200 shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            
+            {/* Modal Header */}
+            <div className="px-6 py-5 bg-[#1A2624] text-white flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div 
+                  className="w-10 h-10 rounded-xl flex items-center justify-center font-serif font-bold text-lg text-white shadow-md border border-white/20"
+                  style={{ backgroundColor: profileAvatarColor }}
+                >
+                  {user?.name?.charAt(0)?.toUpperCase() || "A"}
+                </div>
+                <div>
+                  <h3 className="font-serif font-bold text-base tracking-wide text-white">
+                    {profileSubTab === "profile" ? "Personalizar Perfil" : "Seguridad & Contraseña"}
+                  </h3>
+                  <p className="text-[11px] text-stone-300">
+                    {profileSubTab === "profile" 
+                      ? "Ajusta tu nombre visible y color distintivo de avatar" 
+                      : "Actualiza tu clave de acceso al panel administrativo"
+                    }
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setShowProfileModal(false);
+                  setProfileStatusMsg({ text: "", type: "" });
+                  setCurrentPasswordInput("");
+                  setNewPasswordInput("");
+                  setConfirmPasswordInput("");
+                }}
+                className="p-1.5 text-stone-300 hover:text-white rounded-lg hover:bg-white/10 cursor-pointer transition-colors"
+                title="Cerrar modal"
+              >
+                <span className="material-symbols-outlined text-xl">close</span>
+              </button>
+            </div>
+
+            {/* Sub-tab Navigation (Polaris Pill Tabs) */}
+            <div className="px-6 pt-4 border-b border-stone-200/80 bg-stone-50/50 flex gap-2">
+              <button
+                onClick={() => {
+                  setProfileSubTab("profile");
+                  setProfileStatusMsg({ text: "", type: "" });
+                }}
+                className={`pb-3 px-3 text-xs font-bold border-b-2 flex items-center gap-2 cursor-pointer transition-colors ${
+                  profileSubTab === "profile"
+                    ? "border-[#8C4723] text-[#8C4723]"
+                    : "border-transparent text-stone-500 hover:text-stone-800"
+                }`}
+              >
+                <span className="material-symbols-outlined text-base">person</span>
+                <span>Mi Perfil</span>
+              </button>
+              <button
+                onClick={() => {
+                  setProfileSubTab("security");
+                  setProfileStatusMsg({ text: "", type: "" });
+                }}
+                className={`pb-3 px-3 text-xs font-bold border-b-2 flex items-center gap-2 cursor-pointer transition-colors ${
+                  profileSubTab === "security"
+                    ? "border-[#8C4723] text-[#8C4723]"
+                    : "border-transparent text-stone-500 hover:text-stone-800"
+                }`}
+              >
+                <span className="material-symbols-outlined text-base">lock</span>
+                <span>Seguridad & Contraseña</span>
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 space-y-5 max-h-[75vh] overflow-y-auto">
+              
+              {/* Status Alert (Success / Error) */}
+              {profileStatusMsg.text && (
+                <div className={`p-3 rounded-lg text-xs font-semibold flex items-center gap-2.5 ${
+                  profileStatusMsg.type === "success"
+                    ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                    : "bg-red-50 text-red-800 border border-red-200"
+                }`}>
+                  <span className="material-symbols-outlined text-base">
+                    {profileStatusMsg.type === "success" ? "check_circle" : "error"}
+                  </span>
+                  <span>{profileStatusMsg.text}</span>
+                </div>
+              )}
+
+              {/* TAB 1: PERSONALIZAR PERFIL */}
+              {profileSubTab === "profile" && (
+                <form onSubmit={handleSaveProfile} className="space-y-5">
+                  
+                  {/* Avatar Custom Color Picker */}
+                  <div className="bg-stone-50 p-4 rounded-xl border border-stone-200/70 space-y-3">
+                    <label className="block text-xs uppercase tracking-wider font-bold text-stone-600">
+                      Color Distintivo del Avatar
+                    </label>
+                    <div className="flex items-center gap-4">
+                      <div 
+                        className="w-16 h-16 rounded-2xl flex items-center justify-center font-serif text-2xl font-bold text-white shadow-md border-2 border-white shrink-0 transition-colors"
+                        style={{ backgroundColor: profileAvatarColor }}
+                      >
+                        {profileNameInput?.charAt(0)?.toUpperCase() || user?.name?.charAt(0)?.toUpperCase() || "A"}
+                      </div>
+                      <div className="flex-1 space-y-1.5">
+                        <div className="text-xs text-stone-500">
+                          Elige una tonalidad de la colección Casa Loy:
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {[
+                            { color: "#8C4723", label: "Terracota Barrica" },
+                            { color: "#1A2624", label: "Agave Oscuro" },
+                            { color: "#C29B38", label: "Dorado Añejo" },
+                            { color: "#2F403E", label: "Verde Silvestre" },
+                            { color: "#4A3B32", label: "Roble Tostado" },
+                            { color: "#1E3A5F", label: "Azul Altos" },
+                          ].map((c) => (
+                            <button
+                              key={c.color}
+                              type="button"
+                              onClick={() => setProfileAvatarColor(c.color)}
+                              title={c.label}
+                              className={`w-7 h-7 rounded-full transition-transform cursor-pointer shadow-2xs ${
+                                profileAvatarColor === c.color 
+                                  ? "ring-2 ring-offset-2 ring-stone-800 scale-110" 
+                                  : "hover:scale-105 opacity-85 hover:opacity-100"
+                              }`}
+                              style={{ backgroundColor: c.color }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Nombre Completo */}
+                  <div className="space-y-1.5">
+                    <label className="block text-xs uppercase tracking-wider font-bold text-stone-600">
+                      Nombre Completo
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={profileNameInput}
+                      onChange={(e) => setProfileNameInput(e.target.value)}
+                      placeholder="Ej. Ana Gómez de Loy"
+                      className="w-full bg-white border border-stone-300 rounded-lg p-2.5 text-xs text-stone-900 font-semibold focus:outline-none focus:ring-2 focus:ring-[#8C4723]"
+                    />
+                  </div>
+
+                  {/* Correo Electrónico (Solo Lectura) */}
+                  <div className="space-y-1.5">
+                    <label className="block text-xs uppercase tracking-wider font-bold text-stone-600 flex items-center justify-between">
+                      <span>Correo Electrónico</span>
+                      <span className="text-[10px] font-normal text-stone-400">Verificado</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="email"
+                        disabled
+                        value={user?.email || ""}
+                        className="w-full bg-stone-100 border border-stone-200 rounded-lg p-2.5 text-xs text-stone-500 font-mono cursor-not-allowed"
+                      />
+                      <span className="material-symbols-outlined text-sm text-stone-400 absolute right-3 top-3">
+                        lock
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-stone-400">
+                      El correo electrónico está vinculado a tu cuenta institucional y no se puede modificar desde aquí.
+                    </p>
+                  </div>
+
+                  {/* Roles Asignados */}
+                  <div className="space-y-1.5">
+                    <label className="block text-xs uppercase tracking-wider font-bold text-stone-600">
+                      Roles & Privilegios
+                    </label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {user?.role?.split(',').map(r => r.trim()).map(r => (
+                        <span key={r} className="px-2.5 py-1 bg-stone-100 border border-stone-200 rounded-md text-xs font-bold text-stone-700 capitalize">
+                          {r.replace('_', ' ')}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Footer CTA */}
+                  <div className="pt-3 border-t border-stone-200 flex items-center justify-end gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setShowProfileModal(false)}
+                      className="px-4 py-2 text-xs font-semibold text-stone-600 hover:text-stone-900 cursor-pointer"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSavingProfile}
+                      className="inline-flex items-center gap-2 bg-[#2F403E] hover:bg-[#8C4723] text-white px-5 py-2.5 rounded-lg text-xs font-bold transition-colors cursor-pointer shadow-xs"
+                    >
+                      {isSavingProfile ? (
+                        <>
+                          <span className="material-symbols-outlined text-sm animate-spin">refresh</span>
+                          <span>Guardando...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="material-symbols-outlined text-sm">save</span>
+                          <span>Guardar Cambios</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                </form>
+              )}
+
+              {/* TAB 2: SEGURIDAD & CONTRASEÑA */}
+              {profileSubTab === "security" && (
+                <form onSubmit={handleChangePassword} className="space-y-5">
+                  
+                  <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl text-xs text-amber-900 flex items-start gap-2.5">
+                    <span className="material-symbols-outlined text-amber-700 text-lg shrink-0">shield</span>
+                    <p className="leading-relaxed">
+                      Para proteger la seguridad de la destilería, tu nueva contraseña debe tener al menos <span className="font-bold">6 caracteres</span>. Te sugerimos incluir números y letras.
+                    </p>
+                  </div>
+
+                  {/* Contraseña Actual */}
+                  <div className="space-y-1.5">
+                    <label className="block text-xs uppercase tracking-wider font-bold text-stone-600">
+                      Contraseña Actual
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showPasswordText ? "text" : "password"}
+                        required
+                        value={currentPasswordInput}
+                        onChange={(e) => setCurrentPasswordInput(e.target.value)}
+                        placeholder="Ingresa tu contraseña actual"
+                        className="w-full bg-white border border-stone-300 rounded-lg p-2.5 pr-10 text-xs text-stone-900 font-mono focus:outline-none focus:ring-2 focus:ring-[#8C4723]"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPasswordText(!showPasswordText)}
+                        className="absolute right-2.5 top-2.5 text-stone-400 hover:text-stone-700 cursor-pointer"
+                        title={showPasswordText ? "Ocultar contraseña" : "Ver contraseña"}
+                      >
+                        <span className="material-symbols-outlined text-lg">
+                          {showPasswordText ? "visibility_off" : "visibility"}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Nueva Contraseña */}
+                  <div className="space-y-1.5">
+                    <label className="block text-xs uppercase tracking-wider font-bold text-stone-600">
+                      Nueva Contraseña
+                    </label>
+                    <input
+                      type={showPasswordText ? "text" : "password"}
+                      required
+                      minLength={6}
+                      value={newPasswordInput}
+                      onChange={(e) => setNewPasswordInput(e.target.value)}
+                      placeholder="Mínimo 6 caracteres"
+                      className="w-full bg-white border border-stone-300 rounded-lg p-2.5 text-xs text-stone-900 font-mono focus:outline-none focus:ring-2 focus:ring-[#8C4723]"
+                    />
+                    
+                    {/* Password Strength Indicator */}
+                    {newPasswordInput && (
+                      <div className="space-y-1 pt-1">
+                        <div className="flex items-center justify-between text-[10px]">
+                          <span className="text-stone-400">Nivel de seguridad:</span>
+                          <span className={`font-bold ${
+                            newPasswordInput.length < 6 
+                              ? "text-red-500" 
+                              : newPasswordInput.length >= 8 && /\d/.test(newPasswordInput) && /[A-Z]/.test(newPasswordInput)
+                                ? "text-emerald-600"
+                                : "text-amber-600"
+                          }`}>
+                            {newPasswordInput.length < 6 
+                              ? "Corta (Mínimo 6)" 
+                              : newPasswordInput.length >= 8 && /\d/.test(newPasswordInput) && /[A-Z]/.test(newPasswordInput)
+                                ? "Excelente"
+                                : "Aceptable"
+                            }
+                          </span>
+                        </div>
+                        <div className="w-full bg-stone-200 h-1.5 rounded-full overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all duration-300 ${
+                              newPasswordInput.length < 6
+                                ? "w-1/4 bg-red-500"
+                                : newPasswordInput.length >= 8 && /\d/.test(newPasswordInput) && /[A-Z]/.test(newPasswordInput)
+                                  ? "w-full bg-emerald-500"
+                                  : "w-2/3 bg-amber-500"
+                            }`}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Confirmar Nueva Contraseña */}
+                  <div className="space-y-1.5">
+                    <label className="block text-xs uppercase tracking-wider font-bold text-stone-600">
+                      Confirmar Nueva Contraseña
+                    </label>
+                    <input
+                      type={showPasswordText ? "text" : "password"}
+                      required
+                      minLength={6}
+                      value={confirmPasswordInput}
+                      onChange={(e) => setConfirmPasswordInput(e.target.value)}
+                      placeholder="Repite la nueva contraseña"
+                      className={`w-full bg-white border rounded-lg p-2.5 text-xs text-stone-900 font-mono focus:outline-none focus:ring-2 focus:ring-[#8C4723] ${
+                        confirmPasswordInput && confirmPasswordInput !== newPasswordInput
+                          ? "border-red-400"
+                          : "border-stone-300"
+                      }`}
+                    />
+                    {confirmPasswordInput && confirmPasswordInput !== newPasswordInput && (
+                      <p className="text-[10px] text-red-500 font-semibold">
+                        Las contraseñas no coinciden.
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Footer CTA */}
+                  <div className="pt-3 border-t border-stone-200 flex items-center justify-end gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowProfileModal(false);
+                        setCurrentPasswordInput("");
+                        setNewPasswordInput("");
+                        setConfirmPasswordInput("");
+                      }}
+                      className="px-4 py-2 text-xs font-semibold text-stone-600 hover:text-stone-900 cursor-pointer"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSavingProfile || !currentPasswordInput || newPasswordInput.length < 6 || newPasswordInput !== confirmPasswordInput}
+                      className="inline-flex items-center gap-2 bg-[#8C4723] hover:bg-[#a35329] disabled:bg-stone-300 disabled:cursor-not-allowed text-white px-5 py-2.5 rounded-lg text-xs font-bold transition-colors cursor-pointer shadow-xs"
+                    >
+                      {isSavingProfile ? (
+                        <>
+                          <span className="material-symbols-outlined text-sm animate-spin">refresh</span>
+                          <span>Actualizando...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="material-symbols-outlined text-sm">lock_reset</span>
+                          <span>Actualizar Contraseña</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                </form>
+              )}
+
+            </div>
+
           </div>
         </div>
       )}

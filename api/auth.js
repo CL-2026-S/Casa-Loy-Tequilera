@@ -309,6 +309,86 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true });
     }
 
+    // 5. Update My Profile (Any authenticated user)
+    if (req.method === 'POST' && action === 'update_profile') {
+      const { name } = req.body || {};
+      if (!name || name.trim() === '') {
+        return res.status(400).json({ error: 'El nombre es obligatorio.' });
+      }
+
+      const { data: updatedUser, error } = await supabase
+        .from('admin_users')
+        .update({ name: name.trim() })
+        .eq('id', currentUser.userId)
+        .select('id, email, name, role')
+        .single();
+
+      if (error) throw error;
+
+      await auditLog(
+        currentUser.userId,
+        currentUser.email,
+        currentUser.role,
+        'update_profile',
+        `Actualización de perfil: nuevo nombre "${name.trim()}"`
+      );
+
+      return res.status(200).json({
+        success: true,
+        user: updatedUser,
+        message: 'Perfil actualizado exitosamente.'
+      });
+    }
+
+    // 6. Change My Password (Any authenticated user)
+    if (req.method === 'POST' && action === 'change_password') {
+      const { currentPassword, newPassword } = req.body || {};
+      if (!currentPassword || !newPassword) {
+        return res.status(400).json({ error: 'Debes proporcionar la contraseña actual y la nueva contraseña.' });
+      }
+
+      if (newPassword.length < 6) {
+        return res.status(400).json({ error: 'La nueva contraseña debe tener al menos 6 caracteres.' });
+      }
+
+      // Verify current password against DB
+      const { data: dbUser, error: fetchErr } = await supabase
+        .from('admin_users')
+        .select('id, password_hash')
+        .eq('id', currentUser.userId)
+        .single();
+
+      if (fetchErr || !dbUser) {
+        return res.status(404).json({ error: 'Usuario no encontrado.' });
+      }
+
+      const currentHash = hashPassword(currentPassword);
+      if (dbUser.password_hash !== currentHash) {
+        return res.status(400).json({ error: 'INVALID_PASSWORD', message: 'La contraseña actual no es correcta.' });
+      }
+
+      const newHash = hashPassword(newPassword);
+      const { error: updateErr } = await supabase
+        .from('admin_users')
+        .update({ password_hash: newHash })
+        .eq('id', currentUser.userId);
+
+      if (updateErr) throw updateErr;
+
+      await auditLog(
+        currentUser.userId,
+        currentUser.email,
+        currentUser.role,
+        'change_password',
+        'Cambio voluntario de contraseña administrativa'
+      );
+
+      return res.status(200).json({
+        success: true,
+        message: 'Contraseña modificada con éxito.'
+      });
+    }
+
     return res.status(400).json({ error: 'Acción inválida.' });
 
   } catch (err) {
