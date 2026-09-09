@@ -597,227 +597,120 @@ export default function Nativo1937({ lang = "es", t }) {
         </div>
       </section>
 
-      {/* Premium Haute-Cuisine Restaurant Gallery Section */}
-      <section 
-        className="py-20 md:py-28 bg-[#FAF8F5] text-[#1C1C18] text-left relative overflow-hidden border-b border-[#8C4723]/10" 
-        id="heritage"
-      >
-        {/* Subtle Ambient Lighting Texture */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(ellipse_at_top_right,rgba(140,71,35,0.06),transparent_70%)] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[radial-gradient(ellipse_at_bottom_left,rgba(47,64,62,0.05),transparent_70%)] pointer-events-none" />
+      {/* Fine-Dining Architectural Gallery Section (Ad-Hoc Casa Loy Quiet Luxury) */}
+      <section className="py-24 md:py-32 bg-[#fcf9f3] text-left relative overflow-hidden border-b border-[#1c1c18]/10" id="heritage">
+        {/* Subtle background texture matching Casa Loy */}
+        <div
+          className="absolute inset-0 opacity-[0.02] mix-blend-multiply bg-cover bg-center pointer-events-none"
+          style={{ backgroundImage: "url('/Fibras de Agave Cocido.webp')" }}
+        />
 
         <div className="max-w-container-max mx-auto px-margin-desktop relative z-10">
           
-          {/* Header */}
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12">
-            <div className="space-y-3 max-w-2xl">
-              <div className="flex items-center gap-2">
-                <span className="w-6 h-[1.5px] bg-[#8C4723]" />
-                <span className="font-navigation text-[11px] uppercase tracking-[0.25em] text-[#8C4723] font-semibold">
-                  {lang === "es" ? "Atmósfera & Galería Gastronómica" : "Atmosphere & Culinary Gallery"}
-                </span>
-              </div>
-              <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[48px] font-normal leading-[1.14] tracking-tight text-[#1C1C18]">
-                {lang === "es" 
-                  ? "El encanto de las brasas, el arte agavero y la calidez de nuestra mesa." 
-                  : "The charm of open flame, agave heritage, and the warmth of our table."}
-              </h2>
-              <p className="font-sans text-base md:text-lg text-[#53443A] font-light leading-relaxed pt-1">
-                {lang === "es"
-                  ? "Descubre la atmósfera, la brasa y la mixología de Restaurante 1937 Nativo antes de explorar nuestra carta."
-                  : "Discover the atmosphere, wood fire, and mixology of Restaurante 1937 Nativo before exploring our menu."}
-              </p>
+          {/* Section Header - Editorial Casa Loy */}
+          <div className="text-center max-w-3xl mx-auto space-y-4 mb-12">
+            <div className="flex items-center justify-center gap-3">
+              <span className="w-8 h-[1px] bg-[#8C4723]" />
+              <span className="font-navigation text-[10px] tracking-[0.35em] font-semibold text-[#8C4723] uppercase">
+                {lang === "es" ? "Atmósfera & Espacios" : "Atmosphere & Spaces"}
+              </span>
+              <span className="w-8 h-[1px] bg-[#8C4723]" />
             </div>
 
-            {/* Culinary Category Filter Tabs (NO SCROLLBAR) */}
-            <div className="flex flex-wrap items-center gap-2 md:gap-2.5 self-start lg:self-end">
-              {[
-                { key: "all", label: { es: "Todos", en: "All" } },
-                { key: "platillos", label: { es: "Brasas & Cocina", en: "Grill & Kitchen" } },
-                { key: "ambiente", label: { es: "Mixología & Barra", en: "Mixology & Bar" } },
-                { key: "espacios", label: { es: "Terrazas & Salones", en: "Terraces & Lounges" } }
-              ].map((tab) => {
-                const isActive = galleryCategory === tab.key;
-                return (
-                  <button
-                    key={tab.key}
-                    onClick={() => {
-                      setGalleryCategory(tab.key);
-                      setActiveGalleryIndex(0);
-                    }}
-                    className={`px-4 md:px-5 py-2.5 rounded-full font-navigation text-[11px] md:text-xs tracking-[0.14em] uppercase transition-all duration-300 ${
-                      isActive
-                        ? "bg-[#8C4723] text-white font-semibold shadow-md shadow-[#8C4723]/25 border border-[#8C4723]"
-                        : "bg-white/90 hover:bg-white text-[#53443A] hover:text-[#8C4723] font-medium border border-[#8C4723]/15 hover:border-[#8C4723]/35 shadow-sm"
-                    }`}
-                  >
-                    {tab.label[lang === "es" ? "es" : "en"]}
-                  </button>
-                );
-              })}
-            </div>
+            <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[46px] leading-[1.15] tracking-tight text-[#1c1c18] font-normal">
+              {lang === "es" 
+                ? "Donde la brasa, el terroir y la arquitectura se encuentran." 
+                : "Where wood fire, terroir, and architecture meet."}
+            </h2>
+
+            <p className="font-body-lg text-base md:text-lg text-on-surface-variant italic font-light leading-relaxed">
+              {lang === "es"
+                ? "Descubre la atmósfera, la brasa y la mixología de Restaurante 1937 Nativo antes de explorar nuestra carta."
+                : "Discover the atmosphere, wood fire, and mixology of Restaurante 1937 Nativo before exploring our menu."}
+            </p>
           </div>
 
-          {/* Gallery Presentation */}
-          {galleryCategory === "all" ? (
-            /* Editorial Mosaic Grid (6 items) */
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5 md:gap-6">
-              {filteredGallery.map((item, idx) => {
-                // Layout classes for each card in the curated mosaic:
-                let colSpanClass = "lg:col-span-4";
-                let aspectClass = "aspect-[4/3] md:aspect-[16/11]";
-
-                if (idx === 0) {
-                  colSpanClass = "lg:col-span-7";
-                  aspectClass = "aspect-[16/10] md:aspect-[16/10]";
-                } else if (idx === 1) {
-                  colSpanClass = "lg:col-span-5";
-                  aspectClass = "aspect-[16/10] md:aspect-[16/10]";
-                } else if (idx === 5) {
-                  colSpanClass = "lg:col-span-12";
-                  aspectClass = "aspect-[16/9] md:aspect-[21/9]";
-                }
-
-                return (
-                  <div
-                    key={item.id || idx}
-                    onClick={() => setSelectedModalIndex(idx)}
-                    className={`group relative ${colSpanClass} rounded-2xl overflow-hidden cursor-pointer bg-[#EDE7DE] border border-[#8C4723]/15 shadow-[0_8px_24px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(140,71,35,0.14)] transition-all duration-500`}
-                  >
-                    <div className={`relative w-full ${aspectClass} overflow-hidden`}>
-                      <img
-                        src={item.img}
-                        alt={item.title[lang === "es" ? "es" : "en"]}
-                        loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                      />
-
-                      {/* Vignette & Contrast Gradient Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent transition-opacity duration-500" />
-                      
-                      {/* Top Badges & Zoom Action */}
-                      <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-                        <span className="px-3.5 py-1 bg-black/40 backdrop-blur-md text-white/95 border border-white/20 font-navigation text-[9px] uppercase tracking-[0.2em] font-semibold rounded-full shadow-sm">
-                          {item.badge[lang === "es" ? "es" : "en"]}
-                        </span>
-                        
-                        <div className="w-8 h-8 rounded-full bg-white/25 group-hover:bg-[#8C4723] backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-md">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4" />
-                          </svg>
-                        </div>
-                      </div>
-
-                      {/* Bottom Editorial Caption */}
-                      <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6 text-white space-y-1.5 transition-transform duration-300">
-                        <div className="flex items-center gap-2">
-                          <span className="font-navigation text-[10px] uppercase tracking-[0.2em] text-[#E0A97C] font-semibold">
-                            0{idx + 1}
-                          </span>
-                          <span className="w-1 h-1 rounded-full bg-[#E0A97C]" />
-                          <span className="font-navigation text-[10px] uppercase tracking-[0.18em] text-white/75">
-                            Restaurante 1937 Nativo
-                          </span>
-                        </div>
-                        <h3 className="font-serif text-xl md:text-2xl font-medium tracking-wide leading-tight group-hover:text-[#F3E2D4] transition-colors">
-                          {item.title[lang === "es" ? "es" : "en"]}
-                        </h3>
-                        <p className="font-sans text-xs md:text-sm text-white/80 font-light line-clamp-2 leading-relaxed max-w-xl">
-                          {item.subtitle[lang === "es" ? "es" : "en"]}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            /* Filtered Clean Grid */
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredGallery.map((item, idx) => (
-                <div
-                  key={item.id || idx}
-                  onClick={() => setSelectedModalIndex(idx)}
-                  className="group relative rounded-2xl overflow-hidden cursor-pointer bg-[#EDE7DE] border border-[#8C4723]/15 shadow-[0_8px_24px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(140,71,35,0.14)] transition-all duration-500"
+          {/* Luxury Typographic Filter Tabs */}
+          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mb-14 border-b border-[#1c1c18]/10 pb-4">
+            {[
+              { key: "all", label: { es: "Todos los Espacios", en: "All Spaces" } },
+              { key: "platillos", label: { es: "Brasas & Cocina", en: "Grill & Kitchen" } },
+              { key: "ambiente", label: { es: "Mixología & Cava", en: "Mixology & Cellar" } },
+              { key: "espacios", label: { es: "Terrazas & Salones", en: "Terraces & Lounges" } }
+            ].map((tab) => {
+              const isActive = galleryCategory === tab.key;
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => {
+                    setGalleryCategory(tab.key);
+                    setActiveGalleryIndex(0);
+                  }}
+                  className={`font-navigation text-[11px] sm:text-xs uppercase tracking-[0.2em] transition-all duration-300 relative pb-3 cursor-pointer ${
+                    isActive
+                      ? "text-[#8C4723] font-semibold after:absolute after:bottom-[-17px] after:left-0 after:w-full after:h-[2px] after:bg-[#8C4723]"
+                      : "text-[#1c1c18]/55 hover:text-[#1c1c18] font-medium"
+                  }`}
                 >
-                  <div className="relative w-full aspect-[4/3] overflow-hidden">
-                    <img
-                      src={item.img}
-                      alt={item.title[lang === "es" ? "es" : "en"]}
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    />
+                  {tab.label[lang === "es" ? "es" : "en"]}
+                </button>
+              );
+            })}
+          </div>
 
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-
-                    {/* Badges */}
-                    <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-                      <span className="px-3.5 py-1 bg-black/40 backdrop-blur-md text-white/95 border border-white/20 font-navigation text-[9px] uppercase tracking-[0.2em] font-semibold rounded-full shadow-sm">
-                        {item.badge[lang === "es" ? "es" : "en"]}
-                      </span>
-                      <div className="w-8 h-8 rounded-full bg-white/25 group-hover:bg-[#8C4723] backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-md">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4" />
-                        </svg>
-                      </div>
-                    </div>
-
-                    {/* Bottom Caption */}
-                    <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6 text-white space-y-1.5">
-                      <div className="flex items-center gap-2">
-                        <span className="font-navigation text-[10px] uppercase tracking-[0.2em] text-[#E0A97C] font-semibold">
-                          0{idx + 1}
-                        </span>
-                        <span className="w-1 h-1 rounded-full bg-[#E0A97C]" />
-                        <span className="font-navigation text-[10px] uppercase tracking-[0.18em] text-white/75">
-                          Restaurante 1937 Nativo
-                        </span>
-                      </div>
-                      <h3 className="font-serif text-xl md:text-2xl font-medium tracking-wide leading-tight group-hover:text-[#F3E2D4] transition-colors">
-                        {item.title[lang === "es" ? "es" : "en"]}
-                      </h3>
-                      <p className="font-sans text-xs md:text-sm text-white/80 font-light line-clamp-2 leading-relaxed">
-                        {item.subtitle[lang === "es" ? "es" : "en"]}
-                      </p>
-                    </div>
+          {/* Fine-Dining Architectural Exhibition Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {filteredGallery.map((item, idx) => (
+              <div
+                key={item.id || idx}
+                onClick={() => setSelectedModalIndex(idx)}
+                className="group bg-white border border-[#1c1c18]/10 shadow-sm hover:shadow-xl transition-all duration-700 flex flex-col cursor-pointer overflow-hidden rounded-[2px]"
+              >
+                {/* Photo Frame */}
+                <div className="relative aspect-[4/3] overflow-hidden bg-[#1c1c18]">
+                  <img
+                    src={item.img}
+                    alt={item.title[lang === "es" ? "es" : "en"]}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105 brightness-[0.96] group-hover:brightness-100"
+                  />
+                  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
+                  
+                  {/* Discrete expand icon on hover */}
+                  <div className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-white p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-[2px]">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4" />
+                    </svg>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
 
-          {/* Quick Action Footer Banner */}
-          <div className="mt-12 pt-8 border-t border-[#8C4723]/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-            <div className="space-y-0.5">
-              <p className="font-serif text-lg text-[#1C1C18] font-medium">
-                {lang === "es" 
-                  ? "¿Deseas degustar nuestra propuesta gastronómica?" 
-                  : "Ready to taste our culinary offerings?"}
-              </p>
-              <p className="font-sans text-xs text-[#53443A]">
-                {lang === "es"
-                  ? "Cortes a las brasas, mixología con Tequila Casa Loy y vistas al paisaje agavero."
-                  : "Wood-fired steaks, artisanal Casa Loy mixology, and agave field vistas."}
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <a
-                href="#menu"
-                className="px-5 py-2.5 rounded-full font-navigation text-xs uppercase tracking-[0.16em] font-semibold text-[#8C4723] hover:text-white bg-white hover:bg-[#8C4723] border border-[#8C4723]/30 transition-all shadow-sm"
-              >
-                {lang === "es" ? "Ver la Carta" : "View Menu"}
-              </a>
-              <a
-                href="#reservaciones"
-                className="px-5 py-2.5 rounded-full font-navigation text-xs uppercase tracking-[0.16em] font-semibold text-white bg-[#8C4723] hover:bg-[#723606] transition-all shadow-md shadow-[#8C4723]/20"
-              >
-                {lang === "es" ? "Reservar Mesa" : "Book a Table"}
-              </a>
-            </div>
+                {/* Caption Card below photo (Pure Quiet Luxury) */}
+                <div className="p-5 md:p-6 bg-white flex-1 flex flex-col justify-between border-t border-[#1c1c18]/5">
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className="font-navigation text-[9px] uppercase tracking-[0.25em] text-[#8C4723] font-semibold">
+                        {item.badge[lang === "es" ? "es" : "en"]}
+                      </span>
+                      <span className="font-serif italic text-xs text-[#8C4723]">
+                        0{idx + 1}
+                      </span>
+                    </div>
+                    <h3 className="font-headline-md text-lg md:text-xl font-medium text-[#1c1c18] group-hover:text-[#8C4723] transition-colors leading-snug">
+                      {item.title[lang === "es" ? "es" : "en"]}
+                    </h3>
+                    <p className="font-body-md text-xs sm:text-sm text-on-surface-variant/80 font-light leading-relaxed mt-2 line-clamp-2">
+                      {item.subtitle[lang === "es" ? "es" : "en"]}
+                    </p>
+                  </div>
+
+                  <div className="pt-4 mt-3 border-t border-[#1c1c18]/5 flex items-center justify-between text-xs text-[#8C4723] font-navigation uppercase tracking-wider font-semibold opacity-80 group-hover:opacity-100 transition-opacity">
+                    <span>{lang === "es" ? "Ver fotografía" : "View photograph"}</span>
+                    <span className="material-symbols-outlined text-sm transition-transform duration-300 group-hover:translate-x-1">arrow_forward</span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-
-
 
         </div>
       </section>
