@@ -42,7 +42,8 @@ const routesMap = {
   "/marca-propia": { page: "maquilas", lang: "es" },
   "/maquilas": { page: "maquilas", lang: "es" },
   "/maquilas-v2": { page: "maquilas", lang: "es" },
-  "/maquilas-v3": { page: "maquilas", lang: "es" },
+  "/maquilas-v3": { page: "maquilas-v3", lang: "es" },
+  "/test1mbb": { page: "maquilas-v3", lang: "es" },
   "/marcas": { page: "brands", lang: "es" },
   "/turismo": { page: "turismo", lang: "es" },
   "/turismo/oro": { page: "experience-oro", lang: "es" },
@@ -65,7 +66,11 @@ const routesMap = {
   "/private-label": { page: "maquilas", lang: "en" },
   "/bottling": { page: "maquilas", lang: "en" },
   "/bottling-v2": { page: "maquilas", lang: "en" },
-  "/bottling-v3": { page: "maquilas", lang: "en" },
+  "/bottling-v3": { page: "maquilas-v3", lang: "en" },
+  "/maquilas-v3-en": { page: "maquilas-v3", lang: "en" },
+  "/maquilas-v3/en": { page: "maquilas-v3", lang: "en" },
+  "/test1mbb-en": { page: "maquilas-v3", lang: "en" },
+  "/test1mbb/en": { page: "maquilas-v3", lang: "en" },
   "/brands": { page: "brands", lang: "en" },
   "/tourism": { page: "turismo", lang: "en" },
   "/tourism/gold": { page: "experience-oro", lang: "en" },
@@ -206,6 +211,7 @@ export default function App() {
         "about": "/quienes-somos",
         "maquilas": "/marca-privada",
         "maquilas-v2": "/marca-privada",
+        "maquilas-v3": "/maquilas-v3",
         "brands": "/marcas",
         "turismo": "/turismo",
         "experience-oro": "/turismo/oro",
@@ -225,6 +231,7 @@ export default function App() {
         "about": "/about",
         "maquilas": "/private-label",
         "maquilas-v2": "/private-label",
+        "maquilas-v3": "/bottling-v3",
         "brands": "/brands",
         "turismo": "/tourism",
         "experience-oro": "/tourism/gold",
@@ -460,6 +467,11 @@ export default function App() {
             <Route path="/bottling-v2" element={<MaquilasV2 lang="en" />} />
             <Route path="/maquilas-v3" element={<MaquilasV3 lang="es" />} />
             <Route path="/bottling-v3" element={<MaquilasV3 lang="en" />} />
+            <Route path="/maquilas-v3-en" element={<MaquilasV3 lang="en" />} />
+            <Route path="/maquilas-v3/en" element={<MaquilasV3 lang="en" />} />
+            <Route path="/test1mbb" element={<MaquilasV3 lang="es" />} />
+            <Route path="/test1mbb-en" element={<MaquilasV3 lang="en" />} />
+            <Route path="/test1mbb/en" element={<MaquilasV3 lang="en" />} />
             
             <Route path="/marcas" element={<Brands t={t} lang={lang} country={country} />} />
             <Route path="/brands" element={<Brands t={t} lang={lang} country={country} />} />
