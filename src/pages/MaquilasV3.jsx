@@ -674,109 +674,109 @@ export default function MaquilasV3({ lang = "es" }) {
       </div>
 
       {/* ============================================================
-          §2. POR QUÉ CASA LOY (Diseño alineado al resto del sitio)
+          §2. POR QUÉ CASA LOY (Visible completo sin scroll excesivo)
           ============================================================ */}
-      <section className="py-20 md:py-32 bg-[#fcf9f3]">
-        <div className="max-w-[1240px] mx-auto px-6 text-left">
+      <section className="py-10 md:py-14 min-h-[88vh] flex flex-col justify-center bg-[#fcf9f3]">
+        <div className="max-w-[1240px] mx-auto px-6 text-left w-full">
           <Reveal>
-            <div className="max-w-3xl mb-14">
-              <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-3">
+            <div className="max-w-3xl mb-8">
+              <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-2">
                 {t.whyEyebrow}
               </span>
-              <h2 className="font-serif text-[clamp(28px,3.5vw,50px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-4">
+              <h2 className="font-serif text-[clamp(24px,3vw,44px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-2">
                 {t.whyTitle}
               </h2>
-              <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-[clamp(15px,1.1vw,17px)]">
+              <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-xs sm:text-sm md:text-[15px]">
                 {t.whySub}
               </p>
             </div>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             <Reveal delay={100}>
-              <div className="p-8 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
+              <div className="p-5 sm:p-6 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
                 <div>
-                  <span className="font-serif text-3xl font-light text-primary block mb-2">01</span>
-                  <span className="font-navigation text-[10px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-2">
+                  <span className="font-serif text-2xl font-light text-primary block mb-1">01</span>
+                  <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-1">
                     {lang === "es" ? "Terruño de Origen" : "Highlands Terroir"}
                   </span>
-                  <h3 className="font-serif text-2xl font-light text-[#1c1c18] mb-2">NOM 1633, Los Altos</h3>
-                  <p className="font-body-md text-[#53443a] font-light leading-relaxed text-sm">
+                  <h3 className="font-serif text-xl font-light text-[#1c1c18] mb-1.5">NOM 1633, Los Altos</h3>
+                  <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                     {lang === "es" ? "Ayotlán a más de 2,000 msnm con suelos rojos volcánicos ricos en hierro y microclima con oscilación térmica ideal." : "Ayotlán above 2,000m elevation with red volcanic soil and optimal thermal day/night swing."}
                   </p>
                 </div>
               </div>
             </Reveal>
 
-            <Reveal delay={200}>
-              <div className="p-8 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
+            <Reveal delay={150}>
+              <div className="p-5 sm:p-6 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
                 <div>
-                  <span className="font-serif text-3xl font-light text-primary block mb-2">02</span>
-                  <span className="font-navigation text-[10px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-2">
+                  <span className="font-serif text-2xl font-light text-primary block mb-1">02</span>
+                  <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-1">
                     {lang === "es" ? "Respaldo Industrial" : "Industrial Group"}
                   </span>
-                  <h3 className="font-serif text-2xl font-light text-[#1c1c18] mb-2">Grupo Orbe XXI (60+ {lang === "es" ? "Años" : "Years"})</h3>
-                  <p className="font-body-md text-[#53443a] font-light leading-relaxed text-sm">
+                  <h3 className="font-serif text-xl font-light text-[#1c1c18] mb-1.5">Grupo Orbe XXI (60+ {lang === "es" ? "Años" : "Years"})</h3>
+                  <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                     {lang === "es" ? "Consorcio agroindustrial con más de 2,900 colaboradores y empresas líderes hermanas como TeknoAgrox y Nutriagaves." : "Multinational consortium with 2,900+ employees and sister agro-tech leaders TeknoAgrox and Nutriagaves."}
                   </p>
                 </div>
               </div>
             </Reveal>
 
-            <Reveal delay={300}>
-              <div className="p-8 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
+            <Reveal delay={200}>
+              <div className="p-5 sm:p-6 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
                 <div>
-                  <span className="font-serif text-3xl font-light text-primary block mb-2">03</span>
-                  <span className="font-navigation text-[10px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-2">
+                  <span className="font-serif text-2xl font-light text-primary block mb-1">03</span>
+                  <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-1">
                     {lang === "es" ? "Reserva Propia" : "Estate Reserve"}
                   </span>
-                  <h3 className="font-serif text-2xl font-light text-[#1c1c18] mb-2">3,600 Has. {lang === "es" ? "de Agave" : "Estate Agave"}</h3>
-                  <p className="font-body-md text-[#53443a] font-light leading-relaxed text-sm">
+                  <h3 className="font-serif text-xl font-light text-[#1c1c18] mb-1.5">3,600 Has. {lang === "es" ? "de Agave" : "Estate Agave"}</h3>
+                  <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                     {lang === "es" ? "10.8 millones de plantas propias cultivadas desde 1992 que blindan tu costo por litro contra la especulación spot." : "10.8 million estate agaves since 1992 insulating your brand margins against open spot agave speculation."}
                   </p>
                 </div>
               </div>
             </Reveal>
 
-            <Reveal delay={400}>
-              <div className="p-8 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
+            <Reveal delay={250}>
+              <div className="p-5 sm:p-6 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
                 <div>
-                  <span className="font-serif text-3xl font-light text-primary block mb-2">04</span>
-                  <span className="font-navigation text-[10px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-2">
+                  <span className="font-serif text-2xl font-light text-primary block mb-1">04</span>
+                  <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-1">
                     {lang === "es" ? "Trato Técnico Directo" : "Direct Engineering"}
                   </span>
-                  <h3 className="font-serif text-2xl font-light text-[#1c1c18] mb-2">{lang === "es" ? "Sin Intermediarios" : "No Middlemen Brokers"}</h3>
-                  <p className="font-body-md text-[#53443a] font-light leading-relaxed text-sm">
+                  <h3 className="font-serif text-xl font-light text-[#1c1c18] mb-1.5">{lang === "es" ? "Sin Intermediarios" : "No Middlemen Brokers"}</h3>
+                  <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                     {lang === "es" ? "Comunicación directa con maestros destiladores, ingenieros químicos y coordinadores de aduanas y exportación." : "Direct work sessions with master distillers, laboratory chemists, and export compliance specialists."}
                   </p>
                 </div>
               </div>
             </Reveal>
 
-            <Reveal delay={500}>
-              <div className="p-8 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
+            <Reveal delay={300}>
+              <div className="p-5 sm:p-6 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
                 <div>
-                  <span className="font-serif text-3xl font-light text-primary block mb-2">05</span>
-                  <span className="font-navigation text-[10px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-2">
+                  <span className="font-serif text-2xl font-light text-primary block mb-1">05</span>
+                  <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-1">
                     {lang === "es" ? "Escala & Flexibilidad" : "Scale & Versatility"}
                   </span>
-                  <h3 className="font-serif text-2xl font-light text-[#1c1c18] mb-2">13.5M {lang === "es" ? "Litros / Año" : "Liters / Year"}</h3>
-                  <p className="font-body-md text-[#53443a] font-light leading-relaxed text-sm">
+                  <h3 className="font-serif text-xl font-light text-[#1c1c18] mb-1.5">13.5M {lang === "es" ? "Litros / Año" : "Liters / Year"}</h3>
+                  <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                     {lang === "es" ? "Hornos de mampostería (240t), autoclaves (80t), tahona volcánica, alambiques de cobre y columnas continuas." : "Traditional brick ovens (240t), autoclaves (80t), volcanic tahona, copper pot stills, and continuous columns."}
                   </p>
                 </div>
               </div>
             </Reveal>
 
-            <Reveal delay={600}>
-              <div className="p-8 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
+            <Reveal delay={350}>
+              <div className="p-5 sm:p-6 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
                 <div>
-                  <span className="font-serif text-3xl font-light text-primary block mb-2">06</span>
-                  <span className="font-navigation text-[10px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-2">
+                  <span className="font-serif text-2xl font-light text-primary block mb-1">06</span>
+                  <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-1">
                     {lang === "es" ? "Control Químico" : "Batch Traceability"}
                   </span>
-                  <h3 className="font-serif text-2xl font-light text-[#1c1c18] mb-2">{lang === "es" ? "Cromatografía de Gases" : "Gas Chromatography QA"}</h3>
-                  <p className="font-body-md text-[#53443a] font-light leading-relaxed text-sm">
+                  <h3 className="font-serif text-xl font-light text-[#1c1c18] mb-1.5">{lang === "es" ? "Cromatografía de Gases" : "Gas Chromatography QA"}</h3>
+                  <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                     {lang === "es" ? "Tasting Lab in-house con validación analítica lote a lote y sellos internacionales: USDA, Kosher y Additive Free." : "In-house lab with batch-by-batch chromatographic reports and USDA, Kosher, and Additive Free certifications."}
                   </p>
                 </div>
@@ -787,30 +787,30 @@ export default function MaquilasV3({ lang = "es" }) {
       </section>
 
       {/* ============================================================
-          §3. DENTRO DE CASA LOY (Estética cálida y armónica)
+          §3. DENTRO DE CASA LOY (Estética cinematográfica sin scroll)
           ============================================================ */}
-      <section className="py-20 md:py-32 bg-[#F6F2EA] border-y border-[#1c1c18]/10">
-        <div className="max-w-[1240px] mx-auto px-6 text-left">
+      <section className="py-10 md:py-14 min-h-[88vh] flex flex-col justify-center bg-[#F6F2EA] border-y border-[#1c1c18]/10">
+        <div className="max-w-[1240px] mx-auto px-6 text-left w-full">
           {/* Header */}
           <Reveal>
-            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 mb-6">
               <div>
-                <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-3">
+                <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-2">
                   {t.insideEyebrow}
                 </span>
-                <h2 className="font-serif text-[clamp(28px,3.5vw,50px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight">
+                <h2 className="font-serif text-[clamp(24px,3vw,44px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight">
                   {t.insideTitle}
                 </h2>
               </div>
-              <p className="font-body-lg text-[#53443a] font-light leading-relaxed max-w-md text-[clamp(15px,1.1vw,17px)]">
+              <p className="font-body-lg text-[#53443a] font-light leading-relaxed max-w-md text-xs sm:text-sm">
                 {t.insideSub}
               </p>
             </div>
           </Reveal>
 
           {/* Interactive Cinema Viewer */}
-          <Reveal delay={150}>
-            <div className="relative w-full aspect-[16/9] sm:aspect-[21/9] lg:aspect-[2.4/1] rounded-none overflow-hidden border border-[#1c1c18]/15 shadow-md bg-black group mb-6">
+          <Reveal delay={100}>
+            <div className="relative w-full aspect-[21/9] sm:aspect-[2.6/1] max-h-[380px] rounded-none overflow-hidden border border-[#1c1c18]/15 shadow-md bg-black group mb-4">
               <img
                 key={stations[activeStation].img}
                 src={stations[activeStation].img}
@@ -820,23 +820,23 @@ export default function MaquilasV3({ lang = "es" }) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent"></div>
 
               {/* Overlaid Info */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-                <div className="space-y-2 max-w-2xl">
-                  <span className="font-navigation text-[10px] text-white uppercase tracking-[0.25em] bg-[#8C4723] px-3 py-1 font-semibold inline-block rounded-none">
+              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+                <div className="space-y-1.5 max-w-2xl">
+                  <span className="font-navigation text-[9px] sm:text-[10px] text-white uppercase tracking-[0.25em] bg-[#8C4723] px-2.5 py-0.5 font-semibold inline-block rounded-none">
                     {stations[activeStation].num} · {stations[activeStation].tag}
                   </span>
-                  <h3 className="font-serif text-2xl sm:text-3xl text-white font-light">
+                  <h3 className="font-serif text-xl sm:text-2xl text-white font-light">
                     {stations[activeStation].name}
                   </h3>
-                  <p className="font-body-md text-white/90 leading-relaxed font-light text-sm sm:text-base">
+                  <p className="font-body-md text-white/90 leading-relaxed font-light text-xs sm:text-sm max-w-xl">
                     {stations[activeStation].desc}
                   </p>
                 </div>
 
                 {/* Specs Pills */}
-                <div className="flex flex-wrap sm:flex-col gap-2 sm:items-end">
+                <div className="flex flex-wrap sm:flex-col gap-1.5 sm:items-end">
                   {stations[activeStation].specs.map((spec, sIdx) => (
-                    <span key={sIdx} className="font-navigation text-[10px] uppercase tracking-wider text-white bg-white/15 backdrop-blur-md px-3 py-1 border border-white/20 rounded-none">
+                    <span key={sIdx} className="font-navigation text-[9px] sm:text-[10px] uppercase tracking-wider text-white bg-white/15 backdrop-blur-md px-2.5 py-0.5 border border-white/20 rounded-none">
                       {spec}
                     </span>
                   ))}
@@ -846,24 +846,24 @@ export default function MaquilasV3({ lang = "es" }) {
           </Reveal>
 
           {/* Station Selectors (8 Sharp Buttons matching site buttons) */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 sm:gap-2.5">
             {stations.map((s, idx) => (
               <button
                 key={idx}
                 onClick={() => setActiveStation(idx)}
-                className={`text-left p-3.5 border transition-all rounded-none cursor-pointer ${
+                className={`text-left p-2.5 sm:p-3 border transition-all rounded-none cursor-pointer ${
                   activeStation === idx
                     ? "bg-[#8C4723] border-[#8C4723] text-white shadow-sm"
                     : "bg-white border-[#1c1c18]/10 hover:border-[#8C4723] text-[#53443a] hover:text-[#1c1c18]"
                 }`}
               >
-                <div className="flex items-center justify-between mb-1">
-                  <span className={`font-navigation text-[10px] font-bold ${activeStation === idx ? "text-[#ffdbc7]" : "text-primary"}`}>
+                <div className="flex items-center justify-between mb-0.5">
+                  <span className={`font-navigation text-[9px] sm:text-[10px] font-bold ${activeStation === idx ? "text-[#ffdbc7]" : "text-primary"}`}>
                     {s.num}
                   </span>
                   {activeStation === idx && <span className="w-1.5 h-1.5 rounded-full bg-[#ffdbc7] animate-pulse"></span>}
                 </div>
-                <div className="font-serif text-sm font-light truncate">{s.tag}</div>
+                <div className="font-serif text-xs sm:text-sm font-light truncate">{s.tag}</div>
               </button>
             ))}
           </div>
@@ -871,53 +871,53 @@ export default function MaquilasV3({ lang = "es" }) {
       </section>
 
       {/* ============================================================
-          §4. RUTAS DE PRODUCCIÓN (3 Columnas Alineadas a Capabilities)
+          §4. RUTAS DE PRODUCCIÓN (3 Columnas Alineadas sin scroll)
           ============================================================ */}
-      <section className="py-20 md:py-32 bg-[#fcf9f3]">
-        <div className="max-w-[1240px] mx-auto px-6 text-left">
+      <section className="py-10 md:py-14 min-h-[88vh] flex flex-col justify-center bg-[#fcf9f3]">
+        <div className="max-w-[1240px] mx-auto px-6 text-left w-full">
           <Reveal>
-            <div className="max-w-3xl mb-14">
-              <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-3">
+            <div className="max-w-3xl mb-8">
+              <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-2">
                 {t.solutionsEyebrow}
               </span>
-              <h2 className="font-serif text-[clamp(28px,3.5vw,50px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-4">
+              <h2 className="font-serif text-[clamp(24px,3vw,44px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-2">
                 {t.solutionsTitle}
               </h2>
-              <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-[clamp(15px,1.1vw,17px)]">
+              <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-xs sm:text-sm md:text-[15px]">
                 {t.solutionsSub}
               </p>
             </div>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
             {/* 01 Marca Privada Integral */}
             <Reveal delay={100}>
-              <div className="p-8 sm:p-10 border border-[#1c1c18]/10 bg-white flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-lg rounded-none h-full">
+              <div className="p-6 sm:p-7 border border-[#1c1c18]/10 bg-white flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-lg rounded-none h-full">
                 <div>
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-3">
                     <span className="text-primary font-serif text-2xl font-light">01</span>
-                    <span className="font-navigation text-[10px] text-primary bg-[#F6F2EA] px-2.5 py-1 border border-[#1c1c18]/10 uppercase tracking-widest rounded-none font-semibold">
+                    <span className="font-navigation text-[9px] text-primary bg-[#F6F2EA] px-2.5 py-0.5 border border-[#1c1c18]/10 uppercase tracking-widest rounded-none font-semibold">
                       {lang === "es" ? "Llave en Mano" : "Turnkey 360°"}
                     </span>
                   </div>
-                  <h3 className="font-serif text-2xl sm:text-3xl font-light text-[#1c1c18] mb-3">
+                  <h3 className="font-serif text-xl sm:text-2xl font-light text-[#1c1c18] mb-2">
                     {lang === "es" ? "Marca Privada Integral" : "Turnkey Private Label"}
                   </h3>
-                  <p className="font-body-md text-[#53443a] font-light leading-relaxed mb-6 text-sm">
+                  <p className="font-body-md text-[#53443a] font-light leading-relaxed mb-4 text-xs sm:text-sm">
                     {lang === "es" 
-                      ? "Desarrollo completo desde cero: asesoría jurídica ante el CRT, registro de marca, formulación líquida, proveeduría de botella, etiquetado y preparación para exportación aduanal."
-                      : "Comprehensive brand creation from ground zero: official CRT registry compliance, sensory liquid formulation, bottle sourcing, labeling, and international customs clearance."}
+                      ? "Desarrollo completo desde cero: asesoría jurídica ante el CRT, registro de marca, formulación líquida, proveeduría de botella, etiquetado y exportación."
+                      : "Comprehensive brand creation from ground zero: official CRT registry compliance, sensory liquid formulation, bottle sourcing, labeling, and export clearance."}
                   </p>
                 </div>
-                <div className="space-y-4 pt-4 border-t border-[#1c1c18]/10">
-                  <ul className="space-y-2 text-xs font-navigation text-[#53443a]">
-                    <li className="flex items-center gap-2.5"><span className="text-primary font-bold">✓</span> {lang === "es" ? "100% Tequilana Weber propio" : "100% Weber blue estate agave"}</li>
-                    <li className="flex items-center gap-2.5"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Acompañamiento legal CRT e IMPI" : "CRT & TTB regulatory guidance"}</li>
-                    <li className="flex items-center gap-2.5"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Lotes mínimos optimizados" : "Optimized MOQs for export"}</li>
+                <div className="space-y-3 pt-3 border-t border-[#1c1c18]/10">
+                  <ul className="space-y-1.5 text-xs font-navigation text-[#53443a]">
+                    <li className="flex items-center gap-2"><span className="text-primary font-bold">✓</span> {lang === "es" ? "100% Tequilana Weber propio" : "100% Weber blue estate agave"}</li>
+                    <li className="flex items-center gap-2"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Acompañamiento legal CRT e IMPI" : "CRT & TTB regulatory guidance"}</li>
+                    <li className="flex items-center gap-2"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Lotes mínimos optimizados" : "Optimized MOQs for export"}</li>
                   </ul>
                   <a
                     href="#quiz"
-                    className="w-full block bg-transparent border border-[#8C4723] hover:bg-[#8C4723] hover:text-white text-[#8C4723] font-navigation text-[10px] uppercase tracking-[0.25em] font-medium py-3 text-center transition-all duration-500 rounded-none mt-4"
+                    className="w-full block bg-transparent border border-[#8C4723] hover:bg-[#8C4723] hover:text-white text-[#8C4723] font-navigation text-[10px] uppercase tracking-[0.25em] font-medium py-2.5 text-center transition-all duration-500 rounded-none mt-2"
                   >
                     {lang === "es" ? "Cotizar Marca Privada" : "Quote Private Label"}
                   </a>
@@ -926,36 +926,36 @@ export default function MaquilasV3({ lang = "es" }) {
             </Reveal>
 
             {/* 02 Tequila a Granel (Bulk) */}
-            <Reveal delay={200}>
-              <div className="p-8 sm:p-10 border-2 border-[#8C4723] bg-white flex flex-col justify-between transition-all duration-500 hover:shadow-xl rounded-none relative h-full">
-                <span className="absolute -top-3 right-6 bg-[#8C4723] text-white font-navigation text-[9px] uppercase tracking-[0.25em] px-3 py-1 font-semibold rounded-none shadow-sm">
+            <Reveal delay={150}>
+              <div className="p-6 sm:p-7 border-2 border-[#8C4723] bg-white flex flex-col justify-between transition-all duration-500 hover:shadow-xl rounded-none relative h-full">
+                <span className="absolute -top-3 right-6 bg-[#8C4723] text-white font-navigation text-[9px] uppercase tracking-[0.25em] px-3 py-0.5 font-semibold rounded-none shadow-sm">
                   {lang === "es" ? "Suministro Continuo" : "Bulk Tankers"}
                 </span>
                 <div>
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-3">
                     <span className="text-primary font-serif text-2xl font-light">02</span>
-                    <span className="font-navigation text-[10px] text-primary bg-[#F6F2EA] px-2.5 py-1 border border-[#1c1c18]/10 uppercase tracking-widest rounded-none font-semibold">
+                    <span className="font-navigation text-[9px] text-primary bg-[#F6F2EA] px-2.5 py-0.5 border border-[#1c1c18]/10 uppercase tracking-widest rounded-none font-semibold">
                       {lang === "es" ? "Gran Volumen" : "High Volume"}
                     </span>
                   </div>
-                  <h3 className="font-serif text-2xl sm:text-3xl font-light text-[#1c1c18] mb-3">
+                  <h3 className="font-serif text-xl sm:text-2xl font-light text-[#1c1c18] mb-2">
                     {lang === "es" ? "Tequila a Granel (Bulk)" : "Bulk Tequila Supply"}
                   </h3>
-                  <p className="font-body-md text-[#53443a] font-light leading-relaxed mb-6 text-sm">
+                  <p className="font-body-md text-[#53443a] font-light leading-relaxed mb-4 text-xs sm:text-sm">
                     {lang === "es"
-                      ? "Abastecimiento constante de Tequila 100% Agave o Mixto despachado en autotanques certificados o contenedores IBC totes para importadores, envasadoras globales y distribuidores."
-                      : "Steady bulk supply of 100% Agave or Mixto shipped in dedicated road tankers or 1,000L IBC totes for international bottlers, global importers, and distributors."}
+                      ? "Abastecimiento constante de Tequila 100% Agave o Mixto despachado en autotanques certificados o IBC totes para envasadoras y distribuidores."
+                      : "Steady bulk supply of 100% Agave or Mixto shipped in dedicated road tankers or 1,000L IBC totes for international bottlers and distributors."}
                   </p>
                 </div>
-                <div className="space-y-4 pt-4 border-t border-[#1c1c18]/10">
-                  <ul className="space-y-2 text-xs font-navigation text-[#53443a]">
-                    <li className="flex items-center gap-2.5"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Reporte cromatográfico por autotanque" : "Gas chromatography report per tanker"}</li>
-                    <li className="flex items-center gap-2.5"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Blindaje de precio por cosecha propia" : "Price stability tied to estate agave"}</li>
-                    <li className="flex items-center gap-2.5"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Contratos plurianuales de abasto" : "Multi-year continuous supply contracts"}</li>
+                <div className="space-y-3 pt-3 border-t border-[#1c1c18]/10">
+                  <ul className="space-y-1.5 text-xs font-navigation text-[#53443a]">
+                    <li className="flex items-center gap-2"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Reporte cromatográfico por autotanque" : "Gas chromatography report per tanker"}</li>
+                    <li className="flex items-center gap-2"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Blindaje de precio por cosecha propia" : "Price stability tied to estate agave"}</li>
+                    <li className="flex items-center gap-2"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Contratos plurianuales de abasto" : "Multi-year continuous supply contracts"}</li>
                   </ul>
                   <a
                     href="#agenda-llamada"
-                    className="w-full block bg-[#8C4723] hover:bg-[#a6562b] text-white font-navigation text-[10px] uppercase tracking-[0.25em] font-medium py-3 text-center transition-all duration-500 rounded-none shadow-sm mt-4"
+                    className="w-full block bg-[#8C4723] hover:bg-[#a6562b] text-white font-navigation text-[10px] uppercase tracking-[0.25em] font-medium py-2.5 text-center transition-all duration-500 rounded-none shadow-sm mt-2"
                   >
                     {lang === "es" ? "Cotizar Suministro a Granel" : "Quote Bulk Supply"}
                   </a>
@@ -964,33 +964,33 @@ export default function MaquilasV3({ lang = "es" }) {
             </Reveal>
 
             {/* 03 Envasado & Co-packing */}
-            <Reveal delay={300}>
-              <div className="p-8 sm:p-10 border border-[#1c1c18]/10 bg-white flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-lg rounded-none h-full">
+            <Reveal delay={200}>
+              <div className="p-6 sm:p-7 border border-[#1c1c18]/10 bg-white flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-lg rounded-none h-full">
                 <div>
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-3">
                     <span className="text-primary font-serif text-2xl font-light">03</span>
-                    <span className="font-navigation text-[10px] text-primary bg-[#F6F2EA] px-2.5 py-1 border border-[#1c1c18]/10 uppercase tracking-widest rounded-none font-semibold">
+                    <span className="font-navigation text-[9px] text-primary bg-[#F6F2EA] px-2.5 py-0.5 border border-[#1c1c18]/10 uppercase tracking-widest rounded-none font-semibold">
                       {lang === "es" ? "Acondicionamiento" : "Packaging QA"}
                     </span>
                   </div>
-                  <h3 className="font-serif text-2xl sm:text-3xl font-light text-[#1c1c18] mb-3">
+                  <h3 className="font-serif text-xl sm:text-2xl font-light text-[#1c1c18] mb-2">
                     {lang === "es" ? "Envasado & Co-Packing" : "Co-Packing & Bottling"}
                   </h3>
-                  <p className="font-body-md text-[#53443a] font-light leading-relaxed mb-6 text-sm">
+                  <p className="font-body-md text-[#53443a] font-light leading-relaxed mb-4 text-xs sm:text-sm">
                     {lang === "es"
-                      ? "Línea de envasado de alta precisión: llenado volumétrico, colocación de corcho o tapón irrellenable, etiquetado de exportación e inspección en mesa lumínica botella por botella."
+                      ? "Línea de envasado de alta precisión: llenado volumétrico, colocación de tapón irrellenable, etiquetado de exportación e inspección lumínica."
                       : "High-precision automated packaging: volumetric filling, tamper-evident corking, luxury labeling, and bottle-by-bottle light table quality inspection."}
                   </p>
                 </div>
-                <div className="space-y-4 pt-4 border-t border-[#1c1c18]/10">
-                  <ul className="space-y-2 text-xs font-navigation text-[#53443a]">
-                    <li className="flex items-center gap-2.5"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Inspección lumínica 100% de botellas" : "100% Light-table bottle inspection"}</li>
-                    <li className="flex items-center gap-2.5"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Sellos de seguridad y marbetes CRT" : "Official CRT export tax stamps"}</li>
-                    <li className="flex items-center gap-2.5"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Para marcas nuevas o existentes" : "For emerging or established brands"}</li>
+                <div className="space-y-3 pt-3 border-t border-[#1c1c18]/10">
+                  <ul className="space-y-1.5 text-xs font-navigation text-[#53443a]">
+                    <li className="flex items-center gap-2"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Inspección lumínica 100% de botellas" : "100% Light-table bottle inspection"}</li>
+                    <li className="flex items-center gap-2"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Sellos de seguridad y marbetes CRT" : "Official CRT export tax stamps"}</li>
+                    <li className="flex items-center gap-2"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Para marcas nuevas o existentes" : "For emerging or established brands"}</li>
                   </ul>
                   <a
                     href="#quiz"
-                    className="w-full block bg-transparent border border-[#8C4723] hover:bg-[#8C4723] hover:text-white text-[#8C4723] font-navigation text-[10px] uppercase tracking-[0.25em] font-medium py-3 text-center transition-all duration-500 rounded-none mt-4"
+                    className="w-full block bg-transparent border border-[#8C4723] hover:bg-[#8C4723] hover:text-white text-[#8C4723] font-navigation text-[10px] uppercase tracking-[0.25em] font-medium py-2.5 text-center transition-all duration-500 rounded-none mt-2"
                   >
                     {lang === "es" ? "Solicitar Embotellado" : "Request Bottling"}
                   </a>
@@ -1002,60 +1002,60 @@ export default function MaquilasV3({ lang = "es" }) {
       </section>
 
       {/* ============================================================
-          §5. MITIGACIÓN DE RIESGOS (Alineado al resto del sitio)
+          §5. MITIGACIÓN DE RIESGOS (Alineado al resto del sitio sin scroll)
           ============================================================ */}
-      <section className="py-20 md:py-32 bg-[#F6F2EA] border-y border-[#1c1c18]/10">
-        <div className="max-w-[1240px] mx-auto px-6 text-left">
+      <section className="py-10 md:py-14 min-h-[85vh] flex flex-col justify-center bg-[#F6F2EA] border-y border-[#1c1c18]/10">
+        <div className="max-w-[1240px] mx-auto px-6 text-left w-full">
           <Reveal>
-            <div className="max-w-3xl mb-14">
-              <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-3">
+            <div className="max-w-3xl mb-8">
+              <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-2">
                 {t.stakesEyebrow}
               </span>
-              <h2 className="font-serif text-[clamp(28px,3.5vw,50px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-4">
+              <h2 className="font-serif text-[clamp(24px,3vw,44px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-2">
                 {t.stakesTitle}
               </h2>
-              <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-[clamp(15px,1.1vw,17px)]">
+              <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-xs sm:text-sm md:text-[15px]">
                 {t.stakesSub}
               </p>
             </div>
           </Reveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
             <Reveal delay={100}>
-              <div className="p-8 bg-white border border-[#1c1c18]/10 rounded-none space-y-3 transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md h-full">
-                <span className="font-serif text-3xl font-light text-primary block">01</span>
-                <h3 className="font-serif text-xl font-light text-[#1c1c18]">{lang === "es" ? "Empezar desde cero" : "Starting from zero"}</h3>
-                <p className="font-body-md text-[#53443a] font-light leading-relaxed text-sm">
+              <div className="p-5 sm:p-6 bg-white border border-[#1c1c18]/10 rounded-none space-y-2 transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md h-full">
+                <span className="font-serif text-2xl font-light text-primary block">01</span>
+                <h3 className="font-serif text-lg font-light text-[#1c1c18]">{lang === "es" ? "Empezar desde cero" : "Starting from zero"}</h3>
+                <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                   {lang === "es" ? "Acompañamiento normativo ante el CRT e IMPI para evitar retrasos costosos en registro de marca y aprobación de etiquetas." : "Technical guidance on CRT and trademark registration preventing costly regulatory delays."}
                 </p>
               </div>
             </Reveal>
 
-            <Reveal delay={200}>
-              <div className="p-8 bg-white border border-[#1c1c18]/10 rounded-none space-y-3 transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md h-full">
-                <span className="font-serif text-3xl font-light text-primary block">02</span>
-                <h3 className="font-serif text-xl font-light text-[#1c1c18]">{lang === "es" ? "Cambiar de productor" : "Switching producer"}</h3>
-                <p className="font-body-md text-[#53443a] font-light leading-relaxed text-sm">
+            <Reveal delay={150}>
+              <div className="p-5 sm:p-6 bg-white border border-[#1c1c18]/10 rounded-none space-y-2 transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md h-full">
+                <span className="font-serif text-2xl font-light text-primary block">02</span>
+                <h3 className="font-serif text-lg font-light text-[#1c1c18]">{lang === "es" ? "Cambiar de productor" : "Switching producer"}</h3>
+                <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                   {lang === "es" ? "Replicamos el perfil químico de tu tequila actual con cromatografía in-house y producimos lotes de seguridad sin quiebres de stock." : "Zero stockouts: we chemically replicate your current liquid profile and maintain buffer inventory."}
                 </p>
               </div>
             </Reveal>
 
-            <Reveal delay={300}>
-              <div className="p-8 bg-white border border-[#1c1c18]/10 rounded-none space-y-3 transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md h-full">
-                <span className="font-serif text-3xl font-light text-primary block">03</span>
-                <h3 className="font-serif text-xl font-light text-[#1c1c18]">{lang === "es" ? "Escalar volumen" : "Scaling volume"}</h3>
-                <p className="font-body-md text-[#53443a] font-light leading-relaxed text-sm">
+            <Reveal delay={200}>
+              <div className="p-5 sm:p-6 bg-white border border-[#1c1c18]/10 rounded-none space-y-2 transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md h-full">
+                <span className="font-serif text-2xl font-light text-primary block">03</span>
+                <h3 className="font-serif text-lg font-light text-[#1c1c18]">{lang === "es" ? "Escalar volumen" : "Scaling volume"}</h3>
+                <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                   {lang === "es" ? "13.5M L de capacidad y 10.8M de agaves propios garantizan escalar de miles a millones de litros sin alzas de costo imprevistas." : "13.5M L capacity and 10.8M estate plants ensure scaling smoothly without surprise price spikes."}
                 </p>
               </div>
             </Reveal>
 
-            <Reveal delay={400}>
-              <div className="p-8 bg-white border border-[#1c1c18]/10 rounded-none space-y-3 transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md h-full">
-                <span className="font-serif text-3xl font-light text-primary block">04</span>
-                <h3 className="font-serif text-xl font-light text-[#1c1c18]">{lang === "es" ? "Exportación global" : "Global export"}</h3>
-                <p className="font-body-md text-[#53443a] font-light leading-relaxed text-sm">
+            <Reveal delay={250}>
+              <div className="p-5 sm:p-6 bg-white border border-[#1c1c18]/10 rounded-none space-y-2 transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md h-full">
+                <span className="font-serif text-2xl font-light text-primary block">04</span>
+                <h3 className="font-serif text-lg font-light text-[#1c1c18]">{lang === "es" ? "Exportación global" : "Global export"}</h3>
+                <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                   {lang === "es" ? "Certificados de exportación CRT, fórmulas aprobadas ante el TTB de EE.UU. y documentación fitosanitaria para más de 20 países." : "CRT export certificates, US TTB formula approvals, and phytosanitary clearance for 20+ countries."}
                 </p>
               </div>
@@ -1067,7 +1067,7 @@ export default function MaquilasV3({ lang = "es" }) {
       {/* ============================================================
           §6. QUIZ OFICIAL DE MARCA PRIVADA (Exactamente como Maquilas.jsx)
           ============================================================ */}
-      <section className="relative py-24 md:py-32 overflow-hidden bg-[#1C1A19] text-white" id="quiz">
+      <section className="relative py-12 md:py-16 min-h-[88vh] flex flex-col justify-center overflow-hidden bg-[#1C1A19] text-white" id="quiz">
         <div className="absolute inset-0 z-0">
           <img
             alt="Agave Hearts Background"
@@ -1075,51 +1075,51 @@ export default function MaquilasV3({ lang = "es" }) {
             src="/Piñas de Agave Tequilana Weber.webp"
           />
         </div>
-        <div className="relative z-10 px-6 max-w-[1240px] mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div className="relative z-10 px-6 max-w-[1240px] mx-auto w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
             
-            <div className="lg:col-span-5 text-left space-y-8 animate-fade-in">
-              <span className="font-navigation text-primary-fixed mb-4 block tracking-widest uppercase text-xs font-bold">
+            <div className="lg:col-span-5 text-left space-y-5 animate-fade-in">
+              <span className="font-navigation text-primary-fixed mb-2 block tracking-widest uppercase text-xs font-bold">
                 {t.quizOvertitle}
               </span>
-              <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl mb-6 leading-tight text-white font-light">
+              <h2 className="font-serif text-2xl md:text-4xl lg:text-5xl leading-tight text-white font-light">
                 {t.quizTitle}
               </h2>
-              <p className="font-body-lg text-white/80 leading-relaxed font-light text-sm md:text-base">
+              <p className="font-body-lg text-white/80 leading-relaxed font-light text-xs sm:text-sm">
                 {t.quizDesc}
               </p>
               <div className="flex items-center gap-4 text-primary-fixed">
-                <span className="material-symbols-outlined text-4xl">analytics</span>
-                <div className="h-[1px] w-24 bg-primary-fixed/30"></div>
+                <span className="material-symbols-outlined text-3xl">analytics</span>
+                <div className="h-[1px] w-20 bg-primary-fixed/30"></div>
               </div>
             </div>
 
             {/* Glassmorphic Quiz Controller */}
-            <div className="lg:col-span-7 p-6 md:p-10 bg-white/15 backdrop-blur-3xl border border-white/20 rounded-none shadow-2xl transition-all duration-300 w-full">
+            <div className="lg:col-span-7 p-5 md:p-8 bg-white/15 backdrop-blur-3xl border border-white/20 rounded-none shadow-2xl transition-all duration-300 w-full">
               {quizStep === 1 && (
-                <div className="space-y-4 text-left animate-fade-in">
+                <div className="space-y-3.5 text-left animate-fade-in">
                   <span className="font-navigation text-[#FDA377] font-bold tracking-wider mb-1 block text-xs">
                     {t.stepLabel} 01 / 03
                   </span>
-                  <h3 className="font-serif text-xl md:text-2xl mb-6 text-white select-none font-light">
+                  <h3 className="font-serif text-lg md:text-xl mb-4 text-white select-none font-light">
                     {t.step1Title}
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                     {t.step1Opts.map((opt, idx) => {
                       const letters = ["A", "B", "C", "D", "E"];
                       return (
                         <button
                           key={opt}
                           onClick={() => handleNextStep("solution", opt, 2)}
-                          className={`w-full text-left p-4 border border-white/20 bg-white/10 hover:border-primary hover:bg-white hover:text-black transition-all duration-300 flex justify-between items-center group font-navigation cursor-pointer ${
+                          className={`w-full text-left p-3 border border-white/20 bg-white/10 hover:border-primary hover:bg-white hover:text-black transition-all duration-300 flex justify-between items-center group font-navigation cursor-pointer ${
                             idx === 4 ? "md:col-span-2" : ""
                           }`}
                         >
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2.5">
                             <span className="text-[10px] font-bold text-primary group-hover:text-white bg-white/20 group-hover:bg-primary px-2 py-0.5 rounded border border-white/20 group-hover:border-transparent transition-colors">
                               {letters[idx]}
                             </span>
-                            <span className="text-sm font-light text-white group-hover:text-black leading-tight">{opt}</span>
+                            <span className="text-xs sm:text-sm font-light text-white group-hover:text-black leading-tight">{opt}</span>
                           </div>
                           <span className="material-symbols-outlined text-sm text-primary group-hover:text-black opacity-0 group-hover:opacity-100 transition-opacity">
                             arrow_forward
@@ -1132,29 +1132,29 @@ export default function MaquilasV3({ lang = "es" }) {
               )}
 
               {quizStep === 2 && (
-                <div className="space-y-4 text-left animate-fade-in">
+                <div className="space-y-3.5 text-left animate-fade-in">
                   <span className="font-navigation text-[#FDA377] font-bold tracking-wider mb-1 block text-xs">
                     {t.stepLabel} 02 / 03
                   </span>
-                  <h3 className="font-serif text-xl md:text-2xl mb-6 text-white select-none font-light">
+                  <h3 className="font-serif text-lg md:text-xl mb-4 text-white select-none font-light">
                     {t.step2Title}
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                     {t.step2Opts.map((opt, idx) => {
                       const letters = ["A", "B", "C", "D", "E"];
                       return (
                         <button
                           key={opt}
                           onClick={() => handleNextStep("objective", opt, 3)}
-                          className={`w-full text-left p-4 border border-white/20 bg-white/10 hover:border-primary hover:bg-white hover:text-black transition-all duration-300 flex justify-between items-center group font-navigation cursor-pointer ${
+                          className={`w-full text-left p-3 border border-white/20 bg-white/10 hover:border-primary hover:bg-white hover:text-black transition-all duration-300 flex justify-between items-center group font-navigation cursor-pointer ${
                             idx === 4 ? "md:col-span-2" : ""
                           }`}
                         >
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2.5">
                             <span className="text-[10px] font-bold text-primary group-hover:text-white bg-white/20 group-hover:bg-primary px-2 py-0.5 rounded border border-white/20 group-hover:border-transparent transition-colors">
                               {letters[idx]}
                             </span>
-                            <span className="text-sm font-light text-white group-hover:text-black leading-tight">{opt}</span>
+                            <span className="text-xs sm:text-sm font-light text-white group-hover:text-black leading-tight">{opt}</span>
                           </div>
                           <span className="material-symbols-outlined text-sm text-primary group-hover:text-black opacity-0 group-hover:opacity-100 transition-opacity">
                             arrow_forward
@@ -1167,29 +1167,29 @@ export default function MaquilasV3({ lang = "es" }) {
               )}
 
               {quizStep === 3 && (
-                <div className="space-y-4 text-left animate-fade-in">
+                <div className="space-y-3.5 text-left animate-fade-in">
                   <span className="font-navigation text-[#FDA377] font-bold tracking-wider mb-1 block text-xs">
                     {t.stepLabel} 03 / 03
                   </span>
-                  <h3 className="font-serif text-xl md:text-2xl mb-6 text-white select-none font-light">
+                  <h3 className="font-serif text-lg md:text-xl mb-4 text-white select-none font-light">
                     {t.step3Title}
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                     {t.step3Opts.map((opt, idx) => {
                       const letters = ["A", "B", "C", "D", "E"];
                       return (
                         <button
                           key={opt}
                           onClick={() => handleNextStep("stage", opt, 4)}
-                          className={`w-full text-left p-4 border border-white/20 bg-white/10 hover:border-primary hover:bg-white hover:text-black transition-all duration-300 flex justify-between items-center group font-navigation cursor-pointer ${
+                          className={`w-full text-left p-3 border border-white/20 bg-white/10 hover:border-primary hover:bg-white hover:text-black transition-all duration-300 flex justify-between items-center group font-navigation cursor-pointer ${
                             idx === 4 ? "md:col-span-2" : ""
                           }`}
                         >
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2.5">
                             <span className="text-[10px] font-bold text-primary group-hover:text-white bg-white/20 group-hover:bg-primary px-2 py-0.5 rounded border border-white/20 group-hover:border-transparent transition-colors">
                               {letters[idx]}
                             </span>
-                            <span className="text-sm font-light text-white group-hover:text-black leading-tight">{opt}</span>
+                            <span className="text-xs sm:text-sm font-light text-white group-hover:text-black leading-tight">{opt}</span>
                           </div>
                           <span className="material-symbols-outlined text-sm text-primary group-hover:text-black opacity-0 group-hover:opacity-100 transition-opacity">
                             arrow_forward
@@ -1202,18 +1202,18 @@ export default function MaquilasV3({ lang = "es" }) {
               )}
 
               {quizStep === 4 && (
-                <form onSubmit={handleFormSubmit} className="space-y-5 text-left animate-fade-in">
-                  <h3 className="font-serif text-xl md:text-2xl mb-4 text-white select-none font-light">
+                <form onSubmit={handleFormSubmit} className="space-y-4 text-left animate-fade-in">
+                  <h3 className="font-serif text-lg md:text-xl mb-3 text-white select-none font-light">
                     {t.ctaTitle}
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="relative border-b border-white/35 focus-within:border-primary transition-all duration-300">
                       <input
                         required
                         type="text"
                         value={contactForm.name}
                         onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                        className="w-full border-0 focus:ring-0 bg-transparent py-2.5 font-body-md placeholder:text-white/60 focus:outline-none text-white text-sm"
+                        className="w-full border-0 focus:ring-0 bg-transparent py-2 font-body-md placeholder:text-white/60 focus:outline-none text-white text-xs sm:text-sm"
                         placeholder={t.formName}
                       />
                     </div>
@@ -1223,12 +1223,12 @@ export default function MaquilasV3({ lang = "es" }) {
                         type="text"
                         value={contactForm.company}
                         onChange={(e) => setContactForm({ ...contactForm, company: e.target.value })}
-                        className="w-full border-0 focus:ring-0 bg-transparent py-2.5 font-body-md placeholder:text-white/60 focus:outline-none text-white text-sm"
+                        className="w-full border-0 focus:ring-0 bg-transparent py-2 font-body-md placeholder:text-white/60 focus:outline-none text-white text-xs sm:text-sm"
                         placeholder={t.formCompany}
                       />
                     </div>
                     <div className="flex gap-2 items-end border-b border-white/35 focus-within:border-primary transition-all duration-300 pb-0.5">
-                      <span className="text-white/40 text-sm select-none pb-2 font-body-md">+</span>
+                      <span className="text-white/40 text-xs select-none pb-2 font-body-md">+</span>
                       <input
                         required
                         type="text"
@@ -1238,7 +1238,7 @@ export default function MaquilasV3({ lang = "es" }) {
                           const val = e.target.value.replace(/\D/g, "");
                           setContactForm({ ...contactForm, lada: val });
                         }}
-                        className="w-14 border-0 focus:ring-0 bg-transparent py-2.5 font-body-md placeholder:text-white/60 focus:outline-none text-white text-sm text-center"
+                        className="w-12 border-0 focus:ring-0 bg-transparent py-2 font-body-md placeholder:text-white/60 focus:outline-none text-white text-xs sm:text-sm text-center"
                         placeholder="52"
                       />
                       <input
@@ -1246,7 +1246,7 @@ export default function MaquilasV3({ lang = "es" }) {
                         type="tel"
                         value={contactForm.phone}
                         onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
-                        className="w-full border-0 focus:ring-0 bg-transparent py-2.5 font-body-md placeholder:text-white/60 focus:outline-none text-white text-sm"
+                        className="w-full border-0 focus:ring-0 bg-transparent py-2 font-body-md placeholder:text-white/60 focus:outline-none text-white text-xs sm:text-sm"
                         placeholder={t.formPhone}
                       />
                     </div>
@@ -1256,7 +1256,7 @@ export default function MaquilasV3({ lang = "es" }) {
                         type="email"
                         value={contactForm.email}
                         onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-                        className="w-full border-0 focus:ring-0 bg-transparent py-2.5 font-body-md placeholder:text-white/60 focus:outline-none text-white text-sm"
+                        className="w-full border-0 focus:ring-0 bg-transparent py-2 font-body-md placeholder:text-white/60 focus:outline-none text-white text-xs sm:text-sm"
                         placeholder={t.formEmail}
                       />
                     </div>
@@ -1265,7 +1265,7 @@ export default function MaquilasV3({ lang = "es" }) {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full mt-6 py-3.5 bg-[#8C4723] border border-[#8C4723] text-white font-navigation uppercase tracking-[0.25em] text-xs transition-all hover:bg-[#a6562b] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 rounded-none cursor-pointer"
+                    className="w-full mt-4 py-3 bg-[#8C4723] border border-[#8C4723] text-white font-navigation uppercase tracking-[0.25em] text-xs transition-all hover:bg-[#a6562b] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 rounded-none cursor-pointer"
                   >
                     {isSubmitting ? (
                       <>
@@ -1283,17 +1283,17 @@ export default function MaquilasV3({ lang = "es" }) {
               )}
 
               {quizStep === 5 && (
-                <div className="text-center py-6 space-y-5 animate-fade-in">
-                  <span className="material-symbols-outlined text-5xl text-[#FDA377] mb-1 animate-bounce">
+                <div className="text-center py-5 space-y-4 animate-fade-in">
+                  <span className="material-symbols-outlined text-4xl text-[#FDA377] mb-1 animate-bounce">
                     verified
                   </span>
-                  <h3 className="font-serif text-2xl mb-3 text-white font-light">{t.successTitle}</h3>
-                  <p className="font-body-md text-white/70 max-w-md mx-auto text-sm leading-relaxed font-light">
+                  <h3 className="font-serif text-xl sm:text-2xl mb-2 text-white font-light">{t.successTitle}</h3>
+                  <p className="font-body-md text-white/70 max-w-md mx-auto text-xs sm:text-sm leading-relaxed font-light">
                     {t.successDesc}
                   </p>
                   <button
                     onClick={handleResetQuiz}
-                    className="text-[#FDA377] font-navigation border-b border-[#FDA377] pb-0.5 hover:text-white hover:border-white transition-all mt-6 text-xs cursor-pointer uppercase tracking-wider"
+                    className="text-[#FDA377] font-navigation border-b border-[#FDA377] pb-0.5 hover:text-white hover:border-white transition-all mt-4 text-xs cursor-pointer uppercase tracking-wider"
                   >
                     {t.resetQuizBtn}
                   </button>
@@ -1305,61 +1305,61 @@ export default function MaquilasV3({ lang = "es" }) {
       </section>
 
       {/* ============================================================
-          §7. RUTA DE TRABAJO (Alineado al sitio)
+          §7. RUTA DE TRABAJO (Alineado al sitio sin scroll)
           ============================================================ */}
-      <section className="py-20 md:py-32 bg-[#fcf9f3]">
-        <div className="max-w-[1240px] mx-auto px-6 text-left">
+      <section className="py-10 md:py-14 min-h-[85vh] flex flex-col justify-center bg-[#fcf9f3]">
+        <div className="max-w-[1240px] mx-auto px-6 text-left w-full">
           <Reveal>
-            <div className="max-w-3xl mb-14">
-              <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-3">
+            <div className="max-w-3xl mb-8">
+              <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-2">
                 {t.processEyebrow}
               </span>
-              <h2 className="font-serif text-[clamp(28px,3.5vw,50px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-4">
+              <h2 className="font-serif text-[clamp(24px,3vw,44px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-2">
                 {t.processTitle}
               </h2>
-              <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-[clamp(15px,1.1vw,17px)]">
+              <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-xs sm:text-sm md:text-[15px]">
                 {t.processSub}
               </p>
             </div>
           </Reveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4">
             {[
               {
                 num: "01",
                 title: lang === "es" ? "Diagnóstico" : "Diagnosis",
-                desc: lang === "es" ? "Análisis de volúmenes, mercado meta y especificaciones técnicas de producto." : "Commercial targets, volume projections, and product specs analysis."
+                desc: lang === "es" ? "Análisis de volúmenes, mercado meta y especificaciones técnicas." : "Commercial targets, volume projections, and product specs analysis."
               },
               {
                 num: "02",
                 title: lang === "es" ? "Sesión Técnica" : "Tech Call",
-                desc: lang === "es" ? "Videollamada de 30 minutos con ingenieros para validar viabilidad y costeo." : "30-min session with distillery engineers reviewing feasibility & cost/liter."
+                desc: lang === "es" ? "Videollamada de 30 minutos con ingenieros para validar viabilidad." : "30-min session with distillery engineers reviewing feasibility & cost/liter."
               },
               {
                 num: "03",
                 title: lang === "es" ? "Tasting Lab" : "Lab Samples",
-                desc: lang === "es" ? "Envío de muestras sensoriales en tasting lab hasta aprobar tu perfil exclusivo." : "Sensory formulations dispatched until exact signature is achieved."
+                desc: lang === "es" ? "Envío de muestras sensoriales en tasting lab hasta aprobar tu perfil." : "Sensory formulations dispatched until exact signature is achieved."
               },
               {
                 num: "04",
                 title: lang === "es" ? "Registro CRT" : "CRT Compliance",
-                desc: lang === "es" ? "Trámites oficiales ante el CRT, registro de co-producción y aprobación de etiquetas." : "Official registration with CRT, label approvals, and customs filings."
+                desc: lang === "es" ? "Trámites oficiales ante CRT, registro y aprobación de etiquetas." : "Official registration with CRT, label approvals, and customs filings."
               },
               {
                 num: "05",
                 title: lang === "es" ? "Destilación & QA" : "Production & QA",
-                desc: lang === "es" ? "Destilación a escala, cromatografía de gases lote a lote y envasado final." : "Scale distilling, batch gas chromatography reports, and precision packaging."
+                desc: lang === "es" ? "Destilación a escala, cromatografía de gases lote a lote y envasado." : "Scale distilling, batch gas chromatography reports, and precision packaging."
               },
               {
                 num: "06",
                 title: lang === "es" ? "Exportación" : "Global Dispatch",
-                desc: lang === "es" ? "Acompañamiento logístico aduanal y certificados fitosanitarios internacionales." : "Phytosanitary certification, freight coordination, and customs clearance."
+                desc: lang === "es" ? "Acompañamiento logístico aduanal y certificados fitosanitarios." : "Phytosanitary certification, freight coordination, and customs clearance."
               }
             ].map((step, idx) => (
-              <Reveal key={idx} delay={idx * 100}>
-                <div className="p-6 bg-white border border-[#1c1c18]/10 rounded-none space-y-2.5 transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-sm h-full">
-                  <div className="font-navigation text-[10px] text-primary uppercase tracking-[0.25em] font-semibold">FASE {step.num}</div>
-                  <h3 className="font-serif text-lg font-light text-[#1c1c18]">{step.title}</h3>
+              <Reveal key={idx} delay={idx * 80}>
+                <div className="p-4 sm:p-5 bg-white border border-[#1c1c18]/10 rounded-none space-y-1.5 transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-sm h-full">
+                  <div className="font-navigation text-[9px] text-primary uppercase tracking-[0.25em] font-semibold">FASE {step.num}</div>
+                  <h3 className="font-serif text-base sm:text-lg font-light text-[#1c1c18]">{step.title}</h3>
                   <p className="font-body-md text-[#53443a] text-xs leading-relaxed font-light">{step.desc}</p>
                 </div>
               </Reveal>
@@ -1369,86 +1369,86 @@ export default function MaquilasV3({ lang = "es" }) {
       </section>
 
       {/* ============================================================
-          §8. AGAVE & ABASTECIMIENTO (Alineado al sitio)
+          §8. AGAVE & ABASTECIMIENTO (Alineado al sitio sin scroll)
           ============================================================ */}
-      <section ref={agaveRef} className="py-20 md:py-32 bg-[#F6F2EA] border-y border-[#1c1c18]/10 relative overflow-hidden">
-        <div className="max-w-[1240px] mx-auto px-6 text-left relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <section ref={agaveRef} className="py-10 md:py-14 min-h-[88vh] flex flex-col justify-center bg-[#F6F2EA] border-y border-[#1c1c18]/10 relative overflow-hidden">
+        <div className="max-w-[1240px] mx-auto px-6 text-left relative z-10 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
             {/* Visual Photography */}
             <div className="lg:col-span-6 relative overflow-hidden rounded-none border border-[#1c1c18]/10 shadow-md">
               <img
                 src="/Jimado Agave Tequilana Weber.webp"
                 alt="Agave Fields in Ayotlán Casa Loy"
-                className="w-full aspect-[4/3] object-cover transition-transform duration-1000 hover:scale-105"
+                className="w-full aspect-[16/10] max-h-[360px] object-cover transition-transform duration-1000 hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent"></div>
-              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-                <div className="flex items-center gap-2 bg-[#1c1c18]/80 backdrop-blur-md px-3 py-1.5 border border-white/20 rounded-none">
-                  <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                  <span className="font-navigation text-[10px] uppercase tracking-wider text-white font-semibold">
+              <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+                <div className="flex items-center gap-2 bg-[#1c1c18]/80 backdrop-blur-md px-2.5 py-1 border border-white/20 rounded-none">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                  <span className="font-navigation text-[9px] uppercase tracking-wider text-white font-semibold">
                     Ayotlán, Los Altos de Jalisco
                   </span>
                 </div>
-                <span className="font-serif text-sm text-primary-fixed italic bg-[#1c1c18]/80 backdrop-blur-md px-3 py-1.5 border border-white/10 rounded-none">
+                <span className="font-serif text-xs text-primary-fixed italic bg-[#1c1c18]/80 backdrop-blur-md px-2.5 py-1 border border-white/10 rounded-none">
                   100% Tequilana Weber
                 </span>
               </div>
             </div>
 
             {/* Narrative & Metrics */}
-            <div className="lg:col-span-6 space-y-6">
+            <div className="lg:col-span-6 space-y-4">
               <Reveal>
                 <div>
-                  <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-3">
+                  <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-2">
                     {t.agaveEyebrow}
                   </span>
-                  <h2 className="font-serif text-[clamp(28px,3.5vw,46px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-4">
+                  <h2 className="font-serif text-[clamp(22px,2.8vw,40px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-2">
                     {t.agaveTitle}
                   </h2>
-                  <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-[clamp(15px,1.1vw,17px)]">
+                  <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                     {t.agaveSub}
                   </p>
                 </div>
               </Reveal>
 
               {/* Metrics */}
-              <div className="grid grid-cols-3 gap-4 pt-2">
-                <div className="p-6 bg-white border border-[#1c1c18]/10 rounded-none text-center shadow-sm">
-                  <div className="font-serif text-3xl md:text-4xl text-primary font-light">
+              <div className="grid grid-cols-3 gap-3 pt-1">
+                <div className="p-4 bg-white border border-[#1c1c18]/10 rounded-none text-center shadow-sm">
+                  <div className="font-serif text-2xl md:text-3xl text-primary font-light">
                     +{counters.msnm.toLocaleString()}
                   </div>
-                  <div className="font-navigation text-[10px] uppercase text-[#53443a] font-semibold mt-1">msnm Altura</div>
+                  <div className="font-navigation text-[9px] uppercase text-[#53443a] font-semibold mt-0.5">msnm Altura</div>
                 </div>
-                <div className="p-6 bg-white border border-[#1c1c18]/10 rounded-none text-center shadow-sm">
-                  <div className="font-serif text-3xl md:text-4xl text-primary font-light">
+                <div className="p-4 bg-white border border-[#1c1c18]/10 rounded-none text-center shadow-sm">
+                  <div className="font-serif text-2xl md:text-3xl text-primary font-light">
                     {counters.has.toLocaleString()}
                   </div>
-                  <div className="font-navigation text-[10px] uppercase text-[#53443a] font-semibold mt-1">Hectáreas Propias</div>
+                  <div className="font-navigation text-[9px] uppercase text-[#53443a] font-semibold mt-0.5">Hectáreas Propias</div>
                 </div>
-                <div className="p-6 bg-white border border-[#1c1c18]/10 rounded-none text-center shadow-sm">
-                  <div className="font-serif text-3xl md:text-4xl text-primary font-light">
+                <div className="p-4 bg-white border border-[#1c1c18]/10 rounded-none text-center shadow-sm">
+                  <div className="font-serif text-2xl md:text-3xl text-primary font-light">
                     {counters.plants.toFixed(1)}M
                   </div>
-                  <div className="font-navigation text-[10px] uppercase text-[#53443a] font-semibold mt-1">Plantas de Agave</div>
+                  <div className="font-navigation text-[9px] uppercase text-[#53443a] font-semibold mt-0.5">Plantas de Agave</div>
                 </div>
               </div>
 
-              <div className="space-y-4 pt-2">
-                <div className="border-l-2 border-[#8C4723] pl-4 py-1">
-                  <h4 className="font-serif text-xl font-light text-[#1c1c18]">
+              <div className="space-y-3 pt-1">
+                <div className="border-l-2 border-[#8C4723] pl-3.5 py-0.5">
+                  <h4 className="font-serif text-base sm:text-lg font-light text-[#1c1c18]">
                     {lang === "es" ? "Blindaje de Costo por Litro a Largo Plazo" : "Long-Term Cost Protection"}
                   </h4>
-                  <p className="font-body-md text-[#53443a] text-sm mt-1 leading-relaxed font-light">
+                  <p className="font-body-md text-[#53443a] text-xs mt-0.5 leading-relaxed font-light">
                     {lang === "es"
                       ? "Nuestras 3,600 hectáreas sembradas desde 1992 protegen tu marca contra los ciclos de escasez y encarecimiento del agave en el mercado libre."
                       : "Our estate hectares planted since 1992 protect your brand margins against open spot agave speculation and shortages."}
                   </p>
                 </div>
-                <div className="border-l-2 border-[#8C4723] pl-4 py-1">
-                  <h4 className="font-serif text-xl font-light text-[#1c1c18]">
+                <div className="border-l-2 border-[#8C4723] pl-3.5 py-0.5">
+                  <h4 className="font-serif text-base sm:text-lg font-light text-[#1c1c18]">
                     {lang === "es" ? "Maduración Óptima & Azúcares Reductores" : "Optimal Maturation & Sugar Yield"}
                   </h4>
-                  <p className="font-body-md text-[#53443a] text-sm mt-1 leading-relaxed font-light">
+                  <p className="font-body-md text-[#53443a] text-xs mt-0.5 leading-relaxed font-light">
                     {lang === "es"
                       ? "Jima programada únicamente de piñas en plenitud de maduración (6 a 7 años), garantizando altos grados Brix naturales sin saborizantes artificiales."
                       : "Harvesting only fully mature agaves (6 to 7 years) ensuring high natural Brix grades compliant with additive-free standards."}
@@ -1461,68 +1461,68 @@ export default function MaquilasV3({ lang = "es" }) {
       </section>
 
       {/* ============================================================
-          §9. CALENDARIO DE CITAS TÉCNICAS (Sección propia arriba de FAQs)
+          §9. CALENDARIO DE CITAS TÉCNICAS (Mismo ancho max-w-4xl centrado)
           ============================================================ */}
-      <section id="agenda-llamada" className="py-20 md:py-32 bg-[#fcf9f3]">
-        <div className="max-w-[1240px] mx-auto px-6 text-left">
+      <section id="agenda-llamada" className="py-10 md:py-14 min-h-[88vh] flex flex-col justify-center bg-[#fcf9f3]">
+        <div className="max-w-4xl mx-auto px-6 text-left w-full">
           <Reveal>
-            <div className="max-w-3xl mb-14">
-              <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-3">
+            <div className="mb-6">
+              <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-2">
                 {t.calEyebrow}
               </span>
-              <h2 className="font-serif text-[clamp(28px,3.5vw,50px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-4">
+              <h2 className="font-serif text-[clamp(24px,3vw,44px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-2">
                 {t.calTitle}
               </h2>
-              <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-[clamp(15px,1.1vw,17px)]">
+              <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                 {t.calSub}
               </p>
             </div>
           </Reveal>
 
-          {/* Cal.com Clean Embed Card */}
-          <Reveal delay={150}>
-            <div className="w-full max-w-4xl bg-white border border-[#1c1c18]/10 p-6 md:p-10 shadow-sm rounded-none">
-              <div className="mb-4 border-b border-[#1c1c18]/10 pb-4 flex items-center justify-between">
+          {/* Cal.com Clean Embed Card - matched width */}
+          <Reveal delay={100}>
+            <div className="w-full bg-white border border-[#1c1c18]/10 p-5 sm:p-7 shadow-sm rounded-none">
+              <div className="mb-3 border-b border-[#1c1c18]/10 pb-3 flex items-center justify-between">
                 <div>
-                  <h4 className="font-serif text-xl font-light text-[#1c1c18]">
+                  <h4 className="font-serif text-lg font-light text-[#1c1c18]">
                     {lang === "es" ? "Calendario Oficial de Citas Técnicas" : "Technical Consultation Calendar"}
                   </h4>
-                  <p className="font-navigation text-xs text-[#53443a] font-light mt-0.5">
+                  <p className="font-navigation text-[11px] text-[#53443a] font-light mt-0.5">
                     {lang === "es" ? "Selecciona el día y horario disponible para tu videollamada de 30 minutos." : "Select available date & time for your 30-minute Google Meet session."}
                   </p>
                 </div>
-                <span className="font-navigation text-[10px] text-primary font-bold uppercase bg-[#F6F2EA] px-3 py-1 border border-[#1c1c18]/10 rounded-none tracking-wider">
+                <span className="font-navigation text-[9px] text-primary font-bold uppercase bg-[#F6F2EA] px-2.5 py-0.5 border border-[#1c1c18]/10 rounded-none tracking-wider">
                   30 Minutos
                 </span>
               </div>
 
-              <div id="cal-inline-v3-scheduler" className="w-full h-[520px] sm:h-[560px]"></div>
+              <div id="cal-inline-v3-scheduler" className="w-full h-[480px] sm:h-[520px]"></div>
             </div>
           </Reveal>
         </div>
       </section>
 
       {/* ============================================================
-          §10. PREGUNTAS FRECUENTES B2B (Estilo idéntico a Turismo / FAQ)
+          §10. PREGUNTAS FRECUENTES B2B (Mismo ancho max-w-4xl centrado)
           ============================================================ */}
-      <section id="faqs-b2b" className="py-20 md:py-32 bg-[#FAF6F0] border-t border-[#1c1c18]/10">
-        <div className="max-w-[1240px] mx-auto px-6 text-left">
+      <section id="faqs-b2b" className="py-10 md:py-14 min-h-[88vh] flex flex-col justify-center bg-[#FAF6F0] border-t border-[#1c1c18]/10">
+        <div className="max-w-4xl mx-auto px-6 text-left w-full">
           <Reveal>
-            <div className="max-w-3xl mb-12">
-              <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-3">
+            <div className="mb-6">
+              <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-2">
                 {t.faqEyebrow}
               </span>
-              <h2 className="font-serif text-[clamp(28px,3.5vw,50px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-4">
+              <h2 className="font-serif text-[clamp(24px,3vw,44px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-2">
                 {t.faqTitle}
               </h2>
-              <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-[clamp(15px,1.1vw,17px)]">
+              <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                 {t.faqSub}
               </p>
             </div>
           </Reveal>
 
           {/* FAQ Tabs */}
-          <div className="flex flex-wrap gap-2.5 mb-8 border-b border-[#1c1c18]/10 pb-3">
+          <div className="flex flex-wrap gap-2 mb-6 border-b border-[#1c1c18]/10 pb-2.5">
             {[
               { key: "founders", label: t.tabFounders },
               { key: "existing", label: t.tabExisting },
@@ -1534,7 +1534,7 @@ export default function MaquilasV3({ lang = "es" }) {
                   setActiveFaqTab(tab.key);
                   setOpenFaqIdx(0);
                 }}
-                className={`font-navigation text-[10px] uppercase tracking-[0.2em] px-4 py-2.5 transition-all cursor-pointer rounded-none ${
+                className={`font-navigation text-[9px] sm:text-[10px] uppercase tracking-[0.2em] px-3.5 py-2 transition-all cursor-pointer rounded-none ${
                   activeFaqTab === tab.key
                     ? "bg-[#8C4723] text-white font-semibold shadow-sm"
                     : "bg-white border border-[#1c1c18]/10 text-[#53443a] hover:border-[#8C4723] hover:text-[#1c1c18]"
@@ -1546,23 +1546,23 @@ export default function MaquilasV3({ lang = "es" }) {
           </div>
 
           {/* Questions Accordion */}
-          <div className="space-y-2 max-w-4xl">
+          <div className="space-y-1.5 w-full">
             {faqData[activeFaqTab].map((item, idx) => (
               <div
                 key={idx}
-                className="border-b border-[#1c1c18]/10 py-4 transition-all"
+                className="border-b border-[#1c1c18]/10 py-3 transition-all"
               >
                 <button
                   onClick={() => setOpenFaqIdx(openFaqIdx === idx ? -1 : idx)}
-                  className="w-full flex items-center justify-between text-left font-serif text-lg md:text-xl font-light text-[#1c1c18] hover:text-primary transition-colors cursor-pointer"
+                  className="w-full flex items-center justify-between text-left font-serif text-base sm:text-lg font-light text-[#1c1c18] hover:text-primary transition-colors cursor-pointer"
                 >
                   <span className="pr-4">{item.q}</span>
-                  <span className="text-primary text-2xl font-light">
+                  <span className="text-primary text-xl font-light">
                     {openFaqIdx === idx ? "−" : "+"}
                   </span>
                 </button>
                 {openFaqIdx === idx && (
-                  <p className="font-navigation text-sm text-[#53443a] leading-relaxed font-light mt-3 pr-8">
+                  <p className="font-navigation text-xs sm:text-sm text-[#53443a] leading-relaxed font-light mt-2 pr-6">
                     {item.a}
                   </p>
                 )}
@@ -1571,42 +1571,11 @@ export default function MaquilasV3({ lang = "es" }) {
           </div>
 
           {/* NDA Guarantee Bar */}
-          <div className="mt-12 p-6 bg-white border border-[#1c1c18]/10 rounded-none flex flex-col sm:flex-row items-center justify-between gap-4 max-w-4xl text-xs font-navigation shadow-sm">
+          <div className="mt-8 p-4 sm:p-5 bg-white border border-[#1c1c18]/10 rounded-none flex flex-col sm:flex-row items-center justify-between gap-3 w-full text-xs font-navigation shadow-sm">
             <span className="flex items-center gap-2 text-[#1c1c18]">
               <span className="text-emerald-700 font-bold">✓</span> {lang === "es" ? "Convenio de Confidencialidad (NDA) disponible para todo proyecto" : "Strict Non-Disclosure Agreement (NDA) available for every project"}
             </span>
-            <span className="text-primary font-bold tracking-widest">NOM 1633 CRT</span>
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================
-          §11. FINAL EDITORIAL CALL TO ACTION (Estándar de Home / Maquilas)
-          ============================================================ */}
-      <section className="bg-[#F6F2EA] py-24 md:py-32 px-6 border-t border-[#1c1c18]/10 text-center">
-        <div className="max-w-3xl mx-auto space-y-6">
-          <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block">
-            {t.finalCtaEyebrow}
-          </span>
-          <h2 className="font-serif text-[clamp(28px,3.8vw,52px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight">
-            {t.finalCtaTitle}
-          </h2>
-          <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-[clamp(15px,1.1vw,18px)] max-w-2xl mx-auto">
-            {t.finalCtaDesc}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-5 items-center justify-center pt-4">
-            <a
-              href="#quiz"
-              className="bg-[#8C4723] border border-[#8C4723] hover:bg-[#a6562b] hover:border-[#a6562b] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-medium py-3.5 px-8 transition-all duration-500 min-w-[200px] text-center shadow-md rounded-none"
-            >
-              {t.finalCtaBtn1}
-            </a>
-            <a
-              href="#agenda-llamada"
-              className="border border-[#8C4723] text-[#8C4723] hover:bg-[#8C4723] hover:text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-medium py-3.5 px-8 transition-all duration-500 min-w-[200px] text-center rounded-none"
-            >
-              {t.finalCtaBtn2}
-            </a>
+            <span className="text-primary font-bold tracking-widest text-[11px]">NOM 1633 CRT</span>
           </div>
         </div>
       </section>
