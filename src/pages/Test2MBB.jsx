@@ -82,7 +82,6 @@ export default function Test2MBB({ lang = "es", setPage }) {
   // Content dictionary
   const content = {
     hero: {
-      overtitle: "TEQUILA B2B · NOM 1633",
       h1: isEn ? (
         <>Private Label Tequila Manufacturing in Mexico.<br /><span className="text-white italic font-normal">Your tequila starts in Los Altos de Jalisco.</span></>
       ) : (
@@ -634,32 +633,21 @@ export default function Test2MBB({ lang = "es", setPage }) {
           (Visible sin hacer scroll: h-screen con barra inferior integrada)
           ============================================================ */}
       <section className="relative h-screen w-full flex flex-col justify-between overflow-hidden bg-zinc-950 text-white">
-        {/* Background Image with Home's Exact Picture Tags and Overlays */}
+        {/* Background Image: Naves Industriales Casa Loy Tequilera con Montacargas */}
         <div className="absolute inset-0 z-0">
-          <picture>
-            <source media="(max-width: 768px)" srcSet="/Casa Loy Tequilera-movil.webp" />
-            <source 
-              media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
-              srcSet="/Casa Loy Tequilera-retina.webp" 
-            />
-            <img
-              alt="Casa Loy Tequilera"
-              className="w-full h-full object-cover brightness-[0.78] transition-transform duration-[7500ms] ease-out scale-105"
-              src="/Casa Loy Tequilera-escritorio.webp"
-            />
-          </picture>
-          {/* Exact dark gradient overlay from Home */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/25 to-black/75"></div>
+          <img
+            alt="Naves Industriales Casa Loy Tequilera"
+            className="w-full h-full object-cover brightness-[0.72] transition-transform duration-[7500ms] ease-out scale-105"
+            src="/Naves Industriales Casa Loy Tequilera.webp"
+            fetchPriority="high"
+          />
+          {/* Dark gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/80"></div>
         </div>
 
         {/* Content Container (Centered in Viewport) */}
         <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex-1 flex flex-col items-center justify-center pt-20 pb-2">
-          {/* Overtitle (Sin "destilería" ni "maquila") */}
-          <span className="font-nav-tag text-[clamp(11px,1vw,13px)] text-[#FDA377] uppercase tracking-[0.4em] mb-3 block font-semibold">
-            {content.hero.overtitle}
-          </span>
-
-          {/* Main Heading: Fabricación de tequila de marca blanca en México */}
+          {/* Main Heading: Fabricación de Tequila Private Label en México */}
           <h1 className="font-serif-title text-[clamp(26px,4.2vw,54px)] leading-[1.12] tracking-tight font-light text-white uppercase max-w-4xl mx-auto mb-3">
             {content.hero.h1}
           </h1>
