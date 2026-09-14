@@ -456,7 +456,7 @@ export default function MaquilasV3({ lang = "es" }) {
         ? "Recepción directa de nuestras 3,600 hectáreas en Los Altos de Jalisco. Selección de piñas en plenitud de maduración (6-7 años) con medición de grados Brix."
         : "Direct intake from our 3,600 hectares in Los Altos de Jalisco. Hand-selected agaves at peak maturity (6-7 years) tested for optimal natural Brix sugars.",
       specs: ["100% Tequilana Weber", "Los Altos de Jalisco", "Jima Madura"],
-      img: "/Patio de Maniobras y Recepción de Agave Casa Loy.webp"
+      img: "/Jima.webp"
     },
     {
       num: "02",
