@@ -26,7 +26,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
   // Inside Casa Loy active station index (0 to 7)
   const [activeInside, setActiveInside] = useState(0);
 
-  // Cal.com Embed Loader
+  // Cal.com Embed Loader (30-minute consultation)
   useEffect(() => {
     (function (C, A, L) {
       let p = function (a, ar) { a.q.push(ar); };
@@ -82,11 +82,11 @@ export default function Test2MBB({ lang = "es", setPage }) {
   // Content dictionary
   const content = {
     hero: {
-      overtitle: isEn ? "DISTILLERY & PRIVATE LABEL TEQUILA B2B · NOM 1633" : "DESTILERÍA & MAQUILA TEQUILA B2B · NOM 1633",
+      overtitle: isEn ? "TEQUILA B2B · NOM 1633" : "TEQUILA B2B · NOM 1633",
       h1: isEn ? (
-        <>PRIVATE LABEL TEQUILA MANUFACTURING IN MEXICO.<br /><span className="text-white italic font-normal">YOUR TEQUILA STARTS IN LOS ALTOS DE JALISCO.</span></>
+        <>WHITE LABEL TEQUILA MANUFACTURING IN MEXICO.<br /><span className="text-white italic font-normal">YOUR TEQUILA STARTS IN LOS ALTOS DE JALISCO.</span></>
       ) : (
-        <>MAQUILA DE TEQUILA DE MARCA PRIVADA EN MÉXICO.<br /><span className="text-white italic font-normal">TU TEQUILA COMIENZA EN LOS ALTOS DE JALISCO.</span></>
+        <>FABRICACIÓN DE TEQUILA DE MARCA BLANCA EN MÉXICO.<br /><span className="text-white italic font-normal">TU TEQUILA COMIENZA EN LOS ALTOS DE JALISCO.</span></>
       ),
       secondary: isEn ? '"Your vision. Our expertise."' : '"Tu visión. Nuestra experiencia."',
       sub: isEn
@@ -183,7 +183,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
       routes: isEn ? [
         {
           num: "01",
-          title: "Private Label Tequila",
+          title: "White Label / Private Label Tequila",
           desc: "Create or sell tequila under your own brand with full turnkey support, from CRT registration to final export packaging.",
           tag: "PRIVATE_LABEL"
         },
@@ -202,7 +202,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
       ] : [
         {
           num: "01",
-          title: "Tequila de Marca Privada",
+          title: "Tequila de Marca Privada / Blanca",
           desc: "Crea o vende tequila bajo tu propia marca con soporte integral llave en mano, desde registro ante CRT hasta empaque final.",
           tag: "PRIVATE_LABEL"
         },
@@ -561,7 +561,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
         email: contactForm.email,
         lada: contactForm.lada || "+52",
         phone: contactForm.phone,
-        solution: quizAnswers.solution || "Tequila de Marca Privada",
+        solution: quizAnswers.solution || "Tequila de Marca Privada / Blanca",
         objective: `Mercado: ${quizAnswers.market || "No especificado"}`,
         stage: quizAnswers.stage || "En desarrollo",
         comments: contactForm.notes || "Registro desde /test2mbb (Diagnóstico 3 preguntas)",
@@ -619,12 +619,21 @@ export default function Test2MBB({ lang = "es", setPage }) {
           background: #8C4723;
           display: inline-block;
         }
+        @keyframes scroll-arrow-down {
+          0% { transform: translateY(-4px); opacity: 0; }
+          50% { opacity: 1; }
+          100% { transform: translateY(4px); opacity: 0; }
+        }
+        .animate-scroll-arrow {
+          animation: scroll-arrow-down 2.2s infinite cubic-bezier(0.25, 1, 0.5, 1);
+        }
       `}</style>
 
       {/* ============================================================
-          01. HERO BANNER: ESTILO EXACTO DEL HOME DE CASA LOY
+          01. HERO BANNER: ESTILO EXACTO HOME DE CASA LOY CON TRUST BAR INTEGRADO
+          (Visible sin hacer scroll: h-screen con barra inferior integrada)
           ============================================================ */}
-      <section className="relative min-h-[92vh] w-full flex items-center justify-center overflow-hidden bg-zinc-950 text-white">
+      <section className="relative h-screen w-full flex flex-col justify-between overflow-hidden bg-zinc-950 text-white">
         {/* Background Image with Home's Exact Picture Tags and Overlays */}
         <div className="absolute inset-0 z-0">
           <picture>
@@ -640,86 +649,97 @@ export default function Test2MBB({ lang = "es", setPage }) {
             />
           </picture>
           {/* Exact dark gradient overlay from Home */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/25 to-black/70"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/25 to-black/75"></div>
         </div>
 
-        {/* Content Container (Matching Home Banner Layout & Typography) */}
-        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center pt-28 pb-20">
-          {/* Overtitle */}
-          <span className="font-nav-tag text-[clamp(11px,1vw,13px)] text-[#FDA377] uppercase tracking-[0.4em] mb-4 block font-semibold">
+        {/* Content Container (Centered in Viewport) */}
+        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex-1 flex flex-col items-center justify-center pt-20 pb-2">
+          {/* Overtitle (Sin "destilería" ni "maquila") */}
+          <span className="font-nav-tag text-[clamp(11px,1vw,13px)] text-[#FDA377] uppercase tracking-[0.4em] mb-3 block font-semibold">
             {content.hero.overtitle}
           </span>
 
-          {/* Main Heading in Home's Serif Typography */}
-          <h1 className="font-serif-title text-[clamp(28px,4.5vw,58px)] leading-[1.1] tracking-tight font-light text-white uppercase max-w-4xl mx-auto mb-4">
+          {/* Main Heading: Fabricación de tequila de marca blanca en México */}
+          <h1 className="font-serif-title text-[clamp(26px,4.2vw,54px)] leading-[1.12] tracking-tight font-light text-white uppercase max-w-4xl mx-auto mb-3">
             {content.hero.h1}
           </h1>
 
           {/* Secondary quote in Italic */}
-          <p className="font-serif-title italic text-lg md:text-xl text-[#FDA377] mb-5">
+          <p className="font-serif-title italic text-base md:text-xl text-[#FDA377] mb-3">
             {content.hero.secondary}
           </p>
 
           {/* Subtitle / Narrative */}
-          <p className="font-nav-tag text-white/80 font-normal text-xs md:text-sm max-w-2xl mx-auto mb-10 leading-relaxed tracking-wider uppercase">
+          <p className="font-nav-tag text-white/80 font-normal text-xs md:text-sm max-w-2xl mx-auto mb-7 leading-relaxed tracking-wider uppercase">
             {content.hero.sub}
           </p>
 
           {/* CTA Buttons in Exact Home Style */}
-          <div className="flex flex-col sm:flex-row gap-5 items-center justify-center w-full max-w-md sm:max-w-none">
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full max-w-md sm:max-w-none mb-4">
             <a
               href="#quiz"
-              className="bg-[#8C4723] border border-[#8C4723] hover:bg-[#a6562b] hover:border-[#a6562b] text-white font-nav-tag text-[11px] sm:text-xs uppercase tracking-[0.3em] font-medium py-4 px-8 transition-all duration-500 min-w-[210px] text-center shadow-lg cursor-pointer"
+              className="bg-[#8C4723] border border-[#8C4723] hover:bg-[#a6562b] hover:border-[#a6562b] text-white font-nav-tag text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-semibold py-3.5 px-8 transition-all duration-500 min-w-[200px] text-center shadow-lg cursor-pointer"
             >
               {content.hero.ctaStart}
             </a>
             <a
               href="#cta"
-              className="border border-white/60 hover:bg-[#8C4723] hover:border-[#8C4723] text-white font-nav-tag text-[11px] sm:text-xs uppercase tracking-[0.3em] font-medium py-4 px-8 transition-all duration-500 min-w-[210px] text-center cursor-pointer"
+              className="border border-white/60 hover:bg-[#8C4723] hover:border-[#8C4723] text-white font-nav-tag text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-semibold py-3.5 px-8 transition-all duration-500 min-w-[200px] text-center cursor-pointer"
             >
               {content.hero.ctaCall}
             </a>
+          </div>
+
+          {/* Animación de flecha de scroll de Home */}
+          <a href="#why" className="inline-flex flex-col items-center gap-1 opacity-80 hover:opacity-100 transition-opacity mt-2 cursor-pointer">
+            <svg 
+              className="w-4 h-4 text-white animate-scroll-arrow" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+          </a>
+        </div>
+
+        {/* LÍNEA INFERIOR DE DATOS (TRUST BAR) INTEGRADA EN EL MISMO BLOQUE (Visible sin scroll) */}
+        <div className="w-full bg-[#EDE7DE] border-t border-[#1A1615]/15 py-3 md:py-3.5 z-20 shadow-md">
+          <div className="max-w-[1300px] mx-auto px-6">
+            <div className="flex flex-wrap justify-center items-center gap-y-1.5 gap-x-3 md:gap-x-6 text-center">
+              <span className="font-nav-tag text-[11px] md:text-xs font-bold uppercase tracking-widest text-[#8C4723]">
+                NOM 1633
+              </span>
+              <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
+              <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
+                Los Altos de Jalisco
+              </span>
+              <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
+              <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
+                {isEn ? "Family-owned" : "Empresa familiar"}
+              </span>
+              <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
+              <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
+                {isEn ? "Agave roots since 1992" : "Raíces agaveras desde 1992"}
+              </span>
+              <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
+              <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
+                {isEn ? "Batch control" : "Control por lotes"}
+              </span>
+              <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
+              <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
+                {isEn ? "Export coordination" : "Coordinación de exportación"}
+              </span>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ============================================================
-          LÍNEA INFERIOR DE DATOS (TRUST BAR) INTEGRADA DE FORMA LIMPIA Y ELEGANTE
-          ============================================================ */}
-      <div className="bg-[#EDE7DE] border-y border-[#1A1615]/10 py-4">
-        <div className="max-w-[1300px] mx-auto px-6">
-          <div className="flex flex-wrap justify-center items-center gap-y-2 gap-x-3 md:gap-x-6 text-center">
-            <span className="font-nav-tag text-[11px] md:text-xs font-bold uppercase tracking-widest text-[#8C4723]">
-              NOM 1633
-            </span>
-            <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
-            <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
-              Los Altos de Jalisco
-            </span>
-            <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
-            <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
-              {isEn ? "Family-owned" : "Empresa familiar"}
-            </span>
-            <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
-            <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
-              {isEn ? "Agave roots since 1992" : "Raíces agaveras desde 1992"}
-            </span>
-            <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
-            <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
-              {isEn ? "Batch control" : "Control por lotes"}
-            </span>
-            <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
-            <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
-              {isEn ? "Export coordination" : "Coordinación de exportación"}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* ============================================================
           WHY CASA LOY (6 TARJETAS INTERACTIVAS)
           ============================================================ */}
-      <section className="py-20 md:py-24 bg-[#FAF8F5]">
+      <section id="why" className="py-20 md:py-24 bg-[#FAF8F5]">
         <div className="max-w-[1160px] mx-auto px-6">
           <p className="test2mbb-eyebrow">{content.why.eyebrow}</p>
           <h2 className="font-serif-title font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-[#1C1C1C] mb-10">
@@ -801,7 +821,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
       </section>
 
       {/* ============================================================
-          RUTAS DE SOLUCIÓN (3 RUTAS FUNDAMENTALES Y LIMPIAS)
+          RUTAS DE SOLUCIÓN (3 RUTAS LIMPIAS, SIN RECUADROS ROJOS NI CAJA INFERIOR)
           ============================================================ */}
       <section className="py-20 md:py-24 bg-[#FAF8F5]">
         <div className="max-w-[1160px] mx-auto px-6">
@@ -1004,10 +1024,9 @@ export default function Test2MBB({ lang = "es", setPage }) {
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {[
-                        { title: isEn ? "Turnkey Private Label" : "Tequila de Marca Privada", desc: isEn ? "Full service from CRT registry, formulation to export." : "Crea o vende tequila bajo tu propia marca comercial." },
+                        { title: isEn ? "White Label / Private Label Tequila" : "Tequila de Marca Privada / Blanca", desc: isEn ? "Full turnkey support from CRT registry, formulation to export." : "Crea o vende tequila bajo tu propia marca con servicio llave en mano." },
                         { title: isEn ? "Bulk Tequila Supply" : "Suministro de Tequila a Granel", desc: isEn ? "100% Agave or Mixto bulk for bottlers & distributors." : "Tequila a granel para envasadores, importadores o distribuidores." },
-                        { title: isEn ? "Co-packing & Bottling Services" : "Servicios de Envasado / Co-packing", desc: isEn ? "Filling, labeling and secondary packaging." : "Embotellado, etiquetado o empaque para proyectos de terceros." },
-                        { title: isEn ? "Custom Profile & Cask Aging" : "Perfil de Autor & Cava", desc: isEn ? "Sensory calibration and bespoke barrel aging." : "Desarrollo o calibración fina de tu perfil de líquido en barrica." }
+                        { title: isEn ? "Co-packing & Bottling Services" : "Servicios de Envasado / Co-packing", desc: isEn ? "Filling, labeling, tax stamp placement and secondary packaging." : "Embotellado, tapado, sellado y acondicionamiento para proyectos externos." }
                       ].map((opt, i) => (
                         <button
                           key={i}
