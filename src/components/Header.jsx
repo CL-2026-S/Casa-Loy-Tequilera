@@ -47,10 +47,21 @@ export default function Header({ lang, setLang, t, page, setPage }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isDarkHeroPage = ["home", "home-interactive", "maquilas", "maquilas-v3", "turismo", "nativo", "blog", "careers", "editorial-preview"].includes(page);
+  const isDarkHeroPage = [
+    "home",
+    "home-interactive",
+    "maquilas",
+    "maquilas-v3",
+    "test2mbb",
+    "turismo",
+    "nativo",
+    "blog",
+    "careers",
+    "editorial-preview"
+  ].includes(page);
 
   const getLinkClass = (targetPage) => {
-    const isActive = page === targetPage;
+    const isActive = page === targetPage || (targetPage === "maquilas" && (page === "test2mbb" || page === "maquilas-v3"));
     const base = "font-navigation text-[clamp(9.5px,0.65vw,12px)] uppercase tracking-[0.1em] font-semibold relative transition-all duration-300 whitespace-nowrap py-1.5 group select-none cursor-pointer";
     
     if (isDarkHeroPage && !scrolled) {
@@ -68,7 +79,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
   };
 
   const getUnderlineClass = (targetPage) => {
-    const isActive = page === targetPage;
+    const isActive = page === targetPage || (targetPage === "maquilas" && (page === "test2mbb" || page === "maquilas-v3"));
     const base = "absolute bottom-0 left-0 w-full h-[1.5px] bg-current transform origin-left transition-transform duration-300";
     return isActive ? `${base} scale-x-100` : `${base} scale-x-0 group-hover:scale-x-100`;
   };

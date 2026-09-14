@@ -28,6 +28,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
 
   // Cal.com Embed Loader (30-minute consultation)
   useEffect(() => {
+    if (setPage) setPage("test2mbb");
     (function (C, A, L) {
       let p = function (a, ar) { a.q.push(ar); };
       let d = C.document;
