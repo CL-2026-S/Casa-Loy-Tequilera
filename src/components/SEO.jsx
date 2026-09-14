@@ -98,6 +98,13 @@ const seoData = {
       ogDesc: "Detalles y diagnóstico interactivo para proyectos de tequila de marca privada y maquila por contrato.",
       ogImage: "/Jimado Agave Tequilana Weber.webp"
     },
+    test2mbb: {
+      title: "Casa Loy — Private Label & Bulk Tequila | Guía Ejecutable v2",
+      description: "Destilería NOM 1633 en Los Altos de Jalisco. Maquila de tequila, marca privada, envasado y suministro a granel.",
+      ogTitle: "Casa Loy — Private Label & Bulk Tequila | Guía Ejecutable v2",
+      ogDesc: "A family-owned NOM 1633 distillery built for founders, existing brands, and distributors ready to build with a real origin behind them.",
+      ogImage: "/Campo de Agave Ayotlán Casa Loy Tequilera.webp"
+    },
     brands: {
       title: "Nuestras Marcas | Portafolio de Tequilas Casa Loy",
       description: "Descubre nuestro selecto portafolio de tequilas: Casa Loy Tequila, Reserva Casa Loy, TADDEL Tequila y Tierra Zafiro Tequila.",
@@ -400,6 +407,13 @@ const seoData = {
       ogTitle: "Private Label Tequila B2B Guide v2 - Casa Loy Tequilera",
       ogDesc: "Operational details and 8-step diagnostic quiz for private label tequila projects.",
       ogImage: "/Jimado Agave Tequilana Weber.webp"
+    },
+    test2mbb: {
+      title: "Casa Loy — Private Label & Bulk Tequila | Executable Guide v2",
+      description: "NOM 1633 Distillery in Los Altos de Jalisco. Private label tequila manufacturing, co-packing, custom profiling and bulk supply.",
+      ogTitle: "Casa Loy — Private Label & Bulk Tequila | Executable Guide v2",
+      ogDesc: "A family-owned NOM 1633 distillery built for founders, existing brands, and distributors ready to build with a real origin behind them.",
+      ogImage: "/Campo de Agave Ayotlán Casa Loy Tequilera.webp"
     },
     brands: {
       title: "Our Brands | Casa Loy Tequila Portfolio",

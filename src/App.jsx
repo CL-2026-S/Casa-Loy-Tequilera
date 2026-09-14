@@ -31,6 +31,7 @@ import TermsConditions from "./pages/TermsConditions";
 import TeaserPage from "./pages/TeaserPage";
 import ValidateTicket from "./pages/ValidateTicket";
 import AdminPanel from "./pages/AdminPanel";
+import Test2MBB from "./pages/Test2MBB";
 
 // Bilingual routing map
 const routesMap = {
@@ -44,6 +45,7 @@ const routesMap = {
   "/maquilas-v2": { page: "maquilas", lang: "es" },
   "/maquilas-v3": { page: "maquilas-v3", lang: "es" },
   "/test1mbb": { page: "maquilas-v3", lang: "es" },
+  "/test2mbb": { page: "test2mbb", lang: "es" },
   "/marcas": { page: "brands", lang: "es" },
   "/turismo": { page: "turismo", lang: "es" },
   "/turismo/oro": { page: "experience-oro", lang: "es" },
@@ -71,6 +73,8 @@ const routesMap = {
   "/maquilas-v3/en": { page: "maquilas-v3", lang: "en" },
   "/test1mbb-en": { page: "maquilas-v3", lang: "en" },
   "/test1mbb/en": { page: "maquilas-v3", lang: "en" },
+  "/test2mbb-en": { page: "test2mbb", lang: "en" },
+  "/test2mbb/en": { page: "test2mbb", lang: "en" },
   "/brands": { page: "brands", lang: "en" },
   "/tourism": { page: "turismo", lang: "en" },
   "/tourism/gold": { page: "experience-oro", lang: "en" },
@@ -212,6 +216,7 @@ export default function App() {
         "maquilas": "/marca-privada",
         "maquilas-v2": "/marca-privada",
         "maquilas-v3": "/maquilas-v3",
+        "test2mbb": "/test2mbb",
         "brands": "/marcas",
         "turismo": "/turismo",
         "experience-oro": "/turismo/oro",
@@ -232,6 +237,7 @@ export default function App() {
         "maquilas": "/private-label",
         "maquilas-v2": "/private-label",
         "maquilas-v3": "/bottling-v3",
+        "test2mbb": "/test2mbb-en",
         "brands": "/brands",
         "turismo": "/tourism",
         "experience-oro": "/tourism/gold",
@@ -264,6 +270,7 @@ export default function App() {
         about: "/quienes-somos",
         maquilas: "/marca-privada",
         "maquilas-v2": "/marca-privada",
+        test2mbb: "/test2mbb",
         brands: "/marcas",
         turismo: "/turismo",
         "experience-oro": "/turismo/oro",
@@ -288,6 +295,7 @@ export default function App() {
         about: "/about",
         maquilas: "/private-label",
         "maquilas-v2": "/private-label",
+        test2mbb: "/test2mbb-en",
         brands: "/brands",
         turismo: "/tourism",
         "experience-oro": "/tourism/gold",
@@ -472,6 +480,9 @@ export default function App() {
             <Route path="/test1mbb" element={<MaquilasV3 lang="es" />} />
             <Route path="/test1mbb-en" element={<MaquilasV3 lang="en" />} />
             <Route path="/test1mbb/en" element={<MaquilasV3 lang="en" />} />
+            <Route path="/test2mbb" element={<Test2MBB lang="es" setPage={setPage} />} />
+            <Route path="/test2mbb-en" element={<Test2MBB lang="en" setPage={setPage} />} />
+            <Route path="/test2mbb/en" element={<Test2MBB lang="en" setPage={setPage} />} />
             
             <Route path="/marcas" element={<Brands t={t} lang={lang} country={country} />} />
             <Route path="/brands" element={<Brands t={t} lang={lang} country={country} />} />
