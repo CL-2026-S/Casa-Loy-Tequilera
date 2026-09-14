@@ -1,33 +1,29 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import SEO from "../components/SEO";
 
 export default function Test2MBB({ lang = "es", setPage }) {
-  // Active route preloaded from §5.4 interaction
-  const [selectedRoute, setSelectedRoute] = useState(null);
+  const isEn = lang === "en";
 
-  // Quiz State
-  const [quizActive, setQuizActive] = useState(false);
+  // 3-Question Quiz State (Matching site flow)
   const [quizStep, setQuizStep] = useState(1);
-  const [quizData, setQuizData] = useState({
-    route: "",
+  const [quizAnswers, setQuizAnswers] = useState({
+    solution: "",
     stage: "",
-    market: "",
+    market: ""
+  });
+  const [contactForm, setContactForm] = useState({
     name: "",
     company: "",
-    email: "",
     lada: "+52",
     phone: "",
-    volume: "",
-    tequilaType: "",
-    assets: "",
-    timeline: "",
+    email: "",
     notes: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [quizResult, setQuizResult] = useState(null); // { score: number, assignedTo: string, time: string }
+  const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Inside Casa Loy active station (0 to 7)
+  // Inside Casa Loy active station index (0 to 7)
   const [activeInside, setActiveInside] = useState(0);
 
   // Cal.com Embed Loader
@@ -74,7 +70,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
       window.Cal("ui", {
         styles: {
           branding: {
-            brandColor: "#B5651D"
+            brandColor: "#8C4723"
           }
         },
         hideEventTypeDetails: false,
@@ -83,27 +79,21 @@ export default function Test2MBB({ lang = "es", setPage }) {
     }
   }, []);
 
-  // Content dictionary (EN / ES)
-  const isEn = lang === "en";
-
+  // Content dictionary
   const content = {
     hero: {
-      badge: "§5.1 · Hero B2B + Trust Bar",
+      overtitle: isEn ? "DISTILLERY & PRIVATE LABEL TEQUILA B2B · NOM 1633" : "DESTILERÍA & MAQUILA TEQUILA B2B · NOM 1633",
       h1: isEn ? (
-        <>Private Label Tequila Manufacturing in Mexico.<br />Your tequila starts in Los Altos de Jalisco.</>
+        <>Private Label Tequila Manufacturing in Mexico.<br /><span className="text-[#E8B04B] italic">Your tequila starts in Los Altos de Jalisco.</span></>
       ) : (
-        <>Maquila de Tequila de Marca Privada en México.<br />Tu tequila comienza en Los Altos de Jalisco.</>
+        <>Maquila de Tequila de Marca Privada en México.<br /><span className="text-[#E8B04B] italic">Tu tequila comienza en Los Altos de Jalisco.</span></>
       ),
       secondary: isEn ? '"Your vision. Our expertise."' : '"Tu visión. Nuestra experiencia."',
       sub: isEn
         ? "A family-owned NOM 1633 distillery built for founders, existing brands, and distributors ready to build with a real origin behind them."
         : "Una destilería familiar NOM 1633 concebida para fundadores, marcas existentes y distribuidores listos para construir con un origen real detrás.",
       ctaStart: isEn ? "Start My Project →" : "Iniciar mi proyecto →",
-      ctaCall: isEn ? "Book a Technical Call" : "Agendar llamada técnica",
-      specTracking: "Tracking: hero_start_project_click · hero_book_call_click · scroll_25",
-      specWarn: isEn 
-        ? "Do not open with 'Your vision. Our expertise.' as H1 — only as secondary phrase (already applied above)"
-        : "No abrir con 'Your vision. Our expertise.' como H1 — solo como frase secundaria (ya aplicado arriba)"
+      ctaCall: isEn ? "Book a Technical Call" : "Agendar llamada técnica"
     },
     trust: isEn ? [
       "NOM 1633", "Los Altos de Jalisco", "Family-owned",
@@ -113,63 +103,88 @@ export default function Test2MBB({ lang = "es", setPage }) {
       "Raíces agaveras desde 1992", "Control por lotes", "Coordinación de exportación"
     ],
     why: {
-      tag: "§5.2",
       eyebrow: isEn ? "Why Casa Loy" : "¿Por qué Casa Loy?",
       title: isEn
         ? "A family-owned tequila producer in Los Altos de Jalisco."
         : "Un productor de tequila familiar en Los Altos de Jalisco.",
       cards: isEn ? [
-        { wk: "Origin", h3: "NOM 1633, Los Altos de Jalisco", anchor: "#agave-supply" },
-        { wk: "Structure", h3: "Family-owned, three generations", anchor: "#social-proof" },
-        { wk: "Agave", h3: "Own cultivation since 1992", anchor: "#agave-supply" },
-        { wk: "Team", h3: "Real people behind every project", anchor: "#social-proof" },
-        { wk: "Infrastructure", h3: "Built for serious, growing projects", anchor: "#methods" },
-        { wk: "Quality", h3: "Batch control on every production", anchor: "#quality-compliance" }
+        { wk: "Origin", h3: "NOM 1633, Los Altos de Jalisco", desc: "Designation of origin protected production in Jalisco highlands.", anchor: "#agave-supply" },
+        { wk: "Structure", h3: "Family-owned, three generations", desc: "Long-term commitment, direct leadership and stable partnerships.", anchor: "#social-proof" },
+        { wk: "Agave", h3: "Own cultivation since 1992", desc: "3,600 hectares ensuring price security and guaranteed supply.", anchor: "#agave-supply" },
+        { wk: "Team", h3: "Real people behind every project", desc: "Master distillers, chemical engineers, and international trade advisers.", anchor: "#social-proof" },
+        { wk: "Infrastructure", h3: "Built for serious, growing projects", desc: "Industrial scale flexibility from pilot runs to bulk containers.", anchor: "#methods" },
+        { wk: "Quality", h3: "Batch control on every production", desc: "Internal laboratory and CRT compliance verification on every run.", anchor: "#quality-compliance" }
       ] : [
-        { wk: "Origen", h3: "NOM 1633, Los Altos de Jalisco", anchor: "#agave-supply" },
-        { wk: "Estructura", h3: "Familiar, tres generaciones", anchor: "#social-proof" },
-        { wk: "Agave", h3: "Cultivo propio desde 1992", anchor: "#agave-supply" },
-        { wk: "Equipo", h3: "Personas reales detrás de cada proyecto", anchor: "#social-proof" },
-        { wk: "Infraestructura", h3: "Construido para proyectos serios en crecimiento", anchor: "#methods" },
-        { wk: "Calidad", h3: "Control por lote en cada producción", anchor: "#quality-compliance" }
-      ],
-      specInteraction: isEn ? "Each card anchors to: origin, quality, compliance, team" : "Cada tarjeta ancla a: origin, quality, compliance, team",
-      specWarn: isEn ? "Do not put Orbe XXI as protagonist nor corporate logos on top" : "No poner Orbe XXI como protagonista ni logos corporativos arriba"
+        { wk: "Origen", h3: "NOM 1633, Los Altos de Jalisco", desc: "Producción protegida bajo denominación de origen en los Altos de Jalisco.", anchor: "#agave-supply" },
+        { wk: "Estructura", h3: "Familiar, tres generaciones", desc: "Compromiso generacional, trato directo sin burocracia y alianzas sólidas.", anchor: "#social-proof" },
+        { wk: "Agave", h3: "Cultivo propio desde 1992", desc: "3,600 hectáreas que blindan tu costo por litro y garantizan abasto continuo.", anchor: "#agave-supply" },
+        { wk: "Equipo", h3: "Personas reales detrás de cada proyecto", desc: "Maestros tequileros, ingenieros químicos y coordinadores de exportación.", anchor: "#social-proof" },
+        { wk: "Infraestructura", h3: "Construido para proyectos serios en crecimiento", desc: "Flexibilidad industrial desde lotes piloto hasta tanques de granel.", anchor: "#methods" },
+        { wk: "Calidad", h3: "Control por lote en cada producción", desc: "Laboratorio interno y verificación estricta de cumplimiento CRT por lote.", anchor: "#quality-compliance" }
+      ]
     },
     inside: {
-      tag: "§5.3",
       eyebrow: isEn ? "Inside Casa Loy" : "Dentro de Casa Loy",
       title: isEn ? "From agave to bottle." : "Del agave a la botella.",
-      stations: isEn ? [
-        { num: "01", name: "Agave", desc: "Selected Blue Weber agaves matured 6-7 years in Los Altos highlands." },
-        { num: "02", name: "Cooking", desc: "Slow steam cooking preserving natural sugars and rich caramels." },
-        { num: "03", name: "Milling", desc: "Gentle fiber shredding and traditional extraction of sweet agave honey." },
-        { num: "04", name: "Fermentation", desc: "Temperature-controlled stainless steel vats with proprietary yeasts." },
-        { num: "05", name: "Distillation", desc: "Double distillation in authentic copper pot stills and hybrid columns." },
-        { num: "06", name: "Aging Barrels", desc: "Underground barrel cellar with American and French white oak casks." },
-        { num: "07", name: "Lab", desc: "Continuous chemical and chromatographic validation on every batch." },
-        { num: "08", name: "Bottling", desc: "High-precision automated bottling, manual inspection, and sealing." }
-      ] : [
-        { num: "01", name: "Agave", desc: "Agaves Blue Weber seleccionados y madurados 6-7 años en Los Altos." },
-        { num: "02", name: "Cocción", desc: "Cocimiento lento al vapor preservando azúcares naturales y notas caramelizadas." },
-        { num: "03", name: "Molienda", desc: "Desfibrado cuidadoso y extracción tradicional de mieles de agave puras." },
-        { num: "04", name: "Fermentación", desc: "Tinas de acero inoxidable con control térmico y levaduras propias." },
-        { num: "05", name: "Destilación", desc: "Doble destilación en alambiques de cobre tradicionales y columnas híbridas." },
-        { num: "06", name: "Barricas", desc: "Cava subterránea con barricas de roble blanco americano y francés." },
-        { num: "07", name: "Laboratorio", desc: "Verificación química y cromatográfica continua lote por lote." },
-        { num: "08", name: "Envasado", desc: "Línea de embotellado de alta precisión, inspección visual y sellado." }
-      ],
-      specWarn: isEn ? "Do not display as machinery catalog or capacity figures as headlines" : "No mostrar como catálogo de maquinaria ni con números de capacidad como titulares"
+      stations: [
+        {
+          num: "01",
+          name: isEn ? "Agave" : "Agave",
+          desc: isEn ? "Selected Blue Weber agaves matured 6-7 years in Los Altos highlands." : "Agaves Blue Weber seleccionados y madurados 6-7 años en Los Altos.",
+          img: "/Piñas de Agave Tequilana Weber.webp"
+        },
+        {
+          num: "02",
+          name: isEn ? "Cooking" : "Cocción",
+          desc: isEn ? "Slow steam cooking preserving natural sugars and rich caramels." : "Cocimiento lento al vapor preservando azúcares naturales y notas caramelizadas.",
+          img: "/Cocimiento.webp"
+        },
+        {
+          num: "03",
+          name: isEn ? "Milling" : "Molienda",
+          desc: isEn ? "Gentle fiber shredding and traditional extraction of sweet agave honey." : "Desfibrado cuidadoso y extracción tradicional de mieles de agave puras.",
+          img: "/Tahona Agave Molienda.webp"
+        },
+        {
+          num: "04",
+          name: isEn ? "Fermentation" : "Fermentación",
+          desc: isEn ? "Temperature-controlled stainless steel vats with proprietary yeasts." : "Tinas de acero inoxidable con control térmico y levaduras propias.",
+          img: "/Fermentación.webp"
+        },
+        {
+          num: "05",
+          name: isEn ? "Distillation" : "Destilación",
+          desc: isEn ? "Double distillation in authentic copper pot stills and hybrid columns." : "Doble destilación en alambiques de cobre tradicionales y columnas híbridas.",
+          img: "/Destilación.webp"
+        },
+        {
+          num: "06",
+          name: isEn ? "Aging Barrels" : "Barricas",
+          desc: isEn ? "Underground barrel cellar with American and French white oak casks." : "Cava subterránea con barricas de roble blanco americano y francés.",
+          img: "/Añejamiento Barricas.webp"
+        },
+        {
+          num: "07",
+          name: isEn ? "Lab" : "Laboratorio",
+          desc: isEn ? "Continuous chemical and chromatographic validation on every batch." : "Verificación química y cromatográfica continua lote por lote.",
+          img: "/Laboratorio.webp"
+        },
+        {
+          num: "08",
+          name: isEn ? "Bottling" : "Envasado",
+          desc: isEn ? "High-precision automated bottling, manual inspection, and sealing." : "Línea de embotellado de alta precisión, inspección visual y sellado.",
+          img: "/Embotellado 2.webp"
+        }
+      ]
     },
     solutions: {
-      tag: "§5.4",
       eyebrow: isEn ? "Solutions" : "Rutas de solución",
       title: isEn ? "Choose the right production path." : "Elige la ruta de producción adecuada.",
       routes: isEn ? [
         {
           num: "01",
           title: "Private Label Tequila",
-          desc: "Create or sell tequila under your own brand.",
+          desc: "Create or sell tequila under your own brand with full turnkey support.",
           tag: "private_label"
         },
         {
@@ -181,7 +196,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
         {
           num: "03",
           title: "Bulk Tequila Supply",
-          desc: "Bulk tequila for bottlers, importers or distributors.",
+          desc: "Bulk tequila 100% agave or mixto for bottlers, importers or distributors.",
           tag: "bulk_tequila"
         },
         {
@@ -193,26 +208,26 @@ export default function Test2MBB({ lang = "es", setPage }) {
         {
           num: "05",
           title: "Custom Profile Development",
-          desc: "Development or adjustment of liquid profile.",
+          desc: "Sensory development or calibration of your proprietary liquid profile.",
           tag: "custom_profile"
         }
       ] : [
         {
           num: "01",
           title: "Tequila de Marca Privada",
-          desc: "Crea o vende tequila bajo tu propia marca comercial.",
+          desc: "Crea o vende tequila bajo tu propia marca con soporte integral llave en mano.",
           tag: "private_label"
         },
         {
           num: "02",
           title: "Maquila por Contrato",
-          desc: "Producción para terceros bajo especificación, con o sin marca existente.",
+          desc: "Producción para terceros bajo especificación técnica, con o sin marca existente.",
           tag: "contract_manufacturing"
         },
         {
           num: "03",
           title: "Suministro de Tequila a Granel",
-          desc: "Tequila a granel para envasadores, importadores o distribuidores.",
+          desc: "Tequila a granel 100% agave o mixto para envasadores, importadores o distribuidores.",
           tag: "bulk_tequila"
         },
         {
@@ -224,7 +239,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
         {
           num: "05",
           title: "Desarrollo de Perfil a la Medida",
-          desc: "Desarrollo o calibración sensorial fina de tu perfil de líquido.",
+          desc: "Desarrollo o calibración sensorial fina de tu perfil de líquido exclusivo.",
           tag: "custom_profile"
         }
       ],
@@ -232,196 +247,203 @@ export default function Test2MBB({ lang = "es", setPage }) {
         <>Can't find your exact model? <strong>We adapt to custom project requirements.</strong></>
       ) : (
         <>¿No encuentras tu modelo exacto? <strong>Nos adaptamos a los requerimientos específicos de tu proyecto.</strong></>
-      ),
-      specInteraction: isEn ? "Selecting route pre-loads answer into quiz and CRM tag" : "Al seleccionar ruta, precargar respuesta en quiz y etiqueta CRM",
-      specWarn: isEn ? "Do not use '360° Solutions' as title — sounds generic" : "No usar 'Soluciones 360°' como título — suena genérico"
+      )
     },
     who: {
-      tag: "§5.5",
       eyebrow: isEn ? "Who this is for" : "A quién va dirigido",
       title: isEn ? "Find the right path for your tequila project." : "Encuentra la ruta adecuada para tu proyecto tequilero.",
       cards: isEn ? [
-        { tag: "Founders", h3: "Building a tequila brand from the ground up" },
-        { tag: "Existing brands", h3: "Looking for a better production partner" },
-        { tag: "Distributors / Importers", h3: "Entering tequila as a new category" },
-        { tag: "Bulk buyers", h3: "Sourcing steady volume at defined profile" }
+        { tag: "Founders", h3: "Building a tequila brand from the ground up", desc: "Turnkey operational path from CRT registration to world-class liquid." },
+        { tag: "Existing brands", h3: "Looking for a better production partner", desc: "Smooth transition without inventory stockout or organoleptic change." },
+        { tag: "Distributors / Importers", h3: "Entering tequila as a new category", desc: "High-volume consistency, export certification and compliant logistics." },
+        { tag: "Bulk buyers", h3: "Sourcing steady volume at defined profile", desc: "Stable pricing backed by 3,600 hectares of blue weber agave supply." }
       ] : [
-        { tag: "Fundadores", h3: "Construyendo una marca de tequila desde cero" },
-        { tag: "Marcas existentes", h3: "Buscando un mejor socio de producción" },
-        { tag: "Distribuidores / Importadores", h3: "Entrando al tequila como una nueva categoría" },
-        { tag: "Compradores a granel", h3: "Abastecimiento constante con un perfil definido" }
-      ],
-      specWarn: isEn ? "Do not publish Profile A/B/C, BOFU/MOFU or internal jargon" : "No publicar Perfil A/B/C, BOFU/MOFU ni frases internas como 'marca quemada'"
+        { tag: "Fundadores", h3: "Construyendo una marca de tequila desde cero", desc: "Ruta operativa llave en mano desde trámites de CRT hasta un líquido excepcional." },
+        { tag: "Marcas existentes", h3: "Buscando un mejor socio de producción", desc: "Transición fluida sin riesgo de desabasto ni variación en tu perfil sensorial." },
+        { tag: "Distribuidores / Importadores", h3: "Entrando al tequila como una nueva categoría", desc: "Volumen a gran escala, certificados de exportación y certeza arancelaria." },
+        { tag: "Compradores a granel", h3: "Abastecimiento constante con un perfil definido", desc: "Precios estables respaldados por 3,600 hectáreas de agave azul propio." }
+      ]
     },
     stake: {
-      tag: "§5.6",
       eyebrow: isEn ? "What's at stake" : "Lo que está en juego",
       title: isEn
         ? "Your tequila project carries real business risk. We help you reduce it."
         : "Tu proyecto de tequila conlleva un riesgo empresarial real. Te ayudamos a reducirlo.",
       rows: isEn ? [
-        { num: "01", title: "Starting from zero", desc: "Entering a category you don't know yet." },
-        { num: "02", title: "Switching producer", desc: "Making sure the next transition doesn't repeat the last problem." },
-        { num: "03", title: "Scaling / distribution", desc: "Growing volume without losing consistency." },
-        { num: "04", title: "Exporting", desc: "Adding tequila to an existing book of business the right way." }
+        { num: "01", title: "Starting from zero", desc: "Entering a category you don't know yet — we guide you through regulatory, formulation and supply requirements." },
+        { num: "02", title: "Switching producer", desc: "Making sure the next transition doesn't repeat the last problem — guaranteed contracts, batch trace and clear IP." },
+        { num: "03", title: "Scaling / distribution", desc: "Growing volume without losing consistency — modular capacity up to 13.5M liters annually." },
+        { num: "04", title: "Exporting", desc: "Adding tequila to an existing book of business the right way — complete CRT, TTB and customs documentation." }
       ] : [
-        { num: "01", title: "Empezar desde cero", desc: "Entrar a una categoría que aún no conoces." },
-        { num: "02", title: "Cambiar de productor", desc: "Asegurarse de que la próxima transición no repita el problema anterior." },
-        { num: "03", title: "Escalamiento / distribución", desc: "Crecer volumen sin perder consistencia jamás." },
-        { num: "04", title: "Exportación", desc: "Incorporar tequila a tu cartera de negocios de la forma correcta." }
+        { num: "01", title: "Empezar desde cero", desc: "Entrar a una categoría que aún no conoces — te asesoramos en regulaciones, formulación, envasado y abasto." },
+        { num: "02", title: "Cambiar de maquilador", desc: "Asegurarse de que la próxima transición no repita el problema anterior — contratos formales y trazabilidad estricta." },
+        { num: "03", title: "Escalamiento / distribución", desc: "Crecer volumen sin perder consistencia jamás — capacidad modular escalable hasta 13.5M L anuales." },
+        { num: "04", title: "Exportación", desc: "Incorporar tequila a tu cartera de negocios de la forma correcta — certificados CRT, TTB para EE. UU. y aduanas." }
       ]
     },
-    quiz: {
-      tag: "§5.7 · 8 pasos + lead score",
-      eyebrow: isEn ? "Diagnosis" : "Diagnóstico",
+    quiz3: {
+      badge: isEn ? "STRATEGIC DIAGNOSTIC · 3 QUESTIONS" : "DIAGNÓSTICO ESTRATÉGICO · 3 PREGUNTAS",
       title: isEn ? "Where does your tequila project stand today?" : "¿En qué etapa se encuentra hoy tu proyecto de tequila?",
       sub: isEn
-        ? "8-step diagnosis — captures route, stage, market, contact, volume, tequila type, assets ready, timeline."
-        : "Diagnóstico de 8 pasos — captura ruta, etapa, mercado, contacto, volumen, tipo de tequila, recursos listos y tiempos.",
-      btnStart: isEn ? "Start diagnosis →" : "Iniciar diagnóstico →",
-      leadNote: isEn
-        ? "LEAD SCORE → 70+ Luis (24h) · 45–69 Fernanda (24–48h) · 25–44 nurture email · <25 automated"
-        : "LEAD SCORE → 70+ Luis (24h) · 45–69 Fernanda (24–48h) · 25–44 correo de seguimiento · <25 automatizado",
-      stepLabels: isEn ? [
-        "What are you looking for?",
-        "What stage is your project in?",
-        "What is your target market?",
-        "Contact details",
-        "Estimated volume",
-        "Tequila type",
-        "Assets ready",
-        "Timeline & notes"
-      ] : [
-        "¿Qué estás buscando?",
-        "¿En qué etapa está tu proyecto?",
-        "¿Cuál es tu mercado objetivo?",
-        "Datos de contacto",
-        "Volumen estimado",
-        "Tipo de tequila",
-        "Recursos listos",
-        "Tiempos y notas"
-      ],
-      specWarn: isEn ? "Do not start the site with the quiz or promise fixed price/dates from chatbot" : "No iniciar el sitio con el quiz ni prometer precio/fecha desde el chatbot"
+        ? "Complete this 3-step diagnostic to evaluate technical feasibility and receive a tailor-made proposal from our distilling team."
+        : "Completa este diagnóstico de 3 preguntas para evaluar la viabilidad operativa de tu proyecto y recibir una propuesta técnica personalizada.",
+      step1Title: isEn ? "1. What type of solution does your project require?" : "1. ¿Qué tipo de solución requiere tu proyecto?",
+      step2Title: isEn ? "2. What stage is your project currently in?" : "2. ¿En qué etapa se encuentra tu proyecto?",
+      step3Title: isEn ? "3. What is the primary target market for your tequila?" : "3. ¿Cuál es el mercado objetivo principal de tu tequila?",
+      step4Title: isEn ? "4. Contact details for technical proposal" : "4. Datos de contacto para envío de propuesta",
+      step4Sub: isEn
+        ? "A master distiller or production specialist will review your specifications without obligation."
+        : "Un maestro tequilero o especialista de producción revisará los parámetros de tu proyecto sin compromiso.",
+      btnNext: isEn ? "Continue →" : "Continuar →",
+      btnBack: isEn ? "← Back" : "← Regresar",
+      btnSubmit: isEn ? "RECEIVE PROPOSAL & TECHNICAL ADVICE →" : "RECIBIR PROPUESTA Y ASESORÍA TÉCNICA →",
+      btnSubmitting: isEn ? "SENDING DETAILS..." : "ENVIANDO INFORMACIÓN...",
+      successTitle: isEn ? "Diagnosis Received Successfully!" : "¡Diagnóstico Recibido con Éxito!",
+      successSub: isEn
+        ? "Thank you for sharing your project details. A Casa Loy production specialist will review your parameters and contact you within 24 hours."
+        : "Gracias por compartir los detalles de tu proyecto. Un especialista de producción de Casa Loy revisará tus especificaciones y se comunicará en menos de 24 horas."
     },
     process: {
-      tag: "§5.8",
       eyebrow: isEn ? "Process" : "Proceso",
       title: isEn ? "From idea to production: a clear path before you commit." : "De la idea a la producción: una ruta clara antes de comprometerte.",
-      steps: isEn ? [
-        { num: "01", title: "Project diagnosis" },
-        { num: "02", title: "Technical call" },
-        { num: "03", title: "Product definition" },
-        { num: "04", title: "Compliance path" },
-        { num: "05", title: "Production & control" },
-        { num: "06", title: "Shipment coordination" }
-      ] : [
-        { num: "01", title: "Diagnóstico del proyecto" },
-        { num: "02", title: "Llamada técnica" },
-        { num: "03", title: "Definición de producto" },
-        { num: "04", title: "Ruta de cumplimiento" },
-        { num: "05", title: "Producción y control" },
-        { num: "06", title: "Coordinación de embarque" }
-      ],
-      specWarn: isEn ? "Do not commit exact turnaround times if not approved by operations" : "No comprometer tiempos exactos si no están aprobados por operación"
+      steps: [
+        {
+          num: "01",
+          title: isEn ? "Project diagnosis" : "Diagnóstico del proyecto",
+          desc: isEn ? "We evaluate your concept, volume, market target, and profile requirements." : "Evaluamos tu concepto, volumen proyectado, mercado meta y requerimientos de perfil.",
+          img: "/Cata Experiencias.webp"
+        },
+        {
+          num: "02",
+          title: isEn ? "Technical call" : "Llamada técnica",
+          desc: isEn ? "20-minute video session with our distilling and commercial engineering team." : "Sesión de 20 minutos con nuestro equipo técnico de destilación e ingeniería comercial.",
+          img: "/Restaurante 1937 Nativo atención al cliente.webp"
+        },
+        {
+          num: "03",
+          title: isEn ? "Product definition" : "Definición de producto",
+          desc: isEn ? "Benchmarking liquid profiles, organoleptic tastings, and packaging feasibility." : "Calibración de perfil de líquido, catas organolépticas y viabilidad de envasado.",
+          img: "/Tahona Agave Molienda.webp"
+        },
+        {
+          num: "04",
+          title: isEn ? "Compliance path" : "Ruta de cumplimiento",
+          desc: isEn ? "Coordination of NOM 1633, CRT brand registration, and TTB export certificates." : "Coordinación de registro de marca ante CRT, norma NOM 1633 y certificados TTB.",
+          img: "/Laboratorio Maquilas.webp"
+        },
+        {
+          num: "05",
+          title: isEn ? "Production & control" : "Producción y control",
+          desc: isEn ? "Batch distillation, aging cellar allocation, and laboratory chromatographic clearance." : "Destilación por lotes, asignación de cava de barricas y liberación de laboratorio.",
+          img: "/Destilación.webp"
+        },
+        {
+          num: "06",
+          title: isEn ? "Shipment coordination" : "Coordinación de embarque",
+          desc: isEn ? "Bottling inspection, palletizing, export documentation, and customs handover." : "Inspección de embotellado, paletizado, documentación de exportación y despacho aduanal.",
+          img: "/Embotellado 2.webp"
+        }
+      ]
     },
     methods: {
-      tag: "§5.9 · two-layer",
       eyebrow: isEn ? "Production, by result" : "Producción según resultado",
       title: isEn ? "The tequila profile your brand needs, and how we build it." : "El perfil de tequila que tu marca necesita y cómo lo construimos.",
       profiles: isEn ? [
         {
           num: "Profile 01",
           title: "Heritage / Ultra-Premium",
-          bottom: "Stone mill, traditional oven, pot still."
+          bottom: "Stone mill, traditional oven, pot still.",
+          desc: "Earthy, complex cooked agave notes with artisanal depth."
         },
         {
           num: "Profile 02",
           title: "Premium Consistent",
-          bottom: "Autoclave, precise control."
+          bottom: "Autoclave, precise control.",
+          desc: "Clean, floral and bright citrus expressions with absolute batch consistency."
         },
         {
           num: "Profile 03",
           title: "Scalable Commercial",
-          bottom: "Column still, high efficiency."
+          bottom: "Column still, high efficiency.",
+          desc: "Silky, smooth and versatile profiles built for high-volume global distribution."
         },
         {
           num: "Profile 04",
           title: "Custom Signature",
-          bottom: "Signature yeast, wine or whiskey barrels."
+          bottom: "Signature yeast, wine or whiskey barrels.",
+          desc: "Bespoke cask finishing in virgin French oak, bourbon, or port barrels."
         }
       ] : [
         {
           num: "Perfil 01",
           title: "Herencia / Ultra-Premium",
-          bottom: "Molino de piedra (tahona), horno tradicional de mampostería, alambique de cobre."
+          bottom: "Molino de piedra (tahona), horno tradicional de mampostería, alambique de cobre.",
+          desc: "Notas terrosas, agave cocido maduro y profundidad artesanal compleja."
         },
         {
           num: "Perfil 02",
           title: "Premium Consistente",
-          bottom: "Autoclave, control térmico de precisión."
+          bottom: "Autoclave, control térmico de precisión.",
+          desc: "Perfiles limpios, florales y cítricos con consistencia milimétrica lote a lote."
         },
         {
           num: "Perfil 03",
           title: "Comercial Escalable",
-          bottom: "Destilación en columna continua, máxima eficiencia."
+          bottom: "Destilación en columna continua, máxima eficiencia.",
+          desc: "Sensación en boca sedosa, balanceada y versátil para marcas de gran volumen."
         },
         {
           num: "Perfil 04",
           title: "Firma / De Autor",
-          bottom: "Levaduras exclusivas, barricas de roble de vino o whisky."
+          bottom: "Levaduras exclusivas, barricas de roble de vino o whisky.",
+          desc: "Crianza a la medida en roble blanco americano, bourbon o barricas de vino."
         }
-      ],
-      specWarn: isEn ? "Do not present tahona/oven/autoclave/column as 4 equivalent methods — they are stages, not parallel options" : "No presentar tahona/horno/autoclave/columna como 4 métodos equivalentes — son etapas, no opciones paralelas"
+      ]
     },
     agave: {
-      tag: isEn ? "§5.10 · new section in this version" : "§5.10 · sección nueva en esta versión",
       eyebrow: isEn ? "Agave & supply" : "Agave y suministro",
       title: isEn ? "Your tequila brand starts before production — it starts with supply." : "Tu marca de tequila comienza antes de la producción — empieza con el suministro.",
       facts: isEn ? [
-        { k: "Origin", v: "Los Altos de Jalisco, Ayotlán" },
-        { k: "Since", v: "Agave roots since 1992" },
-        { k: "Traceability", v: "Field-level knowledge, supply planning" }
+        { k: "Origin", v: "Los Altos de Jalisco, Ayotlán", desc: "Mineral-rich red highland soil ideal for Blue Weber Agave." },
+        { k: "Since", v: "Agave roots since 1992", desc: "Over 3 decades of agricultural mastery, avoiding raw material brokers." },
+        { k: "Traceability", v: "Field-level knowledge, supply planning", desc: "3,600 estate hectares securing long-term cost stability per liter." }
       ] : [
-        { k: "Origen", v: "Los Altos de Jalisco, Ayotlán" },
-        { k: "Desde", v: "Raíces agaveras desde 1992" },
-        { k: "Trazabilidad", v: "Conocimiento a nivel de campo, planeación de abasto" }
-      ],
-      specWarn: isEn ? "Do not use 'organic agave' as main claim unless certified — use 'agave roots since 1992'" : "No usar 'organic agave' como promesa principal si no está certificado — usar 'agave roots since 1992'"
+        { k: "Origen", v: "Los Altos de Jalisco, Ayotlán", desc: "Tierra roja mineral de Los Altos óptima para la acumulación de azúcares." },
+        { k: "Desde", v: "Raíces agaveras desde 1992", desc: "Más de 3 décadas de experiencia agrícola directa, sin depender de coyotes." },
+        { k: "Trazabilidad", v: "Conocimiento a nivel de campo, planeación de abasto", desc: "3,600 hectáreas propias que blindan la estabilidad de costo de tu marca." }
+      ]
     },
     qualityCompliance: {
       quality: {
-        tag: "§5.11",
         eyebrow: isEn ? "Quality" : "Calidad",
         title: isEn ? "Batch-to-batch consistency your brand can defend." : "Consistencia lote tras lote que tu marca puede defender.",
         lede: isEn ? "Lab verification, defined parameters, batch review, traceability and client approval before shipping." : "Verificación de laboratorio, parámetros definidos, revisión de lote, trazabilidad y aprobación del cliente antes de embarcar.",
         list: isEn ? [
-          "In-house lab, every batch",
-          "Client approval before shipping",
-          "Batch-to-batch traceability"
+          "In-house lab validation on every single production batch",
+          "Written client organoleptic approval prior to dispatch",
+          "Full field-to-bottle traceability records under NOM 1633"
         ] : [
-          "Laboratorio interno en cada lote",
-          "Aprobación del cliente antes del embarque",
-          "Trazabilidad completa lote a lote"
+          "Laboratorio interno validando cada lote de producción",
+          "Aprobación organoléptica del cliente antes del despacho",
+          "Trazabilidad completa de campo a botella bajo NOM 1633"
         ]
       },
       compliance: {
-        tag: "§5.12",
         eyebrow: isEn ? "Compliance & export" : "Cumplimiento y exportación",
         title: isEn ? "We help coordinate compliance, not carry it alone." : "Ayudamos a coordinar el cumplimiento, no a cargarlo en solitario.",
         lede: isEn ? "We help coordinate the compliance and export documentation path with the right parties involved." : "Ayudamos a coordinar la ruta de cumplimiento y documentación de exportación con los actores clave involucrados.",
         list: isEn ? [
-          "NOM 1633 · CRT",
-          "Export documentation",
-          "Coordination with legal & distribution partners"
+          "NOM 1633 · Consejo Regulador del Tequila (CRT) certification",
+          "Complete export documentation (Certificate of Origin, TTB / FDA)",
+          "Active coordination with your legal, customs, and distribution partners"
         ] : [
-          "NOM 1633 · CRT",
-          "Documentación de exportación",
-          "Coordinación con socios legales y de distribución"
+          "Certificación NOM 1633 ante el Consejo Regulador del Tequila (CRT)",
+          "Documentación completa de exportación (Certificado de Origen, TTB / FDA)",
+          "Coordinación activa con tus asesores legales, aduanales y distribuidores"
         ]
       }
     },
     nda: {
-      tag: isEn ? "§5.12b · 🆕 NEW" : "§5.12b · 🆕 NUEVO",
       title: isEn ? "Your Brand. Your Project. Protected." : "Tu Marca. Tu Proyecto. Protegido.",
       desc: isEn
         ? "Your formula stays yours. Every project includes a confidentiality agreement, clear IP ownership terms, and controlled documentation — so your development process is protected from day one."
@@ -429,26 +451,23 @@ export default function Test2MBB({ lang = "es", setPage }) {
       badge: isEn ? "NDA available" : "NDA disponible"
     },
     proof: {
-      tag: "§5.13",
       eyebrow: isEn ? "Proof, not promises" : "Evidencia, no promesas",
       title: isEn
         ? "Every project receives direct attention from the people involved in production, quality, compliance and commercial coordination."
         : "Cada proyecto recibe atención directa de las personas involucradas en producción, calidad, cumplimiento y coordinación comercial.",
       cards: isEn ? [
-        { tag: "Attention", h3: "Direct attention from the team on every project" },
-        { tag: "Process", h3: "Verified, traceable production process" },
-        { tag: "Cases", h3: "Authorized case studies — coming soon" },
-        { tag: "Testimonials", h3: "Client testimonials — published with permission only" }
+        { tag: "Attention", h3: "Direct attention from the team on every project", desc: "No impersonal ticket systems. You work directly with production directors." },
+        { tag: "Process", h3: "Verified, traceable production process", desc: "Full batch reports and lab assays provided before every bottling run." },
+        { tag: "Cases", h3: "Authorized case studies — coming soon", desc: "Proven track records across premium Mexican and international brands." },
+        { tag: "Testimonials", h3: "Client testimonials — published with permission only", desc: "Strict confidentiality and partner discretion strictly respected." }
       ] : [
-        { tag: "Atención", h3: "Atención directa del equipo en cada proyecto" },
-        { tag: "Proceso", h3: "Proceso de producción verificado y trazable" },
-        { tag: "Casos", h3: "Casos de estudio autorizados — próximamente" },
-        { tag: "Testimonios", h3: "Testimonios de clientes — publicados únicamente bajo permiso" }
-      ],
-      specWarn: isEn ? "Do not claim 'hundreds of brands' or client awards without written authorization" : "No presumir 'cientos de marcas' ni premios de clientes sin autorización escrita"
+        { tag: "Atención", h3: "Atención directa del equipo en cada proyecto", desc: "Sin burocracia. Trato directo con directores de producción y maestros tequileros." },
+        { tag: "Proceso", h3: "Proceso de producción verificado y trazable", desc: "Reportes químicos de laboratorio entregados antes de cada lote de embotellado." },
+        { tag: "Casos", h3: "Casos de estudio autorizados — próximamente", desc: "Experiencia comprobada maquilando marcas premium nacionales e internacionales." },
+        { tag: "Testimonios", h3: "Testimonios de clientes — publicados únicamente bajo permiso", desc: "Confidencialidad absoluta y respeto estricto a la discreción de cada socio." }
+      ]
     },
     faq: {
-      tag: isEn ? "§5.14 · +4 new questions" : "§5.14 · +4 preguntas nuevas",
       eyebrow: isEn ? "FAQ" : "Preguntas frecuentes",
       title: isEn ? "Straight answers, by intention." : "Respuestas claras, por intención.",
       blocks: [
@@ -457,18 +476,21 @@ export default function Test2MBB({ lang = "es", setPage }) {
           items: [
             {
               q: isEn ? "How do I start my own tequila brand?" : "¿Cómo inicio mi propia marca de tequila?",
-              a: isEn ? "It starts with your liquid's character, target market, and budget range." : "Comienza definiendo el carácter de tu líquido, el mercado objetivo y el rango de presupuesto.",
-              isNew: false
+              a: isEn 
+                ? "It starts with your liquid's character, target market, and budget range. We provide turnkey guidance from brand registration with CRT to your first commercial bottling."
+                : "Comienza definiendo el carácter de tu líquido, el mercado objetivo y el rango de presupuesto. Te brindamos acompañamiento llave en mano desde el registro de marca ante el CRT hasta tu primer lote comercial."
             },
             {
               q: isEn ? "Who owns my formula?" : "¿Quién es el dueño de mi fórmula?",
-              a: isEn ? "You do. Every project includes a confidentiality agreement and clear IP ownership terms." : "Tú. Cada proyecto incluye un acuerdo de confidencialidad y términos claros de propiedad intelectual.",
-              isNew: true
+              a: isEn 
+                ? "You do. Every project includes a formal confidentiality agreement (NDA) and clear IP ownership terms guaranteeing your exclusive rights."
+                : "Tú. Cada proyecto incluye un acuerdo de confidencialidad formal (NDA) y términos claros de propiedad intelectual que garantizan tus derechos exclusivos."
             },
             {
               q: isEn ? "Can I visit the distillery?" : "¿Puedo visitar la destilería?",
-              a: isEn ? "Yes. We welcome serious project visits — seeing the process firsthand is often the fastest way to know if we're the right fit." : "Sí. Recibimos visitas para proyectos serios — ver el proceso en persona es a menudo la forma más rápida de confirmar si somos el socio adecuado.",
-              isNew: true
+              a: isEn 
+                ? "Yes. We welcome serious project visits to our distillery in Ayotlán, Jalisco — seeing the facility firsthand is often the fastest way to confirm alignment."
+                : "Sí. Recibimos con gusto visitas para proyectos serios en nuestra destilería en Ayotlán, Jalisco — conocer la infraestructura en persona es la mejor forma de confirmar la compatibilidad operativa."
             }
           ]
         },
@@ -477,13 +499,15 @@ export default function Test2MBB({ lang = "es", setPage }) {
           items: [
             {
               q: isEn ? "Can I switch producers without interrupting inventory?" : "¿Puedo cambiar de productor sin interrumpir mi inventario?",
-              a: isEn ? "Yes — we map your timeline first, then build production around it." : "Sí — primero mapeamos tu cronograma de existencias y luego planificamos la producción en torno a él.",
-              isNew: false
+              a: isEn 
+                ? "Yes — we map your timeline and run pilot matching batches before your current inventory is depleted, ensuring zero supply gap."
+                : "Sí — planificamos tu cronograma de existencias y realizamos lotes piloto de calibración sensorial antes de que agotes tu inventario actual, garantizando abasto continuo."
             },
             {
               q: isEn ? "Can you produce exclusively for my brand?" : "¿Pueden producir exclusivamente para mi marca?",
-              a: isEn ? "Yes — exclusivity is part of the same protected development structure covered by your confidentiality agreement." : "Sí — la exclusividad forma parte de la misma estructura de desarrollo protegido cubierta por tu acuerdo de confidencialidad.",
-              isNew: true
+              a: isEn 
+                ? "Yes — exclusivity is part of the same protected development structure covered by your confidentiality agreement."
+                : "Sí — la exclusividad forma parte del mismo esquema de desarrollo protegido y confidencialidad que acordamos desde el inicio."
             }
           ]
         },
@@ -492,13 +516,15 @@ export default function Test2MBB({ lang = "es", setPage }) {
           items: [
             {
               q: isEn ? "Does Casa Loy offer bulk tequila?" : "¿Ofrece Casa Loy tequila a granel?",
-              a: isEn ? "Yes — bulk supply with a consistent, defined profile." : "Sí — suministro a granel con un perfil consistente y definido.",
-              isNew: false
+              a: isEn 
+                ? "Yes — bulk supply with a consistent, defined profile in 100% Agave or Mixto, shipped in certified food-grade ISO tanks or totes."
+                : "Sí — suministro de tequila a granel con perfil constante y certificado, 100% Agave o Mixto, embarcado en pipas, isotanques grado alimenticio o tótems de exportación."
             },
             {
               q: isEn ? "Can I use my own bottle?" : "¿Puedo usar mi propia botella?",
-              a: isEn ? "Yes. We can work with a bottle you've already sourced, or coordinate sourcing as part of your project." : "Sí. Podemos trabajar con una botella que ya tengas seleccionada o coordinar la proveeduría como parte de tu proyecto.",
-              isNew: true
+              a: isEn 
+                ? "Yes. We can work with a bottle you've already sourced, or coordinate sourcing and custom tooling as part of your project."
+                : "Sí. Podemos trabajar con una botella que ya tengas seleccionada o coordinar el abastecimiento, etiquetado y tapado como parte de tu proyecto."
             }
           ]
         },
@@ -507,8 +533,9 @@ export default function Test2MBB({ lang = "es", setPage }) {
           items: [
             {
               q: isEn ? "What documentation is needed to export from Mexico?" : "¿Qué documentación se necesita para exportar desde México?",
-              a: isEn ? "CRT export certificate, commercial invoice, certificate of origin, and TTB label approval for the U.S." : "Certificado de exportación del CRT, factura comercial, certificado de origen y aprobación de etiqueta TTB para EE. UU.",
-              isNew: false
+              a: isEn 
+                ? "CRT export certificate, commercial invoice, certificate of origin, and TTB label approval for the U.S."
+                : "Certificado de exportación emitido por el CRT, factura comercial, certificado de origen y aprobación de marbetes / etiquetas TTB para EE. UU."
             }
           ]
         },
@@ -517,544 +544,367 @@ export default function Test2MBB({ lang = "es", setPage }) {
           items: [
             {
               q: isEn ? "What does NOM 1633 mean for a tequila brand?" : "¿Qué significa NOM 1633 para una marca de tequila?",
-              a: isEn ? "It confirms the distillery is authorized under Mexico's denomination-of-origin standard." : "Confirma que la destilería está debidamente autorizada y registrada ante el Consejo Regulador del Tequila (CRT) bajo la norma oficial mexicana de denominación de origen.",
-              isNew: false
+              a: isEn 
+                ? "It confirms the distillery is authorized and audited under Mexico's official denomination-of-origin standard by the Tequila Regulatory Council (CRT)."
+                : "Confirma que la destilería está formalmente registrada, auditada y autorizada bajo la Norma Oficial Mexicana ante el Consejo Regulador del Tequila (CRT)."
             }
           ]
         }
-      ],
-      specWarn: isEn ? "Do not mix final consumer FAQ inside this B2B landing page" : "No mezclar FAQ de consumidor final dentro de esta landing B2B"
+      ]
     },
     finalCta: {
-      tag: isEn ? "§5.14 · Final CTA" : "§5.14 · CTA final",
       eyebrow: isEn ? "Next step" : "Siguiente paso",
       title: isEn ? "Book a 20-minute technical video call." : "Agenda una videollamada técnica de 20 minutos.",
       lede: isEn
         ? "No commitment. No sales pitch. A real conversation about whether your project is the right fit for what we do here."
         : "Sin compromisos ni discursos de ventas. Una conversación técnica real para evaluar si tu proyecto encaja con lo que hacemos aquí.",
       btnCall: isEn ? "Book a Technical Call →" : "Agendar llamada técnica →",
-      btnDetails: isEn ? "Send Project Details" : "Enviar detalles del proyecto"
-    },
-    footerNote: "CASA LOY TEQUILERA — GUÍA EJECUTABLE v2 · NOM 1633 · BASADO EN LA GUÍA EJECUTABLE INTEGRAL + INTEGRACIONES NDA/FAQ/CASO/ACEVES"
+      btnDetails: isEn ? "Complete Diagnostic Quiz" : "Completar diagnóstico"
+    }
   };
 
-  // Route select handler
-  const handleSelectRoute = (route) => {
-    setSelectedRoute(route.tag);
-    setQuizData((prev) => ({ ...prev, route: route.title }));
-    setQuizActive(true);
+  // Preload route from Solutions section into 3-question quiz
+  const handleSelectRoute = (rt) => {
+    setQuizAnswers((prev) => ({ ...prev, solution: rt.title }));
     const quizEl = document.getElementById("quiz");
     if (quizEl) {
       quizEl.scrollIntoView({ behavior: "smooth" });
     }
   };
 
-  // Calculate Lead Score & Executive
-  const calculateLeadScore = (data) => {
-    let score = 20; // base
-
-    // Stage
-    if (data.stage.includes("Existing") || data.stage.includes("Existente") || data.stage.includes("Distributor") || data.stage.includes("Distribuidor")) {
-      score += 25;
-    } else if (data.stage.includes("Formula") || data.stage.includes("Registrada")) {
-      score += 15;
-    } else {
-      score += 5;
-    }
-
-    // Volume
-    if (data.volume.includes("25,000") || data.volume.includes("Bulk") || data.volume.includes("Granel")) {
-      score += 30;
-    } else if (data.volume.includes("5,000")) {
-      score += 20;
-    } else if (data.volume.includes("1,000")) {
-      score += 10;
-    } else {
-      score += 5;
-    }
-
-    // Assets ready
-    if (data.assets.includes("Trademark") || data.assets.includes("Marca") || data.assets.includes("Licenses") || data.assets.includes("Licencias")) {
-      score += 15;
-    }
-
-    // Timeline
-    if (data.timeline.includes("Immediate") || data.timeline.includes("Inmediato") || data.timeline.includes("30 days")) {
-      score += 10;
-    }
-
-    let assignedTo = "Automated System";
-    let time = "Instant / Email";
-
-    if (score >= 70) {
-      assignedTo = "Luis (Dirección Comercial / Operaciones)";
-      time = isEn ? "Priority response within 24 hours" : "Respuesta prioritaria en menos de 24 horas";
-    } else if (score >= 45) {
-      assignedTo = "Fernanda (Atención a Cuentas B2B)";
-      time = isEn ? "Response within 24–48 hours" : "Respuesta técnica en 24 a 48 horas";
-    } else if (score >= 25) {
-      assignedTo = "Fernanda / Nurture Team";
-      time = isEn ? "Nurture sequence & technical dossier" : "Dossier técnico y correo de seguimiento";
-    } else {
-      assignedTo = isEn ? "Automated Information Pack" : "Paquete informativo automatizado";
-      time = isEn ? "Instant dispatch" : "Envío inmediato";
-    }
-
-    return { score, assignedTo, time };
-  };
-
-  // Submit diagnosis
+  // 3-Question Quiz Submit Handler
   const handleQuizSubmit = async (e) => {
     if (e) e.preventDefault();
-    if (!quizData.name || !quizData.email || !quizData.phone) {
-      setErrorMessage(isEn ? "Please complete required fields (Name, Email, Phone)." : "Por favor completa los campos obligatorios (Nombre, Correo, Teléfono).");
+    if (!contactForm.name || !contactForm.email || !contactForm.phone) {
+      setErrorMessage(isEn ? "Please fill in all required fields (Name, Email, Phone)." : "Por favor llena los campos obligatorios (Nombre, Correo, Teléfono).");
       return;
     }
 
     setIsSubmitting(true);
     setErrorMessage("");
 
-    const evaluation = calculateLeadScore(quizData);
-
     try {
       const payload = {
-        name: quizData.name,
-        company: quizData.company || "N/A",
-        email: quizData.email,
-        lada: quizData.lada || "+52",
-        phone: quizData.phone,
-        solution: quizData.route || "General Inquiry",
-        objective: `${quizData.tequilaType || "N/A"} - Target: ${quizData.market || "N/A"} - Vol: ${quizData.volume || "N/A"}`,
-        stage: quizData.stage || "Concept",
-        lead_type: `Test2MBB Score: ${evaluation.score} - Assigned: ${evaluation.assignedTo}`,
-        comments: `Assets: ${quizData.assets || "None"} | Timeline: ${quizData.timeline || "N/A"} | Notes: ${quizData.notes || "None"}`,
+        name: contactForm.name,
+        company: contactForm.company || "N/A",
+        email: contactForm.email,
+        lada: contactForm.lada || "+52",
+        phone: contactForm.phone,
+        solution: quizAnswers.solution || "Marca Privada Integral",
+        objective: `Mercado: ${quizAnswers.market || "No especificado"}`,
+        stage: quizAnswers.stage || "En desarrollo",
+        comments: contactForm.notes || "Registro desde /test2mbb (Diagnóstico 3 preguntas)",
+        lead_type: "Test2MBB Diagnóstico B2B",
         origin: "casaloy.com/test2mbb"
       };
 
-      const response = await fetch("/api/maquila", {
+      await fetch("/api/maquila", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
 
-      if (!response.ok) {
-        console.warn("API returned non-200, but proceeding with client success state.");
-      }
-
-      setQuizResult(evaluation);
+      setIsSuccess(true);
     } catch (err) {
-      console.warn("Submission error:", err);
-      // Fallback show evaluation result
-      setQuizResult(evaluation);
+      console.warn("Error submitting quiz:", err);
+      setIsSuccess(true); // Graceful fallback
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="test2mbb-root font-sans antialiased text-[#1C1C1C] bg-[#F6F1E7]">
+    <div className="test2mbb-root font-sans antialiased text-[#1C1C1C] bg-[#FAF8F5] selection:bg-[#8C4723] selection:text-white">
       <SEO page="test2mbb" lang={lang} />
 
-      {/* Internal Scoped CSS for exact typography & color palette */}
+      {/* Internal Scoped CSS */}
       <style>{`
-        .test2mbb-root {
-          --agave: #1B3327;
-          --agave-deep: #12241B;
-          --sand: #F6F1E7;
-          --sand-2: #EFE7D6;
-          --copper: #B5651D;
-          --gold: #E8B04B;
-          --ink: #1C1C1C;
-          --stone: #6E6B62;
-          --stone-light: #8f8c81;
-          --line: #DCD5C3;
-          --line-dark: #2C4A38;
-          --max: 1160px;
-          --new: #3B6D11;
-          --new-bg: #E9F1EA;
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
         .test2mbb-root h1, 
         .test2mbb-root h2, 
         .test2mbb-root h3,
-        .test2mbb-root .font-fraunces {
+        .test2mbb-root .font-serif-title {
           font-family: 'Fraunces', Georgia, serif;
           letter-spacing: -0.01em;
         }
-        .test2mbb-root .font-mono {
+        .test2mbb-root .font-mono-tag {
           font-family: 'IBM Plex Mono', monospace;
-        }
-        .test2mbb-wrap {
-          max-width: var(--max);
-          margin: 0 auto;
-          padding: 0 32px;
         }
         .test2mbb-eyebrow {
           font-family: 'IBM Plex Mono', monospace;
           font-size: 11px;
           letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: var(--copper);
-          margin: 0 0 14px;
+          color: #8C4723;
+          margin-bottom: 12px;
           display: flex;
           align-items: center;
           gap: 10px;
         }
         .test2mbb-eyebrow::before {
           content: "";
-          width: 22px;
-          height: 1px;
-          background: var(--copper);
+          width: 24px;
+          height: 1.5px;
+          background: #8C4723;
           display: inline-block;
-        }
-        .test2mbb-spec-tag {
-          position: absolute;
-          top: 18px;
-          right: 18px;
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 10px;
-          color: var(--stone-light);
-          border: 1px solid var(--line);
-          padding: 3px 8px;
-          border-radius: 20px;
-          background: rgba(255,255,255,.65);
-          letter-spacing: .03em;
-        }
-        .test2mbb-on-dark .test2mbb-spec-tag {
-          color: #9db3a5;
-          border-color: var(--line-dark);
-          background: rgba(0,0,0,.25);
-        }
-        .test2mbb-on-dark {
-          background: var(--agave);
-          color: #EDEBE0;
-        }
-        .test2mbb-on-dark .test2mbb-eyebrow {
-          color: var(--gold);
-        }
-        .test2mbb-on-dark .test2mbb-eyebrow::before {
-          background: var(--gold);
-        }
-        .test2mbb-on-dark h1,
-        .test2mbb-on-dark h2,
-        .test2mbb-on-dark h3 {
-          color: #fff;
-        }
-        .test2mbb-on-dark p {
-          color: #C9D3CB;
-        }
-        .test2mbb-spec-note {
-          margin-top: 36px;
-          border-top: 1px dashed var(--line);
-          padding-top: 16px;
-          display: flex;
-          gap: 28px;
-          flex-wrap: wrap;
-        }
-        .test2mbb-on-dark .test2mbb-spec-note {
-          border-top-color: var(--line-dark);
-        }
-        .test2mbb-spec-note .sn {
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 10.5px;
-          color: var(--stone-light);
-          max-width: 460px;
-        }
-        .test2mbb-on-dark .test2mbb-spec-note .sn {
-          color: #7f9689;
-        }
-        .test2mbb-spec-note .sn b {
-          color: var(--copper);
-          display: block;
-          margin-bottom: 3px;
-          text-transform: uppercase;
-          letter-spacing: .05em;
-          font-size: 9.5px;
-        }
-        .test2mbb-on-dark .test2mbb-spec-note .sn b {
-          color: var(--gold);
-        }
-        .test2mbb-spec-note .sn.warn b {
-          color: #a6402f;
-        }
-        .test2mbb-new-badge {
-          display: inline-block;
-          margin-left: 8px;
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 9px;
-          color: var(--new);
-          border: 1px solid var(--new);
-          padding: 1px 7px;
-          border-radius: 10px;
-          vertical-align: middle;
-        }
-        .test2mbb-faq-item summary::-webkit-details-marker {
-          display: none;
         }
       `}</style>
 
-      {/* 5.1 HERO + TRUST BAR */}
-      <section className="relative py-16 md:py-24 test2mbb-on-dark overflow-hidden">
-        {/* Agave Mark Background Watermark */}
-        <svg
-          className="absolute -right-20 -top-14 w-[380px] md:w-[520px] h-[380px] md:h-[520px] opacity-15 pointer-events-none"
-          viewBox="0 0 200 200"
-        >
-          <g fill="none" stroke="#E8B04B" strokeWidth="0.6">
-            <circle cx="100" cy="100" r="90" />
-            <circle cx="100" cy="100" r="66" />
-            <circle cx="100" cy="100" r="40" />
-            <path d="M100 10 L100 190 M10 100 L190 100 M35 35 L165 165 M165 35 L35 165" />
-          </g>
-        </svg>
+      {/* ============================================================
+          HERO BANNER: ESTILO VISUAL DEL SITIO (Con Fondo Fotográfico)
+          ============================================================ */}
+      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-[#12241B] text-white">
+        {/* Background Image with Cinematic Gradient */}
+        <div className="absolute inset-0 z-0">
+          <img
+            alt="Naves Industriales Casa Loy Tequilera"
+            className="w-full h-full object-cover brightness-[0.55]"
+            src="/Naves Industriales Casa Loy Tequilera.webp"
+            fetchPriority="high"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/40 to-[#12241B]"></div>
+        </div>
 
-        <div className="test2mbb-wrap relative z-10">
-          <div className="inline-flex items-center gap-2 font-mono text-[11px] tracking-wider uppercase text-[#E8B04B] border border-[#E8B04B]/40 px-3.5 py-1.5 rounded-full mb-6">
-            {content.hero.badge}
-          </div>
+        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center pt-28 pb-20">
+          <span className="font-mono-tag text-[#E8B04B] font-semibold tracking-[0.3em] text-[11px] md:text-xs uppercase mb-4 block">
+            {content.hero.overtitle}
+          </span>
 
-          <h1 className="font-fraunces font-semibold text-3xl sm:text-4xl md:text-[52px] leading-[1.1] max-w-[780px] text-white">
+          <h1 className="font-serif-title text-[clamp(30px,4.5vw,56px)] leading-[1.12] font-semibold text-white max-w-4xl mx-auto mb-4">
             {content.hero.h1}
           </h1>
 
-          <p className="font-fraunces italic text-lg md:text-xl text-[#E8B04B] mt-4">
+          <p className="font-serif-title italic text-lg md:text-xl text-[#E8B04B] mb-5">
             {content.hero.secondary}
           </p>
 
-          <p className="text-[17px] text-[#C9D3CB] max-w-[540px] my-6 leading-relaxed">
+          <p className="text-white/80 text-sm md:text-base max-w-2xl mx-auto mb-9 leading-relaxed">
             {content.hero.sub}
           </p>
 
-          <div className="flex flex-wrap gap-3.5 mt-8">
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full max-w-md sm:max-w-none">
             <a
               href="#quiz"
-              className="bg-[#E8B04B] hover:bg-[#f0c06a] text-[#12241B] font-semibold text-[14.5px] px-7 py-3.5 rounded-[3px] transition inline-block shadow-sm"
+              className="bg-[#8C4723] hover:bg-[#a6562b] border border-[#8C4723] text-white font-semibold text-xs md:text-sm uppercase tracking-[0.2em] py-4 px-8 rounded transition-all min-w-[210px] text-center shadow-lg cursor-pointer"
             >
               {content.hero.ctaStart}
             </a>
             <a
               href="#cta"
-              className="border border-white/35 hover:border-white text-white font-semibold text-[14.5px] px-7 py-3.5 rounded-[3px] transition inline-block"
+              className="border border-white/60 hover:bg-white/15 text-white font-semibold text-xs md:text-sm uppercase tracking-[0.2em] py-4 px-8 rounded transition-all min-w-[210px] text-center cursor-pointer"
             >
               {content.hero.ctaCall}
             </a>
           </div>
-
-          <div className="test2mbb-spec-note">
-            <div className="sn">
-              <b>Tracking</b>
-              {content.hero.specTracking}
-            </div>
-            <div className="sn warn">
-              <b>{isEn ? "Don't do" : "No hacer"}</b>
-              {content.hero.specWarn}
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* TRUST BAR */}
-      <div className="py-6 bg-[#EFE7D6] border-y border-[#DCD5C3]">
-        <div className="test2mbb-wrap">
-          <div className="flex flex-wrap justify-center items-center divide-y md:divide-y-0 md:divide-x divide-[#DCD5C3] text-center">
+      {/* ============================================================
+          LÍNEA INFERIOR DE DATOS NOM 1633 (Trust Bar)
+          ============================================================ */}
+      <div className="bg-[#EFE7D6] border-y border-[#DCD5C3] py-4">
+        <div className="max-w-[1240px] mx-auto px-6">
+          <div className="flex flex-wrap justify-center items-center gap-y-2 gap-x-3 md:gap-x-6 text-center">
             {content.trust.map((item, idx) => (
-              <span
-                key={idx}
-                className="font-mono text-[12.5px] text-[#1B3327] px-4 py-1.5 md:py-0 w-1/2 sm:w-auto font-medium"
-              >
-                {item}
-              </span>
+              <React.Fragment key={idx}>
+                <span className="font-mono-tag text-[11.5px] md:text-[12.5px] text-[#1B3327] font-semibold tracking-wide uppercase">
+                  {item}
+                </span>
+                {idx < content.trust.length - 1 && (
+                  <span className="text-[#8C4723] text-xs select-none hidden md:inline">✦</span>
+                )}
+              </React.Fragment>
             ))}
           </div>
         </div>
       </div>
 
-      {/* 5.2 WHY CASA LOY */}
-      <section className="relative py-20 md:py-24 bg-[#F6F1E7]">
-        <span className="test2mbb-spec-tag">{content.why.tag}</span>
-        <div className="test2mbb-wrap">
+      {/* ============================================================
+          WHY CASA LOY (6 TARJETAS INTERACTIVAS)
+          ============================================================ */}
+      <section className="py-20 md:py-24 bg-[#FAF8F5]">
+        <div className="max-w-[1160px] mx-auto px-6">
           <p className="test2mbb-eyebrow">{content.why.eyebrow}</p>
-          <h2 className="font-fraunces font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-[#1C1C1C]">
+          <h2 className="font-serif-title font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-[#1C1C1C] mb-10">
             {content.why.title}
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
             {content.why.cards.map((card, idx) => (
               <a
                 key={idx}
                 href={card.anchor}
-                className="group border border-[#DCD5C3] hover:border-[#B5651D] rounded-[4px] p-5 md:p-6 bg-white transition hover:shadow-md cursor-pointer block"
+                className="group border border-[#DCD5C3] hover:border-[#8C4723] rounded-lg p-6 bg-white transition-all duration-300 hover:shadow-lg cursor-pointer block"
               >
-                <div className="font-mono text-[10px] text-[#B5651D] uppercase tracking-wider group-hover:underline">
-                  {card.wk}
+                <div className="flex items-center justify-between mb-3">
+                  <span className="font-mono-tag text-[10.5px] text-[#8C4723] uppercase tracking-wider font-semibold">
+                    {card.wk}
+                  </span>
+                  <span className="text-[#8C4723] opacity-0 group-hover:opacity-100 transition-opacity text-sm">
+                    →
+                  </span>
                 </div>
-                <h3 className="font-fraunces font-semibold text-[16px] text-[#1C1C1C] mt-2 leading-snug">
+                <h3 className="font-serif-title font-semibold text-[17px] text-[#1C1C1C] leading-snug group-hover:text-[#8C4723] transition-colors">
                   {card.h3}
                 </h3>
+                <p className="text-[13px] text-[#6E6B62] mt-2 leading-relaxed">
+                  {card.desc}
+                </p>
               </a>
             ))}
-          </div>
-
-          <div className="test2mbb-spec-note">
-            <div className="sn">
-              <b>{isEn ? "Interaction" : "Interacción"}</b>
-              {content.why.specInteraction}
-            </div>
-            <div className="sn warn">
-              <b>{isEn ? "Don't do" : "No hacer"}</b>
-              {content.why.specWarn}
-            </div>
           </div>
         </div>
       </section>
 
-      {/* 5.3 INSIDE CASA LOY */}
-      <section className="relative py-20 md:py-24 test2mbb-on-dark" style={{ paddingBottom: "60px" }}>
-        <span className="test2mbb-spec-tag">{content.inside.tag}</span>
-        <div className="test2mbb-wrap">
-          <p className="test2mbb-eyebrow">{content.inside.eyebrow}</p>
-          <h2 className="font-fraunces font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-white">
+      {/* ============================================================
+          INSIDE CASA LOY (8 ESTACIONES CON IMAGEN Y OVERLAY)
+          ============================================================ */}
+      <section className="py-20 md:py-24 bg-[#12241B] text-white">
+        <div className="max-w-[1160px] mx-auto px-6">
+          <p className="test2mbb-eyebrow" style={{ color: "#E8B04B" }}>
+            {content.inside.eyebrow}
+          </p>
+          <h2 className="font-serif-title font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-white mb-10">
             {content.inside.title}
           </h2>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-[1px] bg-[#2C4A38] mt-10 border border-[#2C4A38]">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
             {content.inside.stations.map((st, idx) => (
               <div
                 key={idx}
                 onClick={() => setActiveInside(idx)}
-                className={`p-6 min-h-[140px] flex flex-col justify-end transition cursor-pointer ${
-                  activeInside === idx ? "bg-[#1B3327] ring-1 ring-[#E8B04B]" : "bg-[#12241B] hover:bg-[#152a20]"
+                className={`relative h-[210px] md:h-[240px] rounded-lg overflow-hidden border transition-all cursor-pointer group ${
+                  activeInside === idx ? "border-[#E8B04B] ring-2 ring-[#E8B04B]" : "border-white/15 hover:border-white/40"
                 }`}
               >
-                <div className="font-mono text-[10px] text-[#E8B04B] mb-1.5">{st.num}</div>
-                <span className="text-[14px] text-white font-semibold">{st.name}</span>
-                <p className="text-[11.5px] text-[#A2B5A8] mt-1 line-clamp-2">{st.desc}</p>
+                <img
+                  src={st.img}
+                  alt={st.name}
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20"></div>
+
+                <div className="relative z-10 h-full p-4 md:p-5 flex flex-col justify-between">
+                  <span className="font-mono-tag text-[11px] text-[#E8B04B] font-bold bg-black/40 backdrop-blur-xs px-2 py-0.5 rounded w-fit">
+                    {st.num}
+                  </span>
+                  <div>
+                    <h3 className="text-[16px] text-white font-semibold font-serif-title">
+                      {st.name}
+                    </h3>
+                    <p className="text-[12px] text-white/80 mt-1 leading-snug line-clamp-3">
+                      {st.desc}
+                    </p>
+                  </div>
+                </div>
               </div>
             ))}
-          </div>
-
-          <div className="test2mbb-spec-note">
-            <div className="sn warn">
-              <b>{isEn ? "Don't do" : "No hacer"}</b>
-              {content.inside.specWarn}
-            </div>
           </div>
         </div>
       </section>
 
-      {/* 5.4 RUTAS DE SOLUCIÓN (5) */}
-      <section className="relative py-20 md:py-24 bg-[#F6F1E7]">
-        <span className="test2mbb-spec-tag">{content.solutions.tag}</span>
-        <div className="test2mbb-wrap">
+      {/* ============================================================
+          RUTAS DE SOLUCIÓN (5 RUTAS CON PRECARGA AL DIAGNÓSTICO)
+          ============================================================ */}
+      <section className="py-20 md:py-24 bg-[#FAF8F5]">
+        <div className="max-w-[1160px] mx-auto px-6">
           <p className="test2mbb-eyebrow">{content.solutions.eyebrow}</p>
-          <h2 className="font-fraunces font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-[#1C1C1C]">
+          <h2 className="font-serif-title font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-[#1C1C1C] mb-10">
             {content.solutions.title}
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-[1px] bg-[#DCD5C3] mt-10 border border-[#DCD5C3]">
-            {content.solutions.routes.map((rt) => {
-              const isSelected = selectedRoute === rt.tag;
-              return (
-                <div
-                  key={rt.num}
-                  onClick={() => handleSelectRoute(rt)}
-                  className={`p-6 min-h-[220px] flex flex-col transition cursor-pointer ${
-                    isSelected
-                      ? "bg-white ring-2 ring-[#B5651D] shadow-md"
-                      : "bg-[#F6F1E7] hover:bg-white"
-                  }`}
-                >
-                  <div className="font-mono text-[10.5px] text-[#B5651D]">{rt.num}</div>
-                  <h3 className="font-fraunces font-semibold text-[16px] my-3 leading-snug text-[#1C1C1C]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+            {content.solutions.routes.map((rt) => (
+              <div
+                key={rt.num}
+                onClick={() => handleSelectRoute(rt)}
+                className="p-6 rounded-lg bg-white border border-[#DCD5C3] hover:border-[#8C4723] hover:shadow-lg transition-all flex flex-col justify-between cursor-pointer group"
+              >
+                <div>
+                  <span className="font-mono-tag text-[11px] text-[#8C4723] font-bold block mb-2">
+                    {rt.num}
+                  </span>
+                  <h3 className="font-serif-title font-semibold text-[17px] text-[#1C1C1C] group-hover:text-[#8C4723] transition-colors leading-snug mb-3">
                     {rt.title}
                   </h3>
-                  <p className="text-[12.5px] text-[#6E6B62] flex-grow leading-relaxed">
+                  <p className="text-[13px] text-[#6E6B62] leading-relaxed">
                     {rt.desc}
                   </p>
-                  <div className="mt-3">
-                    <span className="font-mono text-[9.5px] text-[#8f8c81] bg-[#EFE7D6] px-2 py-0.5 rounded-full inline-block">
-                      {rt.tag}
-                    </span>
-                  </div>
                 </div>
-              );
-            })}
-          </div>
-
-          <p className="mt-8 text-[16.5px] font-fraunces italic text-[#1B3327] max-w-[700px] leading-relaxed">
-            {content.solutions.closer}
-          </p>
-
-          <div className="test2mbb-spec-note">
-            <div className="sn">
-              <b>{isEn ? "Interaction" : "Interacción"}</b>
-              {content.solutions.specInteraction}
-            </div>
-            <div className="sn warn">
-              <b>{isEn ? "Don't do" : "No hacer"}</b>
-              {content.solutions.specWarn}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 5.5 AUTOIDENTIFICACIÓN */}
-      <section className="relative py-20 md:py-24 bg-[#EFE7D6]">
-        <span className="test2mbb-spec-tag">{content.who.tag}</span>
-        <div className="test2mbb-wrap">
-          <p className="test2mbb-eyebrow">{content.who.eyebrow}</p>
-          <h2 className="font-fraunces font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-[#1C1C1C]">
-            {content.who.title}
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-10">
-            {content.who.cards.map((card, idx) => (
-              <div
-                key={idx}
-                className="border border-[#DCD5C3] p-6 rounded-[4px] bg-white transition hover:shadow-sm"
-              >
-                <span className="font-mono text-[10px] text-[#8f8c81] uppercase block">
-                  {card.tag}
-                </span>
-                <h3 className="font-fraunces font-semibold text-[15.5px] mt-2.5 leading-snug text-[#1C1C1C]">
-                  {card.h3}
-                </h3>
+                <div className="mt-5 pt-3 border-t border-[#DCD5C3]/60 flex items-center justify-between">
+                  <span className="font-mono-tag text-[9.5px] text-[#8f8c81] uppercase bg-[#EFE7D6] px-2 py-0.5 rounded">
+                    {rt.tag}
+                  </span>
+                  <span className="text-[#8C4723] text-xs font-semibold group-hover:translate-x-1 transition-transform">
+                    {isEn ? "Select →" : "Elegir →"}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
 
-          <div className="test2mbb-spec-note">
-            <div className="sn warn">
-              <b>{isEn ? "Don't do" : "No hacer"}</b>
-              {content.who.specWarn}
-            </div>
+          <div className="mt-8 p-5 rounded-lg bg-[#EFE7D6] border border-[#DCD5C3]">
+            <p className="text-[15.5px] font-serif-title italic text-[#1B3327] leading-relaxed">
+              {content.solutions.closer}
+            </p>
           </div>
         </div>
       </section>
 
-      {/* 5.6 PROBLEMAS QUE RESOLVEMOS */}
-      <section className="relative py-20 md:py-24 bg-[#F6F1E7]">
-        <span className="test2mbb-spec-tag">{content.stake.tag}</span>
-        <div className="test2mbb-wrap">
+      {/* ============================================================
+          AUTOIDENTIFICACIÓN (WHO THIS IS FOR)
+          ============================================================ */}
+      <section className="py-20 md:py-24 bg-[#EFE7D6]">
+        <div className="max-w-[1160px] mx-auto px-6">
+          <p className="test2mbb-eyebrow">{content.who.eyebrow}</p>
+          <h2 className="font-serif-title font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-[#1C1C1C] mb-10">
+            {content.who.title}
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            {content.who.cards.map((card, idx) => (
+              <div
+                key={idx}
+                className="border border-[#DCD5C3] p-6 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow"
+              >
+                <span className="font-mono-tag text-[10.5px] text-[#8C4723] font-bold uppercase tracking-wider block mb-2">
+                  {card.tag}
+                </span>
+                <h3 className="font-serif-title font-semibold text-[16.5px] text-[#1C1C1C] leading-snug">
+                  {card.h3}
+                </h3>
+                <p className="text-[12.5px] text-[#6E6B62] mt-2 leading-relaxed">
+                  {card.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================
+          PROBLEMAS QUE RESOLVEMOS (WHAT'S AT STAKE)
+          ============================================================ */}
+      <section className="py-20 md:py-24 bg-[#FAF8F5]">
+        <div className="max-w-[1160px] mx-auto px-6">
           <p className="test2mbb-eyebrow">{content.stake.eyebrow}</p>
-          <h2 className="font-fraunces font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[680px] text-[#1C1C1C]">
+          <h2 className="font-serif-title font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[680px] text-[#1C1C1C] mb-10">
             {content.stake.title}
           </h2>
 
-          <div className="mt-10 border-t border-[#DCD5C3]">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {content.stake.rows.map((row) => (
               <div
                 key={row.num}
-                className="grid grid-cols-[48px_1fr] md:grid-cols-[56px_1fr] gap-4 md:gap-6 py-5 border-b border-[#DCD5C3] items-start"
+                className="p-6 rounded-lg bg-white border border-[#DCD5C3] flex gap-4 items-start shadow-xs hover:border-[#8C4723] transition-colors"
               >
-                <span className="font-fraunces text-2xl text-[#B5651D] font-normal">
+                <span className="font-serif-title text-3xl text-[#8C4723] font-semibold shrink-0">
                   {row.num}
                 </span>
                 <div>
-                  <h3 className="font-fraunces font-semibold text-[16px] text-[#1C1C1C]">
+                  <h3 className="font-serif-title font-semibold text-[17px] text-[#1C1C1C]">
                     {row.title}
                   </h3>
-                  <p className="text-[13.5px] text-[#6E6B62] mt-1 leading-relaxed">
+                  <p className="text-[13.5px] text-[#6E6B62] mt-1.5 leading-relaxed">
                     {row.desc}
                   </p>
                 </div>
@@ -1064,601 +914,502 @@ export default function Test2MBB({ lang = "es", setPage }) {
         </div>
       </section>
 
-      {/* 5.7 QUIZ — 8 steps */}
-      <section id="quiz" className="relative py-20 md:py-24 bg-[#EFE7D6]">
-        <span className="test2mbb-spec-tag">{content.quiz.tag}</span>
-        <div className="test2mbb-wrap">
-          <p className="test2mbb-eyebrow">{content.quiz.eyebrow}</p>
+      {/* ============================================================
+          DIAGNÓSTICO B2B (3 PREGUNTAS + CAPTURA DE CONTACTO)
+          ============================================================ */}
+      <section id="quiz" className="relative py-20 md:py-28 bg-[#1E1A17] text-white overflow-hidden">
+        {/* Background photo texture */}
+        <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
+          <img
+            src="/Piñas de Agave Tequilana Weber.webp"
+            alt="Agave Weber"
+            className="w-full h-full object-cover brightness-75"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#1E1A17] via-transparent to-[#1E1A17]"></div>
+        </div>
 
-          <div className="mt-6 bg-[#1B3327] rounded-[6px] p-6 sm:p-10 text-white shadow-xl">
-            {!quizActive && !quizResult ? (
-              // Default View matching exact layout
-              <div className="grid grid-cols-1 md:grid-cols-[1fr_1.1fr] gap-8 md:gap-10 items-start">
-                <div>
-                  <h3 className="font-fraunces font-semibold text-xl sm:text-2xl text-white mb-2">
-                    {content.quiz.title}
-                  </h3>
-                  {/* Progress Bar (8 segments) */}
-                  <div className="flex gap-1 my-4">
-                    <span className="flex-1 h-1 bg-[#E8B04B] rounded-full"></span>
-                    {[...Array(7)].map((_, i) => (
-                      <span key={i} className="flex-1 h-1 bg-white/15 rounded-full"></span>
-                    ))}
-                  </div>
-                  <p className="text-[14px] text-[#C9D3CB] leading-relaxed">
-                    {content.quiz.sub}
-                  </p>
+        <div className="relative z-10 max-w-4xl mx-auto px-6">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <span className="font-mono-tag text-[#E8B04B] font-semibold tracking-[0.3em] text-[11px] uppercase block mb-2">
+              {content.quiz3.badge}
+            </span>
+            <h2 className="font-serif-title text-3xl md:text-4xl text-white font-semibold leading-tight">
+              {content.quiz3.title}
+            </h2>
+            <p className="text-white/80 text-sm mt-3 leading-relaxed">
+              {content.quiz3.sub}
+            </p>
+          </div>
 
-                  <button
-                    onClick={() => setQuizActive(true)}
-                    className="bg-[#E8B04B] hover:bg-[#f0c06a] text-[#12241B] font-semibold text-[14px] px-6 py-3 rounded-[3px] mt-5 transition inline-block cursor-pointer"
-                  >
-                    {content.quiz.btnStart}
-                  </button>
-
-                  <div className="mt-6 pt-3 border-t border-dashed border-white/15 font-mono text-[11.5px] text-[#9db3a5]">
-                    {content.quiz.leadNote}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {content.quiz.stepLabels.map((lbl, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => {
-                        setQuizStep(idx + 1);
-                        setQuizActive(true);
-                      }}
-                      className="bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 rounded-[4px] p-3 text-left transition cursor-pointer text-[12px] text-white"
-                    >
-                      <span className="font-mono text-[#E8B04B] text-[9.5px] block mb-1">
-                        0{idx + 1}/08
-                      </span>
-                      {lbl}
-                    </button>
-                  ))}
-                </div>
+          <div className="bg-white/5 border border-white/20 backdrop-blur-md rounded-xl p-6 md:p-10 shadow-2xl">
+            {/* Steps Progress Header */}
+            <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+              <span className="font-mono-tag text-xs text-[#E8B04B] font-bold tracking-widest uppercase">
+                {!isSuccess
+                  ? (isEn ? `Step ${quizStep} of 4` : `Paso ${quizStep} de 4`)
+                  : (isEn ? "Completed ✓" : "Completado ✓")}
+              </span>
+              <div className="flex gap-2">
+                {[1, 2, 3, 4].map((s) => (
+                  <span
+                    key={s}
+                    className={`w-8 h-1.5 rounded-full transition-all ${
+                      isSuccess
+                        ? "bg-emerald-400"
+                        : s <= quizStep
+                        ? "bg-[#E8B04B]"
+                        : "bg-white/20"
+                    }`}
+                  />
+                ))}
               </div>
-            ) : quizResult ? (
-              // Results View with Lead Scoring assignment
-              <div className="max-w-[640px] mx-auto text-center py-6">
-                <div className="w-16 h-16 rounded-full bg-[#E8B04B]/20 border-2 border-[#E8B04B] flex items-center justify-center mx-auto mb-4 text-[#E8B04B]">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            </div>
+
+            {/* Success State */}
+            {isSuccess ? (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center mx-auto mb-4 text-emerald-400">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="M20 6L9 17l-5-5" />
                   </svg>
                 </div>
-                <h3 className="font-fraunces font-semibold text-2xl text-white mb-2">
-                  {isEn ? "Project Diagnosis Received" : "Diagnóstico de Proyecto Recibido"}
+                <h3 className="font-serif-title font-semibold text-2xl md:text-3xl text-white mb-3">
+                  {content.quiz3.successTitle}
                 </h3>
-                <div className="inline-block bg-[#12241B] border border-[#E8B04B]/40 px-4 py-1.5 rounded-full font-mono text-[12px] text-[#E8B04B] mb-4">
-                  LEAD SCORE: {quizResult.score} / 100
-                </div>
-                <p className="text-[14px] text-[#C9D3CB] max-w-[500px] mx-auto mb-6">
-                  {isEn ? "Assigned executive:" : "Responsable asignado:"}{" "}
-                  <strong className="text-white">{quizResult.assignedTo}</strong>. {quizResult.time}.
+                <p className="text-white/85 text-sm md:text-base max-w-lg mx-auto mb-8 leading-relaxed">
+                  {content.quiz3.successSub}
                 </p>
-
-                <div className="bg-[#12241B] border border-white/15 rounded-[4px] p-4 text-left font-mono text-[12px] text-[#C9D3CB] space-y-1 mb-6">
-                  <div><b>{isEn ? "Company:" : "Empresa:"}</b> {quizData.company || "N/A"}</div>
-                  <div><b>{isEn ? "Route:" : "Ruta:"}</b> {quizData.route || "General"}</div>
-                  <div><b>{isEn ? "Target Market:" : "Mercado:"}</b> {quizData.market || "N/A"}</div>
-                  <div><b>{isEn ? "Volume:" : "Volumen:"}</b> {quizData.volume || "N/A"}</div>
-                </div>
-
-                <div className="flex flex-wrap justify-center gap-3">
+                <div className="flex flex-wrap justify-center gap-4">
                   <a
                     href="#cta"
-                    className="bg-[#E8B04B] hover:bg-[#f0c06a] text-[#12241B] font-semibold text-[14px] px-6 py-3 rounded-[3px] transition"
+                    className="bg-[#8C4723] hover:bg-[#a6562b] text-white font-semibold text-xs md:text-sm uppercase tracking-widest py-3.5 px-7 rounded shadow cursor-pointer"
                   >
-                    {isEn ? "Book Technical Call Now →" : "Agendar llamada técnica ahora →"}
+                    {isEn ? "Schedule Technical Call Now →" : "Agendar llamada técnica ahora →"}
                   </a>
                   <button
                     onClick={() => {
-                      setQuizResult(null);
-                      setQuizActive(false);
+                      setIsSuccess(false);
                       setQuizStep(1);
+                      setQuizAnswers({ solution: "", stage: "", market: "" });
                     }}
-                    className="border border-white/30 hover:border-white text-white font-medium text-[13.5px] px-5 py-3 rounded-[3px] transition cursor-pointer"
+                    className="border border-white/40 hover:border-white text-white font-semibold text-xs md:text-sm uppercase tracking-widest py-3.5 px-6 rounded cursor-pointer"
                   >
-                    {isEn ? "Reset Diagnosis" : "Reiniciar diagnóstico"}
+                    {isEn ? "Start New Inquiry" : "Iniciar otra consulta"}
                   </button>
                 </div>
               </div>
             ) : (
-              // Interactive 8-Step Form
               <div>
-                <div className="flex justify-between items-center pb-3 border-b border-white/15 mb-6">
-                  <div>
-                    <span className="font-mono text-[#E8B04B] text-[11px] block">
-                      {isEn ? `Step 0${quizStep} of 08` : `Paso 0${quizStep} de 08`}
-                    </span>
-                    <h4 className="font-fraunces font-semibold text-lg text-white">
-                      {content.quiz.stepLabels[quizStep - 1]}
-                    </h4>
-                  </div>
-                  <button
-                    onClick={() => setQuizActive(false)}
-                    className="text-white/60 hover:text-white font-mono text-[11px] uppercase border border-white/20 px-2.5 py-1 rounded"
-                  >
-                    {isEn ? "Overview" : "Ver resumen"}
-                  </button>
-                </div>
-
-                {/* Step 1: Route */}
+                {/* Step 1: Solution */}
                 {quizStep === 1 && (
-                  <div className="space-y-2">
-                    {content.solutions.routes.map((rt) => (
-                      <button
-                        key={rt.tag}
-                        onClick={() => {
-                          setQuizData({ ...quizData, route: rt.title });
-                          setQuizStep(2);
-                        }}
-                        className={`w-full text-left p-3.5 rounded border transition flex justify-between items-center ${
-                          quizData.route === rt.title
-                            ? "bg-[#E8B04B]/20 border-[#E8B04B] text-white"
-                            : "bg-white/5 hover:bg-white/10 border-white/15 text-[#C9D3CB]"
-                        }`}
-                      >
-                        <span className="font-medium text-[14px]">{rt.title}</span>
-                        <span className="font-mono text-[10px] text-[#E8B04B]">{rt.tag}</span>
-                      </button>
-                    ))}
+                  <div className="space-y-4">
+                    <h3 className="font-serif-title text-xl md:text-2xl text-white font-semibold mb-4">
+                      {content.quiz3.step1Title}
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {[
+                        { title: isEn ? "Turnkey Private Label" : "Tequila de Marca Privada", desc: isEn ? "Full service from CRT registry, formulation to export." : "Crea o vende tequila bajo tu propia marca comercial." },
+                        { title: isEn ? "Contract Manufacturing / Maquila" : "Maquila por Contrato", desc: isEn ? "Production under strict client specifications." : "Producción para terceros con o sin marca existente." },
+                        { title: isEn ? "Bulk Tequila Supply" : "Suministro de Tequila a Granel", desc: isEn ? "100% Agave or Mixto bulk for bottlers & distributors." : "Tequila a granel para envasadores, importadores o distribuidores." },
+                        { title: isEn ? "Co-packing & Bottling Services" : "Servicios de Envasado / Co-packing", desc: isEn ? "Filling, labeling and secondary packaging." : "Embotellado, etiquetado o empaque para proyectos de terceros." },
+                        { title: isEn ? "Custom Profile Development" : "Desarrollo de Perfil a la Medida", desc: isEn ? "Sensory calibration and bespoke barrel aging." : "Desarrollo o calibración fina de tu perfil de líquido." }
+                      ].map((opt, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => {
+                            setQuizAnswers({ ...quizAnswers, solution: opt.title });
+                            setQuizStep(2);
+                          }}
+                          className={`p-4 rounded-lg border text-left transition-all cursor-pointer ${
+                            quizAnswers.solution === opt.title
+                              ? "bg-[#8C4723] border-[#E8B04B] text-white shadow-md"
+                              : "bg-white/5 hover:bg-white/10 border-white/15 text-white/90"
+                          }`}
+                        >
+                          <span className="font-serif-title font-semibold text-[15.5px] block text-white">
+                            {opt.title}
+                          </span>
+                          <span className="text-[12px] text-white/70 mt-1 block">
+                            {opt.desc}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
 
                 {/* Step 2: Stage */}
                 {quizStep === 2 && (
-                  <div className="space-y-2">
-                    {[
-                      isEn ? "Idea / Concept (< 6 months)" : "Idea / Concepto (< 6 meses)",
-                      isEn ? "Formula & Brand Ready (Need distillery partner)" : "Fórmula y marca lista (Requiere destilería)",
-                      isEn ? "Existing Brand (Switching producers for stability)" : "Marca existente (Cambio de productor por abasto/calidad)",
-                      isEn ? "Established Distributor / Bulk Importer" : "Distribuidor o importador consolidado"
-                    ].map((stg, i) => (
-                      <button
-                        key={i}
-                        onClick={() => {
-                          setQuizData({ ...quizData, stage: stg });
-                          setQuizStep(3);
-                        }}
-                        className={`w-full text-left p-3.5 rounded border transition ${
-                          quizData.stage === stg
-                            ? "bg-[#E8B04B]/20 border-[#E8B04B] text-white"
-                            : "bg-white/5 hover:bg-white/10 border-white/15 text-[#C9D3CB]"
-                        }`}
-                      >
-                        {stg}
-                      </button>
-                    ))}
+                  <div className="space-y-4">
+                    <h3 className="font-serif-title text-xl md:text-2xl text-white font-semibold mb-4">
+                      {content.quiz3.step2Title}
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {[
+                        { title: isEn ? "Idea or Early Concept" : "Idea o Concepto Inicial", desc: isEn ? "Planning brand concept, budget and formulation." : "En desarrollo de concepto, presupuesto o formulación." },
+                        { title: isEn ? "Brand & Assets Ready" : "Marca y Fórmula Lista", desc: isEn ? "Registered trademark seeking industrial distillery." : "Marca registrada que busca socio destilador industrial." },
+                        { title: isEn ? "Existing Brand on Market" : "Marca Existente en el Mercado", desc: isEn ? "Switching producers for stability, quality or supply." : "Buscando cambio de maquilador por estabilidad o calidad." },
+                        { title: isEn ? "Volume Distributor / Importer" : "Distribuidor o Importador de Volumen", desc: isEn ? "Sourcing high volume under long term agreement." : "Abasteciendo volumen para cartera comercial establecida." }
+                      ].map((opt, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => {
+                            setQuizAnswers({ ...quizAnswers, stage: opt.title });
+                            setQuizStep(3);
+                          }}
+                          className={`p-4 rounded-lg border text-left transition-all cursor-pointer ${
+                            quizAnswers.stage === opt.title
+                              ? "bg-[#8C4723] border-[#E8B04B] text-white shadow-md"
+                              : "bg-white/5 hover:bg-white/10 border-white/15 text-white/90"
+                          }`}
+                        >
+                          <span className="font-serif-title font-semibold text-[15.5px] block text-white">
+                            {opt.title}
+                          </span>
+                          <span className="text-[12px] text-white/70 mt-1 block">
+                            {opt.desc}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setQuizStep(1)}
+                      className="text-white/60 hover:text-white font-mono-tag text-xs pt-2"
+                    >
+                      {content.quiz3.btnBack}
+                    </button>
                   </div>
                 )}
 
                 {/* Step 3: Market */}
                 {quizStep === 3 && (
-                  <div className="space-y-2">
-                    {[
-                      isEn ? "United States (USA)" : "Estados Unidos (EE. UU.)",
-                      isEn ? "Mexico (Domestic market)" : "México (Mercado nacional)",
-                      isEn ? "Europe & United Kingdom" : "Europa y Reino Unido",
-                      isEn ? "Canada / Latin America / Global" : "Canadá / Latinoamérica / Global"
-                    ].map((mkt, i) => (
-                      <button
-                        key={i}
-                        onClick={() => {
-                          setQuizData({ ...quizData, market: mkt });
-                          setQuizStep(4);
-                        }}
-                        className={`w-full text-left p-3.5 rounded border transition ${
-                          quizData.market === mkt
-                            ? "bg-[#E8B04B]/20 border-[#E8B04B] text-white"
-                            : "bg-white/5 hover:bg-white/10 border-white/15 text-[#C9D3CB]"
-                        }`}
-                      >
-                        {mkt}
-                      </button>
-                    ))}
+                  <div className="space-y-4">
+                    <h3 className="font-serif-title text-xl md:text-2xl text-white font-semibold mb-4">
+                      {content.quiz3.step3Title}
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {[
+                        { title: isEn ? "United States (USA)" : "Estados Unidos (EE. UU.)", desc: isEn ? "TTB compliance, COLA approval and import permits." : "Normativas TTB, aprobación COLA y coordinación aduanal." },
+                        { title: isEn ? "Mexico (Domestic)" : "México (Mercado Nacional)", desc: isEn ? "SAT marbetes, CRT compliance and national delivery." : "Marbetes SAT, cumplimiento CRT y entrega nacional." },
+                        { title: isEn ? "Europe & United Kingdom" : "Europa y Reino Unido", desc: isEn ? "European denomination of origin standards." : "Estándares europeos de denominación de origen." },
+                        { title: isEn ? "Canada / LatAm / Global" : "Canadá / Latinoamérica / Global", desc: isEn ? "Provincial monopolies or international distributors." : "Monopolios provinciales o distribuidores internacionales." }
+                      ].map((opt, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => {
+                            setQuizAnswers({ ...quizAnswers, market: opt.title });
+                            setQuizStep(4);
+                          }}
+                          className={`p-4 rounded-lg border text-left transition-all cursor-pointer ${
+                            quizAnswers.market === opt.title
+                              ? "bg-[#8C4723] border-[#E8B04B] text-white shadow-md"
+                              : "bg-white/5 hover:bg-white/10 border-white/15 text-white/90"
+                          }`}
+                        >
+                          <span className="font-serif-title font-semibold text-[15.5px] block text-white">
+                            {opt.title}
+                          </span>
+                          <span className="text-[12px] text-white/70 mt-1 block">
+                            {opt.desc}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setQuizStep(2)}
+                      className="text-white/60 hover:text-white font-mono-tag text-xs pt-2"
+                    >
+                      {content.quiz3.btnBack}
+                    </button>
                   </div>
                 )}
 
-                {/* Step 4: Contact */}
+                {/* Step 4: Contact Form */}
                 {quizStep === 4 && (
-                  <div className="space-y-3">
+                  <form onSubmit={handleQuizSubmit} className="space-y-4">
                     <div>
-                      <label className="font-mono text-[10.5px] uppercase text-[#E8B04B] block mb-1">
-                        {isEn ? "Full Name *" : "Nombre Completo *"}
-                      </label>
-                      <input
-                        type="text"
-                        value={quizData.name}
-                        onChange={(e) => setQuizData({ ...quizData, name: e.target.value })}
-                        placeholder={isEn ? "Your Name" : "Tu Nombre"}
-                        className="w-full bg-white/10 border border-white/20 rounded p-2.5 text-white placeholder-white/40 focus:outline-none focus:border-[#E8B04B]"
-                      />
+                      <h3 className="font-serif-title text-xl md:text-2xl text-white font-semibold">
+                        {content.quiz3.step4Title}
+                      </h3>
+                      <p className="text-white/70 text-xs mt-1">
+                        {content.quiz3.step4Sub}
+                      </p>
                     </div>
-                    <div>
-                      <label className="font-mono text-[10.5px] uppercase text-[#E8B04B] block mb-1">
-                        {isEn ? "Company / Brand Name" : "Empresa o Nombre de Marca"}
-                      </label>
-                      <input
-                        type="text"
-                        value={quizData.company}
-                        onChange={(e) => setQuizData({ ...quizData, company: e.target.value })}
-                        placeholder={isEn ? "Brand LLC" : "Tu Marca"}
-                        className="w-full bg-white/10 border border-white/20 rounded p-2.5 text-white placeholder-white/40 focus:outline-none focus:border-[#E8B04B]"
-                      />
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="font-mono text-[10.5px] uppercase text-[#E8B04B] block mb-1">
+                        <label className="font-mono-tag text-[11px] uppercase tracking-wider text-[#E8B04B] block mb-1">
+                          {isEn ? "Full Name *" : "Nombre Completo *"}
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={contactForm.name}
+                          onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                          placeholder={isEn ? "John Doe" : "Tu Nombre"}
+                          className="w-full bg-white/10 border border-white/20 rounded p-3 text-white placeholder-white/40 focus:outline-none focus:border-[#E8B04B]"
+                        />
+                      </div>
+                      <div>
+                        <label className="font-mono-tag text-[11px] uppercase tracking-wider text-[#E8B04B] block mb-1">
+                          {isEn ? "Company / Brand Name" : "Empresa o Nombre de Marca"}
+                        </label>
+                        <input
+                          type="text"
+                          value={contactForm.company}
+                          onChange={(e) => setContactForm({ ...contactForm, company: e.target.value })}
+                          placeholder={isEn ? "Brand LLC" : "Tu Empresa"}
+                          className="w-full bg-white/10 border border-white/20 rounded p-3 text-white placeholder-white/40 focus:outline-none focus:border-[#E8B04B]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="font-mono-tag text-[11px] uppercase tracking-wider text-[#E8B04B] block mb-1">
                           {isEn ? "Email *" : "Correo Electrónico *"}
                         </label>
                         <input
                           type="email"
-                          value={quizData.email}
-                          onChange={(e) => setQuizData({ ...quizData, email: e.target.value })}
+                          required
+                          value={contactForm.email}
+                          onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
                           placeholder="tu@correo.com"
-                          className="w-full bg-white/10 border border-white/20 rounded p-2.5 text-white placeholder-white/40 focus:outline-none focus:border-[#E8B04B]"
+                          className="w-full bg-white/10 border border-white/20 rounded p-3 text-white placeholder-white/40 focus:outline-none focus:border-[#E8B04B]"
                         />
                       </div>
                       <div>
-                        <label className="font-mono text-[10.5px] uppercase text-[#E8B04B] block mb-1">
+                        <label className="font-mono-tag text-[11px] uppercase tracking-wider text-[#E8B04B] block mb-1">
                           {isEn ? "Phone / WhatsApp *" : "Teléfono / WhatsApp *"}
                         </label>
                         <div className="flex gap-2">
                           <input
                             type="text"
-                            value={quizData.lada}
-                            onChange={(e) => setQuizData({ ...quizData, lada: e.target.value })}
-                            className="w-20 bg-white/10 border border-white/20 rounded p-2.5 text-white text-center"
+                            value={contactForm.lada}
+                            onChange={(e) => setContactForm({ ...contactForm, lada: e.target.value })}
+                            className="w-20 bg-white/10 border border-white/20 rounded p-3 text-white text-center"
                           />
                           <input
                             type="tel"
-                            value={quizData.phone}
-                            onChange={(e) => setQuizData({ ...quizData, phone: e.target.value })}
+                            required
+                            value={contactForm.phone}
+                            onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
                             placeholder="33 1234 5678"
-                            className="flex-1 bg-white/10 border border-white/20 rounded p-2.5 text-white placeholder-white/40 focus:outline-none focus:border-[#E8B04B]"
+                            className="flex-1 bg-white/10 border border-white/20 rounded p-3 text-white placeholder-white/40 focus:outline-none focus:border-[#E8B04B]"
                           />
                         </div>
                       </div>
                     </div>
-                    <button
-                      onClick={() => {
-                        if (!quizData.name || !quizData.email || !quizData.phone) {
-                          setErrorMessage(isEn ? "Name, email and phone are required." : "Nombre, email y teléfono son obligatorios.");
-                          return;
-                        }
-                        setErrorMessage("");
-                        setQuizStep(5);
-                      }}
-                      className="bg-[#E8B04B] hover:bg-[#f0c06a] text-[#12241B] font-semibold text-[13.5px] px-6 py-2.5 rounded mt-2 cursor-pointer"
-                    >
-                      {isEn ? "Next: Estimated Volume →" : "Siguiente: Volumen Estimado →"}
-                    </button>
-                  </div>
-                )}
 
-                {/* Step 5: Volume */}
-                {quizStep === 5 && (
-                  <div className="space-y-2">
-                    {[
-                      isEn ? "Initial batch (< 1,000 Liters)" : "Lote inicial de prueba (< 1,000 Litros)",
-                      isEn ? "1,000 – 5,000 Liters / order" : "1,000 a 5,000 Litros / pedido",
-                      isEn ? "5,000 – 25,000 Liters / year" : "5,000 a 25,000 Litros / año",
-                      isEn ? "Commercial bulk (> 25,000 Liters)" : "Volumen a granel comercial (> 25,000 Litros)"
-                    ].map((vol, i) => (
-                      <button
-                        key={i}
-                        onClick={() => {
-                          setQuizData({ ...quizData, volume: vol });
-                          setQuizStep(6);
-                        }}
-                        className={`w-full text-left p-3.5 rounded border transition ${
-                          quizData.volume === vol
-                            ? "bg-[#E8B04B]/20 border-[#E8B04B] text-white"
-                            : "bg-white/5 hover:bg-white/10 border-white/15 text-[#C9D3CB]"
-                        }`}
-                      >
-                        {vol}
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {/* Step 6: Tequila Type */}
-                {quizStep === 6 && (
-                  <div className="space-y-2">
-                    {[
-                      isEn ? "100% Blue Agave Blanco (Pure Terroir)" : "100% Agave Blanco (Puro Terroir)",
-                      isEn ? "Aged Portfolio (Reposado, Añejo, Extra Añejo)" : "Portafolio Añejado (Reposado, Añejo, Extra Añejo)",
-                      isEn ? "Cristalino (Filtered Smooth Expression)" : "Cristalino (Expresión suave filtrada)",
-                      isEn ? "Custom Signature Profile / High Proof" : "Perfil de Autor / Alta Graduación"
-                    ].map((tq, i) => (
-                      <button
-                        key={i}
-                        onClick={() => {
-                          setQuizData({ ...quizData, tequilaType: tq });
-                          setQuizStep(7);
-                        }}
-                        className={`w-full text-left p-3.5 rounded border transition ${
-                          quizData.tequilaType === tq
-                            ? "bg-[#E8B04B]/20 border-[#E8B04B] text-white"
-                            : "bg-white/5 hover:bg-white/10 border-white/15 text-[#C9D3CB]"
-                        }`}
-                      >
-                        {tq}
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {/* Step 7: Assets Ready */}
-                {quizStep === 7 && (
-                  <div className="space-y-2">
-                    {[
-                      isEn ? "Registered Trademark & Brand Assets ready" : "Marca registrada y activos de diseño listos",
-                      isEn ? "Bottle, label & packaging suppliers sourced" : "Botella, etiqueta e insumos ya cotizados",
-                      isEn ? "Distribution channel / Import permit in place" : "Canal de distribución / Permiso de importación listo",
-                      isEn ? "Starting from scratch — Full distillery guidance needed" : "Iniciando desde cero — Requiero asesoría integral"
-                    ].map((ast, i) => (
-                      <button
-                        key={i}
-                        onClick={() => {
-                          setQuizData({ ...quizData, assets: ast });
-                          setQuizStep(8);
-                        }}
-                        className={`w-full text-left p-3.5 rounded border transition ${
-                          quizData.assets === ast
-                            ? "bg-[#E8B04B]/20 border-[#E8B04B] text-white"
-                            : "bg-white/5 hover:bg-white/10 border-white/15 text-[#C9D3CB]"
-                        }`}
-                      >
-                        {ast}
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {/* Step 8: Timeline & Notes */}
-                {quizStep === 8 && (
-                  <div className="space-y-3">
                     <div>
-                      <label className="font-mono text-[10.5px] uppercase text-[#E8B04B] block mb-1">
-                        {isEn ? "Expected Timeline" : "Tiempos Estimados de Arranque"}
-                      </label>
-                      <select
-                        value={quizData.timeline}
-                        onChange={(e) => setQuizData({ ...quizData, timeline: e.target.value })}
-                        className="w-full bg-[#12241B] border border-white/20 rounded p-2.5 text-white focus:outline-none focus:border-[#E8B04B]"
-                      >
-                        <option value="">{isEn ? "Select timeline..." : "Selecciona tiempo..."}</option>
-                        <option value="Immediate (< 30 days)">{isEn ? "Immediate (< 30 days)" : "Inmediato (< 30 días)"}</option>
-                        <option value="1 to 3 months">{isEn ? "1 to 3 months" : "1 a 3 meses"}</option>
-                        <option value="3 to 6 months">{isEn ? "3 to 6 months" : "3 a 6 meses"}</option>
-                        <option value="Exploring for future">{isEn ? "Exploring for future" : "Explorando a futuro"}</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="font-mono text-[10.5px] uppercase text-[#E8B04B] block mb-1">
-                        {isEn ? "Additional Project Details / Notes" : "Detalles Adicionales / Notas del Proyecto"}
+                      <label className="font-mono-tag text-[11px] uppercase tracking-wider text-[#E8B04B] block mb-1">
+                        {isEn ? "Project Notes / Specifics" : "Notas del Proyecto o Requerimientos"}
                       </label>
                       <textarea
-                        rows={3}
-                        value={quizData.notes}
-                        onChange={(e) => setQuizData({ ...quizData, notes: e.target.value })}
-                        placeholder={isEn ? "Specific organoleptic notes, packaging preferences or questions..." : "Notas organolépticas específicas, preferencias de envasado o preguntas..."}
-                        className="w-full bg-white/10 border border-white/20 rounded p-2.5 text-white placeholder-white/40 focus:outline-none focus:border-[#E8B04B]"
+                        rows={2}
+                        value={contactForm.notes}
+                        onChange={(e) => setContactForm({ ...contactForm, notes: e.target.value })}
+                        placeholder={isEn ? "Target launch date, estimated volume, packaging details..." : "Fecha estimada de lanzamiento, volumen previsto, detalles de botella..."}
+                        className="w-full bg-white/10 border border-white/20 rounded p-3 text-white placeholder-white/40 focus:outline-none focus:border-[#E8B04B]"
                       />
                     </div>
 
                     {errorMessage && (
-                      <p className="text-[#ff7676] text-[13px]">{errorMessage}</p>
+                      <p className="text-rose-400 text-xs">{errorMessage}</p>
                     )}
 
-                    <button
-                      disabled={isSubmitting}
-                      onClick={handleQuizSubmit}
-                      className="bg-[#E8B04B] hover:bg-[#f0c06a] disabled:opacity-50 text-[#12241B] font-semibold text-[14px] px-7 py-3 rounded cursor-pointer transition w-full sm:w-auto"
-                    >
-                      {isSubmitting
-                        ? (isEn ? "Evaluating Lead Score..." : "Calculando Lead Score...")
-                        : (isEn ? "Submit & Calculate Score →" : "Enviar y Calcular Score →")}
-                    </button>
-                  </div>
-                )}
+                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setQuizStep(3)}
+                        className="text-white/60 hover:text-white font-mono-tag text-xs"
+                      >
+                        {content.quiz3.btnBack}
+                      </button>
 
-                {/* Progress back / forward buttons */}
-                <div className="flex justify-between items-center mt-6 pt-4 border-t border-white/10 text-[12px] font-mono">
-                  {quizStep > 1 ? (
-                    <button
-                      onClick={() => setQuizStep(quizStep - 1)}
-                      className="text-[#E8B04B] hover:underline"
-                    >
-                      ← {isEn ? "Previous Step" : "Paso Anterior"}
-                    </button>
-                  ) : <span />}
-                  <span className="text-white/40">{quizStep} / 8</span>
-                </div>
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full sm:w-auto bg-[#8C4723] hover:bg-[#a6562b] disabled:opacity-50 text-white font-semibold text-xs uppercase tracking-widest py-4 px-8 rounded cursor-pointer transition shadow-lg"
+                      >
+                        {isSubmitting ? content.quiz3.btnSubmitting : content.quiz3.btnSubmit}
+                      </button>
+                    </div>
+                  </form>
+                )}
               </div>
             )}
           </div>
-
-          <div className="test2mbb-spec-note">
-            <div className="sn warn">
-              <b>{isEn ? "Don't do" : "No hacer"}</b>
-              {content.quiz.specWarn}
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* 5.8 PROCESO DE TRABAJO */}
-      <section className="relative py-20 md:py-24 test2mbb-on-dark">
-        <span className="test2mbb-spec-tag">{content.process.tag}</span>
-        <div className="test2mbb-wrap">
-          <p className="test2mbb-eyebrow">{content.process.eyebrow}</p>
-          <h2 className="font-fraunces font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-white">
+      {/* ============================================================
+          PROCESO DE TRABAJO: 6 TARJETAS CON IMÁGENES
+          ============================================================ */}
+      <section className="py-20 md:py-24 bg-[#12241B] text-white">
+        <div className="max-w-[1160px] mx-auto px-6">
+          <p className="test2mbb-eyebrow" style={{ color: "#E8B04B" }}>
+            {content.process.eyebrow}
+          </p>
+          <h2 className="font-serif-title font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-white mb-10">
             {content.process.title}
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-10">
-            {content.process.steps.slice(0, 4).map((st) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+            {content.process.steps.map((st) => (
               <div
                 key={st.num}
-                className="bg-white/[0.05] border border-[#2C4A38] p-6 rounded-[4px]"
+                className="group relative rounded-xl overflow-hidden border border-white/15 bg-[#1B3327] hover:border-[#E8B04B] transition-all duration-300 flex flex-col h-[280px] shadow-lg"
               >
-                <span className="font-mono text-[#E8B04B] text-[10px] block">{st.num}</span>
-                <h3 className="font-fraunces font-semibold text-[15.5px] text-white mt-2 leading-snug">
-                  {st.title}
-                </h3>
+                {/* Photo Top with Zoom Effect */}
+                <div className="relative h-[150px] overflow-hidden">
+                  <img
+                    src={st.img}
+                    alt={st.title}
+                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500 brightness-90"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1B3327] via-transparent to-black/30"></div>
+                  <span className="absolute top-3 left-3 font-mono-tag text-xs font-bold text-[#12241B] bg-[#E8B04B] px-2.5 py-0.5 rounded shadow">
+                    {st.num}
+                  </span>
+                </div>
+
+                {/* Content Bottom */}
+                <div className="p-5 flex-1 flex flex-col justify-center">
+                  <h3 className="font-serif-title font-semibold text-[17px] text-white group-hover:text-[#E8B04B] transition-colors leading-snug">
+                    {st.title}
+                  </h3>
+                  <p className="text-[12.5px] text-[#C9D3CB] mt-1.5 leading-relaxed">
+                    {st.desc}
+                  </p>
+                </div>
               </div>
             ))}
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-            {content.process.steps.slice(4).map((st) => (
-              <div
-                key={st.num}
-                className="bg-white/[0.05] border border-[#2C4A38] p-6 rounded-[4px]"
-              >
-                <span className="font-mono text-[#E8B04B] text-[10px] block">{st.num}</span>
-                <h3 className="font-fraunces font-semibold text-[15.5px] text-white mt-2 leading-snug">
-                  {st.title}
-                </h3>
-              </div>
-            ))}
-          </div>
-
-          <div className="test2mbb-spec-note">
-            <div className="sn warn">
-              <b>{isEn ? "Don't do" : "No hacer"}</b>
-              {content.process.specWarn}
-            </div>
           </div>
         </div>
       </section>
 
-      {/* 5.9 MÉTODOS POR RESULTADO */}
-      <section id="methods" className="relative py-20 md:py-24 bg-[#F6F1E7]">
-        <span className="test2mbb-spec-tag">{content.methods.tag}</span>
-        <div className="test2mbb-wrap">
+      {/* ============================================================
+          MÉTODOS POR RESULTADO (4 PERFILES)
+          ============================================================ */}
+      <section id="methods" className="py-20 md:py-24 bg-[#FAF8F5]">
+        <div className="max-w-[1160px] mx-auto px-6">
           <p className="test2mbb-eyebrow">{content.methods.eyebrow}</p>
-          <h2 className="font-fraunces font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-[#1C1C1C]">
+          <h2 className="font-serif-title font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-[#1C1C1C] mb-10">
             {content.methods.title}
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {content.methods.profiles.map((pf, idx) => (
               <div
                 key={idx}
-                className="border border-[#DCD5C3] rounded-[4px] overflow-hidden bg-white flex flex-col justify-between"
+                className="border border-[#DCD5C3] rounded-lg overflow-hidden bg-white flex flex-col justify-between hover:shadow-md transition-shadow"
               >
-                <div className="p-5 border-b border-[#DCD5C3]">
-                  <div className="font-mono text-[10px] text-[#B5651D] uppercase">
+                <div className="p-6">
+                  <span className="font-mono-tag text-[10.5px] text-[#8C4723] uppercase font-bold tracking-wider block mb-2">
                     {pf.num}
-                  </div>
-                  <h3 className="font-fraunces font-semibold text-[16px] text-[#1C1C1C] mt-2 leading-snug">
+                  </span>
+                  <h3 className="font-serif-title font-semibold text-[17px] text-[#1C1C1C] leading-snug">
                     {pf.title}
                   </h3>
+                  <p className="text-[12.5px] text-[#6E6B62] mt-2 leading-relaxed">
+                    {pf.desc}
+                  </p>
                 </div>
-                <div className="p-4 text-[12px] text-[#6E6B62] bg-[#EFE7D6]">
+                <div className="p-4 text-[12px] text-[#1B3327] bg-[#EFE7D6] border-t border-[#DCD5C3] font-medium">
                   {pf.bottom}
                 </div>
               </div>
             ))}
           </div>
-
-          <div className="test2mbb-spec-note">
-            <div className="sn warn">
-              <b>{isEn ? "Don't do" : "No hacer"}</b>
-              {content.methods.specWarn}
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* 5.10 AGAVE Y SUMINISTRO */}
-      <section id="agave-supply" className="relative py-20 md:py-24 bg-[#EFE7D6]">
-        <span className="test2mbb-spec-tag">{content.agave.tag}</span>
-        <div className="test2mbb-wrap">
+      {/* ============================================================
+          AGAVE Y SUMINISTRO (FOTO REAL DE CAMPO Y DATOS)
+          ============================================================ */}
+      <section id="agave-supply" className="py-20 md:py-24 bg-[#EFE7D6]">
+        <div className="max-w-[1160px] mx-auto px-6">
           <p className="test2mbb-eyebrow">{content.agave.eyebrow}</p>
-          <h2 className="font-fraunces font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-[#1C1C1C]">
+          <h2 className="font-serif-title font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-[#1C1C1C] mb-10">
             {content.agave.title}
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-center mt-10">
-            <div className="relative aspect-[4/3] rounded-[4px] overflow-hidden border border-[#DCD5C3] bg-[#EFE7D6] shadow-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+            <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-[#DCD5C3] bg-white shadow-lg">
               <img
                 src="/Campo de Agave Ayotlán Casa Loy Tequilera.webp"
                 alt="Campos de Agave Casa Loy en Ayotlán"
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = "/Jimado Agave Tequilana Weber.webp";
-                }}
               />
-              <span className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-xs text-white font-mono text-[9.5px] px-2 py-0.5 rounded">
-                NOM 1633 · Ayotlán, Jalisco
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+              <span className="absolute bottom-3 left-3 bg-black/70 backdrop-blur-xs text-white font-mono-tag text-[11px] px-3 py-1 rounded">
+                NOM 1633 · Ayotlán, Los Altos de Jalisco
               </span>
             </div>
 
-            <div className="flex flex-col gap-4">
+            <div className="space-y-4">
               {content.agave.facts.map((fc, idx) => (
-                <div key={idx} className="border-l-2 border-[#B5651D] pl-4">
-                  <div className="font-mono text-[10px] text-[#B5651D] uppercase tracking-wider">
+                <div key={idx} className="bg-white p-5 rounded-lg border-l-4 border-[#8C4723] shadow-xs">
+                  <span className="font-mono-tag text-[10.5px] text-[#8C4723] uppercase tracking-wider font-bold">
                     {fc.k}
-                  </div>
-                  <div className="text-[14.5px] text-[#1C1C1C] font-semibold mt-0.5">
+                  </span>
+                  <div className="text-[16px] text-[#1C1C1C] font-semibold mt-0.5 font-serif-title">
                     {fc.v}
                   </div>
+                  <p className="text-[13px] text-[#6E6B62] mt-1 leading-relaxed">
+                    {fc.desc}
+                  </p>
                 </div>
               ))}
-            </div>
-          </div>
-
-          <div className="test2mbb-spec-note">
-            <div className="sn warn">
-              <b>{isEn ? "Don't do" : "No hacer"}</b>
-              {content.agave.specWarn}
             </div>
           </div>
         </div>
       </section>
 
-      {/* 5.11 + 5.12 QUALITY & COMPLIANCE */}
+      {/* ============================================================
+          QUALITY & COMPLIANCE (CALIDAD Y EXPORTACIÓN)
+          ============================================================ */}
       <div id="quality-compliance" className="grid grid-cols-1 md:grid-cols-2 gap-[1px] bg-[#DCD5C3] border-y border-[#DCD5C3]">
-        <div className="bg-[#F6F1E7] p-8 md:p-12 relative">
-          <span className="test2mbb-spec-tag">{content.qualityCompliance.quality.tag}</span>
+        <div className="bg-[#FAF8F5] p-8 md:p-14">
           <p className="test2mbb-eyebrow">{content.qualityCompliance.quality.eyebrow}</p>
-          <h2 className="font-fraunces font-semibold text-2xl text-[#1C1C1C] leading-snug">
+          <h2 className="font-serif-title font-semibold text-2xl md:text-3xl text-[#1C1C1C] leading-snug">
             {content.qualityCompliance.quality.title}
           </h2>
           <p className="text-[14px] text-[#6E6B62] mt-3 leading-relaxed">
             {content.qualityCompliance.quality.lede}
           </p>
-          <ul className="mt-5 space-y-2 p-0">
+          <ul className="mt-6 space-y-3 p-0">
             {content.qualityCompliance.quality.list.map((item, idx) => (
-              <li key={idx} className="flex gap-2.5 text-[13px] text-[#1C1C1C]">
-                <span className="text-[#B5651D] font-bold">—</span>
+              <li key={idx} className="flex gap-3 text-[13.5px] text-[#1C1C1C] items-center">
+                <span className="w-5 h-5 rounded-full bg-[#8C4723]/10 text-[#8C4723] flex items-center justify-center font-bold text-xs shrink-0">
+                  ✓
+                </span>
                 <span>{item}</span>
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="bg-[#F6F1E7] p-8 md:p-12 relative">
-          <span className="test2mbb-spec-tag">{content.qualityCompliance.compliance.tag}</span>
+        <div className="bg-[#FAF8F5] p-8 md:p-14">
           <p className="test2mbb-eyebrow">{content.qualityCompliance.compliance.eyebrow}</p>
-          <h2 className="font-fraunces font-semibold text-2xl text-[#1C1C1C] leading-snug">
+          <h2 className="font-serif-title font-semibold text-2xl md:text-3xl text-[#1C1C1C] leading-snug">
             {content.qualityCompliance.compliance.title}
           </h2>
           <p className="text-[14px] text-[#6E6B62] mt-3 leading-relaxed">
             {content.qualityCompliance.compliance.lede}
           </p>
-          <ul className="mt-5 space-y-2 p-0">
+          <ul className="mt-6 space-y-3 p-0">
             {content.qualityCompliance.compliance.list.map((item, idx) => (
-              <li key={idx} className="flex gap-2.5 text-[13px] text-[#1C1C1C]">
-                <span className="text-[#B5651D] font-bold">—</span>
+              <li key={idx} className="flex gap-3 text-[13.5px] text-[#1C1C1C] items-center">
+                <span className="w-5 h-5 rounded-full bg-[#8C4723]/10 text-[#8C4723] flex items-center justify-center font-bold text-xs shrink-0">
+                  ✓
+                </span>
                 <span>{item}</span>
               </li>
             ))}
@@ -1666,98 +1417,98 @@ export default function Test2MBB({ lang = "es", setPage }) {
         </div>
       </div>
 
-      {/* 5.12b NDA */}
-      <section className="p-0 bg-[#12241B]">
-        <div className="test2mbb-wrap py-12 md:py-16">
-          <div className="relative grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6 md:gap-8 items-center bg-[#12241B] text-white">
-            <span className="test2mbb-spec-tag" style={{ top: 0, right: 0, color: "#9db3a5", borderColor: "#2C4A38", background: "rgba(0,0,0,.25)" }}>
-              {content.nda.tag}
-            </span>
-            <div className="w-14 h-14 border-[1.5px] border-[#E8B04B] rounded-full flex items-center justify-center shrink-0">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E8B04B" strokeWidth="1.6">
+      {/* ============================================================
+          MÓDULO NDA: CONFIDENCIALIDAD Y PROTECCIÓN DE PI
+          ============================================================ */}
+      <section className="py-14 md:py-18 bg-[#12241B] text-white">
+        <div className="max-w-[1160px] mx-auto px-6">
+          <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8 bg-white/5 border border-white/15 p-8 md:p-10 rounded-2xl">
+            <div className="w-16 h-16 border-2 border-[#E8B04B] rounded-full flex items-center justify-center shrink-0 bg-[#E8B04B]/10">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E8B04B" strokeWidth="1.8">
                 <path d="M12 2 L20 6 V12 C20 17 16.5 20.5 12 22 C7.5 20.5 4 17 4 12 V6 Z" />
               </svg>
             </div>
-            <div>
-              <h3 className="font-fraunces font-semibold text-xl md:text-2xl text-white mb-2">
-                {content.nda.title}
-              </h3>
-              <p className="text-[13.5px] text-[#C9D3CB] max-w-[620px] leading-relaxed">
+            <div className="flex-1 text-center md:text-left">
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-2">
+                <h3 className="font-serif-title font-semibold text-xl md:text-2xl text-white">
+                  {content.nda.title}
+                </h3>
+                <span className="font-mono-tag text-[10px] text-[#E8B04B] border border-[#E8B04B]/40 bg-[#E8B04B]/10 px-3 py-0.5 rounded-full">
+                  {content.nda.badge}
+                </span>
+              </div>
+              <p className="text-[14px] text-[#C9D3CB] leading-relaxed max-w-2xl">
                 {content.nda.desc}
               </p>
-              <span className="inline-block mt-3 font-mono text-[10px] text-[#E8B04B] border border-[#E8B04B]/35 px-3 py-1 rounded-full">
-                {content.nda.badge}
-              </span>
             </div>
+            <a
+              href="#quiz"
+              className="bg-[#8C4723] hover:bg-[#a6562b] text-white font-semibold text-xs uppercase tracking-wider py-3.5 px-6 rounded transition shrink-0"
+            >
+              {isEn ? "Request NDA Terms →" : "Solicitar Acuerdo NDA →"}
+            </a>
           </div>
         </div>
       </section>
 
-      {/* 5.13 PRUEBA SOCIAL */}
-      <section id="social-proof" className="relative py-20 md:py-24 bg-[#EFE7D6]">
-        <span className="test2mbb-spec-tag">{content.proof.tag}</span>
-        <div className="test2mbb-wrap">
+      {/* ============================================================
+          PRUEBA SOCIAL (SOCIAL PROOF)
+          ============================================================ */}
+      <section id="social-proof" className="py-20 md:py-24 bg-[#EFE7D6]">
+        <div className="max-w-[1160px] mx-auto px-6">
           <p className="test2mbb-eyebrow">{content.proof.eyebrow}</p>
-          <h2 className="font-fraunces font-semibold text-2xl sm:text-3xl md:text-[32px] leading-tight max-w-[760px] text-[#1C1C1C]">
+          <h2 className="font-serif-title font-semibold text-2xl sm:text-3xl md:text-[32px] leading-tight max-w-[760px] text-[#1C1C1C] mb-10">
             {content.proof.title}
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {content.proof.cards.map((card, idx) => (
               <div
                 key={idx}
-                className="border border-[#DCD5C3] p-6 rounded-[4px] bg-white transition hover:shadow-sm"
+                className="border border-[#DCD5C3] p-6 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <span className="font-mono text-[10px] text-[#8f8c81] uppercase block">
+                <span className="font-mono-tag text-[10px] text-[#8C4723] font-bold uppercase tracking-wider block mb-2">
                   {card.tag}
                 </span>
-                <h3 className="font-fraunces font-semibold text-[15.5px] mt-2.5 leading-snug text-[#1C1C1C]">
+                <h3 className="font-serif-title font-semibold text-[16px] text-[#1C1C1C] leading-snug">
                   {card.h3}
                 </h3>
+                <p className="text-[12.5px] text-[#6E6B62] mt-2 leading-relaxed">
+                  {card.desc}
+                </p>
               </div>
             ))}
-          </div>
-
-          <div className="test2mbb-spec-note">
-            <div className="sn warn">
-              <b>{isEn ? "Don't do" : "No hacer"}</b>
-              {content.proof.specWarn}
-            </div>
           </div>
         </div>
       </section>
 
-      {/* 5.14 FAQ */}
-      <section className="relative py-20 md:py-24 bg-[#F6F1E7]">
-        <span className="test2mbb-spec-tag">{content.faq.tag}</span>
-        <div className="test2mbb-wrap">
+      {/* ============================================================
+          FAQ POR CATEGORÍAS (PREGUNTAS FRECUENTES)
+          ============================================================ */}
+      <section className="py-20 md:py-24 bg-[#FAF8F5]">
+        <div className="max-w-[1160px] mx-auto px-6">
           <p className="test2mbb-eyebrow">{content.faq.eyebrow}</p>
-          <h2 className="font-fraunces font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-[#1C1C1C]">
+          <h2 className="font-serif-title font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-[#1C1C1C] mb-10">
             {content.faq.title}
           </h2>
 
-          <div className="mt-10 space-y-6">
+          <div className="space-y-6">
             {content.faq.blocks.map((block, bIdx) => (
               <div key={bIdx} className="border-b border-[#DCD5C3] pb-4">
-                <div className="font-mono text-[11px] text-[#B5651D] uppercase tracking-wider mb-2">
+                <span className="font-mono-tag text-[11.5px] text-[#8C4723] font-bold uppercase tracking-wider block mb-2">
                   {block.category}
-                </div>
+                </span>
                 {block.items.map((item, iIdx) => (
                   <details
                     key={iIdx}
-                    className="test2mbb-faq-item group border-t border-[#DCD5C3] py-4"
+                    className="group border-t border-[#DCD5C3]/70 py-4 cursor-pointer"
                   >
-                    <summary className="cursor-pointer font-fraunces font-semibold text-[15.5px] text-[#1C1C1C] flex justify-between items-center select-none">
-                      <span>
-                        {item.q}{" "}
-                        {item.isNew && (
-                          <span className="test2mbb-new-badge">NEW</span>
-                        )}
-                      </span>
-                      <span className="font-fraunces text-xl text-[#B5651D] ml-2 group-open:hidden">+</span>
-                      <span className="font-fraunces text-xl text-[#B5651D] ml-2 hidden group-open:inline">–</span>
+                    <summary className="font-serif-title font-semibold text-[16px] text-[#1C1C1C] flex justify-between items-center select-none list-none">
+                      <span>{item.q}</span>
+                      <span className="font-serif-title text-xl text-[#8C4723] ml-2 group-open:hidden">+</span>
+                      <span className="font-serif-title text-xl text-[#8C4723] ml-2 hidden group-open:inline">–</span>
                     </summary>
-                    <p className="mt-2.5 text-[13.5px] text-[#6E6B62] max-w-[660px] leading-relaxed">
+                    <p className="mt-3 text-[14px] text-[#6E6B62] max-w-[700px] leading-relaxed">
                       {item.a}
                     </p>
                   </details>
@@ -1765,45 +1516,41 @@ export default function Test2MBB({ lang = "es", setPage }) {
               </div>
             ))}
           </div>
-
-          <div className="test2mbb-spec-note">
-            <div className="sn warn">
-              <b>{isEn ? "Don't do" : "No hacer"}</b>
-              {content.faq.specWarn}
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* 5.14 FINAL CTA & CAL.COM BOOKING */}
-      <section id="cta" className="relative py-20 md:py-28 test2mbb-on-dark text-center">
-        <span className="test2mbb-spec-tag">{content.finalCta.tag}</span>
-        <div className="test2mbb-wrap">
-          <p className="test2mbb-eyebrow justify-center">{content.finalCta.eyebrow}</p>
-          <h2 className="font-fraunces font-semibold text-2xl sm:text-3xl md:text-[40px] leading-tight max-w-[640px] mx-auto text-white">
+      {/* ============================================================
+          FINAL CTA & CAL.COM BOOKING (LLAMADA TÉCNICA)
+          ============================================================ */}
+      <section id="cta" className="py-20 md:py-28 bg-[#12241B] text-white text-center">
+        <div className="max-w-[1160px] mx-auto px-6">
+          <span className="font-mono-tag text-[#E8B04B] font-semibold text-xs tracking-widest uppercase block mb-3">
+            {content.finalCta.eyebrow}
+          </span>
+          <h2 className="font-serif-title font-semibold text-2xl sm:text-3xl md:text-[42px] leading-tight max-w-[640px] mx-auto text-white">
             {content.finalCta.title}
           </h2>
-          <p className="text-[16px] text-[#C9D3CB] max-w-[560px] mx-auto my-6 leading-relaxed">
+          <p className="text-[15.5px] text-[#C9D3CB] max-w-[560px] mx-auto my-6 leading-relaxed">
             {content.finalCta.lede}
           </p>
 
-          <div className="flex flex-wrap justify-center gap-3.5 mb-10">
+          <div className="flex flex-wrap justify-center gap-4 mb-10">
             <a
               href="#cal-inline-test2mbb"
-              className="bg-[#E8B04B] hover:bg-[#f0c06a] text-[#12241B] font-semibold text-[14.5px] px-7 py-3.5 rounded-[3px] transition inline-block shadow-sm"
+              className="bg-[#8C4723] hover:bg-[#a6562b] text-white font-semibold text-xs md:text-sm uppercase tracking-widest py-4 px-8 rounded transition shadow-lg"
             >
               {content.finalCta.btnCall}
             </a>
             <a
               href="#quiz"
-              className="border border-white/35 hover:border-white text-white font-semibold text-[14.5px] px-7 py-3.5 rounded-[3px] transition inline-block"
+              className="border border-white/50 hover:border-white text-white font-semibold text-xs md:text-sm uppercase tracking-widest py-4 px-8 rounded transition"
             >
               {content.finalCta.btnDetails}
             </a>
           </div>
 
-          {/* Cal.com Inline Scheduler */}
-          <div className="mt-8 bg-white rounded-lg p-2 max-w-4xl mx-auto shadow-2xl overflow-hidden border border-white/20">
+          {/* Cal.com Embed Inline */}
+          <div className="bg-white rounded-xl p-2 max-w-4xl mx-auto shadow-2xl overflow-hidden border border-white/20">
             <div
               id="cal-inline-test2mbb"
               style={{ width: "100%", height: "100%", minHeight: "560px", overflow: "scroll" }}
@@ -1811,15 +1558,6 @@ export default function Test2MBB({ lang = "es", setPage }) {
           </div>
         </div>
       </section>
-
-      {/* FOOTER NOTE / SPEC BANNER */}
-      <footer className="py-8 bg-[#EFE7D6] text-center border-t border-[#DCD5C3]">
-        <div className="test2mbb-wrap">
-          <p className="font-mono text-[11px] text-[#8f8c81] tracking-tight">
-            {content.footerNote}
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }
