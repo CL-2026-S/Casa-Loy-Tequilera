@@ -82,31 +82,31 @@ export default function Test2MBB({ lang = "es", setPage }) {
   // Content dictionary
   const content = {
     hero: {
-      overtitle: isEn ? "TEQUILA B2B · NOM 1633" : "TEQUILA B2B · NOM 1633",
+      overtitle: "TEQUILA B2B · NOM 1633",
       h1: isEn ? (
-        <>WHITE LABEL TEQUILA MANUFACTURING IN MEXICO.<br /><span className="text-white italic font-normal">YOUR TEQUILA STARTS IN LOS ALTOS DE JALISCO.</span></>
+        <>Private Label Tequila Manufacturing in Mexico.<br /><span className="text-white italic font-normal">Your tequila starts in Los Altos de Jalisco.</span></>
       ) : (
-        <>FABRICACIÓN DE TEQUILA DE MARCA BLANCA EN MÉXICO.<br /><span className="text-white italic font-normal">TU TEQUILA COMIENZA EN LOS ALTOS DE JALISCO.</span></>
+        <>Fabricación de Tequila Private Label en México.<br /><span className="text-white italic font-normal">Tu tequila empieza en Los Altos de Jalisco.</span></>
       ),
       secondary: isEn ? '"Your vision. Our expertise."' : '"Tu visión. Nuestra experiencia."',
       sub: isEn
         ? "A family-owned NOM 1633 distillery built for founders, existing brands, and distributors ready to build with a real origin behind them."
-        : "Una destilería familiar NOM 1633 concebida para fundadores, marcas existentes y distribuidores listos para construir con un origen real detrás.",
-      ctaStart: isEn ? "START MY PROJECT" : "INICIAR MI PROYECTO",
-      ctaCall: isEn ? "BOOK 30-MIN TECHNICAL CALL" : "AGENDAR LLAMADA DE 30 MIN"
+        : "Una destilería familiar con NOM 1633, creada para fundadores, marcas existentes y distribuidores listos para construir con un origen real detrás de su producto.",
+      ctaStart: isEn ? "Start My Project →" : "Iniciar mi proyecto →",
+      ctaCall: isEn ? "Book a Technical Call" : "Agendar una llamada técnica"
     },
     trust: isEn ? [
       "NOM 1633", "Los Altos de Jalisco", "Family-owned",
       "Agave roots since 1992", "Batch control", "Export coordination"
     ] : [
-      "NOM 1633", "Los Altos de Jalisco", "Empresa familiar",
-      "Raíces agaveras desde 1992", "Control por lotes", "Coordinación de exportación"
+      "NOM 1633", "Los Altos de Jalisco", "De propiedad familiar",
+      "Raíces de agave desde 1992", "Control de lote", "Coordinación de exportación"
     ],
     why: {
-      eyebrow: isEn ? "Why Casa Loy" : "¿Por qué Casa Loy?",
+      eyebrow: isEn ? "Why Casa Loy" : "Por qué Casa Loy",
       title: isEn
         ? "A family-owned tequila producer in Los Altos de Jalisco."
-        : "Un productor de tequila familiar en Los Altos de Jalisco.",
+        : "Un productor familiar de tequila en Los Altos de Jalisco.",
       cards: isEn ? [
         { wk: "Origin", h3: "NOM 1633, Los Altos de Jalisco", desc: "Designation of origin protected production in Jalisco highlands.", anchor: "#agave-supply" },
         { wk: "Structure", h3: "Family-owned, three generations", desc: "Long-term commitment, direct leadership and stable partnerships.", anchor: "#social-proof" },
@@ -116,11 +116,11 @@ export default function Test2MBB({ lang = "es", setPage }) {
         { wk: "Quality", h3: "Batch control on every production", desc: "Internal laboratory and CRT compliance verification on every run.", anchor: "#quality-compliance" }
       ] : [
         { wk: "Origen", h3: "NOM 1633, Los Altos de Jalisco", desc: "Producción protegida bajo denominación de origen en los Altos de Jalisco.", anchor: "#agave-supply" },
-        { wk: "Estructura", h3: "Familiar, tres generaciones", desc: "Compromiso generacional, trato directo sin burocracia y alianzas sólidas.", anchor: "#social-proof" },
+        { wk: "Estructura", h3: "Empresa familiar, tres generaciones", desc: "Compromiso generacional, trato directo sin burocracia y alianzas sólidas.", anchor: "#social-proof" },
         { wk: "Agave", h3: "Cultivo propio desde 1992", desc: "3,600 hectáreas que blindan tu costo por litro y garantizan abasto continuo.", anchor: "#agave-supply" },
         { wk: "Equipo", h3: "Personas reales detrás de cada proyecto", desc: "Maestros tequileros, ingenieros químicos y coordinadores de exportación.", anchor: "#social-proof" },
-        { wk: "Infraestructura", h3: "Construido para proyectos serios en crecimiento", desc: "Flexibilidad industrial desde lotes piloto hasta tanques de granel.", anchor: "#methods" },
-        { wk: "Calidad", h3: "Control por lote en cada producción", desc: "Laboratorio interno y verificación estricta de cumplimiento CRT por lote.", anchor: "#quality-compliance" }
+        { wk: "Infraestructura", h3: "Construida para proyectos serios y en crecimiento", desc: "Flexibilidad industrial desde lotes piloto hasta tanques de granel.", anchor: "#methods" },
+        { wk: "Calidad", h3: "Control de lote en cada producción", desc: "Laboratorio interno y verificación estricta de cumplimiento CRT por lote.", anchor: "#quality-compliance" }
       ]
     },
     inside: {
@@ -159,13 +159,13 @@ export default function Test2MBB({ lang = "es", setPage }) {
         },
         {
           num: "06",
-          name: isEn ? "Aging Barrels" : "Barricas",
+          name: isEn ? "Barrels" : "Barricas",
           desc: isEn ? "Underground barrel cellar with American and French white oak casks." : "Cava subterránea con barricas de roble blanco americano y francés.",
           img: "/Añejamiento Barricas.webp"
         },
         {
           num: "07",
-          name: isEn ? "Lab" : "Laboratorio",
+          name: isEn ? "Laboratory" : "Laboratorio",
           desc: isEn ? "Continuous chemical and chromatographic validation on every batch." : "Verificación química y cromatográfica continua lote por lote.",
           img: "/Laboratorio.webp"
         },
@@ -178,51 +178,51 @@ export default function Test2MBB({ lang = "es", setPage }) {
       ]
     },
     solutions: {
-      eyebrow: isEn ? "Solutions" : "Rutas de solución",
-      title: isEn ? "Choose the right production path." : "Elige la ruta de producción adecuada.",
+      eyebrow: isEn ? "Solutions" : "Soluciones",
+      title: isEn ? "Choose the right production path." : "Elige la ruta de producción correcta.",
       routes: isEn ? [
         {
           num: "01",
-          title: "White Label / Private Label Tequila",
-          desc: "Create or sell tequila under your own brand with full turnkey support, from CRT registration to final export packaging.",
+          title: "Private Label Tequila",
+          desc: "Create or sell tequila under your own brand.",
           tag: "PRIVATE_LABEL"
         },
         {
           num: "02",
           title: "Bulk Tequila Supply",
-          desc: "Continuous bulk tequila supply in 100% Agave or Mixto, shipped in certified food-grade ISO tanks or totes for global bottlers.",
+          desc: "Bulk tequila for bottlers, importers or distributors.",
           tag: "BULK_TEQUILA"
         },
         {
           num: "03",
           title: "Co-packing / Bottling Services",
-          desc: "Filling, sealing, labeling, tax stamp placement, and high-precision inspection for established external projects.",
+          desc: "Bottling, labeling or packaging for a third-party project.",
           tag: "COPACKING_BOTTLING"
         }
       ] : [
         {
           num: "01",
-          title: "Tequila de Marca Privada / Blanca",
-          desc: "Crea o vende tequila bajo tu propia marca con soporte integral llave en mano, desde registro ante CRT hasta empaque final.",
+          title: "Tequila Private Label",
+          desc: "Crea o vende tequila bajo tu propia marca.",
           tag: "PRIVATE_LABEL"
         },
         {
           num: "02",
           title: "Suministro de Tequila a Granel",
-          desc: "Abastecimiento continuo de tequila a granel 100% Agave o Mixto, embarcado en isotanques o pipas grado alimenticio para embotelladoras globales.",
+          desc: "Tequila a granel para embotelladores, importadores o distribuidores.",
           tag: "BULK_TEQUILA"
         },
         {
           num: "03",
-          title: "Servicios de Envasado / Co-packing",
-          desc: "Embotellado, tapado, sellado, colocación de marbetes e inspección visual en mesa de luz para proyectos consolidados.",
+          title: "Co-packing / Servicios de Envasado",
+          desc: "Envasado, etiquetado o empaque para un proyecto de terceros.",
           tag: "COPACKING_BOTTLING"
         }
       ]
     },
     who: {
-      eyebrow: isEn ? "Who this is for" : "A quién va dirigido",
-      title: isEn ? "Find the right path for your tequila project." : "Encuentra la ruta adecuada para tu proyecto tequilero.",
+      eyebrow: isEn ? "Who this is for" : "Para quién es esto",
+      title: isEn ? "Find the right path for your tequila project." : "Encuentra la ruta correcta para tu proyecto de tequila.",
       cards: isEn ? [
         { tag: "Founders", h3: "Building a tequila brand from the ground up", desc: "Turnkey operational path from CRT registration to world-class liquid." },
         { tag: "Existing brands", h3: "Looking for a better production partner", desc: "Smooth transition without inventory stockout or organoleptic change." },
@@ -231,25 +231,25 @@ export default function Test2MBB({ lang = "es", setPage }) {
       ] : [
         { tag: "Fundadores", h3: "Construyendo una marca de tequila desde cero", desc: "Ruta operativa llave en mano desde trámites de CRT hasta un líquido excepcional." },
         { tag: "Marcas existentes", h3: "Buscando un mejor socio de producción", desc: "Transición fluida sin riesgo de desabasto ni variación en tu perfil sensorial." },
-        { tag: "Distribuidores / Importadores", h3: "Entrando al tequila como una nueva categoría", desc: "Volumen a gran escala, certificados de exportación y certeza arancelaria." },
-        { tag: "Compradores a granel", h3: "Abastecimiento constante con un perfil definido", desc: "Precios estables respaldados por 3,600 hectáreas de agave azul propio." }
+        { tag: "Distribuidores / Importadores", h3: "Incursionando en tequila como nueva categoría", desc: "Volumen a gran escala, certificados de exportación y certeza arancelaria." },
+        { tag: "Compradores a granel", h3: "Buscando volumen constante con perfil definido", desc: "Precios estables respaldados por 3,600 hectáreas de agave azul propio." }
       ]
     },
     stake: {
       eyebrow: isEn ? "What's at stake" : "Lo que está en juego",
       title: isEn
         ? "Your tequila project carries real business risk. We help you reduce it."
-        : "Tu proyecto de tequila conlleva un riesgo empresarial real. Te ayudamos a reducirlo.",
+        : "Tu proyecto de tequila conlleva un riesgo de negocio real. Te ayudamos a reducirlo.",
       rows: isEn ? [
-        { num: "01", title: "Starting from zero", desc: "Entering a category you don't know yet — we guide you through regulatory, formulation and supply requirements." },
-        { num: "02", title: "Switching producer", desc: "Making sure the next transition doesn't repeat the last problem — guaranteed contracts, batch trace and clear IP." },
-        { num: "03", title: "Scaling / distribution", desc: "Growing volume without losing consistency — modular capacity up to 13.5M liters annually." },
-        { num: "04", title: "Exporting", desc: "Adding tequila to an existing book of business the right way — complete CRT, TTB and customs documentation." }
+        { num: "01", title: "Starting from zero", desc: "Entering a category you don't know yet." },
+        { num: "02", title: "Switching producer", desc: "Making sure the next transition doesn't repeat the last problem." },
+        { num: "03", title: "Scaling / distribution", desc: "Growing volume without losing consistency." },
+        { num: "04", title: "Exporting", desc: "Adding tequila to an existing book of business the right way." }
       ] : [
-        { num: "01", title: "Empezar desde cero", desc: "Entrar a una categoría que aún no conoces — te asesoramos en regulaciones, formulación, envasado y abasto." },
-        { num: "02", title: "Cambiar de maquilador", desc: "Asegurarse de que la próxima transición no repita el problema anterior — contratos formales y trazabilidad estricta." },
-        { num: "03", title: "Escalamiento / distribución", desc: "Crecer volumen sin perder consistencia jamás — capacidad modular escalable hasta 13.5M L anuales." },
-        { num: "04", title: "Exportación", desc: "Incorporar tequila a tu cartera de negocios de la forma correcta — certificados CRT, TTB para EE. UU. y aduanas." }
+        { num: "01", title: "Empezar desde cero", desc: "Entrar a una categoría que aún no conoces." },
+        { num: "02", title: "Cambiar de productor", desc: "Asegurar que la siguiente transición no repita el problema anterior." },
+        { num: "03", title: "Escalar / distribución", desc: "Crecer en volumen sin perder consistencia." },
+        { num: "04", title: "Exportar", desc: "Incorporar tequila a tu cartera de negocio de la manera correcta." }
       ]
     },
     quiz3: {
@@ -286,20 +286,20 @@ export default function Test2MBB({ lang = "es", setPage }) {
         },
         {
           num: "02",
-          title: isEn ? "Technical call (30 min)" : "Llamada técnica (30 min)",
-          desc: isEn ? "30-minute video session with our distilling and commercial engineering team." : "Sesión técnica de 30 minutos con nuestro equipo de destilación e ingeniería comercial.",
+          title: isEn ? "Technical call" : "Llamada técnica",
+          desc: isEn ? "30-minute technical video call with our distilling and commercial team." : "Videollamada técnica de 30 minutos con nuestro equipo de destilación y comercial.",
           img: "/Restaurante 1937 Nativo atención al cliente.webp"
         },
         {
           num: "03",
-          title: isEn ? "Product definition" : "Definición de producto",
+          title: isEn ? "Product definition" : "Definición del producto",
           desc: isEn ? "Benchmarking liquid profiles, organoleptic tastings, and packaging feasibility." : "Calibración de perfil de líquido, catas organolépticas y viabilidad de envasado.",
           img: "/Tahona Agave Molienda.webp"
         },
         {
           num: "04",
-          title: isEn ? "Compliance path" : "Ruta de cumplimiento",
-          desc: isEn ? "Coordination of NOM 1633, CRT brand registration, and TTB export certificates." : "Coordinación de registro de marca ante CRT, norma NOM 1633 y certificados TTB.",
+          title: isEn ? "Compliance path" : "Ruta de cumplimiento normativo",
+          desc: isEn ? "Coordination of NOM 1633, CRT brand registration, and export certificates." : "Coordinación de registro de marca ante CRT, norma NOM 1633 y certificados de exportación.",
           img: "/Laboratorio Maquilas.webp"
         },
         {
@@ -310,107 +310,107 @@ export default function Test2MBB({ lang = "es", setPage }) {
         },
         {
           num: "06",
-          title: isEn ? "Shipment coordination" : "Coordinación de embarque",
+          title: isEn ? "Shipment coordination" : "Coordinación de envío",
           desc: isEn ? "Bottling inspection, palletizing, export documentation, and customs handover." : "Inspección de embotellado, paletizado, documentación de exportación y despacho aduanal.",
           img: "/Embotellado 2.webp"
         }
       ]
     },
     methods: {
-      eyebrow: isEn ? "Production, by result" : "Producción según resultado",
-      title: isEn ? "The tequila profile your brand needs, and how we build it." : "El perfil de tequila que tu marca necesita y cómo lo construimos.",
+      eyebrow: isEn ? "Production, by result" : "Producción, por resultado",
+      title: isEn ? "The tequila profile your brand needs, and how we build it." : "El perfil de tequila que tu marca necesita, y cómo lo construimos.",
       profiles: isEn ? [
         {
-          num: "Profile 01",
+          num: "01",
           title: "Heritage / Ultra-Premium",
           bottom: "Stone mill, traditional oven, pot still.",
-          desc: "Earthy, complex cooked agave notes with artisanal depth."
+          desc: "Stone mill, traditional oven, pot still."
         },
         {
-          num: "Profile 02",
+          num: "02",
           title: "Premium Consistent",
           bottom: "Autoclave, precise control.",
-          desc: "Clean, floral and bright citrus expressions with absolute batch consistency."
+          desc: "Autoclave, precise control."
         },
         {
-          num: "Profile 03",
+          num: "03",
           title: "Scalable Commercial",
           bottom: "Column still, high efficiency.",
-          desc: "Silky, smooth and versatile profiles built for high-volume global distribution."
+          desc: "Column still, high efficiency."
         },
         {
-          num: "Profile 04",
+          num: "04",
           title: "Custom Signature",
           bottom: "Signature yeast, wine or whiskey barrels.",
-          desc: "Bespoke cask finishing in virgin French oak, bourbon, or port barrels."
+          desc: "Signature yeast, wine or whiskey barrels."
         }
       ] : [
         {
-          num: "Perfil 01",
+          num: "01",
           title: "Herencia / Ultra-Premium",
-          bottom: "Molino de piedra (tahona), horno tradicional de mampostería, alambique de cobre.",
-          desc: "Notas terrosas, agave cocido maduro y profundidad artesanal compleja."
+          bottom: "Molino de piedra, horno tradicional, alambique.",
+          desc: "Molino de piedra, horno tradicional, alambique."
         },
         {
-          num: "Perfil 02",
+          num: "02",
           title: "Premium Consistente",
-          bottom: "Autoclave, control térmico de precisión.",
-          desc: "Perfiles limpios, florales y cítricos con consistencia milimétrica lote a lote."
+          bottom: "Autoclave, control preciso.",
+          desc: "Autoclave, control preciso."
         },
         {
-          num: "Perfil 03",
+          num: "03",
           title: "Comercial Escalable",
-          bottom: "Destilación en columna continua, máxima eficiencia.",
-          desc: "Sensación en boca sedosa, balanceada y versátil para marcas de gran volumen."
+          bottom: "Columna de destilación, alta eficiencia.",
+          desc: "Columna de destilación, alta eficiencia."
         },
         {
-          num: "Perfil 04",
-          title: "Firma / De Autor",
-          bottom: "Levaduras exclusivas, barricas de roble de vino o whisky.",
-          desc: "Crianza a la medida en roble blanco americano, bourbon o barricas de vino."
+          num: "04",
+          title: "Firma Personalizada",
+          bottom: "Levadura característica, barricas de vino o whisky.",
+          desc: "Levadura característica, barricas de vino o whisky."
         }
       ]
     },
     agave: {
       eyebrow: isEn ? "Agave & supply" : "Agave y suministro",
-      title: isEn ? "Your tequila brand starts before production — it starts with supply." : "Tu marca de tequila comienza antes de la producción — empieza con el suministro.",
+      title: isEn ? "Your tequila brand starts before production — it starts with supply." : "Tu marca de tequila empieza antes de la producción: empieza con el suministro.",
       facts: isEn ? [
         { k: "Origin", v: "Los Altos de Jalisco, Ayotlán", desc: "Mineral-rich red highland soil ideal for Blue Weber Agave." },
         { k: "Since", v: "Agave roots since 1992", desc: "Over 3 decades of agricultural mastery, avoiding raw material brokers." },
         { k: "Traceability", v: "Field-level knowledge, supply planning", desc: "3,600 estate hectares securing long-term cost stability per liter." }
       ] : [
         { k: "Origen", v: "Los Altos de Jalisco, Ayotlán", desc: "Tierra roja mineral de Los Altos óptima para la acumulación de azúcares." },
-        { k: "Desde", v: "Raíces agaveras desde 1992", desc: "Más de 3 décadas de experiencia agrícola directa, sin depender de coyotes." },
-        { k: "Trazabilidad", v: "Conocimiento a nivel de campo, planeación de abasto", desc: "3,600 hectáreas propias que blindan la estabilidad de costo de tu marca." }
+        { k: "Desde", v: "Raíces de agave desde 1992", desc: "Más de 3 décadas de experiencia agrícola directa, sin depender de coyotes." },
+        { k: "Trazabilidad", v: "Conocimiento a nivel de campo, planeación de suministro", desc: "3,600 hectáreas propias que blindan la estabilidad de costo de tu marca." }
       ]
     },
     qualityCompliance: {
       quality: {
         eyebrow: isEn ? "Quality" : "Calidad",
-        title: isEn ? "Batch-to-batch consistency your brand can defend." : "Consistencia lote tras lote que tu marca puede defender.",
-        lede: isEn ? "Lab verification, defined parameters, batch review, traceability and client approval before shipping." : "Verificación de laboratorio, parámetros definidos, revisión de lote, trazabilidad y aprobación del cliente antes de embarcar.",
+        title: isEn ? "Batch-to-batch consistency your brand can defend." : "Consistencia lote a lote que tu marca puede respaldar.",
+        lede: isEn ? "Lab verification, defined parameters, batch review, traceability and client approval before shipping." : "Verificación de laboratorio, parámetros definidos, revisión de lote, trazabilidad y aprobación del cliente antes del envío.",
         list: isEn ? [
-          "In-house lab validation on every single production batch",
-          "Written client organoleptic approval prior to dispatch",
-          "Full field-to-bottle traceability records under NOM 1633"
+          "In-house lab, every batch",
+          "Client approval before shipping",
+          "Batch-to-batch traceability"
         ] : [
-          "Laboratorio interno validando cada lote de producción",
-          "Aprobación organoléptica del cliente antes del despacho",
-          "Trazabilidad completa de campo a botella bajo NOM 1633"
+          "Laboratorio propio, en cada lote",
+          "Aprobación del cliente antes del envío",
+          "Trazabilidad lote a lote"
         ]
       },
       compliance: {
         eyebrow: isEn ? "Compliance & export" : "Cumplimiento y exportación",
-        title: isEn ? "We help coordinate compliance, not carry it alone." : "Ayudamos a coordinar el cumplimiento, no a cargarlo en solitario.",
-        lede: isEn ? "We help coordinate the compliance and export documentation path with the right parties involved." : "Ayudamos a coordinar la ruta de cumplimiento y documentación de exportación con los actores clave involucrados.",
+        title: isEn ? "We help coordinate compliance, not carry it alone." : "Te ayudamos a coordinar el cumplimiento normativo, no a cargarlo solo.",
+        lede: isEn ? "We help coordinate the compliance and export documentation path with the right parties involved." : "Ayudamos a coordinar la ruta de cumplimiento normativo y documentación de exportación con las partes correctas involucradas.",
         list: isEn ? [
-          "NOM 1633 · Consejo Regulador del Tequila (CRT) certification",
-          "Complete export documentation (Certificate of Origin, TTB / FDA)",
-          "Active coordination with your legal, customs, and distribution partners"
+          "NOM 1633 · CRT",
+          "Export documentation",
+          "Coordination with legal & distribution partners"
         ] : [
-          "Certificación NOM 1633 ante el Consejo Regulador del Tequila (CRT)",
-          "Documentación completa de exportación (Certificado de Origen, TTB / FDA)",
-          "Coordinación activa con tus asesores legales, aduanales y distribuidores"
+          "NOM 1633 · CRT",
+          "Documentación de exportación",
+          "Coordinación con socios legales y de distribución"
         ]
       }
     },
@@ -418,14 +418,14 @@ export default function Test2MBB({ lang = "es", setPage }) {
       title: isEn ? "Your Brand. Your Project. Protected." : "Tu Marca. Tu Proyecto. Protegido.",
       desc: isEn
         ? "Your formula stays yours. Every project includes a confidentiality agreement, clear IP ownership terms, and controlled documentation — so your development process is protected from day one."
-        : "Tu fórmula te pertenece. Cada proyecto incluye un acuerdo de confidencialidad (NDA), términos claros de propiedad intelectual y documentación controlada — para que tu proceso de desarrollo esté protegido desde el primer día.",
+        : "Tu fórmula sigue siendo tuya. Cada proyecto incluye un acuerdo de confidencialidad, términos claros de propiedad intelectual y documentación controlada, para que tu proceso de desarrollo esté protegido desde el primer día.",
       badge: isEn ? "NDA available" : "NDA disponible"
     },
     proof: {
-      eyebrow: isEn ? "Proof, not promises" : "Evidencia, no promesas",
+      eyebrow: isEn ? "Proof, not promises" : "Pruebas, no promesas",
       title: isEn
         ? "Every project receives direct attention from the people involved in production, quality, compliance and commercial coordination."
-        : "Cada proyecto recibe atención directa de las personas involucradas en producción, calidad, cumplimiento y coordinación comercial.",
+        : "Cada proyecto recibe atención directa de las personas involucradas en producción, calidad, cumplimiento normativo y coordinación comercial.",
       cards: isEn ? [
         { tag: "Attention", h3: "Direct attention from the team on every project", desc: "No impersonal ticket systems. You work directly with production directors." },
         { tag: "Process", h3: "Verified, traceable production process", desc: "Full batch reports and lab assays provided before every bottling run." },
@@ -435,33 +435,33 @@ export default function Test2MBB({ lang = "es", setPage }) {
         { tag: "Atención", h3: "Atención directa del equipo en cada proyecto", desc: "Sin burocracia. Trato directo con directores de producción y maestros tequileros." },
         { tag: "Proceso", h3: "Proceso de producción verificado y trazable", desc: "Reportes químicos de laboratorio entregados antes de cada lote de embotellado." },
         { tag: "Casos", h3: "Casos de estudio autorizados — próximamente", desc: "Experiencia comprobada maquilando marcas premium nacionales e internacionales." },
-        { tag: "Testimonios", h3: "Testimonios de clientes — publicados únicamente bajo permiso", desc: "Confidencialidad absoluta y respeto estricto a la discreción de cada socio." }
+        { tag: "Testimonios", h3: "Testimonios de clientes — publicados solo con autorización", desc: "Confidencialidad absoluta y respeto estricto a la discreción de cada socio." }
       ]
     },
     faq: {
       eyebrow: isEn ? "FAQ" : "Preguntas frecuentes",
-      title: isEn ? "Straight answers, by intention." : "Respuestas claras, por intención.",
+      title: isEn ? "Straight answers, by intention." : "Respuestas directas, organizadas por intención.",
       blocks: [
         {
           category: isEn ? "Founders / Investors" : "Fundadores / Inversionistas",
           items: [
             {
-              q: isEn ? "How do I start my own tequila brand?" : "¿Cómo inicio mi propia marca de tequila?",
+              q: isEn ? "How do I start my own tequila brand?" : "¿Cómo empiezo mi propia marca de tequila?",
               a: isEn 
-                ? "It starts with your liquid's character, target market, and budget range. We provide turnkey guidance from brand registration with CRT to your first commercial bottling."
-                : "Comienza definiendo el carácter de tu líquido, el mercado objetivo y el rango de presupuesto. Te brindamos acompañamiento llave en mano desde el registro de marca ante el CRT hasta tu primer lote comercial."
+                ? "It starts with your liquid's character, target market, and budget range."
+                : "Empieza con el carácter de tu líquido, tu mercado objetivo y tu rango de presupuesto."
             },
             {
-              q: isEn ? "Who owns my formula?" : "¿Quién es el dueño de mi fórmula?",
+              q: isEn ? "Who owns my formula?" : "¿A quién le pertenece mi fórmula?",
               a: isEn 
-                ? "You do. Every project includes a formal confidentiality agreement (NDA) and clear IP ownership terms guaranteeing your exclusive rights."
-                : "Tú. Cada proyecto incluye un acuerdo de confidencialidad formal (NDA) y términos claros de propiedad intelectual que garantizan tus derechos exclusivos."
+                ? "You do. Every project includes a confidentiality agreement and clear IP ownership terms."
+                : "A ti. Cada proyecto incluye un acuerdo de confidencialidad y términos claros de propiedad intelectual."
             },
             {
               q: isEn ? "Can I visit the distillery?" : "¿Puedo visitar la destilería?",
               a: isEn 
-                ? "Yes. We welcome serious project visits to our distillery in Ayotlán, Jalisco — seeing the facility firsthand is often the fastest way to confirm alignment."
-                : "Sí. Recibimos con gusto visitas para proyectos serios en nuestra destilería en Ayotlán, Jalisco — conocer la infraestructura en persona es la mejor forma de confirmar la compatibilidad operativa."
+                ? "Yes. We welcome serious project visits — seeing the process firsthand is often the fastest way to know if we're the right fit."
+                : "Sí. Recibimos visitas de proyectos serios: ver el proceso de primera mano suele ser la forma más rápida de saber si somos el socio correcto."
             }
           ]
         },
@@ -471,14 +471,14 @@ export default function Test2MBB({ lang = "es", setPage }) {
             {
               q: isEn ? "Can I switch producers without interrupting inventory?" : "¿Puedo cambiar de productor sin interrumpir mi inventario?",
               a: isEn 
-                ? "Yes — we map your timeline and run pilot matching batches before your current inventory is depleted, ensuring zero supply gap."
-                : "Sí — planificamos tu cronograma de existencias y realizamos lotes piloto de calibración sensorial antes de que agotes tu inventario actual, garantizando abasto continuo."
+                ? "Yes — we map your timeline first, then build production around it."
+                : "Sí: primero mapeamos tus tiempos y después construimos la producción alrededor de ellos."
             },
             {
-              q: isEn ? "Can you produce exclusively for my brand?" : "¿Pueden producir exclusivamente para mi marca?",
+              q: isEn ? "Can you produce exclusively for my brand?" : "¿Pueden producir de forma exclusiva para mi marca?",
               a: isEn 
                 ? "Yes — exclusivity is part of the same protected development structure covered by your confidentiality agreement."
-                : "Sí — la exclusividad forma parte del mismo esquema de desarrollo protegido y confidencialidad que acordamos desde el inicio."
+                : "Sí: la exclusividad forma parte de la misma estructura de desarrollo protegida, cubierta por tu acuerdo de confidencialidad."
             }
           ]
         },
@@ -486,16 +486,16 @@ export default function Test2MBB({ lang = "es", setPage }) {
           category: isEn ? "Bulk buyers" : "Compradores a granel",
           items: [
             {
-              q: isEn ? "Does Casa Loy offer bulk tequila?" : "¿Ofrece Casa Loy tequila a granel?",
+              q: isEn ? "Does Casa Loy offer bulk tequila?" : "¿Casa Loy ofrece tequila a granel?",
               a: isEn 
-                ? "Yes — bulk supply with a consistent, defined profile in 100% Agave or Mixto, shipped in certified food-grade ISO tanks or totes."
-                : "Sí — suministro de tequila a granel con perfil constante y certificado, 100% Agave o Mixto, embarcado en pipas, isotanques grado alimenticio o tótems de exportación."
+                ? "Yes — bulk supply with a consistent, defined profile."
+                : "Sí: suministro a granel con un perfil consistente y definido."
             },
             {
               q: isEn ? "Can I use my own bottle?" : "¿Puedo usar mi propia botella?",
               a: isEn 
-                ? "Yes. We can work with a bottle you've already sourced, or coordinate sourcing and custom tooling as part of your project."
-                : "Sí. Podemos trabajar con una botella que ya tengas seleccionada o coordinar el abastecimiento, etiquetado y tapado como parte de tu proyecto."
+                ? "Yes. We can work with a bottle you've already sourced, or coordinate sourcing as part of your project."
+                : "Sí. Podemos trabajar con una botella que ya hayas conseguido, o coordinar su abastecimiento como parte de tu proyecto."
             }
           ]
         },
@@ -506,7 +506,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
               q: isEn ? "What documentation is needed to export from Mexico?" : "¿Qué documentación se necesita para exportar desde México?",
               a: isEn 
                 ? "CRT export certificate, commercial invoice, certificate of origin, and TTB label approval for the U.S."
-                : "Certificado de exportación emitido por el CRT, factura comercial, certificado de origen y aprobación de marbetes / etiquetas TTB para EE. UU."
+                : "Certificado de exportación CRT, factura comercial, certificado de origen y aprobación de etiqueta TTB para EE. UU."
             }
           ]
         },
@@ -514,10 +514,10 @@ export default function Test2MBB({ lang = "es", setPage }) {
           category: isEn ? "Compliance" : "Cumplimiento normativo",
           items: [
             {
-              q: isEn ? "What does NOM 1633 mean for a tequila brand?" : "¿Qué significa NOM 1633 para una marca de tequila?",
+              q: isEn ? "What does NOM 1633 mean for a tequila brand?" : "¿Qué significa la NOM 1633 para una marca de tequila?",
               a: isEn 
-                ? "It confirms the distillery is authorized and audited under Mexico's official denomination-of-origin standard by the Tequila Regulatory Council (CRT)."
-                : "Confirma que la destilería está formalmente registrada, auditada y autorizada bajo la Norma Oficial Mexicana ante el Consejo Regulador del Tequila (CRT)."
+                ? "It confirms the distillery is authorized under Mexico's denomination-of-origin standard."
+                : "Confirma que la destilería está autorizada bajo la norma mexicana de denominación de origen."
             }
           ]
         }
@@ -525,12 +525,12 @@ export default function Test2MBB({ lang = "es", setPage }) {
     },
     finalCta: {
       eyebrow: isEn ? "Next step" : "Siguiente paso",
-      title: isEn ? "Book a 30-minute technical video call." : "Agenda una videollamada técnica de 30 minutos.",
+      title: isEn ? "Book a 20-minute technical video call." : "Agenda una videollamada técnica de 30 minutos.",
       lede: isEn
-        ? "No commitment. No sales pitch. A 30-minute real technical conversation about whether your project is the right fit for what we do here."
-        : "Sin compromisos ni discursos de ventas. Una conversación técnica real de 30 minutos para evaluar si tu proyecto encaja con lo que hacemos aquí.",
-      btnCall: isEn ? "Book a 30-Minute Technical Call →" : "Agendar llamada técnica de 30 minutos →",
-      btnDetails: isEn ? "Complete Diagnostic Quiz" : "Completar diagnóstico"
+        ? "No commitment. No sales pitch. A real conversation about whether your project is the right fit for what we do here."
+        : "Sin compromiso. Sin discurso de ventas. Una conversación real sobre si tu proyecto encaja con lo que hacemos aquí.",
+      btnCall: isEn ? "Book a Technical Call →" : "Agendar una llamada técnica →",
+      btnDetails: isEn ? "Send Project Details" : "Enviar detalles del proyecto"
     }
   };
 
@@ -1322,21 +1322,18 @@ export default function Test2MBB({ lang = "es", setPage }) {
             {content.methods.profiles.map((pf, idx) => (
               <div
                 key={idx}
-                className="border border-[#DCD5C3] rounded-lg overflow-hidden bg-white flex flex-col justify-between hover:shadow-md transition-shadow"
+                className="border border-[#DCD5C3] rounded-lg overflow-hidden bg-white flex flex-col justify-between hover:border-[#8C4723] hover:shadow-md transition-all duration-300 p-6"
               >
-                <div className="p-6">
-                  <span className="font-nav-tag text-[10.5px] text-[#8C4723] uppercase font-bold tracking-wider block mb-2">
+                <div>
+                  <span className="font-nav-tag text-[11px] text-[#8C4723] uppercase font-bold tracking-wider block mb-2">
                     {pf.num}
                   </span>
-                  <h3 className="font-serif-title font-semibold text-[18px] text-[#1C1C1C] leading-snug">
+                  <h3 className="font-serif-title font-semibold text-[19px] text-[#1C1C1C] leading-snug">
                     {pf.title}
                   </h3>
-                  <p className="text-[12.5px] text-[#6E6B62] mt-2 leading-relaxed">
-                    {pf.desc}
-                  </p>
                 </div>
-                <div className="p-4 text-[12px] text-[#1B3327] bg-[#EFE7D6] border-t border-[#DCD5C3] font-medium">
-                  {pf.bottom}
+                <div className="mt-4 pt-4 border-t border-[#DCD5C3]/60 text-[13px] text-[#555] leading-relaxed">
+                  {pf.desc}
                 </div>
               </div>
             ))}
