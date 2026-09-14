@@ -59,7 +59,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
       window.Cal("init", { origin: "https://cal.com" });
       window.Cal("inline", {
         elementOrSelector: "#cal-inline-test2mbb",
-        calLink: "internationalcasaloy",
+        calLink: "internationalcasaloy/30min",
         config: { 
           layout: "month_view",
           theme: "light",
@@ -84,16 +84,16 @@ export default function Test2MBB({ lang = "es", setPage }) {
     hero: {
       overtitle: isEn ? "DISTILLERY & PRIVATE LABEL TEQUILA B2B · NOM 1633" : "DESTILERÍA & MAQUILA TEQUILA B2B · NOM 1633",
       h1: isEn ? (
-        <>Private Label Tequila Manufacturing in Mexico.<br /><span className="text-[#E8B04B] italic">Your tequila starts in Los Altos de Jalisco.</span></>
+        <>PRIVATE LABEL TEQUILA MANUFACTURING IN MEXICO.<br /><span className="text-white italic font-normal">YOUR TEQUILA STARTS IN LOS ALTOS DE JALISCO.</span></>
       ) : (
-        <>Maquila de Tequila de Marca Privada en México.<br /><span className="text-[#E8B04B] italic">Tu tequila comienza en Los Altos de Jalisco.</span></>
+        <>MAQUILA DE TEQUILA DE MARCA PRIVADA EN MÉXICO.<br /><span className="text-white italic font-normal">TU TEQUILA COMIENZA EN LOS ALTOS DE JALISCO.</span></>
       ),
       secondary: isEn ? '"Your vision. Our expertise."' : '"Tu visión. Nuestra experiencia."',
       sub: isEn
         ? "A family-owned NOM 1633 distillery built for founders, existing brands, and distributors ready to build with a real origin behind them."
         : "Una destilería familiar NOM 1633 concebida para fundadores, marcas existentes y distribuidores listos para construir con un origen real detrás.",
-      ctaStart: isEn ? "Start My Project →" : "Iniciar mi proyecto →",
-      ctaCall: isEn ? "Book a Technical Call" : "Agendar llamada técnica"
+      ctaStart: isEn ? "START MY PROJECT" : "INICIAR MI PROYECTO",
+      ctaCall: isEn ? "BOOK 30-MIN TECHNICAL CALL" : "AGENDAR LLAMADA DE 30 MIN"
     },
     trust: isEn ? [
       "NOM 1633", "Los Altos de Jalisco", "Family-owned",
@@ -184,70 +184,41 @@ export default function Test2MBB({ lang = "es", setPage }) {
         {
           num: "01",
           title: "Private Label Tequila",
-          desc: "Create or sell tequila under your own brand with full turnkey support.",
-          tag: "private_label"
+          desc: "Create or sell tequila under your own brand with full turnkey support, from CRT registration to final export packaging.",
+          tag: "PRIVATE_LABEL"
         },
         {
           num: "02",
-          title: "Contract Manufacturing / Maquila",
-          desc: "Production for third parties under specification, with or without existing brand.",
-          tag: "contract_manufacturing"
+          title: "Bulk Tequila Supply",
+          desc: "Continuous bulk tequila supply in 100% Agave or Mixto, shipped in certified food-grade ISO tanks or totes for global bottlers.",
+          tag: "BULK_TEQUILA"
         },
         {
           num: "03",
-          title: "Bulk Tequila Supply",
-          desc: "Bulk tequila 100% agave or mixto for bottlers, importers or distributors.",
-          tag: "bulk_tequila"
-        },
-        {
-          num: "04",
           title: "Co-packing / Bottling Services",
-          desc: "Bottling, labeling or packaging for a third-party project.",
-          tag: "copacking_bottling"
-        },
-        {
-          num: "05",
-          title: "Custom Profile Development",
-          desc: "Sensory development or calibration of your proprietary liquid profile.",
-          tag: "custom_profile"
+          desc: "Filling, sealing, labeling, tax stamp placement, and high-precision inspection for established external projects.",
+          tag: "COPACKING_BOTTLING"
         }
       ] : [
         {
           num: "01",
           title: "Tequila de Marca Privada",
-          desc: "Crea o vende tequila bajo tu propia marca con soporte integral llave en mano.",
-          tag: "private_label"
+          desc: "Crea o vende tequila bajo tu propia marca con soporte integral llave en mano, desde registro ante CRT hasta empaque final.",
+          tag: "PRIVATE_LABEL"
         },
         {
           num: "02",
-          title: "Maquila por Contrato",
-          desc: "Producción para terceros bajo especificación técnica, con o sin marca existente.",
-          tag: "contract_manufacturing"
+          title: "Suministro de Tequila a Granel",
+          desc: "Abastecimiento continuo de tequila a granel 100% Agave o Mixto, embarcado en isotanques o pipas grado alimenticio para embotelladoras globales.",
+          tag: "BULK_TEQUILA"
         },
         {
           num: "03",
-          title: "Suministro de Tequila a Granel",
-          desc: "Tequila a granel 100% agave o mixto para envasadores, importadores o distribuidores.",
-          tag: "bulk_tequila"
-        },
-        {
-          num: "04",
           title: "Servicios de Envasado / Co-packing",
-          desc: "Embotellado, etiquetado o acondicionamiento para proyectos de terceros.",
-          tag: "copacking_bottling"
-        },
-        {
-          num: "05",
-          title: "Desarrollo de Perfil a la Medida",
-          desc: "Desarrollo o calibración sensorial fina de tu perfil de líquido exclusivo.",
-          tag: "custom_profile"
+          desc: "Embotellado, tapado, sellado, colocación de marbetes e inspección visual en mesa de luz para proyectos consolidados.",
+          tag: "COPACKING_BOTTLING"
         }
-      ],
-      closer: isEn ? (
-        <>Can't find your exact model? <strong>We adapt to custom project requirements.</strong></>
-      ) : (
-        <>¿No encuentras tu modelo exacto? <strong>Nos adaptamos a los requerimientos específicos de tu proyecto.</strong></>
-      )
+      ]
     },
     who: {
       eyebrow: isEn ? "Who this is for" : "A quién va dirigido",
@@ -315,8 +286,8 @@ export default function Test2MBB({ lang = "es", setPage }) {
         },
         {
           num: "02",
-          title: isEn ? "Technical call" : "Llamada técnica",
-          desc: isEn ? "20-minute video session with our distilling and commercial engineering team." : "Sesión de 20 minutos con nuestro equipo técnico de destilación e ingeniería comercial.",
+          title: isEn ? "Technical call (30 min)" : "Llamada técnica (30 min)",
+          desc: isEn ? "30-minute video session with our distilling and commercial engineering team." : "Sesión técnica de 30 minutos con nuestro equipo de destilación e ingeniería comercial.",
           img: "/Restaurante 1937 Nativo atención al cliente.webp"
         },
         {
@@ -554,11 +525,11 @@ export default function Test2MBB({ lang = "es", setPage }) {
     },
     finalCta: {
       eyebrow: isEn ? "Next step" : "Siguiente paso",
-      title: isEn ? "Book a 20-minute technical video call." : "Agenda una videollamada técnica de 20 minutos.",
+      title: isEn ? "Book a 30-minute technical video call." : "Agenda una videollamada técnica de 30 minutos.",
       lede: isEn
-        ? "No commitment. No sales pitch. A real conversation about whether your project is the right fit for what we do here."
-        : "Sin compromisos ni discursos de ventas. Una conversación técnica real para evaluar si tu proyecto encaja con lo que hacemos aquí.",
-      btnCall: isEn ? "Book a Technical Call →" : "Agendar llamada técnica →",
+        ? "No commitment. No sales pitch. A 30-minute real technical conversation about whether your project is the right fit for what we do here."
+        : "Sin compromisos ni discursos de ventas. Una conversación técnica real de 30 minutos para evaluar si tu proyecto encaja con lo que hacemos aquí.",
+      btnCall: isEn ? "Book a 30-Minute Technical Call →" : "Agendar llamada técnica de 30 minutos →",
       btnDetails: isEn ? "Complete Diagnostic Quiz" : "Completar diagnóstico"
     }
   };
@@ -590,7 +561,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
         email: contactForm.email,
         lada: contactForm.lada || "+52",
         phone: contactForm.phone,
-        solution: quizAnswers.solution || "Marca Privada Integral",
+        solution: quizAnswers.solution || "Tequila de Marca Privada",
         objective: `Mercado: ${quizAnswers.market || "No especificado"}`,
         stage: quizAnswers.stage || "En desarrollo",
         comments: contactForm.notes || "Registro desde /test2mbb (Diagnóstico 3 preguntas)",
@@ -623,22 +594,23 @@ export default function Test2MBB({ lang = "es", setPage }) {
         .test2mbb-root h2, 
         .test2mbb-root h3,
         .test2mbb-root .font-serif-title {
-          font-family: 'Fraunces', Georgia, serif;
+          font-family: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
           letter-spacing: -0.01em;
         }
-        .test2mbb-root .font-mono-tag {
-          font-family: 'IBM Plex Mono', monospace;
+        .test2mbb-root .font-nav-tag {
+          font-family: 'Plus Jakarta Sans', 'Montserrat', sans-serif;
         }
         .test2mbb-eyebrow {
-          font-family: 'IBM Plex Mono', monospace;
+          font-family: 'Plus Jakarta Sans', 'Montserrat', sans-serif;
           font-size: 11px;
-          letter-spacing: 0.14em;
+          letter-spacing: 0.25em;
           text-transform: uppercase;
           color: #8C4723;
           margin-bottom: 12px;
           display: flex;
           align-items: center;
           gap: 10px;
+          font-weight: 700;
         }
         .test2mbb-eyebrow::before {
           content: "";
@@ -650,47 +622,60 @@ export default function Test2MBB({ lang = "es", setPage }) {
       `}</style>
 
       {/* ============================================================
-          HERO BANNER: ESTILO VISUAL DEL SITIO (Con Fondo Fotográfico)
+          01. HERO BANNER: ESTILO EXACTO DEL HOME DE CASA LOY
           ============================================================ */}
-      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-[#12241B] text-white">
-        {/* Background Image with Cinematic Gradient */}
+      <section className="relative min-h-[92vh] w-full flex items-center justify-center overflow-hidden bg-zinc-950 text-white">
+        {/* Background Image with Home's Exact Picture Tags and Overlays */}
         <div className="absolute inset-0 z-0">
-          <img
-            alt="Naves Industriales Casa Loy Tequilera"
-            className="w-full h-full object-cover brightness-[0.55]"
-            src="/Naves Industriales Casa Loy Tequilera.webp"
-            fetchPriority="high"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-black/40 to-[#12241B]"></div>
+          <picture>
+            <source media="(max-width: 768px)" srcSet="/Casa Loy Tequilera-movil.webp" />
+            <source 
+              media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
+              srcSet="/Casa Loy Tequilera-retina.webp" 
+            />
+            <img
+              alt="Casa Loy Tequilera"
+              className="w-full h-full object-cover brightness-[0.78] transition-transform duration-[7500ms] ease-out scale-105"
+              src="/Casa Loy Tequilera-escritorio.webp"
+            />
+          </picture>
+          {/* Exact dark gradient overlay from Home */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/25 to-black/70"></div>
         </div>
 
+        {/* Content Container (Matching Home Banner Layout & Typography) */}
         <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center pt-28 pb-20">
-          <span className="font-mono-tag text-[#E8B04B] font-semibold tracking-[0.3em] text-[11px] md:text-xs uppercase mb-4 block">
+          {/* Overtitle */}
+          <span className="font-nav-tag text-[clamp(11px,1vw,13px)] text-[#FDA377] uppercase tracking-[0.4em] mb-4 block font-semibold">
             {content.hero.overtitle}
           </span>
 
-          <h1 className="font-serif-title text-[clamp(30px,4.5vw,56px)] leading-[1.12] font-semibold text-white max-w-4xl mx-auto mb-4">
+          {/* Main Heading in Home's Serif Typography */}
+          <h1 className="font-serif-title text-[clamp(28px,4.5vw,58px)] leading-[1.1] tracking-tight font-light text-white uppercase max-w-4xl mx-auto mb-4">
             {content.hero.h1}
           </h1>
 
-          <p className="font-serif-title italic text-lg md:text-xl text-[#E8B04B] mb-5">
+          {/* Secondary quote in Italic */}
+          <p className="font-serif-title italic text-lg md:text-xl text-[#FDA377] mb-5">
             {content.hero.secondary}
           </p>
 
-          <p className="text-white/80 text-sm md:text-base max-w-2xl mx-auto mb-9 leading-relaxed">
+          {/* Subtitle / Narrative */}
+          <p className="font-nav-tag text-white/80 font-normal text-xs md:text-sm max-w-2xl mx-auto mb-10 leading-relaxed tracking-wider uppercase">
             {content.hero.sub}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full max-w-md sm:max-w-none">
+          {/* CTA Buttons in Exact Home Style */}
+          <div className="flex flex-col sm:flex-row gap-5 items-center justify-center w-full max-w-md sm:max-w-none">
             <a
               href="#quiz"
-              className="bg-[#8C4723] hover:bg-[#a6562b] border border-[#8C4723] text-white font-semibold text-xs md:text-sm uppercase tracking-[0.2em] py-4 px-8 rounded transition-all min-w-[210px] text-center shadow-lg cursor-pointer"
+              className="bg-[#8C4723] border border-[#8C4723] hover:bg-[#a6562b] hover:border-[#a6562b] text-white font-nav-tag text-[11px] sm:text-xs uppercase tracking-[0.3em] font-medium py-4 px-8 transition-all duration-500 min-w-[210px] text-center shadow-lg cursor-pointer"
             >
               {content.hero.ctaStart}
             </a>
             <a
               href="#cta"
-              className="border border-white/60 hover:bg-white/15 text-white font-semibold text-xs md:text-sm uppercase tracking-[0.2em] py-4 px-8 rounded transition-all min-w-[210px] text-center cursor-pointer"
+              className="border border-white/60 hover:bg-[#8C4723] hover:border-[#8C4723] text-white font-nav-tag text-[11px] sm:text-xs uppercase tracking-[0.3em] font-medium py-4 px-8 transition-all duration-500 min-w-[210px] text-center cursor-pointer"
             >
               {content.hero.ctaCall}
             </a>
@@ -699,21 +684,34 @@ export default function Test2MBB({ lang = "es", setPage }) {
       </section>
 
       {/* ============================================================
-          LÍNEA INFERIOR DE DATOS NOM 1633 (Trust Bar)
+          LÍNEA INFERIOR DE DATOS (TRUST BAR) INTEGRADA DE FORMA LIMPIA Y ELEGANTE
           ============================================================ */}
-      <div className="bg-[#EFE7D6] border-y border-[#DCD5C3] py-4">
-        <div className="max-w-[1240px] mx-auto px-6">
+      <div className="bg-[#EDE7DE] border-y border-[#1A1615]/10 py-4">
+        <div className="max-w-[1300px] mx-auto px-6">
           <div className="flex flex-wrap justify-center items-center gap-y-2 gap-x-3 md:gap-x-6 text-center">
-            {content.trust.map((item, idx) => (
-              <React.Fragment key={idx}>
-                <span className="font-mono-tag text-[11.5px] md:text-[12.5px] text-[#1B3327] font-semibold tracking-wide uppercase">
-                  {item}
-                </span>
-                {idx < content.trust.length - 1 && (
-                  <span className="text-[#8C4723] text-xs select-none hidden md:inline">✦</span>
-                )}
-              </React.Fragment>
-            ))}
+            <span className="font-nav-tag text-[11px] md:text-xs font-bold uppercase tracking-widest text-[#8C4723]">
+              NOM 1633
+            </span>
+            <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
+            <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
+              Los Altos de Jalisco
+            </span>
+            <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
+            <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
+              {isEn ? "Family-owned" : "Empresa familiar"}
+            </span>
+            <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
+            <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
+              {isEn ? "Agave roots since 1992" : "Raíces agaveras desde 1992"}
+            </span>
+            <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
+            <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
+              {isEn ? "Batch control" : "Control por lotes"}
+            </span>
+            <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
+            <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
+              {isEn ? "Export coordination" : "Coordinación de exportación"}
+            </span>
           </div>
         </div>
       </div>
@@ -736,14 +734,14 @@ export default function Test2MBB({ lang = "es", setPage }) {
                 className="group border border-[#DCD5C3] hover:border-[#8C4723] rounded-lg p-6 bg-white transition-all duration-300 hover:shadow-lg cursor-pointer block"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <span className="font-mono-tag text-[10.5px] text-[#8C4723] uppercase tracking-wider font-semibold">
+                  <span className="font-nav-tag text-[10.5px] text-[#8C4723] uppercase tracking-wider font-bold">
                     {card.wk}
                   </span>
                   <span className="text-[#8C4723] opacity-0 group-hover:opacity-100 transition-opacity text-sm">
                     →
                   </span>
                 </div>
-                <h3 className="font-serif-title font-semibold text-[17px] text-[#1C1C1C] leading-snug group-hover:text-[#8C4723] transition-colors">
+                <h3 className="font-serif-title font-semibold text-[18px] text-[#1C1C1C] leading-snug group-hover:text-[#8C4723] transition-colors">
                   {card.h3}
                 </h3>
                 <p className="text-[13px] text-[#6E6B62] mt-2 leading-relaxed">
@@ -760,7 +758,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
           ============================================================ */}
       <section className="py-20 md:py-24 bg-[#12241B] text-white">
         <div className="max-w-[1160px] mx-auto px-6">
-          <p className="test2mbb-eyebrow" style={{ color: "#E8B04B" }}>
+          <p className="test2mbb-eyebrow" style={{ color: "#FDA377" }}>
             {content.inside.eyebrow}
           </p>
           <h2 className="font-serif-title font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-white mb-10">
@@ -773,7 +771,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
                 key={idx}
                 onClick={() => setActiveInside(idx)}
                 className={`relative h-[210px] md:h-[240px] rounded-lg overflow-hidden border transition-all cursor-pointer group ${
-                  activeInside === idx ? "border-[#E8B04B] ring-2 ring-[#E8B04B]" : "border-white/15 hover:border-white/40"
+                  activeInside === idx ? "border-[#FDA377] ring-2 ring-[#FDA377]" : "border-white/15 hover:border-white/40"
                 }`}
               >
                 <img
@@ -784,11 +782,11 @@ export default function Test2MBB({ lang = "es", setPage }) {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20"></div>
 
                 <div className="relative z-10 h-full p-4 md:p-5 flex flex-col justify-between">
-                  <span className="font-mono-tag text-[11px] text-[#E8B04B] font-bold bg-black/40 backdrop-blur-xs px-2 py-0.5 rounded w-fit">
+                  <span className="font-nav-tag text-[11px] text-[#FDA377] font-bold bg-black/40 backdrop-blur-xs px-2 py-0.5 rounded w-fit">
                     {st.num}
                   </span>
                   <div>
-                    <h3 className="text-[16px] text-white font-semibold font-serif-title">
+                    <h3 className="text-[17px] text-white font-semibold font-serif-title">
                       {st.name}
                     </h3>
                     <p className="text-[12px] text-white/80 mt-1 leading-snug line-clamp-3">
@@ -803,7 +801,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
       </section>
 
       {/* ============================================================
-          RUTAS DE SOLUCIÓN (5 RUTAS CON PRECARGA AL DIAGNÓSTICO)
+          RUTAS DE SOLUCIÓN (3 RUTAS FUNDAMENTALES Y LIMPIAS)
           ============================================================ */}
       <section className="py-20 md:py-24 bg-[#FAF8F5]">
         <div className="max-w-[1160px] mx-auto px-6">
@@ -812,40 +810,38 @@ export default function Test2MBB({ lang = "es", setPage }) {
             {content.solutions.title}
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {content.solutions.routes.map((rt) => (
               <div
                 key={rt.num}
                 onClick={() => handleSelectRoute(rt)}
-                className="p-6 rounded-lg bg-white border border-[#DCD5C3] hover:border-[#8C4723] hover:shadow-lg transition-all flex flex-col justify-between cursor-pointer group"
+                className="p-7 rounded-xl bg-white border border-[#DCD5C3] hover:border-[#8C4723] hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer group"
               >
                 <div>
-                  <span className="font-mono-tag text-[11px] text-[#8C4723] font-bold block mb-2">
-                    {rt.num}
-                  </span>
-                  <h3 className="font-serif-title font-semibold text-[17px] text-[#1C1C1C] group-hover:text-[#8C4723] transition-colors leading-snug mb-3">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-nav-tag text-xs text-[#8C4723] font-bold">
+                      {rt.num}
+                    </span>
+                    <span className="font-nav-tag text-[10px] text-[#8C4723] font-semibold uppercase bg-[#EFE7D6] px-2.5 py-1 rounded">
+                      {rt.tag}
+                    </span>
+                  </div>
+
+                  <h3 className="font-serif-title font-semibold text-[20px] text-[#1C1C1C] group-hover:text-[#8C4723] transition-colors leading-snug mb-3">
                     {rt.title}
                   </h3>
-                  <p className="text-[13px] text-[#6E6B62] leading-relaxed">
+                  <p className="text-[13.5px] text-[#6E6B62] leading-relaxed">
                     {rt.desc}
                   </p>
                 </div>
-                <div className="mt-5 pt-3 border-t border-[#DCD5C3]/60 flex items-center justify-between">
-                  <span className="font-mono-tag text-[9.5px] text-[#8f8c81] uppercase bg-[#EFE7D6] px-2 py-0.5 rounded">
-                    {rt.tag}
-                  </span>
-                  <span className="text-[#8C4723] text-xs font-semibold group-hover:translate-x-1 transition-transform">
-                    {isEn ? "Select →" : "Elegir →"}
+
+                <div className="mt-6 pt-4 border-t border-[#DCD5C3]/60 flex items-center justify-end">
+                  <span className="text-[#8C4723] text-xs font-semibold tracking-wider uppercase flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                    {isEn ? "Select route →" : "Elegir ruta →"}
                   </span>
                 </div>
               </div>
             ))}
-          </div>
-
-          <div className="mt-8 p-5 rounded-lg bg-[#EFE7D6] border border-[#DCD5C3]">
-            <p className="text-[15.5px] font-serif-title italic text-[#1B3327] leading-relaxed">
-              {content.solutions.closer}
-            </p>
           </div>
         </div>
       </section>
@@ -866,10 +862,10 @@ export default function Test2MBB({ lang = "es", setPage }) {
                 key={idx}
                 className="border border-[#DCD5C3] p-6 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <span className="font-mono-tag text-[10.5px] text-[#8C4723] font-bold uppercase tracking-wider block mb-2">
+                <span className="font-nav-tag text-[10.5px] text-[#8C4723] font-bold uppercase tracking-wider block mb-2">
                   {card.tag}
                 </span>
-                <h3 className="font-serif-title font-semibold text-[16.5px] text-[#1C1C1C] leading-snug">
+                <h3 className="font-serif-title font-semibold text-[17px] text-[#1C1C1C] leading-snug">
                   {card.h3}
                 </h3>
                 <p className="text-[12.5px] text-[#6E6B62] mt-2 leading-relaxed">
@@ -901,7 +897,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
                   {row.num}
                 </span>
                 <div>
-                  <h3 className="font-serif-title font-semibold text-[17px] text-[#1C1C1C]">
+                  <h3 className="font-serif-title font-semibold text-[18px] text-[#1C1C1C]">
                     {row.title}
                   </h3>
                   <p className="text-[13.5px] text-[#6E6B62] mt-1.5 leading-relaxed">
@@ -930,7 +926,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
 
         <div className="relative z-10 max-w-4xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-10">
-            <span className="font-mono-tag text-[#E8B04B] font-semibold tracking-[0.3em] text-[11px] uppercase block mb-2">
+            <span className="font-nav-tag text-[#FDA377] font-semibold tracking-[0.3em] text-[11px] uppercase block mb-2">
               {content.quiz3.badge}
             </span>
             <h2 className="font-serif-title text-3xl md:text-4xl text-white font-semibold leading-tight">
@@ -944,7 +940,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
           <div className="bg-white/5 border border-white/20 backdrop-blur-md rounded-xl p-6 md:p-10 shadow-2xl">
             {/* Steps Progress Header */}
             <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
-              <span className="font-mono-tag text-xs text-[#E8B04B] font-bold tracking-widest uppercase">
+              <span className="font-nav-tag text-xs text-[#FDA377] font-bold tracking-widest uppercase">
                 {!isSuccess
                   ? (isEn ? `Step ${quizStep} of 4` : `Paso ${quizStep} de 4`)
                   : (isEn ? "Completed ✓" : "Completado ✓")}
@@ -957,7 +953,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
                       isSuccess
                         ? "bg-emerald-400"
                         : s <= quizStep
-                        ? "bg-[#E8B04B]"
+                        ? "bg-[#FDA377]"
                         : "bg-white/20"
                     }`}
                   />
@@ -984,7 +980,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
                     href="#cta"
                     className="bg-[#8C4723] hover:bg-[#a6562b] text-white font-semibold text-xs md:text-sm uppercase tracking-widest py-3.5 px-7 rounded shadow cursor-pointer"
                   >
-                    {isEn ? "Schedule Technical Call Now →" : "Agendar llamada técnica ahora →"}
+                    {isEn ? "Schedule 30-Min Technical Call Now →" : "Agendar llamada técnica de 30 min ahora →"}
                   </a>
                   <button
                     onClick={() => {
@@ -1009,10 +1005,9 @@ export default function Test2MBB({ lang = "es", setPage }) {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {[
                         { title: isEn ? "Turnkey Private Label" : "Tequila de Marca Privada", desc: isEn ? "Full service from CRT registry, formulation to export." : "Crea o vende tequila bajo tu propia marca comercial." },
-                        { title: isEn ? "Contract Manufacturing / Maquila" : "Maquila por Contrato", desc: isEn ? "Production under strict client specifications." : "Producción para terceros con o sin marca existente." },
                         { title: isEn ? "Bulk Tequila Supply" : "Suministro de Tequila a Granel", desc: isEn ? "100% Agave or Mixto bulk for bottlers & distributors." : "Tequila a granel para envasadores, importadores o distribuidores." },
                         { title: isEn ? "Co-packing & Bottling Services" : "Servicios de Envasado / Co-packing", desc: isEn ? "Filling, labeling and secondary packaging." : "Embotellado, etiquetado o empaque para proyectos de terceros." },
-                        { title: isEn ? "Custom Profile Development" : "Desarrollo de Perfil a la Medida", desc: isEn ? "Sensory calibration and bespoke barrel aging." : "Desarrollo o calibración fina de tu perfil de líquido." }
+                        { title: isEn ? "Custom Profile & Cask Aging" : "Perfil de Autor & Cava", desc: isEn ? "Sensory calibration and bespoke barrel aging." : "Desarrollo o calibración fina de tu perfil de líquido en barrica." }
                       ].map((opt, i) => (
                         <button
                           key={i}
@@ -1023,11 +1018,11 @@ export default function Test2MBB({ lang = "es", setPage }) {
                           }}
                           className={`p-4 rounded-lg border text-left transition-all cursor-pointer ${
                             quizAnswers.solution === opt.title
-                              ? "bg-[#8C4723] border-[#E8B04B] text-white shadow-md"
+                              ? "bg-[#8C4723] border-[#FDA377] text-white shadow-md"
                               : "bg-white/5 hover:bg-white/10 border-white/15 text-white/90"
                           }`}
                         >
-                          <span className="font-serif-title font-semibold text-[15.5px] block text-white">
+                          <span className="font-serif-title font-semibold text-[16px] block text-white">
                             {opt.title}
                           </span>
                           <span className="text-[12px] text-white/70 mt-1 block">
@@ -1061,11 +1056,11 @@ export default function Test2MBB({ lang = "es", setPage }) {
                           }}
                           className={`p-4 rounded-lg border text-left transition-all cursor-pointer ${
                             quizAnswers.stage === opt.title
-                              ? "bg-[#8C4723] border-[#E8B04B] text-white shadow-md"
+                              ? "bg-[#8C4723] border-[#FDA377] text-white shadow-md"
                               : "bg-white/5 hover:bg-white/10 border-white/15 text-white/90"
                           }`}
                         >
-                          <span className="font-serif-title font-semibold text-[15.5px] block text-white">
+                          <span className="font-serif-title font-semibold text-[16px] block text-white">
                             {opt.title}
                           </span>
                           <span className="text-[12px] text-white/70 mt-1 block">
@@ -1077,7 +1072,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
                     <button
                       type="button"
                       onClick={() => setQuizStep(1)}
-                      className="text-white/60 hover:text-white font-mono-tag text-xs pt-2"
+                      className="text-white/60 hover:text-white font-nav-tag text-xs pt-2"
                     >
                       {content.quiz3.btnBack}
                     </button>
@@ -1106,11 +1101,11 @@ export default function Test2MBB({ lang = "es", setPage }) {
                           }}
                           className={`p-4 rounded-lg border text-left transition-all cursor-pointer ${
                             quizAnswers.market === opt.title
-                              ? "bg-[#8C4723] border-[#E8B04B] text-white shadow-md"
+                              ? "bg-[#8C4723] border-[#FDA377] text-white shadow-md"
                               : "bg-white/5 hover:bg-white/10 border-white/15 text-white/90"
                           }`}
                         >
-                          <span className="font-serif-title font-semibold text-[15.5px] block text-white">
+                          <span className="font-serif-title font-semibold text-[16px] block text-white">
                             {opt.title}
                           </span>
                           <span className="text-[12px] text-white/70 mt-1 block">
@@ -1122,7 +1117,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
                     <button
                       type="button"
                       onClick={() => setQuizStep(2)}
-                      className="text-white/60 hover:text-white font-mono-tag text-xs pt-2"
+                      className="text-white/60 hover:text-white font-nav-tag text-xs pt-2"
                     >
                       {content.quiz3.btnBack}
                     </button>
@@ -1143,7 +1138,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="font-mono-tag text-[11px] uppercase tracking-wider text-[#E8B04B] block mb-1">
+                        <label className="font-nav-tag text-[11px] uppercase tracking-wider text-[#FDA377] block mb-1">
                           {isEn ? "Full Name *" : "Nombre Completo *"}
                         </label>
                         <input
@@ -1152,11 +1147,11 @@ export default function Test2MBB({ lang = "es", setPage }) {
                           value={contactForm.name}
                           onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
                           placeholder={isEn ? "John Doe" : "Tu Nombre"}
-                          className="w-full bg-white/10 border border-white/20 rounded p-3 text-white placeholder-white/40 focus:outline-none focus:border-[#E8B04B]"
+                          className="w-full bg-white/10 border border-white/20 rounded p-3 text-white placeholder-white/40 focus:outline-none focus:border-[#FDA377]"
                         />
                       </div>
                       <div>
-                        <label className="font-mono-tag text-[11px] uppercase tracking-wider text-[#E8B04B] block mb-1">
+                        <label className="font-nav-tag text-[11px] uppercase tracking-wider text-[#FDA377] block mb-1">
                           {isEn ? "Company / Brand Name" : "Empresa o Nombre de Marca"}
                         </label>
                         <input
@@ -1164,14 +1159,14 @@ export default function Test2MBB({ lang = "es", setPage }) {
                           value={contactForm.company}
                           onChange={(e) => setContactForm({ ...contactForm, company: e.target.value })}
                           placeholder={isEn ? "Brand LLC" : "Tu Empresa"}
-                          className="w-full bg-white/10 border border-white/20 rounded p-3 text-white placeholder-white/40 focus:outline-none focus:border-[#E8B04B]"
+                          className="w-full bg-white/10 border border-white/20 rounded p-3 text-white placeholder-white/40 focus:outline-none focus:border-[#FDA377]"
                         />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="font-mono-tag text-[11px] uppercase tracking-wider text-[#E8B04B] block mb-1">
+                        <label className="font-nav-tag text-[11px] uppercase tracking-wider text-[#FDA377] block mb-1">
                           {isEn ? "Email *" : "Correo Electrónico *"}
                         </label>
                         <input
@@ -1180,11 +1175,11 @@ export default function Test2MBB({ lang = "es", setPage }) {
                           value={contactForm.email}
                           onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
                           placeholder="tu@correo.com"
-                          className="w-full bg-white/10 border border-white/20 rounded p-3 text-white placeholder-white/40 focus:outline-none focus:border-[#E8B04B]"
+                          className="w-full bg-white/10 border border-white/20 rounded p-3 text-white placeholder-white/40 focus:outline-none focus:border-[#FDA377]"
                         />
                       </div>
                       <div>
-                        <label className="font-mono-tag text-[11px] uppercase tracking-wider text-[#E8B04B] block mb-1">
+                        <label className="font-nav-tag text-[11px] uppercase tracking-wider text-[#FDA377] block mb-1">
                           {isEn ? "Phone / WhatsApp *" : "Teléfono / WhatsApp *"}
                         </label>
                         <div className="flex gap-2">
@@ -1200,14 +1195,14 @@ export default function Test2MBB({ lang = "es", setPage }) {
                             value={contactForm.phone}
                             onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
                             placeholder="33 1234 5678"
-                            className="flex-1 bg-white/10 border border-white/20 rounded p-3 text-white placeholder-white/40 focus:outline-none focus:border-[#E8B04B]"
+                            className="flex-1 bg-white/10 border border-white/20 rounded p-3 text-white placeholder-white/40 focus:outline-none focus:border-[#FDA377]"
                           />
                         </div>
                       </div>
                     </div>
 
                     <div>
-                      <label className="font-mono-tag text-[11px] uppercase tracking-wider text-[#E8B04B] block mb-1">
+                      <label className="font-nav-tag text-[11px] uppercase tracking-wider text-[#FDA377] block mb-1">
                         {isEn ? "Project Notes / Specifics" : "Notas del Proyecto o Requerimientos"}
                       </label>
                       <textarea
@@ -1215,7 +1210,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
                         value={contactForm.notes}
                         onChange={(e) => setContactForm({ ...contactForm, notes: e.target.value })}
                         placeholder={isEn ? "Target launch date, estimated volume, packaging details..." : "Fecha estimada de lanzamiento, volumen previsto, detalles de botella..."}
-                        className="w-full bg-white/10 border border-white/20 rounded p-3 text-white placeholder-white/40 focus:outline-none focus:border-[#E8B04B]"
+                        className="w-full bg-white/10 border border-white/20 rounded p-3 text-white placeholder-white/40 focus:outline-none focus:border-[#FDA377]"
                       />
                     </div>
 
@@ -1227,7 +1222,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
                       <button
                         type="button"
                         onClick={() => setQuizStep(3)}
-                        className="text-white/60 hover:text-white font-mono-tag text-xs"
+                        className="text-white/60 hover:text-white font-nav-tag text-xs"
                       >
                         {content.quiz3.btnBack}
                       </button>
@@ -1253,7 +1248,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
           ============================================================ */}
       <section className="py-20 md:py-24 bg-[#12241B] text-white">
         <div className="max-w-[1160px] mx-auto px-6">
-          <p className="test2mbb-eyebrow" style={{ color: "#E8B04B" }}>
+          <p className="test2mbb-eyebrow" style={{ color: "#FDA377" }}>
             {content.process.eyebrow}
           </p>
           <h2 className="font-serif-title font-semibold text-2xl sm:text-3xl md:text-[34px] leading-tight max-w-[640px] text-white mb-10">
@@ -1264,7 +1259,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
             {content.process.steps.map((st) => (
               <div
                 key={st.num}
-                className="group relative rounded-xl overflow-hidden border border-white/15 bg-[#1B3327] hover:border-[#E8B04B] transition-all duration-300 flex flex-col h-[280px] shadow-lg"
+                className="group relative rounded-xl overflow-hidden border border-white/15 bg-[#1B3327] hover:border-[#FDA377] transition-all duration-300 flex flex-col h-[280px] shadow-lg"
               >
                 {/* Photo Top with Zoom Effect */}
                 <div className="relative h-[150px] overflow-hidden">
@@ -1274,14 +1269,14 @@ export default function Test2MBB({ lang = "es", setPage }) {
                     className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500 brightness-90"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#1B3327] via-transparent to-black/30"></div>
-                  <span className="absolute top-3 left-3 font-mono-tag text-xs font-bold text-[#12241B] bg-[#E8B04B] px-2.5 py-0.5 rounded shadow">
+                  <span className="absolute top-3 left-3 font-nav-tag text-xs font-bold text-[#12241B] bg-[#FDA377] px-2.5 py-0.5 rounded shadow">
                     {st.num}
                   </span>
                 </div>
 
                 {/* Content Bottom */}
                 <div className="p-5 flex-1 flex flex-col justify-center">
-                  <h3 className="font-serif-title font-semibold text-[17px] text-white group-hover:text-[#E8B04B] transition-colors leading-snug">
+                  <h3 className="font-serif-title font-semibold text-[18px] text-white group-hover:text-[#FDA377] transition-colors leading-snug">
                     {st.title}
                   </h3>
                   <p className="text-[12.5px] text-[#C9D3CB] mt-1.5 leading-relaxed">
@@ -1311,10 +1306,10 @@ export default function Test2MBB({ lang = "es", setPage }) {
                 className="border border-[#DCD5C3] rounded-lg overflow-hidden bg-white flex flex-col justify-between hover:shadow-md transition-shadow"
               >
                 <div className="p-6">
-                  <span className="font-mono-tag text-[10.5px] text-[#8C4723] uppercase font-bold tracking-wider block mb-2">
+                  <span className="font-nav-tag text-[10.5px] text-[#8C4723] uppercase font-bold tracking-wider block mb-2">
                     {pf.num}
                   </span>
-                  <h3 className="font-serif-title font-semibold text-[17px] text-[#1C1C1C] leading-snug">
+                  <h3 className="font-serif-title font-semibold text-[18px] text-[#1C1C1C] leading-snug">
                     {pf.title}
                   </h3>
                   <p className="text-[12.5px] text-[#6E6B62] mt-2 leading-relaxed">
@@ -1348,7 +1343,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-              <span className="absolute bottom-3 left-3 bg-black/70 backdrop-blur-xs text-white font-mono-tag text-[11px] px-3 py-1 rounded">
+              <span className="absolute bottom-3 left-3 bg-black/70 backdrop-blur-xs text-white font-nav-tag text-[11px] px-3 py-1 rounded font-semibold">
                 NOM 1633 · Ayotlán, Los Altos de Jalisco
               </span>
             </div>
@@ -1356,10 +1351,10 @@ export default function Test2MBB({ lang = "es", setPage }) {
             <div className="space-y-4">
               {content.agave.facts.map((fc, idx) => (
                 <div key={idx} className="bg-white p-5 rounded-lg border-l-4 border-[#8C4723] shadow-xs">
-                  <span className="font-mono-tag text-[10.5px] text-[#8C4723] uppercase tracking-wider font-bold">
+                  <span className="font-nav-tag text-[10.5px] text-[#8C4723] uppercase tracking-wider font-bold">
                     {fc.k}
                   </span>
-                  <div className="text-[16px] text-[#1C1C1C] font-semibold mt-0.5 font-serif-title">
+                  <div className="text-[17px] text-[#1C1C1C] font-semibold mt-0.5 font-serif-title">
                     {fc.v}
                   </div>
                   <p className="text-[13px] text-[#6E6B62] mt-1 leading-relaxed">
@@ -1423,8 +1418,8 @@ export default function Test2MBB({ lang = "es", setPage }) {
       <section className="py-14 md:py-18 bg-[#12241B] text-white">
         <div className="max-w-[1160px] mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8 bg-white/5 border border-white/15 p-8 md:p-10 rounded-2xl">
-            <div className="w-16 h-16 border-2 border-[#E8B04B] rounded-full flex items-center justify-center shrink-0 bg-[#E8B04B]/10">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E8B04B" strokeWidth="1.8">
+            <div className="w-16 h-16 border-2 border-[#FDA377] rounded-full flex items-center justify-center shrink-0 bg-[#FDA377]/10">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FDA377" strokeWidth="1.8">
                 <path d="M12 2 L20 6 V12 C20 17 16.5 20.5 12 22 C7.5 20.5 4 17 4 12 V6 Z" />
               </svg>
             </div>
@@ -1433,7 +1428,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
                 <h3 className="font-serif-title font-semibold text-xl md:text-2xl text-white">
                   {content.nda.title}
                 </h3>
-                <span className="font-mono-tag text-[10px] text-[#E8B04B] border border-[#E8B04B]/40 bg-[#E8B04B]/10 px-3 py-0.5 rounded-full">
+                <span className="font-nav-tag text-[10px] text-[#FDA377] border border-[#FDA377]/40 bg-[#FDA377]/10 px-3 py-0.5 rounded-full font-bold">
                   {content.nda.badge}
                 </span>
               </div>
@@ -1467,7 +1462,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
                 key={idx}
                 className="border border-[#DCD5C3] p-6 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <span className="font-mono-tag text-[10px] text-[#8C4723] font-bold uppercase tracking-wider block mb-2">
+                <span className="font-nav-tag text-[10px] text-[#8C4723] font-bold uppercase tracking-wider block mb-2">
                   {card.tag}
                 </span>
                 <h3 className="font-serif-title font-semibold text-[16px] text-[#1C1C1C] leading-snug">
@@ -1495,7 +1490,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
           <div className="space-y-6">
             {content.faq.blocks.map((block, bIdx) => (
               <div key={bIdx} className="border-b border-[#DCD5C3] pb-4">
-                <span className="font-mono-tag text-[11.5px] text-[#8C4723] font-bold uppercase tracking-wider block mb-2">
+                <span className="font-nav-tag text-[11.5px] text-[#8C4723] font-bold uppercase tracking-wider block mb-2">
                   {block.category}
                 </span>
                 {block.items.map((item, iIdx) => (
@@ -1503,7 +1498,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
                     key={iIdx}
                     className="group border-t border-[#DCD5C3]/70 py-4 cursor-pointer"
                   >
-                    <summary className="font-serif-title font-semibold text-[16px] text-[#1C1C1C] flex justify-between items-center select-none list-none">
+                    <summary className="font-serif-title font-semibold text-[17px] text-[#1C1C1C] flex justify-between items-center select-none list-none">
                       <span>{item.q}</span>
                       <span className="font-serif-title text-xl text-[#8C4723] ml-2 group-open:hidden">+</span>
                       <span className="font-serif-title text-xl text-[#8C4723] ml-2 hidden group-open:inline">–</span>
@@ -1520,11 +1515,11 @@ export default function Test2MBB({ lang = "es", setPage }) {
       </section>
 
       {/* ============================================================
-          FINAL CTA & CAL.COM BOOKING (LLAMADA TÉCNICA)
+          FINAL CTA & CAL.COM BOOKING (LLAMADA TÉCNICA DE 30 MINUTOS)
           ============================================================ */}
       <section id="cta" className="py-20 md:py-28 bg-[#12241B] text-white text-center">
         <div className="max-w-[1160px] mx-auto px-6">
-          <span className="font-mono-tag text-[#E8B04B] font-semibold text-xs tracking-widest uppercase block mb-3">
+          <span className="font-nav-tag text-[#FDA377] font-semibold text-xs tracking-widest uppercase block mb-3">
             {content.finalCta.eyebrow}
           </span>
           <h2 className="font-serif-title font-semibold text-2xl sm:text-3xl md:text-[42px] leading-tight max-w-[640px] mx-auto text-white">
@@ -1549,7 +1544,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
             </a>
           </div>
 
-          {/* Cal.com Embed Inline */}
+          {/* Cal.com Embed Inline (30 Min) */}
           <div className="bg-white rounded-xl p-2 max-w-4xl mx-auto shadow-2xl overflow-hidden border border-white/20">
             <div
               id="cal-inline-test2mbb"
