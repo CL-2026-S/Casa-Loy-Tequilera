@@ -373,7 +373,7 @@ export async function sendBookingEmail(email, bookingDetails) {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Tu Boleto de Acceso - Casa Loy</title>
+      <title>Confirmación de Reserva de Tour - Casa Loy</title>
       <style>
         body {
           margin: 0;
@@ -440,6 +440,15 @@ export async function sendBookingEmail(email, bookingDetails) {
           margin-top: 12px;
           letter-spacing: 0.05em;
         }
+        .qr-caption {
+          display: block;
+          font-size: 11px;
+          color: #867369;
+          margin-top: 4px;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          font-weight: 600;
+        }
         .details-table {
           width: 100%;
           border-top: 1px solid #f0eee8;
@@ -475,12 +484,13 @@ export async function sendBookingEmail(email, bookingDetails) {
           <td>
             <div class="card">
               <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsI1CK1zDTaSkEhtFNd7gFs0Br7ZXW2rKE6mtXNlOgTpveNdFqRSK2aREIwDEFz2pNbAMxdM8OBUebW2gToScRYF1Q-TmhbHUos5e3w1fOey3coasOccOtVC4bzvDGydMpNF2wf6Q6Mt3FsJZRCihsNaG2kM2hluZ5hkMnIRqzGfCNnIgQCUk8l3pxlAgWZcH9ZqrbWcx3BD1-oHbu3TuTW9SKgwmqAzXcaSv6qTNhx6pJvTmykqnAVLEaPpvw8UHbNpl7z0SLcNA7" alt="Casa Loy Tequilera" class="logo">
-              <h1 class="title">¡Tu Reserva está Confirmada!</h1>
-              <p class="subtitle">Hola <strong>${customer_name}</strong>, gracias por tu compra. Presenta el siguiente boleto digital en la entrada el día de tu visita.</p>
+              <h1 class="title">¡Tu Reservación de Tour está Confirmada!</h1>
+              <p class="subtitle">Hola <strong>${customer_name}</strong>, tu lugar para vivir la <strong>${tourName}</strong> en Destilería Casa Loy ha sido confirmado con éxito. Presenta este comprobante de reservación y tu código QR al llegar a la hacienda.</p>
               
               <div class="qr-container">
                 <img src="${qrCodeUrl}" alt="Código QR de Acceso" class="qr-img">
                 <span class="code-text">${code}</span>
+                <span class="qr-caption">Código de Reserva de Experiencia</span>
               </div>
               
               <table class="details-table" width="100%">
@@ -574,7 +584,7 @@ export async function sendBookingEmail(email, bookingDetails) {
     const { data, error } = await resend.emails.send({
       from: fromEmail,
       to: [email],
-      subject: `Tu boleto de acceso - Casa Loy (${code})`,
+      subject: `Confirmación de Reserva - ${tourName} (${code}) | Casa Loy Tequilera`,
       html: html,
     });
 

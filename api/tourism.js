@@ -154,34 +154,40 @@ export default async function handler(req, res) {
         }
       });
 
-      const bookingsLog = reservations?.map(r => ({
-        code: r.code,
-        name: r.customer_name,
-        email: r.customer_email,
-        phone: r.customer_phone,
-        packageName: r.tour_id === 'diamante' ? 'Experiencia Casa Loy Diamante' : r.tour_id === 'platino' ? 'Experiencia Casa Loy Platino' : 'Experiencia Casa Loy Oro',
-        date: r.date_str,
-        time: r.time_str,
-        guests: r.guests,
-        amount: r.total_paid,
-        method: r.payment_method,
-        timestamp: r.created_at ? new Date(r.created_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) : '',
-        used_at: r.used_at ? new Date(r.used_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) : null,
-        status: r.status || 'Confirmada',
-        allergies: r.allergies || '',
-        celebration: r.celebration || '',
-        comments: r.comments || '',
-        requires_invoice: r.requires_invoice || false,
-        rfc: r.rfc || '',
-        razon_social: r.razon_social || '',
-        postal_code: r.postal_code || '',
-        regimen_fiscal: r.regimen_fiscal || '',
-        cfdi_use: r.cfdi_use || '',
-        card_type: r.card_type || '',
-        creation_mode: r.creation_mode || 'automatic',
-        created_by: r.created_by || 'customer',
-        invoice_sent: r.invoice_sent || false
-      })) || [];
+      const bookingsLog = reservations?.map(r => {
+        const packageName = r.tour_id === 'diamante' ? 'Experiencia Casa Loy Diamante' : r.tour_id === 'platino' ? 'Experiencia Casa Loy Platino' : 'Experiencia Casa Loy Oro';
+        return {
+          code: r.code,
+          name: r.customer_name,
+          email: r.customer_email,
+          phone: r.customer_phone,
+          tour_id: r.tour_id,
+          tour_type: r.tour_id,
+          packageName: packageName,
+          experience_name: packageName,
+          date: r.date_str,
+          time: r.time_str,
+          guests: r.guests,
+          amount: r.total_paid,
+          method: r.payment_method,
+          timestamp: r.created_at ? new Date(r.created_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) : '',
+          used_at: r.used_at ? new Date(r.used_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) : null,
+          status: r.status || 'Confirmada',
+          allergies: r.allergies || '',
+          celebration: r.celebration || '',
+          comments: r.comments || '',
+          requires_invoice: r.requires_invoice || false,
+          rfc: r.rfc || '',
+          razon_social: r.razon_social || '',
+          postal_code: r.postal_code || '',
+          regimen_fiscal: r.regimen_fiscal || '',
+          cfdi_use: r.cfdi_use || '',
+          card_type: r.card_type || '',
+          creation_mode: r.creation_mode || 'automatic',
+          created_by: r.created_by || 'customer',
+          invoice_sent: r.invoice_sent || false
+        };
+      }) || [];
 
       return res.status(200).json({
         maxCapacityLimit: maxCapacity,
@@ -433,8 +439,9 @@ export default async function handler(req, res) {
 
         // 4. No need to update slot_occupancy_overrides. Capacity is calculated dynamically from active reservations.
 
-        // 5. Send automated confirmation email using Resend
-        if (finalStatus === 'Confirmada') {
+        // 5. Send automated confirmation email using Resend only for confirmed bookings
+        const isAbandonedOrPending = finalStatus.includes('Carrito Abandonado') || finalStatus.includes('Intento de Pago') || finalStatus === 'Cancelada';
+        if (finalStatus === 'Confirmada' && !isAbandonedOrPending) {
           try {
             await sendBookingEmail(customer_email, {
               code,
@@ -621,6 +628,13 @@ export default async function handler(req, res) {
         if (tErr) throw tErr;
         if (!ticket) {
           return res.status(404).json({ error: 'TICKET_NOT_FOUND', message: 'Reserva no encontrada.' });
+        }
+
+        if (ticket.status !== 'Confirmada' && ticket.status !== 'Completada') {
+          return res.status(400).json({ 
+            error: 'INVALID_STATUS', 
+            message: 'No se puede enviar correo de confirmación a un carrito abandonado o reserva no confirmada.' 
+          });
         }
 
         const emailRes = await sendBookingEmail(email, {

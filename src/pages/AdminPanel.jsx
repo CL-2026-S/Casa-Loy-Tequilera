@@ -553,9 +553,11 @@ export default function AdminPanel({
 
   const getBookingsForDate = (dateStr) => {
     if (!dateStr) return { bookings: [], paxBySlot: {}, totalPax: 0 };
-    const dayBookings = bookingsLog.filter(
-      (b) => b.date === dateStr && b.status !== "Cancelada"
-    );
+    const dayBookings = bookingsLog.filter((b) => {
+      if (b.date !== dateStr) return false;
+      const s = (b.status || "").trim().toLowerCase();
+      return s === "confirmada" || s === "completada";
+    });
     const paxBySlot = {};
     let totalPax = 0;
     dayBookings.forEach((b) => {
@@ -2325,10 +2327,11 @@ export default function AdminPanel({
   // Filter bookings log based on search query
   const filteredBookingsLog = bookingsLog.filter((log) => {
     if (statusFilter !== "all") {
-      if (statusFilter === "Carrito Abandonado (Intento de Pago)") {
-        if (log.status !== "Carrito Abandonado (Intento de Pago)" && log.status !== "Intento de Pago") {
-          return false;
-        }
+      const s = (log.status || "").trim().toLowerCase();
+      if (statusFilter === "confirmed_all") {
+        if (s !== "confirmada" && s !== "completada") return false;
+      } else if (statusFilter === "Carrito Abandonado (Intento de Pago)") {
+        if (!s.includes("abandonado") && !s.includes("intento")) return false;
       } else if (log.status !== statusFilter) {
         return false;
       }
@@ -3079,14 +3082,15 @@ export default function AdminPanel({
           
           {/* TAB: Dashboard Analítico (Exclusivo para rol admin) */}
           {activeTab === "dashboard" && userHasRole("admin") && (() => {
-            // Analytics Calculations
-            const totalTours = bookingsLog.length;
-            const totalTourPax = bookingsLog.reduce((sum, b) => sum + (parseInt(b.guests) || 1), 0);
-            const totalRevenue = bookingsLog.reduce((sum, b) => {
+            // Analytics Calculations (strictly confirmed or completed tours)
+            const activeTourBookings = bookingsLog.filter(b => b.status === "Confirmada" || b.status === "Completada");
+            const totalTours = activeTourBookings.length;
+            const totalTourPax = activeTourBookings.reduce((sum, b) => sum + (parseInt(b.guests) || 1), 0);
+            const totalRevenue = activeTourBookings.reduce((sum, b) => {
               if (b.amount) return sum + Number(b.amount);
               if (b.total) return sum + Number(b.total);
               const priceMap = { oro: 550, platino: 750, diamante: 1500 };
-              const p = priceMap[b.tour_type || b.experience_id] || 550;
+              const p = priceMap[b.tour_type || b.tour_id || b.experience_id] || 550;
               return sum + ((parseInt(b.guests) || 1) * p);
             }, 0);
 
@@ -3097,8 +3101,8 @@ export default function AdminPanel({
               diamante: { name: "Recorrido Diamante", count: 0, pax: 0, revenue: 0, color: "#1A2624", price: 1500 },
             };
 
-            bookingsLog.forEach(b => {
-              const type = (b.tour_type || b.experience_id || "oro").toLowerCase();
+            activeTourBookings.forEach(b => {
+              const type = (b.tour_type || b.tour_id || b.experience_id || "oro").toLowerCase();
               const guests = parseInt(b.guests) || 1;
               if (type.includes("diamante")) {
                 expBreakdown.diamante.count += 1;
@@ -3123,11 +3127,11 @@ export default function AdminPanel({
             const totalLeads = maquilaLeadsList.length;
 
             // Invoicing SAT CFDI 4.0
-            const requestedInvoices = bookingsLog.filter(b => b.cfdi_requested || b.requires_invoice || b.invoice_status === "issued" || b.rfc).length;
-            const issuedInvoices = bookingsLog.filter(b => b.invoice_status === "issued" || b.factura_emitida).length;
+            const requestedInvoices = activeTourBookings.filter(b => b.cfdi_requested || b.requires_invoice || b.invoice_status === "issued" || b.rfc).length;
+            const issuedInvoices = activeTourBookings.filter(b => b.invoice_status === "issued" || b.factura_emitida).length;
 
-            // Recent 5 tour bookings
-            const recentBookings = [...bookingsLog].slice(0, 5);
+            // Recent 5 tour bookings (only confirmed/completed)
+            const recentBookings = [...activeTourBookings].slice(0, 5);
 
             // Current date nicely formatted in Spanish
             const todayFormatted = new Intl.DateTimeFormat('es-MX', {
@@ -3503,9 +3507,9 @@ export default function AdminPanel({
                       <table className="w-full text-left border-collapse text-xs">
                         <thead>
                           <tr className="bg-stone-50/80 border-b border-stone-200/80 text-stone-500 font-bold uppercase tracking-wider text-[10px]">
-                            <th className="py-3 px-4">Código / Boleto</th>
+                            <th className="py-3 px-4">Código / Reserva</th>
                             <th className="py-3 px-4">Titular</th>
-                            <th className="py-3 px-4">Experiencia</th>
+                            <th className="py-3 px-4">Experiencia / Tour</th>
                             <th className="py-3 px-4 text-center">Pax</th>
                             <th className="py-3 px-4">Fecha & Horario</th>
                             <th className="py-3 px-4 text-right">Monto</th>
@@ -3515,8 +3519,10 @@ export default function AdminPanel({
                         </thead>
                         <tbody className="divide-y divide-stone-200/70">
                           {recentBookings.map((b, idx) => {
-                            const isPaid = b.paid || b.status === "confirmed" || b.status === "paid";
+                            const isConfirmed = b.status === "Confirmada" || b.status === "Completada" || b.paid || b.status === "confirmed" || b.status === "paid";
+                            const isAbandoned = b.status && (b.status.includes("Carrito Abandonado") || b.status.includes("Intento"));
                             const hasSat = b.cfdi_requested || b.requires_invoice || b.invoice_status === "issued";
+                            const expName = b.packageName || b.experience_name || (b.tour_id === 'diamante' ? 'Experiencia Diamante' : b.tour_id === 'platino' ? 'Experiencia Platino' : b.tour_id === 'oro' ? 'Experiencia Oro' : null) || b.tour_type || "Experiencia Casa Loy";
                             return (
                               <tr key={b.id || idx} className="hover:bg-stone-50/80 transition-colors">
                                 <td className="py-3 px-4 font-mono font-bold text-[#8C4723]">
@@ -3526,8 +3532,8 @@ export default function AdminPanel({
                                   {b.name || b.customer_name || "Cliente General"}
                                   {b.email && <div className="text-[10px] font-normal text-stone-400">{b.email}</div>}
                                 </td>
-                                <td className="py-3 px-4 font-medium text-stone-700 capitalize">
-                                  {b.tour_type || b.experience_name || "Recorrido Tequila"}
+                                <td className="py-3 px-4 font-medium text-stone-700">
+                                  {expName}
                                 </td>
                                 <td className="py-3 px-4 text-center font-bold text-stone-800">
                                   {b.guests || 1}
@@ -3541,11 +3547,15 @@ export default function AdminPanel({
                                 </td>
                                 <td className="py-3 px-4 text-center">
                                   <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                                    isPaid 
+                                    isConfirmed 
                                       ? "bg-emerald-50 text-emerald-700 border border-emerald-200" 
-                                      : "bg-amber-50 text-amber-700 border border-amber-200"
+                                      : isAbandoned
+                                        ? "bg-amber-50 text-amber-700 border border-amber-200"
+                                        : b.status === "Cancelada"
+                                          ? "bg-stone-100 text-stone-500 border border-stone-200"
+                                          : "bg-amber-50 text-amber-700 border border-amber-200"
                                   }`}>
-                                    {isPaid ? "Pagado" : "Pendiente"}
+                                    {isConfirmed ? "Pagado" : isAbandoned ? "Carrito Abandonado" : (b.status || "Pendiente")}
                                   </span>
                                 </td>
                                 <td className="py-3 px-4 text-center">
@@ -4082,10 +4092,11 @@ export default function AdminPanel({
                         className="w-full bg-stone-50 border border-stone-200 p-2.5 text-xs focus:outline-none focus:border-[#8C4723] text-[#1c1c18]"
                       >
                         <option value="all">Todos los estados</option>
+                        <option value="confirmed_all">Solo Confirmadas y Completadas</option>
                         <option value="Confirmada">Confirmadas (Vigentes)</option>
                         <option value="Completada">Completadas (Usadas)</option>
                         <option value="Cancelada">Canceladas</option>
-                        <option value="Carrito Abandonado (Intento de Pago)">Carrito Abandonado (PayPal)</option>
+                        <option value="Carrito Abandonado (Intento de Pago)">Carritos Abandonados (PayPal)</option>
                       </select>
                     </div>
 
@@ -4709,7 +4720,18 @@ export default function AdminPanel({
                           day: 'numeric'
                         });
 
-                        const activeDayBookings = allDayBookings.filter(b => b.status !== "Cancelada");
+                        const activeDayBookings = allDayBookings.filter(b => {
+                          const s = (b.status || "").trim().toLowerCase();
+                          return s === "confirmada" || s === "completada";
+                        });
+                        const abandonedDayBookings = allDayBookings.filter(b => {
+                          const s = (b.status || "").trim().toLowerCase();
+                          return s.includes("abandonado") || s.includes("intento");
+                        });
+                        const canceledDayBookings = allDayBookings.filter(b => {
+                          const s = (b.status || "").trim().toLowerCase();
+                          return s === "cancelada";
+                        });
                         const totalPax = activeDayBookings.reduce((sum, b) => sum + (parseInt(b.guests) || 0), 0);
 
                         return (
@@ -4717,18 +4739,18 @@ export default function AdminPanel({
                             <div className="bg-stone-50 border border-stone-200/60 p-4 text-left">
                               <h6 className="text-xs font-bold text-stone-700 capitalize mb-1">{formattedDate}</h6>
                               <div className="flex justify-between items-center text-xs text-stone-500 mt-2 pt-2 border-t border-stone-200/60">
-                                <span>{lang === "es" ? "Reservas activas:" : "Active bookings:"} <strong>{activeDayBookings.length}</strong></span>
-                                <span>{lang === "es" ? "Total personas:" : "Total pax:"} <strong>{totalPax} pax</strong></span>
+                                <span>{lang === "es" ? "Tours confirmados:" : "Confirmed tours:"} <strong>{activeDayBookings.length}</strong></span>
+                                <span>{lang === "es" ? "Total visitantes:" : "Total pax:"} <strong>{totalPax} pax</strong></span>
                               </div>
                             </div>
 
-                            {allDayBookings.length === 0 ? (
-                              <p className="text-xs text-stone-400 italic py-8 text-center bg-stone-50/50">
-                                {lang === "es" ? "No hay reservas registradas para este día." : "No bookings registered for this day."}
+                            {activeDayBookings.length === 0 ? (
+                              <p className="text-xs text-stone-400 italic py-6 text-center bg-stone-50/50">
+                                {lang === "es" ? "No hay tours confirmados para este día." : "No confirmed tours for this day."}
                               </p>
                             ) : (
-                              <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
-                                {allDayBookings.map((log) => {
+                              <div className="space-y-3 max-h-[450px] overflow-y-auto pr-1">
+                                {activeDayBookings.map((log) => {
                                   const isCanceled = log.status === "Cancelada";
                                   const isCompleted = log.status === "Completada" || log.used_at;
                                   const is11 = log.time && log.time.includes("11:00");
@@ -4835,6 +4857,35 @@ export default function AdminPanel({
                                     </div>
                                   );
                                 })}
+                              </div>
+                            )}
+
+                            {/* Carritos Abandonados del día (Separados, sin sumar aforo) */}
+                            {abandonedDayBookings.length > 0 && (
+                              <div className="pt-3 border-t border-dashed border-stone-200 text-left">
+                                <div className="text-[10px] uppercase font-bold text-amber-800 mb-2 flex items-center gap-1">
+                                  <span className="material-symbols-outlined text-xs">remove_shopping_cart</span>
+                                  <span>Carritos Abandonados ({abandonedDayBookings.length})</span>
+                                </div>
+                                <div className="space-y-2">
+                                  {abandonedDayBookings.map((log) => (
+                                    <div key={log.code} className="p-2.5 bg-amber-50/50 border border-amber-200/70 text-stone-600 text-[10px] space-y-1">
+                                      <div className="flex justify-between items-center font-bold">
+                                        <span className="font-mono text-[#8C4723]">{log.code}</span>
+                                        <span className="text-amber-800 bg-amber-100/70 px-1.5 py-0.5 rounded text-[8.5px] uppercase font-bold">No Pagado (0 pax)</span>
+                                      </div>
+                                      <div className="text-stone-800 font-semibold">{log.name}</div>
+                                      <div className="text-stone-500">{log.packageName} • {log.time}</div>
+                                      <div className="text-stone-400 text-[9px] italic">Intento registrado: {log.timestamp || "No registrada"}</div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {canceledDayBookings.length > 0 && (
+                              <div className="text-[9px] text-stone-400 text-center pt-1">
+                                ({canceledDayBookings.length} cancelada{canceledDayBookings.length > 1 ? "s" : ""})
                               </div>
                             )}
                           </div>
@@ -6855,7 +6906,7 @@ export default function AdminPanel({
             </button>
 
             <div className="text-center space-y-1">
-              <h4 className="font-serif text-lg font-bold text-[#8C4723]">Boleto Digital de Acceso</h4>
+              <h4 className="font-serif text-lg font-bold text-[#8C4723]">Comprobante de Reservación de Tour</h4>
               <p className="text-xs text-stone-500 uppercase tracking-wider font-mono font-semibold">{selectedQrTicket.code}</p>
             </div>
 
@@ -6867,7 +6918,7 @@ export default function AdminPanel({
                 alt="Código QR de Acceso"
                 className="w-48 h-48 border border-white shadow-sm bg-white p-2"
               />
-              <span className="text-[10px] text-stone-400 text-center">Escanea este código QR con cualquier dispositivo para validar la entrada</span>
+              <span className="text-[10px] text-stone-400 text-center">Escanea este código QR para validar la reservación del tour</span>
             </div>
 
             <div className="space-y-2 text-xs border-t border-stone-100 pt-3">
