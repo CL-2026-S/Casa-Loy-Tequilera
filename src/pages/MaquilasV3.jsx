@@ -611,33 +611,33 @@ export default function MaquilasV3({ lang = "es" }) {
     {
       num: "04",
       tag: lang === "es" ? "Fermentación" : "Fermentation",
-      name: lang === "es" ? "Tinas Abiertas & Tanques Cerrados" : "Open Vats & Closed Stainless Tanks",
+      name: lang === "es" ? "Tanques Abiertos & Tanques Cerrados" : "Open Tanks & Closed Stainless Tanks",
       desc: lang === "es"
-        ? "Fermentación abierta tradicional para enriquecer ésteres frutales y batería de tanques de acero inoxidable cerrados con control térmico automatizado."
-        : "Traditional open wooden/steel vats for fruit-forward esters and automated temperature-controlled closed stainless tanks.",
-      specs: lang === "es" ? ["Fermentación Abierta", "Fermentación Cerrada", "Levaduras Propias"] : ["Open Fermentation", "Closed Fermentation", "Proprietary Yeasts"],
+        ? "Fermentación en tanques abiertos tradicionales para enriquecer ésteres frutales y batería de tanques de acero inoxidable cerrados con control térmico automatizado."
+        : "Traditional open tanks for fruit-forward esters and automated temperature-controlled closed stainless tanks.",
+      specs: lang === "es" ? ["Tanques Abiertos", "Tanques Cerrados", "Levaduras Propias"] : ["Open Tanks", "Closed Tanks", "Proprietary Yeasts"],
       images: [
         { 
           src: "/Fermentación.webp", 
-          label: lang === "es" ? "Fermentación Abierta" : "Open Fermentation",
-          copperTag: lang === "es" ? "04 · FERMENTACIÓN ABIERTA" : "04 · OPEN FERMENTATION",
+          label: lang === "es" ? "Tanques Abiertos" : "Open Tanks",
+          copperTag: lang === "es" ? "04 · TANQUES ABIERTOS" : "04 · OPEN TANKS",
           whiteTag: lang === "es" ? "MICROFLORA SILVESTRE" : "WILD MICROFLORA",
-          tag: lang === "es" ? "Fermentación Abierta" : "Open Fermentation",
+          tag: lang === "es" ? "Tanques Abiertos" : "Open Tanks",
           desc: lang === "es"
-            ? "Fermentación en tinas abiertas que captura la microflora silvestre de Los Altos de Jalisco, desarrollando perfiles aromáticos complejos con notas frutales y florales únicas."
-            : "Traditional open fermentation vats interacting with highland ambient air to cultivate distinct floral and fruit aromatic esters.",
-          specs: lang === "es" ? ["Fermentación Abierta", "Microflora Nativa", "Ésteres Frutales"] : ["Open Fermentation", "Native Microflora", "Fruit Esters"]
+            ? "Fermentación en tanques abiertos que captura la microflora silvestre de Los Altos de Jalisco, desarrollando perfiles aromáticos complejos con notas frutales y florales únicas."
+            : "Fermentation in open tanks interacting with highland ambient air to cultivate distinct floral and fruit aromatic esters.",
+          specs: lang === "es" ? ["Tanques Abiertos", "Microflora Nativa", "Ésteres Frutales"] : ["Open Tanks", "Native Microflora", "Fruit Esters"]
         },
         { 
           src: "/Tanques Fermentacion Cerrada Acero Casa Loy.jpg", 
-          label: lang === "es" ? "Fermentación Cerrada" : "Closed Fermentation",
-          copperTag: lang === "es" ? "04 · FERMENTACIÓN CERRADA" : "04 · CLOSED FERMENTATION",
+          label: lang === "es" ? "Tanques Cerrados" : "Closed Tanks",
+          copperTag: lang === "es" ? "04 · TANQUES CERRADOS" : "04 · CLOSED TANKS",
           whiteTag: lang === "es" ? "CONTROL TÉRMICO AUTOMATIZADO" : "AUTOMATED THERMAL CONTROL",
-          tag: lang === "es" ? "Fermentación Cerrada" : "Closed Fermentation",
+          tag: lang === "es" ? "Tanques Cerrados" : "Closed Tanks",
           desc: lang === "es"
             ? "Batería de tanques cerrados de acero inoxidable grado alimenticio con camisas térmicas automatizadas, garantizando fermentaciones limpias, homogéneas y 100% reproducibles."
             : "Closed food-grade stainless steel fermentation tanks equipped with automated thermal jackets for sterile, repeatable, and temperature-stable fermentations.",
-          specs: lang === "es" ? ["Fermentación Cerrada", "Control Térmico", "Acero Grado Alimenticio"] : ["Closed Fermentation", "Thermal Jacketed", "Batch Consistency"]
+          specs: lang === "es" ? ["Tanques Cerrados", "Control Térmico", "Acero Grado Alimenticio"] : ["Closed Tanks", "Thermal Jacketed", "Batch Consistency"]
         }
       ]
     },
