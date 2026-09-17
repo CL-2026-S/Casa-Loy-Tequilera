@@ -351,8 +351,8 @@ const seoData = {
   },
   en: {
     home: {
-      title: "Casa Loy Tequilera | 100% Agave Tequila from Jalisco Altos",
-      description: "Premium Mexican distillery specializing in the production, development, and marketing of 100% agave tequila in Los Altos de Jalisco. Tradition, innovation, and operational excellence.",
+      title: "Casa Loy Tequilera | 100% Agave Tequila from The highlands of Jalisco",
+      description: "Premium Mexican distillery specializing in the production, development, and marketing of 100% agave tequila in The highlands of Jalisco. Tradition, innovation, and operational excellence.",
       ogTitle: "Casa Loy Tequilera - Tradition & Innovation in Tequila",
       ogDesc: "We preserve a heritage of excellence dedicated to the art of creating ultra-luxury tequila from Jalisco, Mexico.",
       ogImage: "/Casa Loy Tequilera.webp",
@@ -362,7 +362,7 @@ const seoData = {
           {
             "@type": "Distillery",
             "name": "Casa Loy Tequilera",
-            "description": "100% Agave Premium Tequila Distillery in Jalisco Highlands, Mexico.",
+            "description": "100% Agave Premium Tequila Distillery in The highlands of Jalisco, Mexico.",
             "image": "https://casaloy.com/Logotipo%20Casa%20Loy%20Tequilera.webp",
             "address": {
               "@type": "PostalAddress",
@@ -403,14 +403,14 @@ const seoData = {
     },
     "maquilas-v2": {
       title: "Private Label Tequila B2B Guide v2 | Casa Loy Tequilera",
-      description: "B2B Private Label Tequila Manufacturing, Contract Bottling, and Bulk Supply in Los Altos de Jalisco. NOM 1633.",
+      description: "B2B Private Label Tequila Manufacturing, Contract Bottling, and Bulk Supply in The highlands of Jalisco. NOM 1633.",
       ogTitle: "Private Label Tequila B2B Guide v2 - Casa Loy Tequilera",
       ogDesc: "Operational details and 8-step diagnostic quiz for private label tequila projects.",
       ogImage: "/Jimado Agave Tequilana Weber.webp"
     },
     test2mbb: {
       title: "Casa Loy — Private Label & Bulk Tequila | Executable Guide v2",
-      description: "NOM 1633 Distillery in Los Altos de Jalisco. Private label tequila manufacturing, co-packing, custom profiling and bulk supply.",
+      description: "NOM 1633 Distillery in The highlands of Jalisco. Private label tequila manufacturing, co-packing, custom profiling and bulk supply.",
       ogTitle: "Casa Loy — Private Label & Bulk Tequila | Executable Guide v2",
       ogDesc: "A family-owned NOM 1633 distillery built for founders, existing brands, and distributors ready to build with a real origin behind them.",
       ogImage: "/Campo de Agave Ayotlán Casa Loy Tequilera.webp"
@@ -452,7 +452,7 @@ const seoData = {
                 "name": "Where is Casa Loy Tequilera located and how do I get there from Guadalajara?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Casa Loy Tequilera is located at km 6.5 of the Ayotlán–Atotonilco Highway in Las Villas, Jalisco. It is about a 1.5-hour drive from Guadalajara and 10 minutes from Atotonilco el Alto, making it a premier destination along the Altos de Jalisco tequila route."
+                  "text": "Casa Loy Tequilera is located at km 6.5 of the Ayotlán–Atotonilco Highway in Las Villas, Jalisco. It is about a 1.5-hour drive from Guadalajara and 10 minutes from Atotonilco el Alto, making it a premier destination along the tequila route in The highlands of Jalisco."
                 }
               },
               {
@@ -476,7 +476,7 @@ const seoData = {
                 "name": "Can I visit the 1937 Nativo Restaurant without booking a tequila tour?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Yes. 1937 Nativo Restaurant is open to the public, offering contemporary Mexican cuisine inspired by local Altos de Jalisco ingredients. We advise booking in advance to guarantee a table."
+                  "text": "Yes. 1937 Nativo Restaurant is open to the public, offering contemporary Mexican cuisine inspired by local ingredients from The highlands of Jalisco. We advise booking in advance to guarantee a table."
                 }
               },
               {

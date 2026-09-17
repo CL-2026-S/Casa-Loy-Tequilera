@@ -127,7 +127,7 @@ export const translations = {
       title: "House ",
       titleItalic: "Selection",
       card1Title: "Casa Loy",
-      card1Desc: "Our flagship. A tequila defining the classic elegance of Los Altos de Jalisco.",
+      card1Desc: "Our flagship. A tequila defining the classic elegance of The highlands of Jalisco.",
       card1Action: "Catalog",
       card2Title: "TADDEL",
       card2Desc: "The vanguard of flavor. Modern distillations for cosmopolitan palates.",

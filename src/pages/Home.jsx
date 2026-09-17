@@ -170,7 +170,7 @@ const localT = {
   en: {
     gate: {
       title: "Welcome to the heart of tequila",
-      desc: "From the Highlands of Jalisco, we preserve a heritage dedicated to the art of creating tequila.",
+      desc: "From The highlands of Jalisco, we preserve a heritage dedicated to the art of creating tequila.",
       question: "Are you of legal drinking age to enter this experience?",
       enter: "YES, I AM OF LEGAL DRINKING AGE",
       exit: "EXIT SITE",
@@ -197,7 +197,7 @@ const localT = {
     ],
     historia: {
       quote: "“Three generations. One passion for tequila.”",
-      desc: "Inspired by the vision of <strong>Don Manuel Loy</strong>, Casa Loy Tequilera preserves the art of making tequila while transforming the richness of Los Altos de Jalisco into distillates and projects that today represent the essence of Mexico in the world.",
+      desc: "Inspired by the vision of <strong>Don Manuel Loy</strong>, Casa Loy Tequilera preserves the art of making tequila while transforming the richness of The highlands of Jalisco into distillates and projects that today represent the essence of Mexico in the world.",
       action: "Discover who we are",
     },
     ctaFinal: {
@@ -623,7 +623,7 @@ export default function Home({ lang = "es", setPage, setLang }) {
           <Reveal duration={1200}>
             <div className="space-y-4 md:space-y-8 select-none">
               <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-4">
-                {currentLang === "es" ? "Desde Ayotlán, los Altos de Jalisco" : "From Ayotlán, the Highlands of Jalisco"}
+                {currentLang === "es" ? "Desde Ayotlán, los Altos de Jalisco" : "From Ayotlán, The highlands of Jalisco"}
               </span>
               <p className="font-serif text-[clamp(32px,5vw,76px)] leading-[1.05] tracking-tight font-light text-[#1c1c18] uppercase">
                 {t.manifiesto.line1}

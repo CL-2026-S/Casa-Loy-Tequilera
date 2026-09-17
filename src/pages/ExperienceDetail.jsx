@@ -84,7 +84,7 @@ const packagesData = {
       features: [
         {
           title: "Agave Field Tour",
-          desc: "Walk among blue agaves in the highlands of Ayotlán, Jalisco, and discover the ancient art of cultivation and harvesting.",
+          desc: "Walk among blue agaves in The highlands of Jalisco, Ayotlán, and discover the ancient art of cultivation and harvesting.",
           img: "/Cata en Terraza TADDEL.webp"
         },
         {

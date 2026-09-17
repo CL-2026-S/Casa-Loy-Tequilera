@@ -37,7 +37,7 @@ export default function Turismo({ lang, setPage }) {
     en: [
       {
         q: "Where is Casa Loy Tequilera located and how do I get there from Guadalajara?",
-        a: "Casa Loy Tequilera is located at km 6.5 of the Ayotlán–Atotonilco Highway in Las Villas, Jalisco. It is about a 1.5-hour drive from Guadalajara and 10 minutes from Atotonilco el Alto, making it a premier destination along the Altos de Jalisco tequila route."
+        a: "Casa Loy Tequilera is located at km 6.5 of the Ayotlán–Atotonilco Highway in Las Villas, Jalisco. It is about a 1.5-hour drive from Guadalajara and 10 minutes from Atotonilco el Alto, making it a premier destination along the tequila route in The highlands of Jalisco."
       },
       {
         q: "What days and times are available for the tequila tours and tastings?",
@@ -49,7 +49,7 @@ export default function Turismo({ lang, setPage }) {
       },
       {
         q: "Can I visit the 1937 Nativo Restaurant without booking a tequila tour?",
-        a: "Absolutely! While we highly recommend the complete tequila and food experience, 1937 Nativo Restaurant is open to the public, offering contemporary Mexican cuisine inspired by local Altos de Jalisco ingredients. We advise booking in advance to guarantee a table."
+        a: "Absolutely! While we highly recommend the complete tequila and food experience, 1937 Nativo Restaurant is open to the public, offering contemporary Mexican cuisine inspired by local ingredients from The highlands of Jalisco. We advise booking in advance to guarantee a table."
       },
       {
         q: "Are tequila tours at Casa Loy suitable for families and children?",

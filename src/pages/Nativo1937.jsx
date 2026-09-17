@@ -283,7 +283,7 @@ export default function Nativo1937({ lang = "es", t }) {
       pillar2Desc: "Tequila is not just a companion, it integrates. Aromatic reductions, adobos in agave leaves, and signature mixology designed in perfect harmony.",
       pillar3Title: "Respect for Origin",
       pillar3Sub: "Local traceability",
-      pillar3Desc: "We honor the Highlands of Jalisco by working hand-in-hand with local producers, guaranteeing fresh and sustainable ingredients on every plate.",
+      pillar3Desc: "We honor The highlands of Jalisco by working hand-in-hand with local producers, guaranteeing fresh and sustainable ingredients on every plate.",
       menuTitle: "The Menu",
       menuDesc: "Contemporary Cuisine with Native Products: a sensory journey through the purest flavors of our region.",
       pdfMenu: "Download Full Menu (PDF)",

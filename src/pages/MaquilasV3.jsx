@@ -302,12 +302,12 @@ export default function MaquilasV3({ lang = "es" }) {
     },
     en: {
       seoTitle: "Private Label Tequila & Bulk Distilling B2B | Casa Loy · NOM 1633",
-      seoDesc: "Official NOM 1633 distillery in Los Altos de Jalisco. Full private label production, bulk tequila supply, 3,600 Has. estate agave, and 13.5M L annual capacity.",
+      seoDesc: "Official NOM 1633 distillery in The highlands of Jalisco. Full private label production, bulk tequila supply, 3,600 Has. estate agave, and 13.5M L annual capacity.",
 
       // Hero
       heroTitleLine1: "Private Label Tequila",
       heroTitleLine2: "Manufacturing in México.",
-      heroSubLine: "Your tequila starts in The Highlands of Jalisco",
+      heroSubLine: "Your tequila starts in The highlands of Jalisco",
       heroQuote: '"Your vision. Our expertise."',
       heroDescLine1: "Destileria familiar NOM1633 distillery built for founders,",
       heroDescLine2: "existing brands, and distributiors ready to build with a real",
@@ -317,7 +317,7 @@ export default function MaquilasV3({ lang = "es" }) {
 
       // Trust Bar
       trustNom: "NOM 1633",
-      trustRegion: "LOS ALTOS DE JALISCO",
+      trustRegion: "THE HIGHLANDS OF JALISCO",
       trustFamily: "FAMILY-OWNED",
       trustRoots: "AGAVE ROOTS SINCE 1992",
       trustBatch: "BATCH CONTROL",
@@ -493,18 +493,18 @@ export default function MaquilasV3({ lang = "es" }) {
       name: lang === "es" ? "Plantación, Carga en Campo & Jima" : "Plantations, Field Loading & Harvest",
       desc: lang === "es"
         ? "Recepción directa de nuestras 3,600 hectáreas en Los Altos de Jalisco. Selección de piñas en plenitud de maduración (6-7 años) con medición de grados Brix."
-        : "Direct intake from our 3,600 hectares in Los Altos de Jalisco. Hand-selected agaves at peak maturity (6-7 years) tested for optimal natural Brix sugars.",
-      specs: lang === "es" ? ["3,600 Has. Propias", "Los Altos de Jalisco", "Tequilana Weber"] : ["3,600 Estate Has.", "Highlands Elevation", "Blue Weber Agave"],
+        : "Direct intake from our 3,600 hectares in The highlands of Jalisco. Hand-selected agaves at peak maturity (6-7 years) tested for optimal natural Brix sugars.",
+      specs: lang === "es" ? ["3,600 Has. Propias", "Los Altos de Jalisco", "Tequilana Weber"] : ["3,600 Estate Has.", "The highlands of Jalisco", "Blue Weber Agave"],
       images: [
         { 
           src: "/Campo de Agave Ayotlán Casa Loy Tequilera.webp", 
-          label: lang === "es" ? "Plantación Los Altos" : "Highland Plantations",
-          tag: lang === "es" ? "Cultivo de Origen" : "Highland Plantations",
-          name: lang === "es" ? "Plantaciones de Agave en Los Altos" : "Highland Agave Plantations",
+          label: lang === "es" ? "Plantación Los Altos" : "The highlands of Jalisco",
+          tag: lang === "es" ? "Cultivo de Origen" : "The highlands of Jalisco",
+          name: lang === "es" ? "Plantaciones de Agave en Los Altos" : "Agave Plantations in The highlands of Jalisco",
           desc: lang === "es" 
             ? "Más de 3,600 hectáreas de cultivo propio en Ayotlán, Jalisco, a más de 2,000 msnm con suelos rojos volcánicos ricos en hierro y clima templado."
             : "Over 3,600 hectares of estate agaves in Ayotlán, Jalisco, grown above 2,000 meters elevation in mineral-rich red volcanic soil.",
-          specs: lang === "es" ? ["3,600 Has. Propias", "Los Altos de Jalisco", "Suelo Volcánico"] : ["3,600 Estate Has.", "Highlands Elevation", "Volcanic Soil"]
+          specs: lang === "es" ? ["3,600 Has. Propias", "Los Altos de Jalisco", "Suelo Volcánico"] : ["3,600 Estate Has.", "The highlands of Jalisco", "Volcanic Soil"]
         },
         { 
           src: "/Jima Carga Camion Agave Casa Loy.jpg", 
@@ -974,12 +974,12 @@ export default function MaquilasV3({ lang = "es" }) {
                     <span className="font-serif text-base sm:text-lg font-light text-[#8C4723]/60">01</span>
                   </div>
                   <h3 className="font-serif text-[15px] sm:text-base lg:text-[17px] font-bold text-[#1c1c18] mb-1 leading-snug">
-                    NOM 1633, Los Altos de Jalisco
+                    {lang === "es" ? "NOM 1633, Los Altos de Jalisco" : "NOM 1633, The highlands of Jalisco"}
                   </h3>
                   <p className="font-body-md text-[#53443a] font-light leading-snug text-[11.5px] sm:text-xs lg:text-[12.5px]">
                     {lang === "es"
                       ? "Producción protegida bajo denominación de origen en los Altos de Jalisco."
-                      : "Designation of origin protected production in Jalisco highlands."}
+                      : "Designation of origin protected production in The highlands of Jalisco."}
                   </p>
                 </div>
               </div>

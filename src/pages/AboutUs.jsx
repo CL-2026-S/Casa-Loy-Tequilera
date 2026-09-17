@@ -629,7 +629,7 @@ export default function AboutUs({ t, lang, setPage }) {
       title: "The Promised Land",
       desc: "It all begins in the silence of Ayotlán's red soil. Here, at an altitude of 2,000 meters, we plant the future by hand. Each blue agave pup is a promise of patience; a commitment that will sleep under the Jalisco sun for seven long years, absorbing the minerals that will give soul to our tequila.",
       img: "/Empleado Casa Loy Tequilera Siembra.webp",
-      detail: "Terroir: Iron-rich red clay in Los Altos de Jalisco at 2,000 meters.",
+      detail: "Terroir: Iron-rich red clay in The highlands of Jalisco at 2,000 meters.",
     },
     {
       num: "02",

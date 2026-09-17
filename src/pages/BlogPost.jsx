@@ -452,7 +452,7 @@ export default function BlogPost({ lang = "es", setPage }) {
       const role = post.author_role || (lang === "es" ? "Maestro Tequilero & Selección de Origen" : "Master Distiller & Origin Selection");
       const bio = post.author_bio || (lang === "es"
         ? "Custodiando la pureza del agave azul y la tradición destiladora centenaria en las tierras altas de Jalisco."
-        : "Safeguarding the purity of blue agave and centuries-old distillation tradition in the highlands of Jalisco.");
+        : "Safeguarding the purity of blue agave and centuries-old distillation tradition in The highlands of Jalisco.");
       
       // Smart portrait selection
       let photo = post.author_photo;

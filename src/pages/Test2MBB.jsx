@@ -109,7 +109,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
   const content = {
     hero: {
       h1: isEn ? (
-        <>Private Label Tequila Manufacturing in Mexico.<br /><span className="text-white italic font-normal">Your tequila starts in Los Altos de Jalisco.</span></>
+        <>Private Label Tequila Manufacturing in Mexico.<br /><span className="text-white italic font-normal">Your tequila starts in The highlands of Jalisco.</span></>
       ) : (
         <>Fabricación de Tequila Private Label en México.<br /><span className="text-white italic font-normal">Tu tequila empieza en Los Altos de Jalisco.</span></>
       ),
@@ -120,17 +120,20 @@ export default function Test2MBB({ lang = "es", setPage }) {
       ctaStart: isEn ? "Start My Project →" : "Iniciar mi proyecto →",
       ctaCall: isEn ? "Book a Technical Call" : "Agendar una llamada técnica"
     },
-    trust: [
+    trust: isEn ? [
+      "NOM 1633", "THE HIGHLANDS OF JALISCO", "FAMILY-OWNED",
+      "AGAVE ROOTS SINCE 1992", "BATCH CONTROL", "EXPORT COORDINATION"
+    ] : [
       "NOM 1633", "LOS ALTOS DE JALISCO", "FAMILY-OWNED",
       "AGAVE ROOTS SINCE 1992", "BATCH CONTROL", "EXPORT COORDINATION"
     ],
     why: {
       eyebrow: isEn ? "Why Casa Loy" : "Por qué Casa Loy",
       title: isEn
-        ? "A family-owned tequila producer in Los Altos de Jalisco."
+        ? "A family-owned tequila producer in The highlands of Jalisco."
         : "Un productor familiar de tequila en Los Altos de Jalisco.",
       cards: isEn ? [
-        { wk: "Origin", h3: "NOM 1633, Los Altos de Jalisco", desc: "Designation of origin protected production in Jalisco highlands.", anchor: "#agave-supply" },
+        { wk: "Origin", h3: "NOM 1633, The highlands of Jalisco", desc: "Designation of origin protected production in The highlands of Jalisco.", anchor: "#agave-supply" },
         { wk: "Structure", h3: "Family-owned, three generations", desc: "Long-term commitment, direct leadership and stable partnerships.", anchor: "#social-proof" },
         { wk: "Agave", h3: "Own cultivation since 1992", desc: "3,600 hectares ensuring price security and guaranteed supply.", anchor: "#agave-supply" },
         { wk: "Team", h3: "Real people behind every project", desc: "Master distillers, chemical engineers, and international trade advisers.", anchor: "#social-proof" },
@@ -152,7 +155,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
         {
           num: "01",
           name: isEn ? "Agave" : "Agave",
-          desc: isEn ? "Selected Blue Weber agaves matured 6-7 years in Los Altos highlands." : "Agaves Blue Weber seleccionados y madurados 6-7 años en Los Altos.",
+          desc: isEn ? "Selected Blue Weber agaves matured 6-7 years in The highlands of Jalisco." : "Agaves Blue Weber seleccionados y madurados 6-7 años en Los Altos.",
           img: "/Piñas de Agave Tequilana Weber.webp"
         },
         {
@@ -397,7 +400,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
       eyebrow: isEn ? "Agave & supply" : "Agave y suministro",
       title: isEn ? "Your tequila brand starts before production — it starts with supply." : "Tu marca de tequila empieza antes de la producción: empieza con el suministro.",
       facts: isEn ? [
-        { k: "Origin", v: "Los Altos de Jalisco, Ayotlán", desc: "Mineral-rich red highland soil ideal for Blue Weber Agave." },
+        { k: "Origin", v: "The highlands of Jalisco, Ayotlán", desc: "Mineral-rich red highland soil ideal for Blue Weber Agave." },
         { k: "Since", v: "Agave roots since 1992", desc: "Over 3 decades of agricultural mastery, avoiding raw material brokers." },
         { k: "Traceability", v: "Field-level knowledge, supply planning", desc: "3,600 estate hectares securing long-term cost stability per liter." }
       ] : [
@@ -774,7 +777,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
               </span>
               <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
               <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
-                LOS ALTOS DE JALISCO
+                {isEn ? "THE HIGHLANDS OF JALISCO" : "LOS ALTOS DE JALISCO"}
               </span>
               <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
               <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
@@ -1421,7 +1424,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
               <span className="absolute bottom-3 left-3 bg-black/70 backdrop-blur-xs text-white font-nav-tag text-[11px] px-3 py-1 rounded font-semibold">
-                NOM 1633 · Ayotlán, Los Altos de Jalisco
+                NOM 1633 · Ayotlán, {isEn ? "The highlands of Jalisco" : "Los Altos de Jalisco"}
               </span>
             </div>
 
