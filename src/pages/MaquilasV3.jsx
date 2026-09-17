@@ -509,7 +509,7 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Jima.webp", 
           label: lang === "es" ? "Jima de Agave" : "Agave Harvesting",
-          tag: lang === "es" ? "Jima de Autor" : "Harvest Intake",
+          tag: lang === "es" ? "Jima de Agave" : "Agave Harvesting",
           name: lang === "es" ? "Jima Artesanal al Ras" : "Precision Agave Harvesting",
           desc: lang === "es"
             ? "Corte y rasurado de penca al ras por jimadores experimentados en agaves madurados 6-7 años, concentrando únicamente los azúcares nobles y grados Brix ideales."
