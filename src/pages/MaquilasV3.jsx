@@ -945,38 +945,38 @@ export default function MaquilasV3({ lang = "es" }) {
       </div>
 
       {/* ============================================================
-          §2. POR QUÉ CASA LOY (Visible completo sin scroll excesivo)
+          §2. POR QUÉ CASA LOY (Visible completo en una sola pantalla sin scroll)
           ============================================================ */}
-      <section className="py-10 md:py-14 min-h-[88vh] flex flex-col justify-center bg-[#fcf9f3]">
+      <section className="py-5 sm:py-7 lg:py-9 bg-[#fcf9f3] flex flex-col justify-center">
         <div className="max-w-[1240px] mx-auto px-6 text-left w-full">
           <Reveal>
-            <div className="max-w-3xl mb-8">
-              <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-2">
+            <div className="max-w-3xl mb-4 sm:mb-5">
+              <span className="font-navigation text-[10px] sm:text-[11px] text-primary uppercase tracking-[0.35em] font-semibold block mb-1">
                 {t.whyEyebrow}
               </span>
-              <h2 className="font-serif text-[clamp(24px,3vw,44px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-2">
+              <h2 className="font-serif text-[clamp(20px,2.4vw,32px)] font-light text-[#1c1c18] leading-tight mb-1">
                 {t.whyTitle}
               </h2>
-              <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-xs sm:text-sm md:text-[15px]">
+              <p className="font-body-lg text-[#53443a] font-light leading-snug text-xs sm:text-[13px] md:text-sm">
                 {t.whySub}
               </p>
             </div>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-3.5 lg:gap-4">
             <Reveal delay={100}>
-              <div className="p-6 sm:p-7 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
+              <div className="p-3.5 sm:p-4 lg:p-4.5 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
                 <div>
-                  <div className="flex items-center justify-between mb-2.5">
-                    <span className="font-navigation text-[10px] sm:text-[11px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-navigation text-[9.5px] sm:text-[10.5px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
                       {lang === "es" ? "Origen" : "Origin"}
                     </span>
-                    <span className="font-serif text-lg font-light text-[#8C4723]/60">01</span>
+                    <span className="font-serif text-base sm:text-lg font-light text-[#8C4723]/60">01</span>
                   </div>
-                  <h3 className="font-serif text-lg sm:text-xl font-bold text-[#1c1c18] mb-2 leading-snug">
+                  <h3 className="font-serif text-[15px] sm:text-base lg:text-[17px] font-bold text-[#1c1c18] mb-1 leading-snug">
                     NOM 1633, Los Altos de Jalisco
                   </h3>
-                  <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
+                  <p className="font-body-md text-[#53443a] font-light leading-snug text-[11.5px] sm:text-xs lg:text-[12.5px]">
                     {lang === "es"
                       ? "Producción protegida bajo denominación de origen en los Altos de Jalisco."
                       : "Designation of origin protected production in Jalisco highlands."}
@@ -986,39 +986,39 @@ export default function MaquilasV3({ lang = "es" }) {
             </Reveal>
 
             <Reveal delay={150}>
-              <div className="p-6 sm:p-7 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
+              <div className="p-3.5 sm:p-4 lg:p-4.5 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
                 <div>
-                  <div className="flex items-center justify-between mb-2.5">
-                    <span className="font-navigation text-[10px] sm:text-[11px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-navigation text-[9.5px] sm:text-[10.5px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
                       {lang === "es" ? "Estructura" : "Structure"}
                     </span>
-                    <span className="font-serif text-lg font-light text-[#8C4723]/60">02</span>
+                    <span className="font-serif text-base sm:text-lg font-light text-[#8C4723]/60">02</span>
                   </div>
-                  <h3 className="font-serif text-lg sm:text-xl font-bold text-[#1c1c18] mb-2 leading-snug">
+                  <h3 className="font-serif text-[15px] sm:text-base lg:text-[17px] font-bold text-[#1c1c18] mb-1 leading-snug">
                     {lang === "es" ? "Empresa familiar, tres generaciones" : "Family-owned, three generations"}
                   </h3>
-                  <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
+                  <p className="font-body-md text-[#53443a] font-light leading-snug text-[11.5px] sm:text-xs lg:text-[12.5px]">
                     {lang === "es"
-                      ? "Compromiso generacional, trato directo sin burocracia y alianzas sólidas."
-                      : "Long-term commitment, direct leadership and stable partnerships."}
+                      ? "Historia real, compromiso generacional, trato directo y alianzas sólidas."
+                      : "Real heritage, generational commitment, direct leadership and solid partnerships."}
                   </p>
                 </div>
               </div>
             </Reveal>
 
             <Reveal delay={200}>
-              <div className="p-6 sm:p-7 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
+              <div className="p-3.5 sm:p-4 lg:p-4.5 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
                 <div>
-                  <div className="flex items-center justify-between mb-2.5">
-                    <span className="font-navigation text-[10px] sm:text-[11px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-navigation text-[9.5px] sm:text-[10.5px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
                       {lang === "es" ? "Agave" : "Agave"}
                     </span>
-                    <span className="font-serif text-lg font-light text-[#8C4723]/60">03</span>
+                    <span className="font-serif text-base sm:text-lg font-light text-[#8C4723]/60">03</span>
                   </div>
-                  <h3 className="font-serif text-lg sm:text-xl font-bold text-[#1c1c18] mb-2 leading-snug">
+                  <h3 className="font-serif text-[15px] sm:text-base lg:text-[17px] font-bold text-[#1c1c18] mb-1 leading-snug">
                     {lang === "es" ? "Cultivo propio desde 1992" : "Own cultivation since 1992"}
                   </h3>
-                  <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
+                  <p className="font-body-md text-[#53443a] font-light leading-snug text-[11.5px] sm:text-xs lg:text-[12.5px]">
                     {lang === "es"
                       ? "3,600 hectáreas que blindan tu costo por litro y garantizan abasto continuo."
                       : "3,600 hectares ensuring price security and guaranteed supply."}
@@ -1028,18 +1028,18 @@ export default function MaquilasV3({ lang = "es" }) {
             </Reveal>
 
             <Reveal delay={250}>
-              <div className="p-6 sm:p-7 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
+              <div className="p-3.5 sm:p-4 lg:p-4.5 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
                 <div>
-                  <div className="flex items-center justify-between mb-2.5">
-                    <span className="font-navigation text-[10px] sm:text-[11px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-navigation text-[9.5px] sm:text-[10.5px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
                       {lang === "es" ? "Equipo" : "Team"}
                     </span>
-                    <span className="font-serif text-lg font-light text-[#8C4723]/60">04</span>
+                    <span className="font-serif text-base sm:text-lg font-light text-[#8C4723]/60">04</span>
                   </div>
-                  <h3 className="font-serif text-lg sm:text-xl font-bold text-[#1c1c18] mb-2 leading-snug">
+                  <h3 className="font-serif text-[15px] sm:text-base lg:text-[17px] font-bold text-[#1c1c18] mb-1 leading-snug">
                     {lang === "es" ? "Personas reales detrás de cada proyecto" : "Real people behind every project"}
                   </h3>
-                  <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
+                  <p className="font-body-md text-[#53443a] font-light leading-snug text-[11.5px] sm:text-xs lg:text-[12.5px]">
                     {lang === "es"
                       ? "Maestros tequileros, ingenieros químicos y coordinadores de exportación."
                       : "Master distillers, chemical engineers, and international trade advisers."}
@@ -1049,18 +1049,18 @@ export default function MaquilasV3({ lang = "es" }) {
             </Reveal>
 
             <Reveal delay={300}>
-              <div className="p-6 sm:p-7 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
+              <div className="p-3.5 sm:p-4 lg:p-4.5 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
                 <div>
-                  <div className="flex items-center justify-between mb-2.5">
-                    <span className="font-navigation text-[10px] sm:text-[11px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-navigation text-[9.5px] sm:text-[10.5px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
                       {lang === "es" ? "Infraestructura" : "Infrastructure"}
                     </span>
-                    <span className="font-serif text-lg font-light text-[#8C4723]/60">05</span>
+                    <span className="font-serif text-base sm:text-lg font-light text-[#8C4723]/60">05</span>
                   </div>
-                  <h3 className="font-serif text-lg sm:text-xl font-bold text-[#1c1c18] mb-2 leading-snug">
+                  <h3 className="font-serif text-[15px] sm:text-base lg:text-[17px] font-bold text-[#1c1c18] mb-1 leading-snug">
                     {lang === "es" ? "Construida para proyectos serios y en crecimiento" : "Built for serious, growing projects"}
                   </h3>
-                  <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
+                  <p className="font-body-md text-[#53443a] font-light leading-snug text-[11.5px] sm:text-xs lg:text-[12.5px]">
                     {lang === "es"
                       ? "Flexibilidad industrial desde lotes piloto hasta tanques de granel."
                       : "Industrial scale flexibility from pilot runs to bulk containers."}
@@ -1070,18 +1070,18 @@ export default function MaquilasV3({ lang = "es" }) {
             </Reveal>
 
             <Reveal delay={350}>
-              <div className="p-6 sm:p-7 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
+              <div className="p-3.5 sm:p-4 lg:p-4.5 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
                 <div>
-                  <div className="flex items-center justify-between mb-2.5">
-                    <span className="font-navigation text-[10px] sm:text-[11px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-navigation text-[9.5px] sm:text-[10.5px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
                       {lang === "es" ? "Calidad" : "Quality"}
                     </span>
-                    <span className="font-serif text-lg font-light text-[#8C4723]/60">06</span>
+                    <span className="font-serif text-base sm:text-lg font-light text-[#8C4723]/60">06</span>
                   </div>
-                  <h3 className="font-serif text-lg sm:text-xl font-bold text-[#1c1c18] mb-2 leading-snug">
+                  <h3 className="font-serif text-[15px] sm:text-base lg:text-[17px] font-bold text-[#1c1c18] mb-1 leading-snug">
                     {lang === "es" ? "Control de lote en cada producción" : "Batch control on every production"}
                   </h3>
-                  <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
+                  <p className="font-body-md text-[#53443a] font-light leading-snug text-[11.5px] sm:text-xs lg:text-[12.5px]">
                     {lang === "es"
                       ? "Laboratorio interno y verificación estricta de cumplimiento CRT por lote."
                       : "Internal laboratory and CRT compliance verification on every run."}

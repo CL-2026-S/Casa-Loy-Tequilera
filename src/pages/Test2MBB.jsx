@@ -138,7 +138,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
         { wk: "Quality", h3: "Batch control on every production", desc: "Internal laboratory and CRT compliance verification on every run.", anchor: "#quality-compliance" }
       ] : [
         { wk: "Origen", h3: "NOM 1633, Los Altos de Jalisco", desc: "Producción protegida bajo denominación de origen en los Altos de Jalisco.", anchor: "#agave-supply" },
-        { wk: "Estructura", h3: "Empresa familiar, tres generaciones", desc: "Compromiso generacional, trato directo sin burocracia y alianzas sólidas.", anchor: "#social-proof" },
+        { wk: "Estructura", h3: "Empresa familiar, tres generaciones", desc: "Historia real, compromiso generacional, trato directo y alianzas sólidas.", anchor: "#social-proof" },
         { wk: "Agave", h3: "Cultivo propio desde 1992", desc: "3,600 hectáreas que blindan tu costo por litro y garantizan abasto continuo.", anchor: "#agave-supply" },
         { wk: "Equipo", h3: "Personas reales detrás de cada proyecto", desc: "Maestros tequileros, ingenieros químicos y coordinadores de exportación.", anchor: "#social-proof" },
         { wk: "Infraestructura", h3: "Construida para proyectos serios y en crecimiento", desc: "Flexibilidad industrial desde lotes piloto hasta tanques de granel.", anchor: "#methods" },
