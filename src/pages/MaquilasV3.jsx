@@ -307,7 +307,7 @@ export default function MaquilasV3({ lang = "es" }) {
       // Hero
       heroTitleLine1: "Private Label Tequila",
       heroTitleLine2: "Manufacturing in México.",
-      heroSubLine: "Tu tequila nace en Los Altos de Jalisco",
+      heroSubLine: "Your tequila starts in The Highlands of Jalisco",
       heroQuote: '"Your vision. Our expertise."',
       heroDescLine1: "Destileria familiar NOM1633 distillery built for founders,",
       heroDescLine2: "existing brands, and distributiors ready to build with a real",
