@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muestrario Visual de Colores y Tipografías: Test 1 vs Test 2 | Casa Loy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=Montserrat:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F4EFEB;
+      color: #1A1A1A;
+      padding: 30px 20px 80px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid #E0D7CD;
+    }
+    header span {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: #8C4723;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 8px;
+    }
+    header h1 {
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 42px;
+      font-weight: 500;
+      color: #1A1A1A;
+      letter-spacing: -0.01em;
+    }
+    header p {
+      font-size: 15px;
+      color: #6E6862;
+      margin-top: 6px;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+      gap: 32px;
+    }
+    @media (max-width: 768px) {
+      .grid-2col { grid-template-columns: 1fr; }
+    }
+
+    .version-card {
+      background: #FFFFFF;
+      border: 1px solid #DFD7CD;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    }
+    .version-header {
+      padding: 24px 28px;
+      border-bottom: 1px solid #ECE4DA;
+    }
+    .version-tag {
+      display: inline-block;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .tag-test1 {
+      background: #FAF3EC;
+      color: #8C4723;
+      border: 1px solid #E8D3C4;
+    }
+    .tag-test2 {
+      background: #12241B;
+      color: #FDA377;
+      border: 1px solid #1B3327;
+    }
+    .version-title {
+      font-family: 'EB Garamond', serif;
+      font-size: 26px;
+      font-weight: 500;
+      color: #1C1C18;
+    }
+    .version-sub {
+      font-size: 13px;
+      color: #7A726A;
+      margin-top: 2px;
+    }
+
+    .section-block {
+      padding: 24px 28px;
+      border-bottom: 1px solid #F0E8DE;
+    }
+    .section-block:last-child {
+      border-bottom: none;
+    }
+    .section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-weight: 700;
+      color: #8C4723;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::before {
+      content: "";
+      width: 14px;
+      height: 2px;
+      background: #8C4723;
+      display: inline-block;
+    }
+
+    /* Swatches Grid */
+    .swatches-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+    }
+    .swatch {
+      border-radius: 6px;
+      border: 1px solid rgba(0,0,0,0.08);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: #FAFAFA;
+    }
+    .swatch-color {
+      height: 52px;
+      width: 100%;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .swatch-info {
+      padding: 8px 10px;
+      font-size: 11px;
+    }
+    .swatch-hex {
+      font-weight: 700;
+      font-family: monospace;
+      color: #1A1A1A;
+      font-size: 11.5px;
+    }
+    .swatch-name {
+      color: #777;
+      font-size: 10px;
+      margin-top: 2px;
+      line-height: 1.2;
+    }
+
+    /* Typography Samples */
+    .typo-preview {
+      background: #F9F7F4;
+      border: 1px solid #EBE4DA;
+      border-radius: 6px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+    }
+    .typo-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #8C4723;
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .typo-heading-test1 {
+      font-family: 'EB Garamond', serif;
+      font-size: 26px;
+      font-weight: 400;
+      color: #1C1C18;
+      line-height: 1.15;
+    }
+    .typo-heading-test1 span {
+      font-style: italic;
+    }
+    .typo-heading-test2 {
+      font-family: 'EB Garamond', serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: #1C1C1C;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+    .typo-quote-test2 {
+      font-family: 'EB Garamond', serif;
+      font-style: italic;
+      color: #FDA377;
+      background: #12241B;
+      padding: 8px 12px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 15px;
+    }
+    .typo-eyebrow-test1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.35em;
+      font-weight: 600;
+      color: #7D3F0F;
+    }
+    .typo-eyebrow-test2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      font-weight: 700;
+      color: #8C4723;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .typo-eyebrow-test2::before {
+      content: "";
+      width: 16px;
+      height: 1.5px;
+      background: #8C4723;
+    }
+    .typo-body-test1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
+      color: #53443A;
+      line-height: 1.6;
+    }
+    .typo-body-test2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
+      color: #6E6B62;
+      line-height: 1.6;
+    }
+
+    /* Mini Component Previews */
+    .button-sample {
+      display: inline-block;
+      text-align: center;
+      text-decoration: none;
+      font-size: 10px;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-test1 {
+      background: #8C4723;
+      color: #FFF;
+      letter-spacing: 0.3em;
+      font-family: 'Montserrat', sans-serif;
+      border: 1px solid #8C4723;
+      border-radius: 0;
+    }
+    .btn-test1:hover {
+      background: #A6562B;
+    }
+    .btn-test2 {
+      background: #8C4723;
+      color: #FFF;
+      letter-spacing: 0.25em;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      border: 1px solid #8C4723;
+      border-radius: 6px;
+    }
+    .btn-test2:hover {
+      background: #A6562B;
+    }
+
+    .dark-preview-block {
+      background: #12241B;
+      color: #FFF;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-top: 12px;
+      border: 1px solid #1B3327;
+    }
+    .dark-preview-block h4 {
+      font-family: 'EB Garamond', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+    .dark-preview-block p {
+      font-size: 12px;
+      color: #C9D3CB;
+      margin-top: 4px;
+    }
+    .dark-preview-block .badge {
+      background: #FDA377;
+      color: #12241B;
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      padding: 2px 8px;
+      border-radius: 3px;
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <span>Comparador de Identidad Visual · Casa Loy</span>
+      <h1>Tipografías y Paleta de Colores</h1>
+      <p>Análisis interactivo de tonos, fuentes y elementos de diseño entre <strong>Test 1 (/test1mbb)</strong> y <strong>Test 2 (/test2mbb)</strong></p>
+    </header>
+
+    <div class="grid-2col">
+      
+      <!-- ================== TEST 1 ================== -->
+      <div class="version-card">
+        <div class="version-header">
+          <span class="version-tag tag-test1">Test 1 · MaquilasV3 (/test1mbb)</span>
+          <h2 class="version-title">Editorial de Lujo & Corporativo Clásico</h2>
+          <p class="version-sub">Estética sobria inspirada en etiquetas premium, papel de algodón y tierra agavera.</p>
+        </div>
+
+        <!-- Colores Test 1 -->
+        <div class="section-block">
+          <div class="section-title">Paleta de Colores</div>
+          <div class="swatches-grid">
+            <div class="swatch">
+              <div class="swatch-color" style="background:#8C4723;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#8C4723</div>
+                <div class="swatch-name">Terracota / Barro</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#A6562B;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#A6562B</div>
+                <div class="swatch-name">Hover Terracota</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#7D3F0F;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#7D3F0F</div>
+                <div class="swatch-name">Cobre Tostado</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#FCF9F3;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#FCF9F3</div>
+                <div class="swatch-name">Marfil Crema</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#F6F2EA;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#F6F2EA</div>
+                <div class="swatch-name">Ivory Tierra</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#FAF6F0;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#FAF6F0</div>
+                <div class="swatch-name">Crema FAQ</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#1C1A19;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#1C1A19</div>
+                <div class="swatch-name">Carbón Quiz</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#1C1C18;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#1C1C18</div>
+                <div class="swatch-name">Texto Negro Humo</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#53443A;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#53443A</div>
+                <div class="swatch-name">Texto Moca</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#065F46;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#065F46</div>
+                <div class="swatch-name">Esmeralda Additive Free</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tipografía Test 1 -->
+        <div class="section-block">
+          <div class="section-title">Tipografía en Acción</div>
+          
+          <div class="typo-preview">
+            <span class="typo-label">Eyebrow (Montserrat · Tracking 0.35em)</span>
+            <div class="typo-eyebrow-test1">DESTILERÍA & MAQUILA B2B · NOM 1633</div>
+          </div>
+
+          <div class="typo-preview">
+            <span class="typo-label">Titular Principal (EB Garamond · Light / Italic)</span>
+            <div class="typo-heading-test1">
+              Marca Privada de Tequila 100% Agave <br>
+              <span>Infraestructura, Certificación CRT y Exportación.</span>
+            </div>
+          </div>
+
+          <div class="typo-preview">
+            <span class="typo-label">Párrafos (Plus Jakarta Sans / Inter · Regular)</span>
+            <div class="typo-body-test1">
+              Ayotlán a más de 2,000 msnm con suelos rojos volcánicos ricos en hierro y microclima con oscilación térmica ideal para el cultivo de agave Blue Weber.
+            </div>
+          </div>
+
+          <div style="margin-top: 16px;">
+            <a class="button-sample btn-test1">Cotizar Marca Privada B2B</a>
+            <span style="font-size: 11px; color: #888; margin-left: 12px;">Esquinas rectas (0px radius)</span>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ================== TEST 2 ================== -->
+      <div class="version-card">
+        <div class="version-header">
+          <span class="version-tag tag-test2">Test 2 · Test2MBB (/test2mbb)</span>
+          <h2 class="version-title">Agave Dark & Terroir Moderno</h2>
+          <p class="version-sub">Contraste nocturno entre verde agave profundo, acentos melocotón y bordes redondeados.</p>
+        </div>
+
+        <!-- Colores Test 2 -->
+        <div class="section-block">
+          <div class="section-title">Paleta de Colores</div>
+          <div class="swatches-grid">
+            <div class="swatch">
+              <div class="swatch-color" style="background:#12241B;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#12241B</div>
+                <div class="swatch-name">Verde Agave Noche</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#1B3327;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#1B3327</div>
+                <div class="swatch-name">Verde Botella Card</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#FDA377;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#FDA377</div>
+                <div class="swatch-name">Ámbar Melocotón</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#8C4723;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#8C4723</div>
+                <div class="swatch-name">Arcilla Tequilera</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#A6562B;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#A6562B</div>
+                <div class="swatch-name">Hover Arcilla</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#FAF8F5;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#FAF8F5</div>
+                <div class="swatch-name">Marfil Tiza Suave</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#EDE7DE;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#EDE7DE</div>
+                <div class="swatch-name">Piedra Volcánica</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#EFE7D6;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#EFE7D6</div>
+                <div class="swatch-name">Arena / Paja</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#DCD5C3;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#DCD5C3</div>
+                <div class="swatch-name">Borde Caliza</div>
+              </div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#C9D3CB;"></div>
+              <div class="swatch-info">
+                <div class="swatch-hex">#C9D3CB</div>
+                <div class="swatch-name">Salvia Niebla</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tipografía Test 2 -->
+        <div class="section-block">
+          <div class="section-title">Tipografía en Acción</div>
+          
+          <div class="typo-preview">
+            <span class="typo-label">Eyebrow (Plus Jakarta Sans · Bold con Línea de 24px)</span>
+            <div class="typo-eyebrow-test2">POR QUÉ CASA LOY</div>
+          </div>
+
+          <div class="typo-preview">
+            <span class="typo-label">Titular Principal (EB Garamond · Semibold / Tracking -0.01em)</span>
+            <div class="typo-heading-test2">
+              Un productor familiar de tequila en Los Altos de Jalisco.
+            </div>
+            <div class="typo-quote-test2">"Your vision. Our expertise."</div>
+          </div>
+
+          <div class="typo-preview">
+            <span class="typo-label">Párrafos Diurnos (Plus Jakarta Sans · Regular)</span>
+            <div class="typo-body-test2">
+              3,600 hectáreas cultivadas que blindan tu costo por litro y garantizan abasto continuo sin intermediarios ni volatilidad spot.
+            </div>
+          </div>
+
+          <!-- Muestra de Bloque Oscuro Agave -->
+          <div class="dark-preview-block">
+            <span class="badge">Ruta de Producción</span>
+            <h4>Embotellado y Certificación CRT</h4>
+            <p>Control de lote verificado químicamente por nuestro laboratorio interno con cumplimiento internacional.</p>
+          </div>
+
+          <div style="margin-top: 16px;">
+            <a class="button-sample btn-test2">Iniciar mi proyecto →</a>
+            <span style="font-size: 11px; color: #888; margin-left: 12px;">Esquinas redondeadas (6px - 12px radius)</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

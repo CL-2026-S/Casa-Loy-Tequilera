@@ -26,6 +26,31 @@ export default function Test2MBB({ lang = "es", setPage }) {
   // Inside Casa Loy active station index (0 to 7)
   const [activeInside, setActiveInside] = useState(0);
 
+  // Hero Banner Carousel (Slide 1: Naves Industriales, Slide 2: Etiqueta de Botellas)
+  const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
+  const heroSlides = [
+    {
+      id: "naves",
+      alt: isEn ? "Casa Loy Tequilera Industrial Facilities" : "Naves Industriales Casa Loy Tequilera",
+      src: "/Naves Industriales Casa Loy Tequilera.webp",
+      overlay: "from-black/55 via-black/35 to-black/85"
+    },
+    {
+      id: "etiqueta",
+      alt: isEn ? "Casa Loy Tequila Bottle and Label" : "Etiqueta y Botella de Tequila Casa Loy",
+      src: "/Banner Casa Loy Piedra y Agave-escritorio.webp",
+      srcMobile: "/Banner Casa Loy Piedra y Agave-movil.webp",
+      overlay: "from-black/60 via-black/40 to-black/85"
+    }
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 6500);
+    return () => clearInterval(timer);
+  }, [heroSlides.length]);
+
   // Cal.com Embed Loader (30-minute consultation)
   useEffect(() => {
     if (setPage) setPage("test2mbb");
@@ -95,12 +120,9 @@ export default function Test2MBB({ lang = "es", setPage }) {
       ctaStart: isEn ? "Start My Project →" : "Iniciar mi proyecto →",
       ctaCall: isEn ? "Book a Technical Call" : "Agendar una llamada técnica"
     },
-    trust: isEn ? [
-      "NOM 1633", "Los Altos de Jalisco", "Family-owned",
-      "Agave roots since 1992", "Batch control", "Export coordination"
-    ] : [
-      "NOM 1633", "Los Altos de Jalisco", "De propiedad familiar",
-      "Raíces de agave desde 1992", "Control de lote", "Coordinación de exportación"
+    trust: [
+      "NOM 1633", "LOS ALTOS DE JALISCO", "FAMILY-OWNED",
+      "AGAVE ROOTS SINCE 1992", "BATCH CONTROL", "EXPORT COORDINATION"
     ],
     why: {
       eyebrow: isEn ? "Why Casa Loy" : "Por qué Casa Loy",
@@ -634,17 +656,51 @@ export default function Test2MBB({ lang = "es", setPage }) {
           (Visible sin hacer scroll: h-screen con barra inferior integrada)
           ============================================================ */}
       <section className="relative h-screen w-full flex flex-col justify-between overflow-hidden bg-zinc-950 text-white">
-        {/* Background Image: Naves Industriales Casa Loy Tequilera con Montacargas */}
+        {/* Background Image Carousel (Slide 1: Naves Industriales, Slide 2: Etiqueta de Botellas) */}
         <div className="absolute inset-0 z-0">
-          <img
-            alt="Naves Industriales Casa Loy Tequilera"
-            className="w-full h-full object-cover brightness-[0.72] transition-transform duration-[7500ms] ease-out scale-105"
-            src="/Naves Industriales Casa Loy Tequilera.webp"
-            fetchPriority="high"
-          />
-          {/* Dark gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/80"></div>
+          {heroSlides.map((slide, idx) => (
+            <div
+              key={slide.id}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                idx === currentHeroSlide ? "opacity-100" : "opacity-0 pointer-events-none"
+              }`}
+            >
+              <picture>
+                {slide.srcMobile && (
+                  <source media="(max-width: 768px)" srcSet={slide.srcMobile} />
+                )}
+                <img
+                  alt={slide.alt}
+                  className="w-full h-full object-cover brightness-[0.72] transition-transform duration-[8000ms] ease-out scale-105"
+                  src={slide.src}
+                  fetchPriority={idx === 0 ? "high" : "auto"}
+                />
+              </picture>
+              {/* Dark gradient overlay */}
+              <div className={`absolute inset-0 bg-gradient-to-b ${slide.overlay}`}></div>
+            </div>
+          ))}
         </div>
+
+        {/* Desktop Prev / Next Carousel Controls */}
+        <button
+          onClick={() => setCurrentHeroSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1))}
+          className="hidden md:flex absolute left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 items-center justify-center rounded-full bg-black/40 hover:bg-black/70 text-white/80 hover:text-white transition-all backdrop-blur-sm cursor-pointer border border-white/15 shadow-lg"
+          aria-label="Previous banner slide"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button
+          onClick={() => setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length)}
+          className="hidden md:flex absolute right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 items-center justify-center rounded-full bg-black/40 hover:bg-black/70 text-white/80 hover:text-white transition-all backdrop-blur-sm cursor-pointer border border-white/15 shadow-lg"
+          aria-label="Next banner slide"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
 
         {/* Content Container (Centered in Viewport) */}
         <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex-1 flex flex-col items-center justify-center pt-20 pb-2">
@@ -664,7 +720,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
           </p>
 
           {/* CTA Buttons in Exact Home Style */}
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full max-w-md sm:max-w-none mb-4">
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center w-full max-w-md sm:max-w-none mb-3">
             <a
               href="#quiz"
               className="bg-[#8C4723] border border-[#8C4723] hover:bg-[#a6562b] hover:border-[#a6562b] text-white font-nav-tag text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-semibold py-3.5 px-8 transition-all duration-500 min-w-[200px] text-center shadow-lg cursor-pointer"
@@ -679,8 +735,24 @@ export default function Test2MBB({ lang = "es", setPage }) {
             </a>
           </div>
 
+          {/* Slide Indicators (Dots) */}
+          <div className="flex items-center gap-2.5 my-2.5 z-20">
+            {heroSlides.map((slide, idx) => (
+              <button
+                key={slide.id}
+                onClick={() => setCurrentHeroSlide(idx)}
+                className={`h-1.5 transition-all duration-500 rounded-full cursor-pointer ${
+                  idx === currentHeroSlide
+                    ? "w-8 bg-[#8C4723]"
+                    : "w-2.5 bg-white/40 hover:bg-white/70"
+                }`}
+                aria-label={`Slide ${idx + 1}`}
+              />
+            ))}
+          </div>
+
           {/* Animación de flecha de scroll de Home */}
-          <a href="#why" className="inline-flex flex-col items-center gap-1 opacity-80 hover:opacity-100 transition-opacity mt-2 cursor-pointer">
+          <a href="#why" className="inline-flex flex-col items-center gap-1 opacity-80 hover:opacity-100 transition-opacity mt-1 cursor-pointer">
             <svg 
               className="w-4 h-4 text-white animate-scroll-arrow" 
               fill="none" 
@@ -702,23 +774,23 @@ export default function Test2MBB({ lang = "es", setPage }) {
               </span>
               <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
               <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
-                Los Altos de Jalisco
+                LOS ALTOS DE JALISCO
               </span>
               <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
               <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
-                {isEn ? "Family-owned" : "Empresa familiar"}
+                FAMILY-OWNED
               </span>
               <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
               <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
-                {isEn ? "Agave roots since 1992" : "Raíces agaveras desde 1992"}
+                AGAVE ROOTS SINCE 1992
               </span>
               <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
               <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
-                {isEn ? "Batch control" : "Control por lotes"}
+                BATCH CONTROL
               </span>
               <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
               <span className="font-nav-tag text-[11px] md:text-xs font-semibold uppercase tracking-widest text-[#1C1C1C]">
-                {isEn ? "Export coordination" : "Coordinación de exportación"}
+                EXPORT COORDINATION
               </span>
             </div>
           </div>

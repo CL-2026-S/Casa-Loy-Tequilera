@@ -49,12 +49,28 @@ function Reveal({ children, className = "", delay = 0, duration = 800 }) {
 export default function MaquilasV3({ lang = "es" }) {
   // Quiz State (Identical to Maquilas / Marca Privada)
   const [quizStep, setQuizStep] = useState(1);
-  const [quizAnswers, setQuizAnswers] = useState({ solution: "", objective: "", stage: "" });
+  const [quizAnswers, setQuizAnswers] = useState({ profile: "", solution: "", objective: "", stage: "" });
   const [contactForm, setContactForm] = useState({ name: "", company: "", lada: "", phone: "", email: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Active Station State for "Dentro de Casa Loy" Interactive Showcase
   const [activeStation, setActiveStation] = useState(0);
+  const [activeStationImage, setActiveStationImage] = useState(0);
+
+  // Hero Background Carousel State
+  const [heroImageIdx, setHeroImageIdx] = useState(0);
+  const heroImages = [
+    "/Naves Industriales Casa Loy Tequilera.webp",
+    "/Linea Embotellado Tanque Envasado Casa Loy.jpg",
+    "/Campo de Agave Ayotlán Casa Loy Tequilera.webp"
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setHeroImageIdx(prev => (prev + 1) % heroImages.length);
+    }, 5500);
+    return () => clearInterval(timer);
+  }, [heroImages.length]);
 
   // Active FAQ Category
   const [activeFaqTab, setActiveFaqTab] = useState("founders");
@@ -165,11 +181,12 @@ export default function MaquilasV3({ lang = "es" }) {
       seoDesc: "Destilería oficial NOM 1633 en Los Altos de Jalisco. Producción integral de marca privada, venta a granel, 3,600 Has. de agave propio y 13.5M L de capacidad anual.",
       
       // Hero
-      heroOvertitle: "DESTILERÍA & MAQUILA B2B · NOM 1633",
-      heroTitle: "Marca Privada de Tequila 100% Agave",
-      heroTitleItalic: "Infraestructura, Certificación CRT y Exportación Global.",
-      heroBtn: "Cotizar Marca Privada B2B",
-      heroBtnSec: "Agendar Videollamada",
+      heroTitle1: "Maquila de Tequila y Marca Privada en México.",
+      heroTitle2: "Tu tequila nace en Los Altos de Jalisco.",
+      heroQuote: '"Tu visión. Nuestra experiencia."',
+      heroDesc: "Destilería familiar NOM 1633 construida para fundadores, marcas existentes y distribuidores listos para crear con un verdadero origen detrás.",
+      heroBtn: "Iniciar Mi Proyecto →",
+      heroBtnSec: "Agendar Llamada Técnica",
       
       // Trust Bar
       trustNom: "NOM 1633 CRT",
@@ -183,7 +200,7 @@ export default function MaquilasV3({ lang = "es" }) {
       // Why Casa Loy
       whyEyebrow: "INFRAESTRUCTURA & CERTEZA OPERATIVA",
       whyTitle: "¿Por qué Casa Loy para tu Proyecto?",
-      whySub: "Seis pilares industriales que blindan la calidad, el costo y la entrega continua de tu destilado.",
+      whySub: "Seis pilares que blindan la calidad, el costo y la entrega continua de tu destilado.",
 
       // Inside Casa Loy
       insideEyebrow: "INSTALACIONES & CAPACIDAD INDUSTRIAL",
@@ -191,8 +208,8 @@ export default function MaquilasV3({ lang = "es" }) {
       insideSub: "Recorre interactivamente las 8 estaciones de nuestra destilería en Ayotlán, Jalisco.",
 
       // Solutions
-      solutionsEyebrow: "RUTAS DE PRODUCCIÓN",
-      solutionsTitle: "Soluciones Adaptadas a tu Escala",
+      solutionsEyebrow: "SOLUCIONES",
+      solutionsTitle: "Adaptadas a tu Escala",
       solutionsSub: "Modelos de negocio estructurados para marcas de tequila en crecimiento y distribuidores de alto volumen.",
 
       // Stakes / Risks
@@ -200,11 +217,19 @@ export default function MaquilasV3({ lang = "es" }) {
       stakesTitle: "Mitigación de Riesgos Reales",
       stakesSub: "Respuestas operativas ante los retos más críticos de la industria del tequila.",
 
-      // Quiz (Same as Maquilas.jsx)
-      quizOvertitle: "Quiz estratégico de 3 preguntas",
+      // Quiz
+      quizOvertitle: "Diagnóstico Estratégico B2B",
       quizTitle: "¿Qué tipo de proyecto buscas desarrollar?",
-      quizDesc: "Completa este diagnóstico de 3 preguntas para recibir una propuesta adaptada a tus necesidades y objetivos.",
-      stepLabel: "Pregunta",
+      quizDesc: "Completa este diagnóstico confidencial para recibir una propuesta técnica y económica adaptada a tus objetivos.",
+      stepLabel: "Paso",
+      ndaText: "Convenio de Confidencialidad (NDA) disponible para todo proyecto",
+      step0Title: "Encuentra la ruta correcta para tu proyecto",
+      step0Opts: [
+        { title: "Founders", desc: "Construyendo una marca de tequila desde cero" },
+        { title: "Existing Brands", desc: "Buscando un mejor socio de producción y maquila" },
+        { title: "Distributors / Importers", desc: "Incursionando en tequila como nueva categoría" },
+        { title: "Bulk Buyers", desc: "Abastecimiento de volumen continuo con perfil definido" }
+      ],
       step1Title: "¿Qué solución necesitas actualmente?",
       step2Title: "¿Cuál es tu objetivo principal?",
       step3Title: "¿En qué etapa se encuentra tu proyecto?",
@@ -246,12 +271,12 @@ export default function MaquilasV3({ lang = "es" }) {
       // Workflow Process
       processEyebrow: "METODOLOGÍA DE DESARROLLO",
       processTitle: "Ruta de Trabajo Ágil & Transparente",
-      processSub: "Un flujo estructurado en 6 fases desde el primer contacto hasta el embarque final.",
+      processSub: "Un flujo continuo de 7 fases desde la concepción del perfil hasta el soporte post-venta ágil.",
 
-      // Agave Section
-      agaveEyebrow: "ORIGEN & SOSTENIBILIDAD",
-      agaveTitle: "Agave Propio & Certeza de Abastecimiento",
-      agaveSub: "La base de un gran tequila nace en el campo. Nuestro cultivo directo en Ayotlán garantiza continuidad y estabilidad de costos.",
+      // Sustentabilidad & Certificaciones
+      sustainabilityEyebrow: "RESPONSABILIDAD & CUMPLIMIENTO GLOBAL",
+      sustainabilityTitle: "Sustentabilidad Integral & Certificaciones Oficiales",
+      sustainabilitySub: "Infraestructura circular para inversionistas internacionales con enfoque en energía limpia, composta y certificaciones oficiales.",
 
       // Calendar Section
       calEyebrow: "CONSULTORÍA DIRECTA",
@@ -278,11 +303,12 @@ export default function MaquilasV3({ lang = "es" }) {
       seoDesc: "Official NOM 1633 distillery in Los Altos de Jalisco. Full private label production, bulk tequila supply, 3,600 Has. estate agave, and 13.5M L annual capacity.",
 
       // Hero
-      heroOvertitle: "DISTILLERY & B2B PRIVATE LABEL · NOM 1633",
-      heroTitle: "100% Agave Tequila Private Label & Bottling",
-      heroTitleItalic: "Infrastructure, CRT Certification & Global Export.",
-      heroBtn: "Get B2B Quote",
-      heroBtnSec: "Schedule Video Call",
+      heroTitle1: "Private Label Tequila Manufacturing in Mexico.",
+      heroTitle2: "Your tequila starts in Los Altos de Jalisco.",
+      heroQuote: '"Your vision. Our expertise."',
+      heroDesc: "A family-owned NOM 1633 distillery built for founders, existing brands, and distributors ready to build with a real origin behind them.",
+      heroBtn: "Start My Project →",
+      heroBtnSec: "Book a Technical Call",
 
       // Trust Bar
       trustNom: "NOM 1633 CRT",
@@ -296,7 +322,7 @@ export default function MaquilasV3({ lang = "es" }) {
       // Why Casa Loy
       whyEyebrow: "INFRASTRUCTURE & OPERATIONAL CERTAINTY",
       whyTitle: "Why Casa Loy for Your Tequila Project?",
-      whySub: "Six industrial pillars safeguarding liquid quality, cost control, and uninterrupted delivery.",
+      whySub: "Six pillars safeguarding liquid quality, cost control, and uninterrupted delivery.",
 
       // Inside Casa Loy
       insideEyebrow: "FACILITIES & INDUSTRIAL CAPACITY",
@@ -304,8 +330,8 @@ export default function MaquilasV3({ lang = "es" }) {
       insideSub: "Take an interactive journey through the 8 stations of our distillery in Ayotlán, Jalisco.",
 
       // Solutions
-      solutionsEyebrow: "PRODUCTION ROUTES",
-      solutionsTitle: "Solutions Scaled to Your Stage",
+      solutionsEyebrow: "SOLUTIONS",
+      solutionsTitle: "Scaled to Your Stage",
       solutionsSub: "Proven business structures for emerging spirits brands and high-volume international distributors.",
 
       // Stakes / Risks
@@ -314,10 +340,18 @@ export default function MaquilasV3({ lang = "es" }) {
       stakesSub: "Engineered operational solutions addressing critical bottlenecks in the global tequila supply chain.",
 
       // Quiz
-      quizOvertitle: "Strategic 3-Question Quiz",
+      quizOvertitle: "B2B Strategic Diagnostic",
       quizTitle: "What type of project are you looking to develop?",
-      quizDesc: "Complete this 3-question diagnostic to receive a proposal tailored to your needs and goals.",
-      stepLabel: "Question",
+      quizDesc: "Complete this confidential diagnostic to receive a technical and economic proposal tailored to your goals.",
+      stepLabel: "Step",
+      ndaText: "Strict Non-Disclosure Agreement (NDA) available for every project",
+      step0Title: "Find the right path for your project",
+      step0Opts: [
+        { title: "Founders", desc: "Building a tequila brand from the ground up" },
+        { title: "Existing Brands", desc: "Looking for a better production and contract distilling partner" },
+        { title: "Distributors / Importers", desc: "Entering tequila as a new category" },
+        { title: "Bulk Buyers", desc: "Sourcing steady volume at defined sensory profile" }
+      ],
       step1Title: "What solution do you currently need?",
       step2Title: "What is your main objective?",
       step3Title: "What stage is your project in?",
@@ -359,12 +393,12 @@ export default function MaquilasV3({ lang = "es" }) {
       // Workflow Process
       processEyebrow: "DEVELOPMENT METHODOLOGY",
       processTitle: "Agile & Transparent Workflow",
-      processSub: "A structured 6-phase journey from initial consultation to final customs dispatch.",
+      processSub: "A structured 7-phase journey from initial consultation to agile post-sales support.",
 
-      // Agave Section
-      agaveEyebrow: "ORIGIN & SUSTAINABILITY",
-      agaveTitle: "Estate-Grown Agave & Supply Certainty",
-      agaveSub: "Exceptional tequila starts in the field. Our direct cultivation in Ayotlán guarantees uninterrupted supply and long-term cost insulation.",
+      // Sustainability & Certifications
+      sustainabilityEyebrow: "RESPONSIBILITY & GLOBAL COMPLIANCE",
+      sustainabilityTitle: "Comprehensive Sustainability & Official Certifications",
+      sustainabilitySub: "Circular infrastructure engineered for discerning global investors with clean energy, composting and verified international certifications.",
 
       // Calendar Section
       calEyebrow: "DIRECT CONSULTATION",
@@ -412,6 +446,7 @@ export default function MaquilasV3({ lang = "es" }) {
           email: contactForm.email,
           lada: contactForm.lada,
           phone: contactForm.phone,
+          profile: quizAnswers.profile,
           solution: quizAnswers.solution,
           objective: quizAnswers.objective,
           stage: quizAnswers.stage,
@@ -419,7 +454,7 @@ export default function MaquilasV3({ lang = "es" }) {
       });
 
       if (response.ok) {
-        setQuizStep(5);
+        setQuizStep(6);
       } else {
         const errorData = await response.json().catch(() => ({}));
         alert(
@@ -441,7 +476,7 @@ export default function MaquilasV3({ lang = "es" }) {
   };
 
   const handleResetQuiz = () => {
-    setQuizAnswers({ solution: "", objective: "", stage: "" });
+    setQuizAnswers({ profile: "", solution: "", objective: "", stage: "" });
     setContactForm({ name: "", company: "", lada: "", phone: "", email: "" });
     setQuizStep(1);
   };
@@ -456,37 +491,50 @@ export default function MaquilasV3({ lang = "es" }) {
         ? "Recepción directa de nuestras 3,600 hectáreas en Los Altos de Jalisco. Selección de piñas en plenitud de maduración (6-7 años) con medición de grados Brix."
         : "Direct intake from our 3,600 hectares in Los Altos de Jalisco. Hand-selected agaves at peak maturity (6-7 years) tested for optimal natural Brix sugars.",
       specs: ["100% Tequilana Weber", "Los Altos de Jalisco", "Jima Madura"],
-      img: "/Jima.webp"
+      images: [
+        { src: "/Jima Carga Camion Agave Casa Loy.jpg", label: lang === "es" ? "Carga en Camión" : "Truck Loading" },
+        { src: "/Jima.webp", label: lang === "es" ? "Jima en Campo" : "Field Harvesting" },
+        { src: "/Campo de Agave Ayotlán Casa Loy Tequilera.webp", label: lang === "es" ? "Plantación Los Altos" : "Highland Plantations" }
+      ]
     },
     {
       num: "02",
       tag: lang === "es" ? "Cocimiento Dual" : "Cooking Process",
-      name: lang === "es" ? "Hornos de Mampostería & Autoclaves" : "Traditional Brick Ovens & Autoclaves",
+      name: lang === "es" ? "Autoclaves de Acero & Hornos" : "Pressure Autoclaves & Brick Ovens",
       desc: lang === "es"
-        ? "Capacidad combinada de horneado: 240 toneladas en hornos tradicionales de mampostería para notas caramelizadas y 80 toneladas en autoclaves de acero inoxidable."
-        : "Versatile cooking: 240 metric tons in traditional masonry ovens for rich caramelized notes and 80 tons in stainless steel pressure autoclaves.",
-      specs: ["240t Hornos Mampostería", "80t Autoclaves", "Vapor Controlado"],
-      img: "/Cocimiento de Agave.webp"
+        ? "Capacidad combinada de horneado: 80 toneladas en autoclaves cilíndricos de alta presión y 240 toneladas en hornos tradicionales de mampostería."
+        : "Versatile cooking: 80 metric tons in high-pressure stainless steel autoclaves and 240 tons in traditional masonry brick ovens.",
+      specs: ["80t Autoclaves", "240t Hornos Mampostería", "Vapor Controlado"],
+      images: [
+        { src: "/Autoclaves Acero Inoxidable Casa Loy.jpg", label: lang === "es" ? "Autoclaves de Acero" : "Pressure Autoclaves" },
+        { src: "/Cocimiento de Agave.webp", label: lang === "es" ? "Hornos de Mampostería" : "Brick Ovens (240t)" }
+      ]
     },
     {
       num: "03",
       tag: lang === "es" ? "Extracción Noble" : "Noble Extraction",
-      name: lang === "es" ? "Tahona Volcánica & Molinos" : "Volcanic Tahona & Roller Mills",
+      name: lang === "es" ? "Tren de Molienda & Tahona" : "Shredder Mill & Volcanic Tahona",
       desc: lang === "es"
-        ? "Tahona ancestral de piedra volcánica (500k L/año) para destilados de autor y tren de molienda mecánico con extracción suave de azúcares."
-        : "Ancestral volcanic stone tahona (500k L/yr) for ultra-premium batches and modern roller mills ensuring gentle sugar extraction.",
-      specs: ["Tahona 500k L", "Piedra Volcánica", "Extracción Suave"],
-      img: "/Tahona Agave Molienda.webp"
+        ? "Tren de molienda mecánico de alta capacidad con tolvas industriales para extracción suave de azúcares y tahona volcánica ancestral para lotes de autor."
+        : "High-throughput industrial shredder and roller line for gentle sugar extraction, alongside volcanic stone tahona for author small-batches.",
+      specs: ["Molino ROSH", "Tahona 500k L", "Extracción Suave"],
+      images: [
+        { src: "/Molino Rosh Molienda Agave Casa Loy.jpg", label: lang === "es" ? "Tren de Molienda" : "Shredder Mill Line" },
+        { src: "/Tahona Agave Molienda.webp", label: lang === "es" ? "Tahona Tradicional" : "Volcanic Tahona" }
+      ]
     },
     {
       num: "04",
-      tag: lang === "es" ? "Fermentación Controlada" : "Fermentation",
-      name: lang === "es" ? "Tinas de Fermentación Térmica" : "Stainless Fermentation Tanks",
+      tag: lang === "es" ? "Fermentación" : "Fermentation",
+      name: lang === "es" ? "Tanques Cerrados & Tinas Abiertas" : "Closed Stainless Tanks & Open Vats",
       desc: lang === "es"
-        ? "Tinas de acero inoxidable con control de temperatura automatizado y cepas de levadura exclusivas que garantizan perfiles aromáticos reproducibles."
-        : "Stainless steel tanks with automated temperature jackets and proprietary yeast strains ensuring reproducible sensory signatures.",
-      specs: ["Control Térmico", "Levaduras Propias", "Acero Inoxidable"],
-      img: "/Fermentación.webp"
+        ? "Batería de tanques de acero inoxidable de alta capacidad con control térmico automatizado y tinas abiertas tradicionales para enriquecer ésteres frutales."
+        : "Automated temperature-controlled closed stainless tanks and traditional open wooden/steel vats for fruit-forward esters.",
+      specs: ["Tanques de Acero", "Control Térmico", "Levaduras Propias"],
+      images: [
+        { src: "/Tanques Fermentacion Cerrada Acero Casa Loy.jpg", label: lang === "es" ? "2: Tanques Cerrados" : "2: Closed Tanks" },
+        { src: "/Fermentación.webp", label: lang === "es" ? "1: Tinas Abiertas" : "1: Open Vats" }
+      ]
     },
     {
       num: "05",
@@ -496,7 +544,10 @@ export default function MaquilasV3({ lang = "es" }) {
         ? "Alambiques tradicionales de cobre para cortes precisos de cabeza y cola, complementados con columnas continuas europeas de alta eficiencia."
         : "Traditional copper pot stills for precise cuts and author signatures, complemented with high-efficiency European continuous columns.",
       specs: ["Alambiques de Cobre", "Columnas Continuas", "13.5M L / Año"],
-      img: "/Destilación.webp"
+      images: [
+        { src: "/Destilación.webp", label: lang === "es" ? "Alambiques de Cobre" : "Copper Pot Stills" },
+        { src: "/Columnas Destilacion Tequila.jpg", label: lang === "es" ? "Columnas Continuas" : "Continuous Columns" }
+      ]
     },
     {
       num: "06",
@@ -506,27 +557,37 @@ export default function MaquilasV3({ lang = "es" }) {
         ? "Capacidad de 1.2 millones de litros en barricas de Roble Blanco Americano y Roble Francés bajo condiciones estables de humedad y temperatura."
         : "1.2 Million liters capacity in Virgin American White Oak and French Oak barrels maintained under constant cellar humidity and temperature.",
       specs: ["1.2M L Cava", "Roble Americano", "Roble Francés"],
-      img: "/Pasillo Cava de Añejamiento.webp"
+      images: [
+        { src: "/Pasillo Cava de Añejamiento.webp", label: lang === "es" ? "Cava Subterránea" : "Underground Cellar" },
+        { src: "/Cava de Añejamiento.webp", label: lang === "es" ? "Estiba de Barricas" : "Stacked Casks" },
+        { src: "/Cava Tequilera Casa Loy.webp", label: lang === "es" ? "Bóveda de Añejamiento" : "Aging Vault" }
+      ]
     },
     {
       num: "07",
-      tag: lang === "es" ? "Control Analítico" : "Analytical Lab",
-      name: lang === "es" ? "Tasting Lab & Cromatografía" : "In-House Tasting Lab & GC",
+      tag: lang === "es" ? "Control & Tasting" : "Quality & Tasting",
+      name: lang === "es" ? "Laboratorio de Control & Tasting Lab" : "In-House Quality & Tasting Lab",
       desc: lang === "es"
-        ? "Laboratorio propio equipado con cromatografía de gases, análisis fisicoquímico lote por lote y cabinas de cata profesional previa al embarque."
-        : "In-house lab equipped with gas chromatography, physicochemical analysis for every single batch, and professional sensory booths.",
-      specs: ["Cromatografía de Gases", "Reporte por Lote", "Panel Sensorial"],
-      img: "/Laboratorio Maquilas.webp"
+        ? "Control de calidad analítico lote por lote y Tasting Lab exclusivo para catas sensoriales de perfilado líquido con el cliente."
+        : "Batch-by-batch analytical QA and exclusive in-cellar tasting lab sessions to fine-tune your liquid's exact organoleptic signature.",
+      specs: ["Tasting Lab en Cava", "Panel Sensorial", "Control de Calidad"],
+      images: [
+        { src: "/Laboratorio Maquilas.webp", label: lang === "es" ? "Laboratorio Analítico" : "Analytical Lab" },
+        { src: "/Recorrido Diamante Cava Cata.webp", label: lang === "es" ? "Tasting Lab en Cava" : "In-Cellar Tasting Lab" }
+      ]
     },
     {
       num: "08",
       tag: lang === "es" ? "Acondicionamiento Final" : "Final Bottling",
-      name: lang === "es" ? "Línea de Envasado & Inspección QA" : "Bottling Line & QA Light Tables",
+      name: lang === "es" ? "Tanques de Envasado & Línea de Embotellado" : "Bottling Line & Holding Tanks",
       desc: lang === "es"
-        ? "Llenado de precisión, colocación de tapón, etiquetado e inspección individual en mesa lumínica bajo normativas de exportación internacional."
-        : "High-precision filling, corking, labeling, and bottle-by-bottle light table QA inspection compliant with international export standards.",
-      specs: ["Mesa Lumínica QA", "Sellado de Exportación", "Co-Packing"],
-      img: "/Enbotellado.webp"
+        ? "Tanques de envasado dedicados (20,000+ Lts), llenado de precisión, etiquetado e inspección individual en mesa lumínica bajo normativas de exportación."
+        : "Dedicated packaging holding tanks (20,000+ L), precision filling, labeling, and bottle-by-bottle light table QA inspection compliant with export standards.",
+      specs: ["Tanques TEN-01", "Mesa Lumínica QA", "Co-Packing"],
+      images: [
+        { src: "/Linea Embotellado Tanque Envasado Casa Loy.jpg", label: lang === "es" ? "Tanque & Envasado" : "Bottling & Holding Tank" },
+        { src: "/Embotellado 2.webp", label: lang === "es" ? "Inspección de Botellas" : "Bottle QA Inspection" }
+      ]
     }
   ];
 
@@ -591,40 +652,89 @@ export default function MaquilasV3({ lang = "es" }) {
       />
 
       {/* ============================================================
-          §1. HERO BANNER ESTÁNDAR DEL SITIO (Idéntico a Maquilas / Turismo / Home)
+          §1. HERO BANNER (Estructura y Acomodo solicitado por el usuario)
           ============================================================ */}
-      <section className="relative h-screen w-full bg-zinc-950 overflow-hidden">
+      <section className="relative min-h-[90vh] md:min-h-screen w-full bg-zinc-950 overflow-hidden flex items-center">
+        {/* Carousel Background Images with crossfade */}
         <div className="absolute inset-0 z-0">
-          <img
-            alt="Maquila Tequila Production Casa Loy"
-            className="w-full h-full object-cover brightness-[0.82]"
-            src="/Naves Industriales Casa Loy Tequilera.webp"
-            fetchPriority="high"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/50"></div>
+          {heroImages.map((src, idx) => (
+            <img
+              key={src}
+              alt="Casa Loy Tequilera Background"
+              className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out ${
+                heroImageIdx === idx ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
+              }`}
+              src={src}
+              fetchPriority={idx === 0 ? "high" : "low"}
+            />
+          ))}
+          {/* Deep elegant dark gradients for high contrast and readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/92 via-black/75 to-black/35 z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40 z-10"></div>
         </div>
-        
-        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center h-full pt-16 pb-28 animate-slide-left-right">
-          <span className="font-navigation text-[clamp(11px,1vw,13px)] text-white uppercase tracking-[0.4em] mb-4 block font-semibold">
-            {t.heroOvertitle}
-          </span>
-          <h1 className="font-serif text-[clamp(28px,4.5vw,60px)] leading-[1.1] tracking-tight font-light text-white uppercase max-w-4xl mx-auto mb-10">
-            {t.heroTitle} <br />
-            <span className="text-white italic font-normal">{t.heroTitleItalic}</span>
-          </h1>
-          <div className="flex flex-col sm:flex-row gap-6 items-center justify-center w-full max-w-md sm:max-w-none pt-2">
-            <a
-              className="bg-[#8C4723] border border-[#8C4723] hover:bg-[#a6562b] hover:border-[#a6562b] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-medium py-3.5 px-8 transition-all duration-500 min-w-[200px] text-center shadow-lg rounded-none"
-              href="#quiz"
-            >
-              {t.heroBtn}
-            </a>
-            <a
-              className="border border-white/60 hover:bg-[#8C4723] hover:border-[#8C4723] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-medium py-3.5 px-8 transition-all duration-500 min-w-[200px] text-center rounded-none"
-              href="#agenda-llamada"
-            >
-              {t.heroBtnSec}
-            </a>
+
+        {/* Decorative Compass / CRT Geometry on Right as in screenshot */}
+        <div className="hidden lg:block absolute right-[-4%] top-1/2 -translate-y-1/2 w-[620px] h-[620px] pointer-events-none z-15 opacity-15">
+          <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full stroke-white">
+            <circle cx="200" cy="200" r="190" strokeWidth="1" strokeDasharray="4 4" />
+            <circle cx="200" cy="200" r="145" strokeWidth="0.75" />
+            <circle cx="200" cy="200" r="95" strokeWidth="0.75" />
+            <circle cx="200" cy="200" r="45" strokeWidth="0.75" />
+            <line x1="200" y1="10" x2="200" y2="390" strokeWidth="0.75" />
+            <line x1="10" y1="200" x2="390" y2="200" strokeWidth="0.75" />
+            <line x1="65" y1="65" x2="335" y2="335" strokeWidth="0.5" strokeDasharray="3 3" />
+            <line x1="65" y1="335" x2="335" y2="65" strokeWidth="0.5" strokeDasharray="3 3" />
+          </svg>
+        </div>
+
+        {/* Left-Aligned Content Container matching the User's Screenshot */}
+        <div className="relative z-20 px-6 sm:px-10 lg:px-16 max-w-[1280px] mx-auto w-full py-20 lg:py-28">
+          <div className="max-w-3xl text-left space-y-5 animate-slide-left-right">
+            {/* Title */}
+            <h1 className="font-serif text-[clamp(28px,4vw,56px)] leading-[1.1] tracking-tight font-light text-white">
+              {t.heroTitle1} <br />
+              <span className="font-normal text-white">{t.heroTitle2}</span>
+            </h1>
+
+            {/* Italic Vision Quote */}
+            <div className="font-serif italic text-base sm:text-lg md:text-xl text-[#FDA377] font-normal tracking-wide">
+              {t.heroQuote}
+            </div>
+
+            {/* Description Subtitle */}
+            <p className="font-body-lg text-white/85 font-light leading-relaxed text-xs sm:text-sm md:text-base max-w-2xl pt-1">
+              {t.heroDesc}
+            </p>
+
+            {/* Two Action Buttons side-by-side */}
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center pt-3">
+              <a
+                href="#quiz"
+                className="bg-[#EDA345] hover:bg-[#d99133] text-black font-navigation text-xs sm:text-sm font-semibold tracking-wide py-3.5 px-7 transition-all duration-300 shadow-lg flex items-center justify-center gap-2 rounded-none cursor-pointer"
+              >
+                <span>{t.heroBtn}</span>
+              </a>
+              <a
+                href="#agenda-llamada"
+                className="bg-transparent hover:bg-white/10 text-white border border-white/40 hover:border-white font-navigation text-xs sm:text-sm font-medium tracking-wide py-3.5 px-7 transition-all duration-300 flex items-center justify-center rounded-none cursor-pointer"
+              >
+                {t.heroBtnSec}
+              </a>
+            </div>
+
+            {/* Carousel Slide Indicators */}
+            <div className="flex items-center gap-2 pt-6">
+              {heroImages.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setHeroImageIdx(i)}
+                  aria-label={`Slide ${i + 1}`}
+                  className={`h-1 transition-all duration-500 cursor-pointer ${
+                    heroImageIdx === i ? "w-8 bg-[#EDA345]" : "w-3 bg-white/30 hover:bg-white/60"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
@@ -700,7 +810,7 @@ export default function MaquilasV3({ lang = "es" }) {
                   <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-1">
                     {lang === "es" ? "Terruño de Origen" : "Highlands Terroir"}
                   </span>
-                  <h3 className="font-serif text-xl font-light text-[#1c1c18] mb-1.5">NOM 1633, Los Altos</h3>
+                  <h3 className="font-serif text-xl font-bold text-[#1c1c18] mb-1.5">NOM 1633, Los Altos</h3>
                   <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                     {lang === "es" ? "Ayotlán a más de 2,000 msnm con suelos rojos volcánicos ricos en hierro y microclima con oscilación térmica ideal." : "Ayotlán above 2,000m elevation with red volcanic soil and optimal thermal day/night swing."}
                   </p>
@@ -715,7 +825,7 @@ export default function MaquilasV3({ lang = "es" }) {
                   <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-1">
                     {lang === "es" ? "Respaldo Industrial" : "Industrial Group"}
                   </span>
-                  <h3 className="font-serif text-xl font-light text-[#1c1c18] mb-1.5">Grupo Orbe XXI (60+ {lang === "es" ? "Años" : "Years"})</h3>
+                  <h3 className="font-serif text-xl font-bold text-[#1c1c18] mb-1.5">Grupo Orbe XXI (60+ {lang === "es" ? "Años" : "Years"})</h3>
                   <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                     {lang === "es" ? "Consorcio agroindustrial con más de 2,900 colaboradores y empresas líderes hermanas como TeknoAgrox y Nutriagaves." : "Multinational consortium with 2,900+ employees and sister agro-tech leaders TeknoAgrox and Nutriagaves."}
                   </p>
@@ -730,7 +840,7 @@ export default function MaquilasV3({ lang = "es" }) {
                   <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-1">
                     {lang === "es" ? "Reserva Propia" : "Estate Reserve"}
                   </span>
-                  <h3 className="font-serif text-xl font-light text-[#1c1c18] mb-1.5">3,600 Has. {lang === "es" ? "de Agave" : "Estate Agave"}</h3>
+                  <h3 className="font-serif text-xl font-bold text-[#1c1c18] mb-1.5">3,600 Has. {lang === "es" ? "de Agave" : "Estate Agave"}</h3>
                   <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                     {lang === "es" ? "10.8 millones de plantas propias cultivadas desde 1992 que blindan tu costo por litro contra la especulación spot." : "10.8 million estate agaves since 1992 insulating your brand margins against open spot agave speculation."}
                   </p>
@@ -745,7 +855,7 @@ export default function MaquilasV3({ lang = "es" }) {
                   <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-1">
                     {lang === "es" ? "Trato Técnico Directo" : "Direct Engineering"}
                   </span>
-                  <h3 className="font-serif text-xl font-light text-[#1c1c18] mb-1.5">{lang === "es" ? "Sin Intermediarios" : "No Middlemen Brokers"}</h3>
+                  <h3 className="font-serif text-xl font-bold text-[#1c1c18] mb-1.5">{lang === "es" ? "Sin Intermediarios" : "No Middlemen Brokers"}</h3>
                   <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                     {lang === "es" ? "Comunicación directa con maestros destiladores, ingenieros químicos y coordinadores de aduanas y exportación." : "Direct work sessions with master distillers, laboratory chemists, and export compliance specialists."}
                   </p>
@@ -760,7 +870,7 @@ export default function MaquilasV3({ lang = "es" }) {
                   <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-1">
                     {lang === "es" ? "Escala & Flexibilidad" : "Scale & Versatility"}
                   </span>
-                  <h3 className="font-serif text-xl font-light text-[#1c1c18] mb-1.5">13.5M {lang === "es" ? "Litros / Año" : "Liters / Year"}</h3>
+                  <h3 className="font-serif text-xl font-bold text-[#1c1c18] mb-1.5">13.5M {lang === "es" ? "Litros / Año" : "Liters / Year"}</h3>
                   <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                     {lang === "es" ? "Hornos de mampostería (240t), autoclaves (80t), tahona volcánica, alambiques de cobre y columnas continuas." : "Traditional brick ovens (240t), autoclaves (80t), volcanic tahona, copper pot stills, and continuous columns."}
                   </p>
@@ -775,7 +885,7 @@ export default function MaquilasV3({ lang = "es" }) {
                   <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-1">
                     {lang === "es" ? "Control Químico" : "Batch Traceability"}
                   </span>
-                  <h3 className="font-serif text-xl font-light text-[#1c1c18] mb-1.5">{lang === "es" ? "Cromatografía de Gases" : "Gas Chromatography QA"}</h3>
+                  <h3 className="font-serif text-xl font-bold text-[#1c1c18] mb-1.5">{lang === "es" ? "Cromatografía de Gases" : "Gas Chromatography QA"}</h3>
                   <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
                     {lang === "es" ? "Tasting Lab in-house con validación analítica lote a lote y sellos internacionales: USDA, Kosher y Additive Free." : "In-house lab with batch-by-batch chromatographic reports and USDA, Kosher, and Additive Free certifications."}
                   </p>
@@ -811,37 +921,100 @@ export default function MaquilasV3({ lang = "es" }) {
           {/* Interactive Cinema Viewer */}
           <Reveal delay={100}>
             <div className="relative w-full aspect-[21/9] sm:aspect-[2.6/1] max-h-[380px] rounded-none overflow-hidden border border-[#1c1c18]/15 shadow-md bg-black group mb-4">
-              <img
-                key={stations[activeStation].img}
-                src={stations[activeStation].img}
-                alt={stations[activeStation].name}
-                className="w-full h-full object-cover brightness-[0.72] transition-all duration-700 ease-out scale-100 group-hover:scale-102"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent"></div>
+              {(() => {
+                const currentStation = stations[activeStation];
+                const currentImgObj = currentStation.images?.[activeStationImage] || currentStation.images?.[0] || { src: currentStation.img, label: currentStation.name };
+                return (
+                  <>
+                    <img
+                      key={`${activeStation}-${activeStationImage}`}
+                      src={currentImgObj.src}
+                      alt={currentImgObj.label || currentStation.name}
+                      className="w-full h-full object-cover brightness-[0.72] transition-all duration-700 ease-out scale-100 group-hover:scale-102"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent"></div>
 
-              {/* Overlaid Info */}
-              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-                <div className="space-y-1.5 max-w-2xl">
-                  <span className="font-navigation text-[9px] sm:text-[10px] text-white uppercase tracking-[0.25em] bg-[#8C4723] px-2.5 py-0.5 font-semibold inline-block rounded-none">
-                    {stations[activeStation].num} · {stations[activeStation].tag}
-                  </span>
-                  <h3 className="font-serif text-xl sm:text-2xl text-white font-light">
-                    {stations[activeStation].name}
-                  </h3>
-                  <p className="font-body-md text-white/90 leading-relaxed font-light text-xs sm:text-sm max-w-xl">
-                    {stations[activeStation].desc}
-                  </p>
-                </div>
+                    {/* Top Multi-Image Switcher Pills */}
+                    {currentStation.images && currentStation.images.length > 1 && (
+                      <div className="absolute top-3 sm:top-4 right-3 sm:right-4 z-20 flex items-center gap-1.5 bg-black/60 backdrop-blur-md p-1 border border-white/20">
+                        {currentStation.images.map((imgItem, imgIdx) => (
+                          <button
+                            key={imgIdx}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveStationImage(imgIdx);
+                            }}
+                            className={`px-2.5 py-1 font-navigation text-[9px] sm:text-[10px] uppercase tracking-wider transition-all cursor-pointer ${
+                              activeStationImage === imgIdx
+                                ? "bg-[#8C4723] text-white font-bold shadow-sm"
+                                : "text-white/70 hover:text-white hover:bg-white/10"
+                            }`}
+                          >
+                            {imgItem.label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
 
-                {/* Specs Pills */}
-                <div className="flex flex-wrap sm:flex-col gap-1.5 sm:items-end">
-                  {stations[activeStation].specs.map((spec, sIdx) => (
-                    <span key={sIdx} className="font-navigation text-[9px] sm:text-[10px] uppercase tracking-wider text-white bg-white/15 backdrop-blur-md px-2.5 py-0.5 border border-white/20 rounded-none">
-                      {spec}
-                    </span>
-                  ))}
-                </div>
-              </div>
+                    {/* Left/Right Chevrons for Multi-Image stations */}
+                    {currentStation.images && currentStation.images.length > 1 && (
+                      <>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveStationImage((prev) => (prev === 0 ? currentStation.images.length - 1 : prev - 1));
+                          }}
+                          aria-label="Previous Image"
+                          className="absolute left-2.5 top-1/2 -translate-y-1/2 z-20 w-8 h-8 flex items-center justify-center bg-black/50 hover:bg-[#8C4723] text-white border border-white/20 transition-all opacity-80 hover:opacity-100 cursor-pointer"
+                        >
+                          <span className="material-symbols-outlined text-sm">arrow_back</span>
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveStationImage((prev) => (prev === currentStation.images.length - 1 ? 0 : prev + 1));
+                          }}
+                          aria-label="Next Image"
+                          className="absolute right-2.5 top-1/2 -translate-y-1/2 z-20 w-8 h-8 flex items-center justify-center bg-black/50 hover:bg-[#8C4723] text-white border border-white/20 transition-all opacity-80 hover:opacity-100 cursor-pointer"
+                        >
+                          <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                        </button>
+                      </>
+                    )}
+
+                    {/* Overlaid Info */}
+                    <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7 flex flex-col sm:flex-row sm:items-end justify-between gap-3 z-10">
+                      <div className="space-y-1.5 max-w-2xl">
+                        <div className="flex items-center gap-2">
+                          <span className="font-navigation text-[9px] sm:text-[10px] text-white uppercase tracking-[0.25em] bg-[#8C4723] px-2.5 py-0.5 font-semibold inline-block rounded-none">
+                            {currentStation.num} · {currentStation.tag}
+                          </span>
+                          {currentImgObj.label && (
+                            <span className="font-navigation text-[9px] sm:text-[10px] text-white/90 uppercase tracking-wider bg-white/15 backdrop-blur-md px-2 py-0.5 border border-white/20">
+                              {currentImgObj.label}
+                            </span>
+                          )}
+                        </div>
+                        <h3 className="font-serif text-xl sm:text-2xl text-white font-light">
+                          {currentStation.name}
+                        </h3>
+                        <p className="font-body-md text-white/90 leading-relaxed font-light text-xs sm:text-sm max-w-xl">
+                          {currentStation.desc}
+                        </p>
+                      </div>
+
+                      {/* Specs Pills */}
+                      <div className="flex flex-wrap sm:flex-col gap-1.5 sm:items-end">
+                        {currentStation.specs.map((spec, sIdx) => (
+                          <span key={sIdx} className="font-navigation text-[9px] sm:text-[10px] uppercase tracking-wider text-white bg-white/15 backdrop-blur-md px-2.5 py-0.5 border border-white/20 rounded-none">
+                            {spec}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                );
+              })()}
             </div>
           </Reveal>
 
@@ -850,7 +1023,10 @@ export default function MaquilasV3({ lang = "es" }) {
             {stations.map((s, idx) => (
               <button
                 key={idx}
-                onClick={() => setActiveStation(idx)}
+                onClick={() => {
+                  setActiveStation(idx);
+                  setActiveStationImage(0);
+                }}
                 className={`text-left p-2.5 sm:p-3 border transition-all rounded-none cursor-pointer ${
                   activeStation === idx
                     ? "bg-[#8C4723] border-[#8C4723] text-white shadow-sm"
@@ -890,18 +1066,18 @@ export default function MaquilasV3({ lang = "es" }) {
           </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
-            {/* 01 Marca Privada Integral */}
+            {/* 01 Marca Privada (Selected in Copper) */}
             <Reveal delay={100}>
-              <div className="p-6 sm:p-7 border border-[#1c1c18]/10 bg-white flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-lg rounded-none h-full">
+              <div className="p-6 sm:p-7 border-2 border-[#8C4723] bg-white flex flex-col justify-between transition-all duration-500 hover:shadow-xl rounded-none relative h-full">
+                <span className="absolute -top-3 right-6 bg-[#8C4723] text-white font-navigation text-[9px] uppercase tracking-[0.25em] px-3 py-0.5 font-semibold rounded-none shadow-sm">
+                  {lang === "es" ? "Marca Privada" : "Private Label"}
+                </span>
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-primary font-serif text-2xl font-light">01</span>
-                    <span className="font-navigation text-[9px] text-primary bg-[#F6F2EA] px-2.5 py-0.5 border border-[#1c1c18]/10 uppercase tracking-widest rounded-none font-semibold">
-                      {lang === "es" ? "Llave en Mano" : "Turnkey 360°"}
-                    </span>
                   </div>
-                  <h3 className="font-serif text-xl sm:text-2xl font-light text-[#1c1c18] mb-2">
-                    {lang === "es" ? "Marca Privada Integral" : "Turnkey Private Label"}
+                  <h3 className="font-serif text-xl sm:text-2xl font-semibold text-[#1c1c18] mb-2">
+                    {lang === "es" ? "Marca Privada" : "Private Label"}
                   </h3>
                   <p className="font-body-md text-[#53443a] font-light leading-relaxed mb-4 text-xs sm:text-sm">
                     {lang === "es" 
@@ -909,17 +1085,12 @@ export default function MaquilasV3({ lang = "es" }) {
                       : "Comprehensive brand creation from ground zero: official CRT registry compliance, sensory liquid formulation, bottle sourcing, labeling, and export clearance."}
                   </p>
                 </div>
-                <div className="space-y-3 pt-3 border-t border-[#1c1c18]/10">
-                  <ul className="space-y-1.5 text-xs font-navigation text-[#53443a]">
-                    <li className="flex items-center gap-2"><span className="text-primary font-bold">✓</span> {lang === "es" ? "100% Tequilana Weber propio" : "100% Weber blue estate agave"}</li>
-                    <li className="flex items-center gap-2"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Acompañamiento legal CRT e IMPI" : "CRT & TTB regulatory guidance"}</li>
-                    <li className="flex items-center gap-2"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Lotes mínimos optimizados" : "Optimized MOQs for export"}</li>
-                  </ul>
+                <div className="pt-4">
                   <a
                     href="#quiz"
-                    className="w-full block bg-transparent border border-[#8C4723] hover:bg-[#8C4723] hover:text-white text-[#8C4723] font-navigation text-[10px] uppercase tracking-[0.25em] font-medium py-2.5 text-center transition-all duration-500 rounded-none mt-2"
+                    className="w-full block bg-[#8C4723] hover:bg-[#a6562b] text-white font-navigation text-[10px] uppercase tracking-[0.25em] font-medium py-2.5 text-center transition-all duration-500 rounded-none shadow-sm"
                   >
-                    {lang === "es" ? "Cotizar Marca Privada" : "Quote Private Label"}
+                    {lang === "es" ? "Ver Más" : "See More"}
                   </a>
                 </div>
               </div>
@@ -927,10 +1098,7 @@ export default function MaquilasV3({ lang = "es" }) {
 
             {/* 02 Tequila a Granel (Bulk) */}
             <Reveal delay={150}>
-              <div className="p-6 sm:p-7 border-2 border-[#8C4723] bg-white flex flex-col justify-between transition-all duration-500 hover:shadow-xl rounded-none relative h-full">
-                <span className="absolute -top-3 right-6 bg-[#8C4723] text-white font-navigation text-[9px] uppercase tracking-[0.25em] px-3 py-0.5 font-semibold rounded-none shadow-sm">
-                  {lang === "es" ? "Suministro Continuo" : "Bulk Tankers"}
-                </span>
+              <div className="p-6 sm:p-7 border border-[#1c1c18]/10 bg-white flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-lg rounded-none h-full">
                 <div>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-primary font-serif text-2xl font-light">02</span>
@@ -938,7 +1106,7 @@ export default function MaquilasV3({ lang = "es" }) {
                       {lang === "es" ? "Gran Volumen" : "High Volume"}
                     </span>
                   </div>
-                  <h3 className="font-serif text-xl sm:text-2xl font-light text-[#1c1c18] mb-2">
+                  <h3 className="font-serif text-xl sm:text-2xl font-semibold text-[#1c1c18] mb-2">
                     {lang === "es" ? "Tequila a Granel (Bulk)" : "Bulk Tequila Supply"}
                   </h3>
                   <p className="font-body-md text-[#53443a] font-light leading-relaxed mb-4 text-xs sm:text-sm">
@@ -947,17 +1115,12 @@ export default function MaquilasV3({ lang = "es" }) {
                       : "Steady bulk supply of 100% Agave or Mixto shipped in dedicated road tankers or 1,000L IBC totes for international bottlers and distributors."}
                   </p>
                 </div>
-                <div className="space-y-3 pt-3 border-t border-[#1c1c18]/10">
-                  <ul className="space-y-1.5 text-xs font-navigation text-[#53443a]">
-                    <li className="flex items-center gap-2"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Reporte cromatográfico por autotanque" : "Gas chromatography report per tanker"}</li>
-                    <li className="flex items-center gap-2"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Blindaje de precio por cosecha propia" : "Price stability tied to estate agave"}</li>
-                    <li className="flex items-center gap-2"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Contratos plurianuales de abasto" : "Multi-year continuous supply contracts"}</li>
-                  </ul>
+                <div className="pt-4">
                   <a
                     href="#agenda-llamada"
-                    className="w-full block bg-[#8C4723] hover:bg-[#a6562b] text-white font-navigation text-[10px] uppercase tracking-[0.25em] font-medium py-2.5 text-center transition-all duration-500 rounded-none shadow-sm mt-2"
+                    className="w-full block bg-transparent border border-[#8C4723] hover:bg-[#8C4723] hover:text-white text-[#8C4723] font-navigation text-[10px] uppercase tracking-[0.25em] font-medium py-2.5 text-center transition-all duration-500 rounded-none"
                   >
-                    {lang === "es" ? "Cotizar Suministro a Granel" : "Quote Bulk Supply"}
+                    {lang === "es" ? "Ver Más" : "See More"}
                   </a>
                 </div>
               </div>
@@ -973,7 +1136,7 @@ export default function MaquilasV3({ lang = "es" }) {
                       {lang === "es" ? "Acondicionamiento" : "Packaging QA"}
                     </span>
                   </div>
-                  <h3 className="font-serif text-xl sm:text-2xl font-light text-[#1c1c18] mb-2">
+                  <h3 className="font-serif text-xl sm:text-2xl font-semibold text-[#1c1c18] mb-2">
                     {lang === "es" ? "Envasado & Co-Packing" : "Co-Packing & Bottling"}
                   </h3>
                   <p className="font-body-md text-[#53443a] font-light leading-relaxed mb-4 text-xs sm:text-sm">
@@ -982,17 +1145,12 @@ export default function MaquilasV3({ lang = "es" }) {
                       : "High-precision automated packaging: volumetric filling, tamper-evident corking, luxury labeling, and bottle-by-bottle light table quality inspection."}
                   </p>
                 </div>
-                <div className="space-y-3 pt-3 border-t border-[#1c1c18]/10">
-                  <ul className="space-y-1.5 text-xs font-navigation text-[#53443a]">
-                    <li className="flex items-center gap-2"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Inspección lumínica 100% de botellas" : "100% Light-table bottle inspection"}</li>
-                    <li className="flex items-center gap-2"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Sellos de seguridad y marbetes CRT" : "Official CRT export tax stamps"}</li>
-                    <li className="flex items-center gap-2"><span className="text-primary font-bold">✓</span> {lang === "es" ? "Para marcas nuevas o existentes" : "For emerging or established brands"}</li>
-                  </ul>
+                <div className="pt-4">
                   <a
                     href="#quiz"
-                    className="w-full block bg-transparent border border-[#8C4723] hover:bg-[#8C4723] hover:text-white text-[#8C4723] font-navigation text-[10px] uppercase tracking-[0.25em] font-medium py-2.5 text-center transition-all duration-500 rounded-none mt-2"
+                    className="w-full block bg-transparent border border-[#8C4723] hover:bg-[#8C4723] hover:text-white text-[#8C4723] font-navigation text-[10px] uppercase tracking-[0.25em] font-medium py-2.5 text-center transition-all duration-500 rounded-none"
                   >
-                    {lang === "es" ? "Solicitar Embotellado" : "Request Bottling"}
+                    {lang === "es" ? "Ver Más" : "See More"}
                   </a>
                 </div>
               </div>
@@ -1096,10 +1254,55 @@ export default function MaquilasV3({ lang = "es" }) {
 
             {/* Glassmorphic Quiz Controller */}
             <div className="lg:col-span-7 p-5 md:p-8 bg-white/15 backdrop-blur-3xl border border-white/20 rounded-none shadow-2xl transition-all duration-300 w-full">
+              {/* NDA Guarantee Banner */}
+              <div className="mb-5 inline-flex items-center gap-2 bg-[#8C4723]/35 border border-[#8C4723]/70 px-3.5 py-1 text-xs text-[#FDA377] select-none">
+                <span className="material-symbols-outlined text-sm text-[#FDA377]">verified_user</span>
+                <span className="font-navigation tracking-wider uppercase text-[10px] sm:text-[11px] font-semibold">
+                  {t.ndaText} · NOM 1633 CRT
+                </span>
+              </div>
+
               {quizStep === 1 && (
                 <div className="space-y-3.5 text-left animate-fade-in">
                   <span className="font-navigation text-[#FDA377] font-bold tracking-wider mb-1 block text-xs">
-                    {t.stepLabel} 01 / 03
+                    {t.stepLabel} 01 / 04
+                  </span>
+                  <h3 className="font-serif text-lg md:text-xl mb-4 text-white select-none font-light">
+                    {t.step0Title}
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {t.step0Opts.map((profileOpt, idx) => (
+                      <button
+                        key={profileOpt.title}
+                        onClick={() => handleNextStep("profile", profileOpt.title, 2)}
+                        className="w-full text-left p-4 border border-white/20 bg-white/10 hover:border-primary hover:bg-white hover:text-black transition-all duration-300 flex flex-col justify-between group font-navigation cursor-pointer min-h-[110px]"
+                      >
+                        <div className="flex items-center justify-between w-full mb-1.5">
+                          <span className="text-[10px] font-bold text-primary group-hover:text-white bg-white/20 group-hover:bg-primary px-2 py-0.5 rounded border border-white/20 group-hover:border-transparent transition-colors">
+                            0{idx + 1}
+                          </span>
+                          <span className="material-symbols-outlined text-sm text-primary group-hover:text-black opacity-0 group-hover:opacity-100 transition-opacity">
+                            arrow_forward
+                          </span>
+                        </div>
+                        <div>
+                          <div className="text-sm font-semibold text-white group-hover:text-black leading-tight mb-1">
+                            {profileOpt.title}
+                          </div>
+                          <p className="text-xs font-light text-white/75 group-hover:text-black/80 leading-snug">
+                            {profileOpt.desc}
+                          </p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {quizStep === 2 && (
+                <div className="space-y-3.5 text-left animate-fade-in">
+                  <span className="font-navigation text-[#FDA377] font-bold tracking-wider mb-1 block text-xs">
+                    {t.stepLabel} 02 / 04
                   </span>
                   <h3 className="font-serif text-lg md:text-xl mb-4 text-white select-none font-light">
                     {t.step1Title}
@@ -1110,42 +1313,7 @@ export default function MaquilasV3({ lang = "es" }) {
                       return (
                         <button
                           key={opt}
-                          onClick={() => handleNextStep("solution", opt, 2)}
-                          className={`w-full text-left p-3 border border-white/20 bg-white/10 hover:border-primary hover:bg-white hover:text-black transition-all duration-300 flex justify-between items-center group font-navigation cursor-pointer ${
-                            idx === 4 ? "md:col-span-2" : ""
-                          }`}
-                        >
-                          <div className="flex items-center gap-2.5">
-                            <span className="text-[10px] font-bold text-primary group-hover:text-white bg-white/20 group-hover:bg-primary px-2 py-0.5 rounded border border-white/20 group-hover:border-transparent transition-colors">
-                              {letters[idx]}
-                            </span>
-                            <span className="text-xs sm:text-sm font-light text-white group-hover:text-black leading-tight">{opt}</span>
-                          </div>
-                          <span className="material-symbols-outlined text-sm text-primary group-hover:text-black opacity-0 group-hover:opacity-100 transition-opacity">
-                            arrow_forward
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
-              {quizStep === 2 && (
-                <div className="space-y-3.5 text-left animate-fade-in">
-                  <span className="font-navigation text-[#FDA377] font-bold tracking-wider mb-1 block text-xs">
-                    {t.stepLabel} 02 / 03
-                  </span>
-                  <h3 className="font-serif text-lg md:text-xl mb-4 text-white select-none font-light">
-                    {t.step2Title}
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-                    {t.step2Opts.map((opt, idx) => {
-                      const letters = ["A", "B", "C", "D", "E"];
-                      return (
-                        <button
-                          key={opt}
-                          onClick={() => handleNextStep("objective", opt, 3)}
+                          onClick={() => handleNextStep("solution", opt, 3)}
                           className={`w-full text-left p-3 border border-white/20 bg-white/10 hover:border-primary hover:bg-white hover:text-black transition-all duration-300 flex justify-between items-center group font-navigation cursor-pointer ${
                             idx === 4 ? "md:col-span-2" : ""
                           }`}
@@ -1169,18 +1337,18 @@ export default function MaquilasV3({ lang = "es" }) {
               {quizStep === 3 && (
                 <div className="space-y-3.5 text-left animate-fade-in">
                   <span className="font-navigation text-[#FDA377] font-bold tracking-wider mb-1 block text-xs">
-                    {t.stepLabel} 03 / 03
+                    {t.stepLabel} 03 / 04
                   </span>
                   <h3 className="font-serif text-lg md:text-xl mb-4 text-white select-none font-light">
-                    {t.step3Title}
+                    {t.step2Title}
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-                    {t.step3Opts.map((opt, idx) => {
+                    {t.step2Opts.map((opt, idx) => {
                       const letters = ["A", "B", "C", "D", "E"];
                       return (
                         <button
                           key={opt}
-                          onClick={() => handleNextStep("stage", opt, 4)}
+                          onClick={() => handleNextStep("objective", opt, 4)}
                           className={`w-full text-left p-3 border border-white/20 bg-white/10 hover:border-primary hover:bg-white hover:text-black transition-all duration-300 flex justify-between items-center group font-navigation cursor-pointer ${
                             idx === 4 ? "md:col-span-2" : ""
                           }`}
@@ -1202,6 +1370,41 @@ export default function MaquilasV3({ lang = "es" }) {
               )}
 
               {quizStep === 4 && (
+                <div className="space-y-3.5 text-left animate-fade-in">
+                  <span className="font-navigation text-[#FDA377] font-bold tracking-wider mb-1 block text-xs">
+                    {t.stepLabel} 04 / 04
+                  </span>
+                  <h3 className="font-serif text-lg md:text-xl mb-4 text-white select-none font-light">
+                    {t.step3Title}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                    {t.step3Opts.map((opt, idx) => {
+                      const letters = ["A", "B", "C", "D", "E"];
+                      return (
+                        <button
+                          key={opt}
+                          onClick={() => handleNextStep("stage", opt, 5)}
+                          className={`w-full text-left p-3 border border-white/20 bg-white/10 hover:border-primary hover:bg-white hover:text-black transition-all duration-300 flex justify-between items-center group font-navigation cursor-pointer ${
+                            idx === 4 ? "md:col-span-2" : ""
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <span className="text-[10px] font-bold text-primary group-hover:text-white bg-white/20 group-hover:bg-primary px-2 py-0.5 rounded border border-white/20 group-hover:border-transparent transition-colors">
+                              {letters[idx]}
+                            </span>
+                            <span className="text-xs sm:text-sm font-light text-white group-hover:text-black leading-tight">{opt}</span>
+                          </div>
+                          <span className="material-symbols-outlined text-sm text-primary group-hover:text-black opacity-0 group-hover:opacity-100 transition-opacity">
+                            arrow_forward
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {quizStep === 5 && (
                 <form onSubmit={handleFormSubmit} className="space-y-4 text-left animate-fade-in">
                   <h3 className="font-serif text-lg md:text-xl mb-3 text-white select-none font-light">
                     {t.ctaTitle}
@@ -1245,7 +1448,10 @@ export default function MaquilasV3({ lang = "es" }) {
                         required
                         type="tel"
                         value={contactForm.phone}
-                        onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, "");
+                          setContactForm({ ...contactForm, phone: val });
+                        }}
                         className="w-full border-0 focus:ring-0 bg-transparent py-2 font-body-md placeholder:text-white/60 focus:outline-none text-white text-xs sm:text-sm"
                         placeholder={t.formPhone}
                       />
@@ -1282,7 +1488,7 @@ export default function MaquilasV3({ lang = "es" }) {
                 </form>
               )}
 
-              {quizStep === 5 && (
+              {quizStep === 6 && (
                 <div className="text-center py-5 space-y-4 animate-fade-in">
                   <span className="material-symbols-outlined text-4xl text-[#FDA377] mb-1 animate-bounce">
                     verified
@@ -1323,139 +1529,325 @@ export default function MaquilasV3({ lang = "es" }) {
             </div>
           </Reveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4">
-            {[
-              {
-                num: "01",
-                title: lang === "es" ? "Diagnóstico" : "Diagnosis",
-                desc: lang === "es" ? "Análisis de volúmenes, mercado meta y especificaciones técnicas." : "Commercial targets, volume projections, and product specs analysis."
-              },
-              {
-                num: "02",
-                title: lang === "es" ? "Sesión Técnica" : "Tech Call",
-                desc: lang === "es" ? "Videollamada de 30 minutos con ingenieros para validar viabilidad." : "30-min session with distillery engineers reviewing feasibility & cost/liter."
-              },
-              {
-                num: "03",
-                title: lang === "es" ? "Tasting Lab" : "Lab Samples",
-                desc: lang === "es" ? "Envío de muestras sensoriales en tasting lab hasta aprobar tu perfil." : "Sensory formulations dispatched until exact signature is achieved."
-              },
-              {
-                num: "04",
-                title: lang === "es" ? "Registro CRT" : "CRT Compliance",
-                desc: lang === "es" ? "Trámites oficiales ante CRT, registro y aprobación de etiquetas." : "Official registration with CRT, label approvals, and customs filings."
-              },
-              {
-                num: "05",
-                title: lang === "es" ? "Destilación & QA" : "Production & QA",
-                desc: lang === "es" ? "Destilación a escala, cromatografía de gases lote a lote y envasado." : "Scale distilling, batch gas chromatography reports, and precision packaging."
-              },
-              {
-                num: "06",
-                title: lang === "es" ? "Exportación" : "Global Dispatch",
-                desc: lang === "es" ? "Acompañamiento logístico aduanal y certificados fitosanitarios." : "Phytosanitary certification, freight coordination, and customs clearance."
-              }
-            ].map((step, idx) => (
-              <Reveal key={idx} delay={idx * 80}>
-                <div className="p-4 sm:p-5 bg-white border border-[#1c1c18]/10 rounded-none space-y-1.5 transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-sm h-full">
-                  <div className="font-navigation text-[9px] text-primary uppercase tracking-[0.25em] font-semibold">FASE {step.num}</div>
-                  <h3 className="font-serif text-base sm:text-lg font-light text-[#1c1c18]">{step.title}</h3>
-                  <p className="font-body-md text-[#53443a] text-xs leading-relaxed font-light">{step.desc}</p>
-                </div>
-              </Reveal>
-            ))}
+          {/* Connected Process Flow / Timeline */}
+          <div className="relative">
+            {/* Horizontal Line across desktop */}
+            <div className="hidden xl:block absolute top-7 left-10 right-10 h-[2px] bg-gradient-to-r from-[#8C4723] via-[#8C4723]/60 to-[#8C4723] z-0 pointer-events-none"></div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-7 gap-3 sm:gap-3.5 relative z-10">
+              {[
+                {
+                  num: "01",
+                  title: lang === "es" ? "Diagnóstico" : "Diagnosis",
+                  desc: lang === "es" ? "Análisis de volúmenes, mercado meta y especificaciones técnicas." : "Commercial targets, volume projections, and product specs analysis."
+                },
+                {
+                  num: "02",
+                  title: lang === "es" ? "Sesión Técnica" : "Tech Session",
+                  desc: lang === "es" ? "Videollamada de 30 minutos con ingenieros para validar viabilidad." : "30-min session with distillery engineers reviewing feasibility & cost/liter."
+                },
+                {
+                  num: "03",
+                  title: lang === "es" ? "Tasting Lab" : "Lab Profiling",
+                  desc: lang === "es" ? "Envío de muestras sensoriales en tasting lab hasta aprobar tu perfil." : "Sensory formulations dispatched until exact signature is achieved."
+                },
+                {
+                  num: "04",
+                  title: lang === "es" ? "Registro CRT" : "CRT Compliance",
+                  desc: lang === "es" ? "Trámites oficiales ante CRT, registro y aprobación de etiquetas." : "Official registration with CRT, label approvals, and customs filings."
+                },
+                {
+                  num: "05",
+                  title: lang === "es" ? "Destilación & QA" : "Production & QA",
+                  desc: lang === "es" ? "Destilación a escala, cromatografía de gases lote a lote y envasado." : "Scale distilling, batch gas chromatography reports, and precision packaging."
+                },
+                {
+                  num: "06",
+                  title: lang === "es" ? "Exportación" : "Global Dispatch",
+                  desc: lang === "es" ? "Acompañamiento logístico aduanal y certificados fitosanitarios." : "Phytosanitary certification, freight coordination, and customs clearance."
+                },
+                {
+                  num: "07",
+                  title: lang === "es" ? "Post-Venta Agile" : "Agile Post-Sales",
+                  desc: lang === "es" ? "Reordenamiento programado, optimización continua de márgenes y soporte técnico permanente." : "Scheduled reordering, continuous margin optimization, and proactive technical support."
+                }
+              ].map((step, idx) => (
+                <Reveal key={idx} delay={idx * 60}>
+                  <div className={`p-4 bg-white border rounded-none flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723] hover:shadow-md h-full relative group ${
+                    idx === 6 ? "border-[#8C4723] bg-[#FAF8F5]" : "border-[#1c1c18]/10"
+                  }`}>
+                    {/* Step Indicator Dot & Arrow */}
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-5 h-5 rounded-full bg-[#8C4723] text-white flex items-center justify-center font-navigation text-[10px] font-bold">
+                          {idx + 1}
+                        </span>
+                        <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.2em] font-semibold">
+                          PASO {step.num}
+                        </span>
+                      </div>
+                      {idx < 6 && (
+                        <span className="material-symbols-outlined text-xs text-[#8C4723]/40 group-hover:text-[#8C4723] group-hover:translate-x-0.5 transition-all hidden xl:inline">
+                          arrow_forward
+                        </span>
+                      )}
+                    </div>
+
+                    <div>
+                      <h3 className="font-serif text-sm sm:text-base font-semibold text-[#1c1c18] mb-1 leading-snug">
+                        {step.title}
+                      </h3>
+                      <p className="font-body-md text-[#53443a] text-xs leading-relaxed font-light">
+                        {step.desc}
+                      </p>
+                    </div>
+
+                    {idx === 6 && (
+                      <div className="mt-2 pt-2 border-t border-[#8C4723]/20">
+                        <span className="font-navigation text-[9px] text-[#8C4723] font-bold uppercase tracking-wider block">
+                          ✦ {lang === "es" ? "Acompañamiento Continuo" : "Continuous Partnership"}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </Reveal>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* ============================================================
-          §8. AGAVE & ABASTECIMIENTO (Alineado al sitio sin scroll)
+          §8. SUSTENTABILIDAD & CERTIFICACIONES (2 Columnas)
           ============================================================ */}
-      <section ref={agaveRef} className="py-10 md:py-14 min-h-[88vh] flex flex-col justify-center bg-[#F6F2EA] border-y border-[#1c1c18]/10 relative overflow-hidden">
+      <section className="py-12 md:py-16 min-h-[88vh] flex flex-col justify-center bg-[#F6F2EA] border-y border-[#1c1c18]/10 relative overflow-hidden">
         <div className="max-w-[1240px] mx-auto px-6 text-left relative z-10 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-            {/* Visual Photography */}
-            <div className="lg:col-span-6 relative overflow-hidden rounded-none border border-[#1c1c18]/10 shadow-md">
-              <img
-                src="/Jimado Agave Tequilana Weber.webp"
-                alt="Agave Fields in Ayotlán Casa Loy"
-                className="w-full aspect-[16/10] max-h-[360px] object-cover transition-transform duration-1000 hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent"></div>
-              <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
-                <div className="flex items-center gap-2 bg-[#1c1c18]/80 backdrop-blur-md px-2.5 py-1 border border-white/20 rounded-none">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-                  <span className="font-navigation text-[9px] uppercase tracking-wider text-white font-semibold">
-                    Ayotlán, Los Altos de Jalisco
-                  </span>
-                </div>
-                <span className="font-serif text-xs text-primary-fixed italic bg-[#1c1c18]/80 backdrop-blur-md px-2.5 py-1 border border-white/10 rounded-none">
-                  100% Tequilana Weber
-                </span>
-              </div>
+          {/* Header */}
+          <Reveal>
+            <div className="max-w-3xl mb-8">
+              <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-2">
+                {t.sustainabilityEyebrow || (lang === "es" ? "RESPONSABILIDAD & CUMPLIMIENTO GLOBAL" : "RESPONSIBILITY & GLOBAL COMPLIANCE")}
+              </span>
+              <h2 className="font-serif text-[clamp(24px,3vw,44px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-2">
+                {t.sustainabilityTitle || (lang === "es" ? "Sustentabilidad Integral & Certificaciones Oficiales" : "Comprehensive Sustainability & Official Certifications")}
+              </h2>
+              <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-xs sm:text-sm md:text-[15px]">
+                {t.sustainabilitySub || (lang === "es" 
+                  ? "Infraestructura circular para inversionistas con energía limpia, composta de vinazas y sellos oficiales de exportación."
+                  : "Circular infrastructure engineered for global spirits brands with clean energy, vinazas composting, and verified export seals.")}
+              </p>
             </div>
+          </Reveal>
 
-            {/* Narrative & Metrics */}
-            <div className="lg:col-span-6 space-y-4">
-              <Reveal>
+          {/* 2 Columns: Left = Sustentabilidad, Right = Certificaciones */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-start">
+            
+            {/* Columna Izquierda: Sustentabilidad (Ágil para Inversionistas) */}
+            <Reveal delay={100}>
+              <div className="bg-white border border-[#1c1c18]/15 p-6 sm:p-7 shadow-sm space-y-5 h-full flex flex-col justify-between">
                 <div>
-                  <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-2">
-                    {t.agaveEyebrow}
+                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#1c1c18]/10">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-emerald-700"></span>
+                      <span className="font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#8C4723] font-bold">
+                        {lang === "es" ? "Economía Circular & ESG" : "Circular Economy & ESG"}
+                      </span>
+                    </div>
+                    <span className="font-navigation text-[9px] uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2 py-0.5 border border-emerald-200">
+                      {lang === "es" ? "Grado Inversionista" : "Investor-Ready"}
+                    </span>
+                  </div>
+
+                  <h3 className="font-serif text-xl sm:text-2xl font-light text-[#1c1c18] mb-2">
+                    {lang === "es" ? "Sustentabilidad Agroindustrial" : "Agroindustrial Sustainability"}
+                  </h3>
+                  <p className="font-body-md text-[#53443a] text-xs sm:text-sm leading-relaxed mb-5 font-light">
+                    {lang === "es"
+                      ? "Procesos diseñados para minimizar la huella de carbono, eliminar descargas residuales al subsuelo y garantizar una operación socialmente responsable."
+                      : "Engineered operations reducing carbon footprint, preventing subsoil wastewater runoff, and driving transparent social governance."}
+                  </p>
+
+                  <div className="space-y-3.5">
+                    {/* 01 Solar Energy */}
+                    <div className="flex gap-3.5 p-3.5 bg-[#FAF8F5] border border-[#1c1c18]/10 group hover:border-[#8C4723] transition-all">
+                      <img
+                        src="/Paneles Solares.webp"
+                        alt="Solar Energy Casa Loy"
+                        className="w-20 h-20 object-cover shrink-0 border border-[#1c1c18]/10"
+                      />
+                      <div className="space-y-1">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-serif text-base font-semibold text-[#1c1c18]">
+                            {lang === "es" ? "Energía Solar Fotovoltaica" : "Solar Energy"}
+                          </h4>
+                          <span className="font-navigation text-[8px] uppercase tracking-wider text-[#8C4723] font-bold">Clean Energy</span>
+                        </div>
+                        <p className="font-body-md text-[#53443a] text-xs leading-relaxed font-light">
+                          {lang === "es"
+                            ? "Aprovechamos energía limpia mediante paneles solares para reducir emisiones de CO₂ y asegurar eficiencia operativa permanente."
+                            : "Clean photovoltaic solar arrays generating renewable electricity across production facilities, insulating operations from grid volatility."}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* 02 Vinazas Management & Composting */}
+                    <div className="flex gap-3.5 p-3.5 bg-[#FAF8F5] border border-[#1c1c18]/10 group hover:border-[#8C4723] transition-all">
+                      <img
+                        src="/Compostaje.webp"
+                        alt="Composting Center Casa Loy"
+                        className="w-20 h-20 object-cover shrink-0 border border-[#1c1c18]/10"
+                      />
+                      <div className="space-y-1">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-serif text-base font-semibold text-[#1c1c18]">
+                            {lang === "es" ? "Manejo de Vinazas & Centro de Composta" : "Vinazas Management & Composting"}
+                          </h4>
+                          <span className="font-navigation text-[8px] uppercase tracking-wider text-[#8C4723] font-bold">Zero Waste</span>
+                        </div>
+                        <p className="font-body-md text-[#53443a] text-xs leading-relaxed font-light">
+                          {lang === "es"
+                            ? "Transformación del 100% de residuos orgánicos: las vinazas y el bagazo se convierten en composta enriquecida para devolver vitalidad biológica a nuestros campos."
+                            : "100% organic waste upcycling: vinazas and agave bagasse are converted into bio-compost to regenerate agricultural soil without open dumping."}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* 03 Social & Family Development */}
+                    <div className="flex gap-3.5 p-3.5 bg-[#FAF8F5] border border-[#1c1c18]/10 group hover:border-[#8C4723] transition-all">
+                      <img
+                        src="/Empleado Jimador Casa Loy Tequilera.webp"
+                        alt="Social and Family Development"
+                        className="w-20 h-20 object-cover shrink-0 border border-[#1c1c18]/10"
+                      />
+                      <div className="space-y-1">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-serif text-base font-semibold text-[#1c1c18]">
+                            {lang === "es" ? "Desarrollo Social & Familiar" : "Social & Family Development"}
+                          </h4>
+                          <span className="font-navigation text-[8px] uppercase tracking-wider text-[#8C4723] font-bold">Fair Labor</span>
+                        </div>
+                        <p className="font-body-md text-[#53443a] text-xs leading-relaxed font-light">
+                          {lang === "es"
+                            ? "Dignificación del oficio de jima y destilería en Ayotlán con contratos formales, capacitación técnica continua y apoyo a las familias jornaleras."
+                            : "Promoting dignity and social stability for jimador and distillery families with formal contracts, continuous safety training, and regional community growth."}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-[#1c1c18]/10 flex items-center justify-between text-[#8C4723]">
+                  <span className="font-navigation text-[10px] uppercase tracking-widest font-semibold">
+                    ✦ {lang === "es" ? "Economía Circular Verificada" : "Verified Circular Economy"}
                   </span>
-                  <h2 className="font-serif text-[clamp(22px,2.8vw,40px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-2">
-                    {t.agaveTitle}
-                  </h2>
-                  <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
-                    {t.agaveSub}
-                  </p>
-                </div>
-              </Reveal>
-
-              {/* Metrics */}
-              <div className="grid grid-cols-3 gap-3 pt-1">
-                <div className="p-4 bg-white border border-[#1c1c18]/10 rounded-none text-center shadow-sm">
-                  <div className="font-serif text-2xl md:text-3xl text-primary font-light">
-                    +{counters.msnm.toLocaleString()}
-                  </div>
-                  <div className="font-navigation text-[9px] uppercase text-[#53443a] font-semibold mt-0.5">msnm Altura</div>
-                </div>
-                <div className="p-4 bg-white border border-[#1c1c18]/10 rounded-none text-center shadow-sm">
-                  <div className="font-serif text-2xl md:text-3xl text-primary font-light">
-                    {counters.has.toLocaleString()}
-                  </div>
-                  <div className="font-navigation text-[9px] uppercase text-[#53443a] font-semibold mt-0.5">Hectáreas Propias</div>
-                </div>
-                <div className="p-4 bg-white border border-[#1c1c18]/10 rounded-none text-center shadow-sm">
-                  <div className="font-serif text-2xl md:text-3xl text-primary font-light">
-                    {counters.plants.toFixed(1)}M
-                  </div>
-                  <div className="font-navigation text-[9px] uppercase text-[#53443a] font-semibold mt-0.5">Plantas de Agave</div>
+                  <span className="font-serif text-xs italic text-[#53443a]">
+                    Ayotlán, Jalisco
+                  </span>
                 </div>
               </div>
+            </Reveal>
 
-              <div className="space-y-3 pt-1">
-                <div className="border-l-2 border-[#8C4723] pl-3.5 py-0.5">
-                  <h4 className="font-serif text-base sm:text-lg font-light text-[#1c1c18]">
-                    {lang === "es" ? "Blindaje de Costo por Litro a Largo Plazo" : "Long-Term Cost Protection"}
-                  </h4>
-                  <p className="font-body-md text-[#53443a] text-xs mt-0.5 leading-relaxed font-light">
+            {/* Columna Derecha: Certificaciones Oficiales */}
+            <Reveal delay={150}>
+              <div className="bg-white border border-[#1c1c18]/15 p-6 sm:p-7 shadow-sm space-y-5 h-full flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#1c1c18]/10">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-[#8C4723]"></span>
+                      <span className="font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#8C4723] font-bold">
+                        {lang === "es" ? "Mercados Internacionales" : "International Markets"}
+                      </span>
+                    </div>
+                    <span className="font-navigation text-[9px] uppercase tracking-wider text-[#8C4723] bg-[#FAF8F5] px-2 py-0.5 border border-[#8C4723]/30">
+                      {lang === "es" ? "Auditorías Vigentes" : "Current Audits"}
+                    </span>
+                  </div>
+
+                  <h3 className="font-serif text-xl sm:text-2xl font-light text-[#1c1c18] mb-2">
+                    {lang === "es" ? "Certificaciones de Exportación" : "Export Certifications"}
+                  </h3>
+                  <p className="font-body-md text-[#53443a] text-xs sm:text-sm leading-relaxed mb-5 font-light">
                     {lang === "es"
-                      ? "Nuestras 3,600 hectáreas sembradas desde 1992 protegen tu marca contra los ciclos de escasez y encarecimiento del agave en el mercado libre."
-                      : "Our estate hectares planted since 1992 protect your brand margins against open spot agave speculation and shortages."}
+                      ? "Sellos oficiales confirmados para comercializar tu marca sin fricciones regulatorias en EE.UU., la Unión Europea y canales especializados globales."
+                      : "Official accredited certifications enabling your brand to clear international customs and sell into premium retail without regulatory friction."}
                   </p>
+
+                  <div className="space-y-3">
+                    {/* USDA Organic */}
+                    <div className="p-4 border border-[#1c1c18]/10 bg-[#FAF8F5] hover:border-[#8C4723] transition-all">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <div className="font-serif text-lg font-semibold text-[#1c1c18]">USDA Organic</div>
+                        <span className="font-navigation text-[9px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100/60 px-2 py-0.5 border border-emerald-200">
+                          {lang === "es" ? "Mercado EE.UU." : "USA Market"}
+                        </span>
+                      </div>
+                      <p className="font-body-md text-[#53443a] text-xs leading-relaxed font-light">
+                        {lang === "es"
+                          ? "Certificación orgánica para todo el territorio de Estados Unidos y Norteamérica, avalando el cultivo libre de pesticidas sintéticos y trazabilidad total."
+                          : "Certified organic compliance under USDA National Organic Program for uninterrupted access to top-tier US grocery and spirits retail."}
+                      </p>
+                    </div>
+
+                    {/* Certificación Orgánica Unión Europea */}
+                    <div className="p-4 border border-[#1c1c18]/10 bg-[#FAF8F5] hover:border-[#8C4723] transition-all">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <div className="font-serif text-lg font-semibold text-[#1c1c18]">
+                          {lang === "es" ? "Certificación Orgánica Unión Europea" : "EU Organic Certification"}
+                        </div>
+                        <span className="font-navigation text-[9px] font-bold uppercase tracking-wider text-blue-800 bg-blue-50 px-2 py-0.5 border border-blue-200">
+                          {lang === "es" ? "27 Países UE" : "27 EU Nations"}
+                        </span>
+                      </div>
+                      <p className="font-body-md text-[#53443a] text-xs leading-relaxed font-light">
+                        {lang === "es"
+                          ? "Sello de equivalencia orgánica oficial para exportación directa a los 27 países de la Unión Europea y Suiza, cumpliendo estrictos estándares ecológicos."
+                          : "Official European Organic standard recognition guaranteeing seamless export clearance across the 27 EU member states."}
+                      </p>
+                    </div>
+
+                    {/* KMD Kosher */}
+                    <div className="p-4 border border-[#1c1c18]/10 bg-[#FAF8F5] hover:border-[#8C4723] transition-all">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <div className="font-serif text-lg font-semibold text-[#1c1c18]">KMD Kosher</div>
+                        <span className="font-navigation text-[9px] font-bold uppercase tracking-wider text-[#8C4723] bg-[#8C4723]/10 px-2 py-0.5 border border-[#8C4723]/30">
+                          {lang === "es" ? "Pureza Global" : "Global Purity"}
+                        </span>
+                      </div>
+                      <p className="font-body-md text-[#53443a] text-xs leading-relaxed font-light">
+                        {lang === "es"
+                          ? "Certificación Kosher oficial (KMD) que audita la higiene, pureza de ingredientes y procesos sin contaminantes cruzados, ampliando tus canales globales."
+                          : "Accredited KMD Kosher certification guaranteeing sanitary rigor and religious compliance, opening high-value specialized global distribution."}
+                      </p>
+                    </div>
+
+                    {/* NOM 1633 CRT */}
+                    <div className="p-4 border border-[#1c1c18]/10 bg-[#FAF8F5] hover:border-[#8C4723] transition-all">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <div className="font-serif text-lg font-semibold text-[#1c1c18]">NOM 1633 CRT</div>
+                        <span className="font-navigation text-[9px] font-bold uppercase tracking-wider text-stone-800 bg-stone-200 px-2 py-0.5 border border-stone-300">
+                          {lang === "es" ? "Denominación Oficial" : "Official Origin"}
+                        </span>
+                      </div>
+                      <p className="font-body-md text-[#53443a] text-xs leading-relaxed font-light">
+                        {lang === "es"
+                          ? "Destilería autorizada con permanente inspección del Consejo Regulador del Tequila. Certificados de autenticidad y expedición de marbetes de exportación."
+                          : "Authorized distillery under continuous Consejo Regulador del Tequila supervision, issuing authentic export certificates and customs pedigree."}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="border-l-2 border-[#8C4723] pl-3.5 py-0.5">
-                  <h4 className="font-serif text-base sm:text-lg font-light text-[#1c1c18]">
-                    {lang === "es" ? "Maduración Óptima & Azúcares Reductores" : "Optimal Maturation & Sugar Yield"}
-                  </h4>
-                  <p className="font-body-md text-[#53443a] text-xs mt-0.5 leading-relaxed font-light">
-                    {lang === "es"
-                      ? "Jima programada únicamente de piñas en plenitud de maduración (6 a 7 años), garantizando altos grados Brix naturales sin saborizantes artificiales."
-                      : "Harvesting only fully mature agaves (6 to 7 years) ensuring high natural Brix grades compliant with additive-free standards."}
-                  </p>
+
+                <div className="pt-3 border-t border-[#1c1c18]/10 flex items-center justify-between text-[#8C4723]">
+                  <span className="font-navigation text-[10px] uppercase tracking-widest font-semibold">
+                    ✦ {lang === "es" ? "Documentación Lista para Exportar" : "Export-Ready Compliance"}
+                  </span>
+                  <span className="font-serif text-xs italic text-[#53443a]">
+                    CRT · USDA · EU · KMD
+                  </span>
                 </div>
               </div>
-            </div>
+            </Reveal>
+
           </div>
         </div>
       </section>
