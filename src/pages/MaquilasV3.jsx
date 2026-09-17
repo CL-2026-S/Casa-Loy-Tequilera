@@ -183,8 +183,7 @@ export default function MaquilasV3({ lang = "es" }) {
       // Hero
       heroTitleLine1: "Maquila de Tequila",
       heroTitleLine2: "y Marca Privada en México.",
-      heroSubLine1: "Tu tequila nace en",
-      heroSubLine2: "Los Altos de Jalisco",
+      heroSubLine: "Tu tequila nace en Los Altos de Jalisco",
       heroQuote: '"Tu visión. Nuestra experiencia."',
       heroDescLine1: "Destilería familiar NOM 1633 construida para fundadores,",
       heroDescLine2: "marcas existentes y distribuidores listos para crear con un verdadero",
@@ -308,8 +307,7 @@ export default function MaquilasV3({ lang = "es" }) {
       // Hero
       heroTitleLine1: "Private Label Tequila",
       heroTitleLine2: "Manufacturing in México.",
-      heroSubLine1: "Tu tequila nace en",
-      heroSubLine2: "Los Altos de Jalisco",
+      heroSubLine: "Tu tequila nace en Los Altos de Jalisco",
       heroQuote: '"Your vision. Our expertise."',
       heroDescLine1: "Destileria familiar NOM1633 distillery built for founders,",
       heroDescLine2: "existing brands, and distributiors ready to build with a real",
@@ -843,8 +841,7 @@ export default function MaquilasV3({ lang = "es" }) {
                 {t.heroTitleLine2}
               </span>
               <span className="block font-light text-white/90 text-[clamp(18px,2.2vw,30px)] mt-1.5 sm:mt-2.5 leading-[1.16]">
-                <span className="block">{t.heroSubLine1}</span>
-                <span className="block">{t.heroSubLine2}</span>
+                {t.heroSubLine}
               </span>
             </h1>
 
