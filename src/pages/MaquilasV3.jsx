@@ -650,71 +650,57 @@ export default function MaquilasV3({ lang = "es" }) {
       />
 
       {/* ============================================================
-          §1. HERO BANNER (Estructura y Acomodo solicitado por el usuario)
+          §1. HERO BANNER (Estructura limpia, fotos claras y botones del sitio)
           ============================================================ */}
       <section className="relative min-h-[90vh] md:min-h-screen w-full bg-zinc-950 overflow-hidden flex items-center">
-        {/* Carousel Background Images with crossfade */}
+        {/* Carousel Background Images - Bright & Crisp Visibility */}
         <div className="absolute inset-0 z-0">
           {heroImages.map((src, idx) => (
             <img
               key={src}
               alt="Casa Loy Tequilera Background"
-              className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out ${
+              className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out brightness-[0.88] ${
                 heroImageIdx === idx ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
               }`}
               src={src}
               fetchPriority={idx === 0 ? "high" : "low"}
             />
           ))}
-          {/* Deep elegant dark gradients for high contrast and readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/92 via-black/75 to-black/35 z-10"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/40 z-10"></div>
+          {/* Subtle light vignette only behind text to preserve image appreciation */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/20 to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/35 z-10 pointer-events-none"></div>
         </div>
 
-        {/* Decorative Compass / CRT Geometry on Right as in screenshot */}
-        <div className="hidden lg:block absolute right-[-4%] top-1/2 -translate-y-1/2 w-[620px] h-[620px] pointer-events-none z-15 opacity-15">
-          <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full stroke-white">
-            <circle cx="200" cy="200" r="190" strokeWidth="1" strokeDasharray="4 4" />
-            <circle cx="200" cy="200" r="145" strokeWidth="0.75" />
-            <circle cx="200" cy="200" r="95" strokeWidth="0.75" />
-            <circle cx="200" cy="200" r="45" strokeWidth="0.75" />
-            <line x1="200" y1="10" x2="200" y2="390" strokeWidth="0.75" />
-            <line x1="10" y1="200" x2="390" y2="200" strokeWidth="0.75" />
-            <line x1="65" y1="65" x2="335" y2="335" strokeWidth="0.5" strokeDasharray="3 3" />
-            <line x1="65" y1="335" x2="335" y2="65" strokeWidth="0.5" strokeDasharray="3 3" />
-          </svg>
-        </div>
-
-        {/* Left-Aligned Content Container matching the User's Screenshot */}
+        {/* Left-Aligned Content Container */}
         <div className="relative z-20 px-6 sm:px-10 lg:px-16 max-w-[1280px] mx-auto w-full py-20 lg:py-28">
           <div className="max-w-3xl text-left space-y-5 animate-slide-left-right">
-            {/* Title */}
-            <h1 className="font-serif text-[clamp(28px,4vw,56px)] leading-[1.1] tracking-tight font-light text-white">
+            {/* Title with crisp text shadow for readability over bright images */}
+            <h1 className="font-serif text-[clamp(28px,4vw,56px)] leading-[1.1] tracking-tight font-light text-white [text-shadow:_0_2px_14px_rgb(0_0_0_/_65%)]">
               {t.heroTitle1} <br />
               <span className="font-normal text-white">{t.heroTitle2}</span>
             </h1>
 
             {/* Italic Vision Quote */}
-            <div className="font-serif italic text-base sm:text-lg md:text-xl text-[#FDA377] font-normal tracking-wide">
+            <div className="font-serif italic text-base sm:text-lg md:text-xl text-[#FDA377] font-normal tracking-wide [text-shadow:_0_2px_10px_rgb(0_0_0_/_65%)]">
               {t.heroQuote}
             </div>
 
             {/* Description Subtitle */}
-            <p className="font-body-lg text-white/85 font-light leading-relaxed text-xs sm:text-sm md:text-base max-w-2xl pt-1">
+            <p className="font-body-lg text-white font-light leading-relaxed text-xs sm:text-sm md:text-base max-w-2xl pt-1 [text-shadow:_0_1px_8px_rgb(0_0_0_/_70%)]">
               {t.heroDesc}
             </p>
 
-            {/* Two Action Buttons side-by-side */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center pt-3">
+            {/* Action Buttons matching the site's official style */}
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-stretch sm:items-center pt-4">
               <a
                 href="#quiz"
-                className="bg-[#EDA345] hover:bg-[#d99133] text-black font-navigation text-xs sm:text-sm font-semibold tracking-wide py-3.5 px-7 transition-all duration-300 shadow-lg flex items-center justify-center gap-2 rounded-none cursor-pointer"
+                className="bg-[#8C4723] border border-[#8C4723] hover:bg-[#a6562b] hover:border-[#a6562b] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-medium py-3.5 px-8 transition-all duration-500 min-w-[200px] text-center shadow-lg rounded-none cursor-pointer"
               >
-                <span>{t.heroBtn}</span>
+                {t.heroBtn}
               </a>
               <a
                 href="#agenda-llamada"
-                className="bg-transparent hover:bg-white/10 text-white border border-white/40 hover:border-white font-navigation text-xs sm:text-sm font-medium tracking-wide py-3.5 px-7 transition-all duration-300 flex items-center justify-center rounded-none cursor-pointer"
+                className="border border-white/60 hover:bg-[#8C4723] hover:border-[#8C4723] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-medium py-3.5 px-8 transition-all duration-500 min-w-[200px] text-center rounded-none cursor-pointer"
               >
                 {t.heroBtnSec}
               </a>
@@ -728,7 +714,7 @@ export default function MaquilasV3({ lang = "es" }) {
                   onClick={() => setHeroImageIdx(i)}
                   aria-label={`Slide ${i + 1}`}
                   className={`h-1 transition-all duration-500 cursor-pointer ${
-                    heroImageIdx === i ? "w-8 bg-[#EDA345]" : "w-3 bg-white/30 hover:bg-white/60"
+                    heroImageIdx === i ? "w-8 bg-[#8C4723]" : "w-3 bg-white/40 hover:bg-white/80"
                   }`}
                 />
               ))}
@@ -1581,11 +1567,11 @@ export default function MaquilasV3({ lang = "es" }) {
                 }
               ].map((step, idx) => (
                 <Reveal key={idx} delay={idx * 60}>
-                  <div className={`p-4 bg-white border rounded-none flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723] hover:shadow-md h-full relative group ${
+                  <div className={`p-4 sm:p-5 bg-white border rounded-none flex flex-col items-center text-center justify-between transition-all duration-500 hover:border-[#8C4723] hover:shadow-md h-full relative group ${
                     idx === 6 ? "border-[#8C4723] bg-[#FAF8F5]" : "border-[#1c1c18]/10"
                   }`}>
                     {/* Step Indicator Dot & Arrow */}
-                    <div className="flex items-center justify-between mb-3">
+                    <div className="w-full flex items-center justify-center relative mb-4">
                       <div className="flex items-center gap-1.5">
                         <span className="w-5 h-5 rounded-full bg-[#8C4723] text-white flex items-center justify-center font-navigation text-[10px] font-bold">
                           {idx + 1}
@@ -1595,14 +1581,14 @@ export default function MaquilasV3({ lang = "es" }) {
                         </span>
                       </div>
                       {idx < 6 && (
-                        <span className="material-symbols-outlined text-xs text-[#8C4723]/40 group-hover:text-[#8C4723] group-hover:translate-x-0.5 transition-all hidden xl:inline">
+                        <span className="material-symbols-outlined text-xs text-[#8C4723]/40 group-hover:text-[#8C4723] group-hover:translate-x-0.5 transition-all hidden xl:inline absolute right-0">
                           arrow_forward
                         </span>
                       )}
                     </div>
 
-                    <div>
-                      <h3 className="font-serif text-sm sm:text-base font-semibold text-[#1c1c18] mb-1 leading-snug">
+                    <div className="text-center w-full my-auto">
+                      <h3 className="font-serif text-base font-semibold text-[#1c1c18] mb-1.5 leading-snug">
                         {step.title}
                       </h3>
                       <p className="font-body-md text-[#53443a] text-xs leading-relaxed font-light">
@@ -1611,7 +1597,7 @@ export default function MaquilasV3({ lang = "es" }) {
                     </div>
 
                     {idx === 6 && (
-                      <div className="mt-2 pt-2 border-t border-[#8C4723]/20">
+                      <div className="w-full mt-3 pt-2.5 border-t border-[#8C4723]/20 text-center">
                         <span className="font-navigation text-[9px] text-[#8C4723] font-bold uppercase tracking-wider block">
                           ✦ {lang === "es" ? "Acompañamiento Continuo" : "Continuous Partnership"}
                         </span>
