@@ -484,54 +484,54 @@ export default function MaquilasV3({ lang = "es" }) {
     {
       num: "01",
       tag: lang === "es" ? "Recepción & Jima" : "Harvest & Intake",
-      name: lang === "es" ? "Patio de Agave & Selección de Piñas" : "Agave Intake & Quality Selection",
+      name: lang === "es" ? "Plantación, Carga en Campo & Jima" : "Plantations, Field Loading & Harvest",
       desc: lang === "es"
         ? "Recepción directa de nuestras 3,600 hectáreas en Los Altos de Jalisco. Selección de piñas en plenitud de maduración (6-7 años) con medición de grados Brix."
         : "Direct intake from our 3,600 hectares in Los Altos de Jalisco. Hand-selected agaves at peak maturity (6-7 years) tested for optimal natural Brix sugars.",
       specs: ["100% Tequilana Weber", "Los Altos de Jalisco", "Jima Madura"],
       images: [
-        { src: "/Jima Carga Camion Agave Casa Loy.jpg", label: lang === "es" ? "Carga en Camión" : "Truck Loading" },
-        { src: "/Jima.webp", label: lang === "es" ? "Jima en Campo" : "Field Harvesting" },
-        { src: "/Campo de Agave Ayotlán Casa Loy Tequilera.webp", label: lang === "es" ? "Plantación Los Altos" : "Highland Plantations" }
+        { src: "/Campo de Agave Ayotlán Casa Loy Tequilera.webp", label: lang === "es" ? "Plantación Los Altos" : "Highland Plantations" },
+        { src: "/Jima Carga Camion Agave Casa Loy.jpg", label: lang === "es" ? "Carga en Campo" : "Field Loading" },
+        { src: "/Jima.webp", label: lang === "es" ? "Jima de Agave" : "Agave Harvesting" }
       ]
     },
     {
       num: "02",
       tag: lang === "es" ? "Cocimiento Dual" : "Cooking Process",
-      name: lang === "es" ? "Autoclaves de Acero & Hornos" : "Pressure Autoclaves & Brick Ovens",
+      name: lang === "es" ? "Hornos de Mampostería & Autoclaves" : "Brick Ovens & Pressure Autoclaves",
       desc: lang === "es"
-        ? "Capacidad combinada de horneado: 80 toneladas en autoclaves cilíndricos de alta presión y 240 toneladas en hornos tradicionales de mampostería."
-        : "Versatile cooking: 80 metric tons in high-pressure stainless steel autoclaves and 240 tons in traditional masonry brick ovens.",
-      specs: ["80t Autoclaves", "240t Hornos Mampostería", "Vapor Controlado"],
+        ? "Capacidad combinada de horneado: 240 toneladas en hornos tradicionales de mampostería para notas caramelizadas y 80 toneladas en autoclaves cilíndricos de alta presión."
+        : "Versatile cooking: 240 metric tons in traditional masonry brick ovens and 80 tons in high-pressure stainless steel autoclaves.",
+      specs: ["240t Hornos Mampostería", "80t Autoclaves", "Vapor Controlado"],
       images: [
-        { src: "/Autoclaves Acero Inoxidable Casa Loy.jpg", label: lang === "es" ? "Autoclaves de Acero" : "Pressure Autoclaves" },
-        { src: "/Cocimiento de Agave.webp", label: lang === "es" ? "Hornos de Mampostería" : "Brick Ovens (240t)" }
+        { src: "/Cocimiento de Agave.webp", label: lang === "es" ? "Hornos de Mampostería" : "Brick Ovens (240t)" },
+        { src: "/Autoclaves Acero Inoxidable Casa Loy.jpg", label: lang === "es" ? "Autoclaves de Acero" : "Pressure Autoclaves" }
       ]
     },
     {
       num: "03",
       tag: lang === "es" ? "Extracción Noble" : "Noble Extraction",
-      name: lang === "es" ? "Tren de Molienda & Tahona" : "Shredder Mill & Volcanic Tahona",
+      name: lang === "es" ? "Tahona Volcánica & Tren de Molienda" : "Volcanic Tahona & Shredder Mill",
       desc: lang === "es"
-        ? "Tren de molienda mecánico de alta capacidad con tolvas industriales para extracción suave de azúcares y tahona volcánica ancestral para lotes de autor."
-        : "High-throughput industrial shredder and roller line for gentle sugar extraction, alongside volcanic stone tahona for author small-batches.",
-      specs: ["Molino ROSH", "Tahona 500k L", "Extracción Suave"],
+        ? "Tahona volcánica ancestral para lotes de autor y tren de molienda mecánico de alta capacidad con tolvas industriales para extracción suave de azúcares."
+        : "Ancestral volcanic stone tahona for author small-batches and high-throughput industrial shredder roller line for gentle sugar extraction.",
+      specs: ["Tahona Tradicional", "Tren de Molienda ROSH", "Extracción Suave"],
       images: [
-        { src: "/Molino Rosh Molienda Agave Casa Loy.jpg", label: lang === "es" ? "Tren de Molienda" : "Shredder Mill Line" },
-        { src: "/Tahona Agave Molienda.webp", label: lang === "es" ? "Tahona Tradicional" : "Volcanic Tahona" }
+        { src: "/Tahona Agave Molienda.webp", label: lang === "es" ? "Tahona Tradicional" : "Volcanic Tahona" },
+        { src: "/Molino Rosh Molienda Agave Casa Loy.jpg", label: lang === "es" ? "Tren de Molienda" : "Shredder Mill Line" }
       ]
     },
     {
       num: "04",
       tag: lang === "es" ? "Fermentación" : "Fermentation",
-      name: lang === "es" ? "Tanques Cerrados & Tinas Abiertas" : "Closed Stainless Tanks & Open Vats",
+      name: lang === "es" ? "Tinas Abiertas & Tanques Cerrados" : "Open Vats & Closed Stainless Tanks",
       desc: lang === "es"
-        ? "Batería de tanques de acero inoxidable de alta capacidad con control térmico automatizado y tinas abiertas tradicionales para enriquecer ésteres frutales."
-        : "Automated temperature-controlled closed stainless tanks and traditional open wooden/steel vats for fruit-forward esters.",
-      specs: ["Tanques de Acero", "Control Térmico", "Levaduras Propias"],
+        ? "Tinas abiertas tradicionales para enriquecer ésteres frutales y batería de tanques de acero inoxidable cerrados con control térmico automatizado."
+        : "Traditional open wooden/steel vats for fruit-forward esters and automated temperature-controlled closed stainless tanks.",
+      specs: ["1: Tinas Abiertas", "2: Tanques Cerrados", "Levaduras Propias"],
       images: [
-        { src: "/Tanques Fermentacion Cerrada Acero Casa Loy.jpg", label: lang === "es" ? "2: Tanques Cerrados" : "2: Closed Tanks" },
-        { src: "/Fermentación.webp", label: lang === "es" ? "1: Tinas Abiertas" : "1: Open Vats" }
+        { src: "/Fermentación.webp", label: lang === "es" ? "1: Tinas Abiertas" : "1: Open Vats" },
+        { src: "/Tanques Fermentacion Cerrada Acero Casa Loy.jpg", label: lang === "es" ? "2: Tanques Cerrados" : "2: Closed Tanks" }
       ]
     },
     {
