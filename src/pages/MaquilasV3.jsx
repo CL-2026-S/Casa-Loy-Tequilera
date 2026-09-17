@@ -186,7 +186,9 @@ export default function MaquilasV3({ lang = "es" }) {
       heroSubLine1: "Tu tequila nace en",
       heroSubLine2: "Los Altos de Jalisco",
       heroQuote: '"Tu visión. Nuestra experiencia."',
-      heroDesc: "Destilería familiar NOM 1633 construida para fundadores, marcas existentes y distribuidores listos para crear con un verdadero origen detrás.",
+      heroDescLine1: "Destilería familiar NOM 1633 construida para fundadores,",
+      heroDescLine2: "marcas existentes y distribuidores listos para crear con un verdadero",
+      heroDescLine3: "origen detrás.",
       heroBtn: "Iniciar Mi Proyecto →",
       heroBtnSec: "Agendar Llamada Técnica",
       
@@ -309,7 +311,9 @@ export default function MaquilasV3({ lang = "es" }) {
       heroSubLine1: "Tu tequila nace en",
       heroSubLine2: "Los Altos de Jalisco",
       heroQuote: '"Your vision. Our expertise."',
-      heroDesc: "A family-owned NOM 1633 distillery built for founders, existing brands, and distributors ready to build with a real origin behind them.",
+      heroDescLine1: "Destileria familiar NOM1633 distillery built for founders,",
+      heroDescLine2: "existing brands, and distributiors ready to build with a real",
+      heroDescLine3: "origin behind them.",
       heroBtn: "Start My Project →",
       heroBtnSec: "Book a Technical Call",
 
@@ -483,7 +487,7 @@ export default function MaquilasV3({ lang = "es" }) {
     setQuizStep(1);
   };
 
-  // 8 Stations of "Dentro de Casa Loy" Interactive Showcase
+  // 8 Stations of "Dentro de Casa Loy" Interactive Showcase with tailored per-image content
   const stations = [
     {
       num: "01",
@@ -492,11 +496,38 @@ export default function MaquilasV3({ lang = "es" }) {
       desc: lang === "es"
         ? "Recepción directa de nuestras 3,600 hectáreas en Los Altos de Jalisco. Selección de piñas en plenitud de maduración (6-7 años) con medición de grados Brix."
         : "Direct intake from our 3,600 hectares in Los Altos de Jalisco. Hand-selected agaves at peak maturity (6-7 years) tested for optimal natural Brix sugars.",
-      specs: ["100% Tequilana Weber", "Los Altos de Jalisco", "Jima Madura"],
+      specs: lang === "es" ? ["3,600 Has. Propias", "Los Altos de Jalisco", "Tequilana Weber"] : ["3,600 Estate Has.", "Highlands Elevation", "Blue Weber Agave"],
       images: [
-        { src: "/Campo de Agave Ayotlán Casa Loy Tequilera.webp", label: lang === "es" ? "Plantación Los Altos" : "Highland Plantations" },
-        { src: "/Jima Carga Camion Agave Casa Loy.jpg", label: lang === "es" ? "Carga en Campo" : "Field Loading" },
-        { src: "/Jima.webp", label: lang === "es" ? "Jima de Agave" : "Agave Harvesting" }
+        { 
+          src: "/Campo de Agave Ayotlán Casa Loy Tequilera.webp", 
+          label: lang === "es" ? "Plantación Los Altos" : "Highland Plantations",
+          tag: lang === "es" ? "Cultivo de Origen" : "Highland Plantations",
+          name: lang === "es" ? "Plantaciones de Agave en Los Altos" : "Highland Agave Plantations",
+          desc: lang === "es" 
+            ? "Más de 3,600 hectáreas de cultivo propio en Ayotlán, Jalisco, a más de 2,000 msnm con suelos rojos volcánicos ricos en hierro y clima templado."
+            : "Over 3,600 hectares of estate agaves in Ayotlán, Jalisco, grown above 2,000 meters elevation in mineral-rich red volcanic soil.",
+          specs: lang === "es" ? ["3,600 Has. Propias", "Los Altos de Jalisco", "Suelo Volcánico"] : ["3,600 Estate Has.", "Highlands Elevation", "Volcanic Soil"]
+        },
+        { 
+          src: "/Jima Carga Camion Agave Casa Loy.jpg", 
+          label: lang === "es" ? "Carga en Campo" : "Field Loading",
+          tag: lang === "es" ? "Logística de Campo" : "Field Transport",
+          name: lang === "es" ? "Carga y Logística de Campo" : "Field Loading & Transport Logistics",
+          desc: lang === "es"
+            ? "Carga directa de piñas maduras en camiones de volteo para su traslado inmediato a la destilería, garantizando frescura total sin fermentaciones espontáneas."
+            : "Direct loading of harvested agaves onto dedicated field trucks heading straight to the distillery, ensuring pristine freshness and zero premature souring.",
+          specs: lang === "es" ? ["Logística Inmediata", "Piñas Frescas", "Transporte Propio"] : ["Direct Logistics", "Fresh Harvest", "Dedicated Fleet"]
+        },
+        { 
+          src: "/Jima.webp", 
+          label: lang === "es" ? "Jima de Agave" : "Agave Harvesting",
+          tag: lang === "es" ? "Jima de Autor" : "Harvest Intake",
+          name: lang === "es" ? "Jima Artesanal al Ras" : "Precision Agave Harvesting",
+          desc: lang === "es"
+            ? "Corte y rasurado de penca al ras por jimadores experimentados en agaves madurados 6-7 años, concentrando únicamente los azúcares nobles y grados Brix ideales."
+            : "Close-shave jimador harvesting of 6-7 year agaves at peak physiological maturity, isolating the sweet core and maximizing natural Brix sugar levels.",
+          specs: lang === "es" ? ["Jima al Ras", "6-7 Años Madurez", "Altos Grados Brix"] : ["Close Shave Cut", "6-7 Year Maturity", "Peak Brix Sugars"]
+        }
       ]
     },
     {
@@ -508,8 +539,26 @@ export default function MaquilasV3({ lang = "es" }) {
         : "Versatile cooking: 240 metric tons in traditional masonry brick ovens and 80 tons in high-pressure stainless steel autoclaves.",
       specs: ["240t Hornos Mampostería", "80t Autoclaves", "Vapor Controlado"],
       images: [
-        { src: "/Cocimiento de Agave.webp", label: lang === "es" ? "Hornos de Mampostería" : "Brick Ovens (240t)" },
-        { src: "/Autoclaves Acero Inoxidable Casa Loy.jpg", label: lang === "es" ? "Autoclaves de Acero" : "Pressure Autoclaves" }
+        { 
+          src: "/Cocimiento de Agave.webp", 
+          label: lang === "es" ? "Hornos de Mampostería" : "Brick Masonry Ovens",
+          tag: lang === "es" ? "Hornos de Mampostería" : "Brick Masonry Ovens",
+          name: lang === "es" ? "Hornos Tradicionales de Mampostería (240t)" : "Traditional Brick Masonry Ovens (240t)",
+          desc: lang === "es"
+            ? "Cocimiento lento al vapor durante 36 a 48 horas en hornos de mampostería, convirtiendo almidones en fructosa y desarrollando notas profundas de caramelo y miel cocida."
+            : "Slow 36-48 hour steam cooking inside thick masonry brick ovens, transforming natural starches into sweet, rich caramel aromas.",
+          specs: lang === "es" ? ["240t Capacidad", "Cocción Lenta 48h", "Notas Caramelizadas"] : ["240t Capacity", "Slow 48h Steam", "Caramelized Profile"]
+        },
+        { 
+          src: "/Autoclaves Acero Inoxidable Casa Loy.jpg", 
+          label: lang === "es" ? "Autoclaves de Acero" : "Pressure Autoclaves",
+          tag: lang === "es" ? "Autoclaves de Acero" : "Pressure Autoclaves",
+          name: lang === "es" ? "Autoclaves de Acero Inoxidable (80t)" : "Stainless Steel Pressure Autoclaves (80t)",
+          desc: lang === "es"
+            ? "Batería de autoclaves cilíndricos de alta presión para una hidrólisis rápida, homogénea y estéril, ideal para perfiles frescos con gran pureza herbal y cítrica."
+            : "High-pressure stainless steel cylindrical autoclaves ensuring uniform thermal hydrolysis while retaining bright agave freshness and crisp herbal notes.",
+          specs: lang === "es" ? ["80t Capacidad", "Acero Inoxidable", "Hidrólisis Homogénea"] : ["80t Capacity", "Stainless Steel", "Clean Hydrolysis"]
+        }
       ]
     },
     {
@@ -521,8 +570,26 @@ export default function MaquilasV3({ lang = "es" }) {
         : "Ancestral volcanic stone tahona for author small-batches and high-throughput industrial shredder roller line for gentle sugar extraction.",
       specs: ["Tahona Tradicional", "Tren de Molienda ROSH", "Extracción Suave"],
       images: [
-        { src: "/Tahona Agave Molienda.webp", label: lang === "es" ? "Tahona Tradicional" : "Volcanic Tahona" },
-        { src: "/Molino Rosh Molienda Agave Casa Loy.jpg", label: lang === "es" ? "Tren de Molienda" : "Shredder Mill Line" }
+        { 
+          src: "/Tahona Agave Molienda.webp", 
+          label: lang === "es" ? "Tahona Tradicional" : "Volcanic Tahona",
+          tag: lang === "es" ? "Tahona Tradicional" : "Volcanic Tahona",
+          name: lang === "es" ? "Tahona Volcánica Ancestral" : "Ancestral Volcanic Stone Tahona",
+          desc: lang === "es"
+            ? "Molienda tradicional con rueda de piedra volcánica para lotes de autor y perfiles artesanales, extrayendo jugos puros sin macerar la fibra en exceso para evitar taninos amargos."
+            : "Slow-rolling volcanic stone tahona wheel for small-batch author runs, gently pressing sweet nectar without crushing bitter stem tannins.",
+          specs: lang === "es" ? ["Piedra Volcánica", "Extracción Suave", "Lotes de Autor"] : ["Volcanic Stone", "Gentle Press", "Artisanal Batches"]
+        },
+        { 
+          src: "/Molino Rosh Molienda Agave Casa Loy.jpg", 
+          label: lang === "es" ? "Tren de Molienda" : "Shredder Mill Line",
+          tag: lang === "es" ? "Tren de Molienda ROSH" : "ROSH Mill Line",
+          name: lang === "es" ? "Tren de Molienda Industrial ROSH" : "ROSH Industrial Shredder Roller Mill",
+          desc: lang === "es"
+            ? "Línea mecanizada con desfibradora de alta velocidad y batería de molinos de rodillos ROSH, garantizando extracción continua de alta eficiencia a escala industrial."
+            : "High-throughput mechanized ROSH shredder and roller line delivering clean, high-yield agave sugar extraction at industrial scale.",
+          specs: lang === "es" ? ["Molino ROSH", "Alta Capacidad", "Rendimiento Constante"] : ["ROSH Mill Line", "Industrial Scale", "High-Yield Output"]
+        }
       ]
     },
     {
@@ -530,12 +597,30 @@ export default function MaquilasV3({ lang = "es" }) {
       tag: lang === "es" ? "Fermentación" : "Fermentation",
       name: lang === "es" ? "Tinas Abiertas & Tanques Cerrados" : "Open Vats & Closed Stainless Tanks",
       desc: lang === "es"
-        ? "Tinas abiertas tradicionales para enriquecer ésteres frutales y batería de tanques de acero inoxidable cerrados con control térmico automatizado."
+        ? "Fermentación abierta tradicional para enriquecer ésteres frutales y batería de tanques de acero inoxidable cerrados con control térmico automatizado."
         : "Traditional open wooden/steel vats for fruit-forward esters and automated temperature-controlled closed stainless tanks.",
-      specs: ["1: Tinas Abiertas", "2: Tanques Cerrados", "Levaduras Propias"],
+      specs: ["Open Fermentation", "Closed Fermentation", "Levaduras Propias"],
       images: [
-        { src: "/Fermentación.webp", label: lang === "es" ? "1: Tinas Abiertas" : "1: Open Vats" },
-        { src: "/Tanques Fermentacion Cerrada Acero Casa Loy.jpg", label: lang === "es" ? "2: Tanques Cerrados" : "2: Closed Tanks" }
+        { 
+          src: "/Fermentación.webp", 
+          label: lang === "es" ? "Open Fermentation" : "Open Fermentation",
+          tag: lang === "es" ? "Open Fermentation" : "Open Fermentation",
+          name: lang === "es" ? "Tinas de Fermentación Abierta" : "Open Fermentation Vats",
+          desc: lang === "es"
+            ? "Fermentación en tinas abiertas que captura la microflora silvestre de Los Altos de Jalisco, desarrollando perfiles aromáticos complejos con notas frutales y florales únicas."
+            : "Traditional open fermentation vats interacting with highland ambient air to cultivate distinct floral and fruit aromatic esters.",
+          specs: lang === "es" ? ["Open Fermentation", "Microflora Nativa", "Ésteres Frutales"] : ["Open Fermentation", "Native Microflora", "Fruit Esters"]
+        },
+        { 
+          src: "/Tanques Fermentacion Cerrada Acero Casa Loy.jpg", 
+          label: lang === "es" ? "Closed Fermentation" : "Closed Fermentation",
+          tag: lang === "es" ? "Closed Fermentation" : "Closed Fermentation",
+          name: lang === "es" ? "Tanques de Fermentación Cerrada en Acero" : "Closed Stainless Fermentation Tanks",
+          desc: lang === "es"
+            ? "Batería de tanques cerrados de acero inoxidable grado alimenticio con camisas térmicas automatizadas, garantizando fermentaciones limpias, homogéneas y 100% reproducibles."
+            : "Closed food-grade stainless steel fermentation tanks equipped with automated thermal jackets for sterile, repeatable, and temperature-stable fermentations.",
+          specs: lang === "es" ? ["Closed Fermentation", "Control Térmico", "Acero Grado Alimenticio"] : ["Closed Fermentation", "Thermal Jacketed", "Batch Consistency"]
+        }
       ]
     },
     {
@@ -547,22 +632,67 @@ export default function MaquilasV3({ lang = "es" }) {
         : "Traditional copper pot stills for precise cuts and author signatures, complemented with high-efficiency European continuous columns.",
       specs: ["Alambiques de Cobre", "Columnas Continuas", "13.5M L / Año"],
       images: [
-        { src: "/Destilación.webp", label: lang === "es" ? "Alambiques de Cobre" : "Copper Pot Stills" },
-        { src: "/Columnas Destilacion Tequila Casa Loy.jpg", label: lang === "es" ? "Columnas Continuas" : "Continuous Columns" }
+        { 
+          src: "/Destilación.webp", 
+          label: lang === "es" ? "Alambiques de Cobre" : "Copper Pot Stills",
+          tag: lang === "es" ? "Alambiques de Cobre" : "Copper Pot Stills",
+          name: lang === "es" ? "Alambiques Tradicionales de Cobre" : "Traditional Copper Pot Stills",
+          desc: lang === "es"
+            ? "Doble destilación lenta en alambiques de cobre puro, eliminando compuestos sulfurosos y permitiendo cortes milimétricos de cabezas y colas para una textura sedosa."
+            : "Slow double distillation in pure copper pot stills, catalyzing sulfides and allowing precise cutpoints for a velvety, round mouthfeel.",
+          specs: lang === "es" ? ["Cobre Puro", "Doble Destilación", "Cortes Precisos"] : ["Pure Copper", "Double Distilled", "Silky Texture"]
+        },
+        { 
+          src: "/Columnas Destilacion Tequila Casa Loy.jpg", 
+          label: lang === "es" ? "Columnas Continuas" : "Continuous Columns",
+          tag: lang === "es" ? "Columnas Continuas" : "Continuous Columns",
+          name: lang === "es" ? "Columnas Continuas de Alta Eficiencia" : "High-Efficiency Continuous Columns",
+          desc: lang === "es"
+            ? "Torres de destilación continua europea diseñadas para perfiles de máxima pureza, balance y capacidad industrial de 13.5 millones de litros anuales."
+            : "European continuous distillation towers engineered for ultra-pure spirit profiles, thermal efficiency, and guaranteed 13.5M L annual output.",
+          specs: lang === "es" ? ["13.5M L / Año", "Columnas Continuas", "Alta Pureza"] : ["13.5M L / Year", "Continuous Towers", "Ultra Pure Spirit"]
+        }
       ]
     },
     {
       num: "06",
-      tag: lang === "es" ? "Maduración de Autor" : "Cask Aging",
-      name: lang === "es" ? "Cava Subterránea de Barricas" : "Underground Barrel Cellar",
+      tag: lang === "es" ? "Maduración de Barricas" : "Barrel Maturation",
+      name: lang === "es" ? "Cava de Maduración y Barricas" : "Maturation Cellar & Barrel Program",
       desc: lang === "es"
-        ? "Capacidad de 1.2 millones de litros en barricas de Roble Blanco Americano y Roble Francés bajo condiciones estables de humedad y temperatura."
-        : "1.2 Million liters capacity in Virgin American White Oak and French Oak barrels maintained under constant cellar humidity and temperature.",
-      specs: ["1.2M L Cava", "Roble Americano", "Roble Francés"],
+        ? "Capacidad de 1.2 millones de litros en barricas seleccionadas de Roble Blanco Americano, Bourbon y Roble Francés bajo condiciones subterráneas estables."
+        : "1.2 Million liters capacity across select American Oak, Bourbon, and French Oak casks in climate-controlled underground cellars.",
+      specs: ["Roble Americano", "Barricas Bourbon", "Roble Francés"],
       images: [
-        { src: "/Pasillo Cava de Añejamiento.webp", label: lang === "es" ? "Cava Subterránea" : "Underground Cellar" },
-        { src: "/Cava de Añejamiento.webp", label: lang === "es" ? "Estiba de Barricas" : "Stacked Casks" },
-        { src: "/Cava Tequilera Casa Loy.webp", label: lang === "es" ? "Bóveda de Añejamiento" : "Aging Vault" }
+        { 
+          src: "/Pasillo Cava de Añejamiento.webp", 
+          label: lang === "es" ? "Cava Subterránea" : "Underground Cellar",
+          tag: lang === "es" ? "Cava Subterránea" : "Underground Cellar",
+          name: lang === "es" ? "Cava Subterránea de Barricas" : "Underground Maturation Cellar",
+          desc: lang === "es"
+            ? "Bóveda subterránea con microclima controlado que garantiza estabilidad de temperatura y humedad, reduciendo mermas y favoreciendo una maduración pausada."
+            : "Underground vaulted cellars with natural thermal and humidity stability ensuring a steady, undisturbed wood maturation.",
+          specs: lang === "es" ? ["Cava Subterránea", "1.2M L Capacidad", "Microclima Estable"] : ["Underground Cellar", "1.2M L Capacity", "Steady Microclimate"]
+        },
+        { 
+          src: "/Cava de Añejamiento.webp", 
+          label: lang === "es" ? "Guarda en Barricas" : "Oak Casks Reserve",
+          tag: lang === "es" ? "Tipos de Barricas" : "Barrel Portfolio",
+          name: lang === "es" ? "Roble Americano, Bourbon & Roble Francés" : "American Oak, Bourbon & French Oak Casks",
+          desc: lang === "es"
+            ? "Portafolio versátil de maduración: Roble Blanco Americano nuevo, barricas seleccionadas de primer uso de Bourbon, Roble Francés y acabados especiales para perfiles Reposado, Añejo y Extra Añejo."
+            : "Custom wood program featuring virgin American White Oak, selected first-fill Bourbon casks, and French Oak tailored for Reposado, Añejo, and Extra Añejo expressions.",
+          specs: lang === "es" ? ["Roble Americano", "Barricas de Bourbon", "Roble Francés"] : ["American White Oak", "Bourbon Casks", "French Oak"]
+        },
+        { 
+          src: "/Cava Tequilera Casa Loy.webp", 
+          label: lang === "es" ? "Bóveda de Cavas" : "Cask Vault",
+          tag: lang === "es" ? "Lotes de Autor" : "Special Reserves",
+          name: lang === "es" ? "Bóveda de Maduración y Lotes Especiales" : "Maturation Vault & Special Reserves",
+          desc: lang === "es"
+            ? "Espacio de guarda prolongada para formulación de lotes exclusivos, donde el destilado adquiere notas nobles de vainilla, cacao y caramelo tostado sin aditivos."
+            : "Prolonged wood-contact resting chambers where tequila naturally develops amber hues, toasted vanilla, cocoa, and rich caramel notes without artificial additives.",
+          specs: lang === "es" ? ["Maduración Prolongada", "Libre de Aditivos", "Perfiles de Autor"] : ["Extended Maturation", "Additive Free", "Author Profiles"]
+        }
       ]
     },
     {
@@ -574,21 +704,57 @@ export default function MaquilasV3({ lang = "es" }) {
         : "Batch-by-batch analytical QA and exclusive in-cellar tasting lab sessions to fine-tune your liquid's exact organoleptic signature.",
       specs: ["Tasting Lab en Cava", "Panel Sensorial", "Control de Calidad"],
       images: [
-        { src: "/Laboratorio Maquilas.webp", label: lang === "es" ? "Laboratorio Analítico" : "Analytical Lab" },
-        { src: "/Recorrido Diamante Cava Cata.webp", label: lang === "es" ? "Tasting Lab en Cava" : "In-Cellar Tasting Lab" }
+        { 
+          src: "/Laboratorio Maquilas.webp", 
+          label: lang === "es" ? "Laboratorio de Calidad" : "Analytical Lab",
+          tag: lang === "es" ? "Laboratorio de Calidad" : "Analytical Lab",
+          name: lang === "es" ? "Laboratorio de Control y Cumplimiento CRT" : "In-House Quality & CRT Compliance Lab",
+          desc: lang === "es"
+            ? "Monitoreo químico y analítico lote por lote verificando parámetros fisicoquímicos (alcoholimetría, metanol, ésteres) para certificación oficial y exportación global."
+            : "Batch-by-batch laboratory testing and chemical verification measuring proof, esters, and congeners to guarantee CRT certification and international market compliance.",
+          specs: lang === "es" ? ["Control Lote por Lote", "Certificación CRT", "Pureza Garantizada"] : ["Batch QA", "CRT Compliance", "Guaranteed Purity"]
+        },
+        { 
+          src: "/Recorrido Diamante Cava Cata.webp", 
+          label: lang === "es" ? "Tasting Lab en Cava" : "In-Cellar Tasting Lab",
+          tag: lang === "es" ? "Tasting Lab en Cava" : "In-Cellar Tasting Lab",
+          name: lang === "es" ? "Tasting Lab y Panel Sensorial en Cava" : "In-Cellar Sensory Tasting Lab",
+          desc: lang === "es"
+            ? "Espacio exclusivo de cata en cava subterránea para perfilar organolépticamente el destilado junto con el cliente y maestros tequileros."
+            : "Exclusive in-cellar tasting salon to define, calibrate, and lock in your brand's unique sensory profile alongside our master distillers.",
+          specs: lang === "es" ? ["Panel Sensorial", "Cata en Cava", "Perfil Organoléptico"] : ["Sensory Panel", "In-Cellar Tasting", "Custom Profiling"]
+        }
       ]
     },
     {
       num: "08",
-      tag: lang === "es" ? "Acondicionamiento Final" : "Final Bottling",
-      name: lang === "es" ? "Tanques de Envasado & Línea de Embotellado" : "Bottling Line & Holding Tanks",
+      tag: lang === "es" ? "Envasado & Calidad" : "Bottling & Quality",
+      name: lang === "es" ? "Línea de Envasado e Inspección de Calidad" : "Packaging Line & Quality Inspection",
       desc: lang === "es"
-        ? "Tanques de envasado dedicados (20,000+ Lts), llenado de precisión, etiquetado e inspección individual en mesa lumínica bajo normativas de exportación."
-        : "Dedicated packaging holding tanks (20,000+ L), precision filling, labeling, and bottle-by-bottle light table QA inspection compliant with export standards.",
-      specs: ["Tanques TEN-01", "Mesa Lumínica QA", "Co-Packing"],
+        ? "Tanques de envasado dedicados TEN-01, llenado volumétrico de precisión e inspección individual en mesa lumínica para exportación."
+        : "Dedicated TEN-01 packaging tanks, precision volumetric bottling, and bottle-by-bottle light table optical QA inspection for global export.",
+      specs: ["Línea de Envasado", "Inspección de Calidad", "Apto para Exportación"],
       images: [
-        { src: "/Linea Embotellado Tanque Envasado Casa Loy.jpg", label: lang === "es" ? "Tanque & Envasado" : "Bottling & Holding Tank" },
-        { src: "/Embotellado 2.webp", label: lang === "es" ? "Inspección de Botellas" : "Bottle QA Inspection" }
+        { 
+          src: "/Linea Embotellado Tanque Envasado Casa Loy.jpg", 
+          label: lang === "es" ? "Línea de Envasado" : "Packaging Line",
+          tag: lang === "es" ? "Línea de Envasado" : "Packaging Line",
+          name: lang === "es" ? "Línea de Envasado y Tanques TEN-01" : "Packaging Line & TEN-01 Holding Tanks",
+          desc: lang === "es"
+            ? "Tanques de reposo de envasado dedicados (20,000+ L) y línea de embotellado continuo con dosificación volumétrica de alta precisión y taponado hermético."
+            : "Dedicated holding tanks (20,000+ L) and automated bottling line with high-precision volumetric dosing and hermetic corking.",
+          specs: lang === "es" ? ["Línea de Envasado", "Tanque TEN-01", "Co-Packing"] : ["Packaging Line", "TEN-01 Tanks", "Co-Packing"]
+        },
+        { 
+          src: "/Embotellado 2.webp", 
+          label: lang === "es" ? "Inspección de Calidad" : "Quality Inspection",
+          tag: lang === "es" ? "Inspección de Calidad" : "Quality Inspection",
+          name: lang === "es" ? "Mesa Lumínica e Inspección de Calidad" : "Light Table QA & Quality Inspection",
+          desc: lang === "es"
+            ? "Inspección óptica botella por botella en mesa lumínica, control de sellado de corcho, marbete fiscal, etiquetado y embalaje seguro conforme a normativas de exportación."
+            : "Bottle-by-bottle optical inspection on light tables, cork seal verification, tax strip alignment, and export-grade master boxing.",
+          specs: lang === "es" ? ["Inspección de Calidad", "Mesa Lumínica", "Apto para Exportación"] : ["Quality Inspection", "Light Table QA", "Export Compliance"]
+        }
       ]
     }
   ];
@@ -654,35 +820,32 @@ export default function MaquilasV3({ lang = "es" }) {
       />
 
       {/* ============================================================
-          §1. HERO BANNER (Estructura limpia, fotos claras y botones del sitio)
+          §1. HERO BANNER (Dimensiones h-screen, difuminado estándar del sitio y 3 renglones)
           ============================================================ */}
-      <section className="relative min-h-[90vh] md:min-h-screen w-full bg-zinc-950 overflow-hidden flex items-center">
-        {/* Carousel Background Images - Bright & Crisp Visibility */}
+      <section className="relative h-screen w-full bg-zinc-950 overflow-hidden flex items-center">
+        {/* Carousel Background Images - Exact Site Brightness and Transitions */}
         <div className="absolute inset-0 z-0">
           {heroImages.map((src, idx) => (
             <img
               key={src}
               alt="Casa Loy Tequilera Background"
-              className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out brightness-[0.88] ${
+              className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out brightness-[0.82] ${
                 heroImageIdx === idx ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
               }`}
               src={src}
               fetchPriority={idx === 0 ? "high" : "low"}
             />
           ))}
-          {/* Elegant diffused gradient vignette to ensure high text contrast and legibility */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-transparent z-10 pointer-events-none"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/50 z-10 pointer-events-none"></div>
+          {/* Site-Standard Gradient Overlays matching Home and Maquilas */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/45 z-10 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent z-10 pointer-events-none"></div>
         </div>
 
         {/* Left-Aligned Content Container */}
-        <div className="relative z-20 px-6 sm:px-10 lg:px-16 max-w-[1280px] mx-auto w-full py-20 lg:py-28">
-          <div className="relative max-w-3xl text-left space-y-6 animate-slide-left-right">
-            {/* Soft diffused aura specifically backing the text block */}
-            <div className="absolute -inset-6 sm:-inset-10 -z-10 bg-black/40 backdrop-blur-[2px] rounded-3xl pointer-events-none"></div>
-
+        <div className="relative z-20 px-6 sm:px-10 lg:px-16 max-w-[1280px] mx-auto w-full pt-16 pb-20">
+          <div className="max-w-3xl text-left space-y-5 animate-slide-left-right">
             {/* Title with exact requested structure: bold top lines + less-bold subtitle lines */}
-            <h1 className="font-serif leading-[1.08] tracking-tight text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
+            <h1 className="font-serif leading-[1.08] tracking-tight text-white [text-shadow:_0_2px_14px_rgba(0,0,0,0.85)]">
               <span className="block font-medium text-[clamp(32px,4.5vw,60px)]">
                 {t.heroTitleLine1}
               </span>
@@ -696,13 +859,15 @@ export default function MaquilasV3({ lang = "es" }) {
             </h1>
 
             {/* Enlarged Italic Vision Quote */}
-            <div className="font-serif italic text-2xl sm:text-3xl md:text-4xl text-[#FDA377] font-normal tracking-wide drop-shadow-[0_3px_12px_rgba(0,0,0,0.95)]">
+            <div className="font-serif italic text-2xl sm:text-3xl md:text-4xl text-[#FDA377] font-normal tracking-wide [text-shadow:_0_2px_12px_rgba(0,0,0,0.85)]">
               {t.heroQuote}
             </div>
 
-            {/* Description Subtitle */}
-            <p className="font-body-lg text-white/95 font-light leading-relaxed text-sm sm:text-base md:text-lg max-w-2xl pt-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
-              {t.heroDesc}
+            {/* Description Subtitle structured in exactly 3 lines as requested */}
+            <p className="font-body-lg text-white font-light leading-relaxed text-sm sm:text-base md:text-[17px] pt-1 [text-shadow:_0_2px_10px_rgba(0,0,0,0.85)]">
+              <span className="block">{t.heroDescLine1}</span>
+              <span className="block">{t.heroDescLine2}</span>
+              <span className="block">{t.heroDescLine3}</span>
             </p>
 
             {/* Action Buttons matching the site's official style */}
@@ -1032,25 +1197,25 @@ export default function MaquilasV3({ lang = "es" }) {
                       <div className="space-y-1.5 max-w-2xl">
                         <div className="flex items-center gap-2">
                           <span className="font-navigation text-[9px] sm:text-[10px] text-white uppercase tracking-[0.25em] bg-[#8C4723] px-2.5 py-0.5 font-semibold inline-block rounded-none">
-                            {currentStation.num} · {currentStation.tag}
+                            {currentStation.num} · {currentImgObj.tag || currentStation.tag}
                           </span>
-                          {currentImgObj.label && (
+                          {currentImgObj.label && currentImgObj.label !== (currentImgObj.tag || currentStation.tag) && (
                             <span className="font-navigation text-[9px] sm:text-[10px] text-white/90 uppercase tracking-wider bg-white/15 backdrop-blur-md px-2 py-0.5 border border-white/20">
                               {currentImgObj.label}
                             </span>
                           )}
                         </div>
                         <h3 className="font-serif text-xl sm:text-2xl text-white font-light">
-                          {currentStation.name}
+                          {currentImgObj.name || currentStation.name}
                         </h3>
                         <p className="font-body-md text-white/90 leading-relaxed font-light text-xs sm:text-sm max-w-xl">
-                          {currentStation.desc}
+                          {currentImgObj.desc || currentStation.desc}
                         </p>
                       </div>
 
                       {/* Specs Pills */}
                       <div className="flex flex-wrap sm:flex-col gap-1.5 sm:items-end">
-                        {currentStation.specs.map((spec, sIdx) => (
+                        {(currentImgObj.specs || currentStation.specs).map((spec, sIdx) => (
                           <span key={sIdx} className="font-navigation text-[9px] sm:text-[10px] uppercase tracking-wider text-white bg-white/15 backdrop-blur-md px-2.5 py-0.5 border border-white/20 rounded-none">
                             {spec}
                           </span>
@@ -1320,21 +1485,21 @@ export default function MaquilasV3({ lang = "es" }) {
                       <button
                         key={profileOpt.title}
                         onClick={() => handleNextStep("profile", profileOpt.title, 2)}
-                        className="w-full text-left p-4 border border-white/20 bg-white/10 hover:border-primary hover:bg-white hover:text-black transition-all duration-300 flex flex-col justify-between group font-navigation cursor-pointer min-h-[110px]"
+                        className="w-full text-left p-4 border border-white/20 bg-white/10 hover:border-[#FDA377] hover:bg-[#8C4723] active:bg-[#733719] focus:outline-none focus:ring-2 focus:ring-[#FDA377] transition-all duration-300 flex flex-col justify-between group font-navigation cursor-pointer min-h-[110px]"
                       >
-                        <div className="flex items-center justify-between w-full mb-1.5">
-                          <span className="text-[10px] font-bold text-primary group-hover:text-white bg-white/20 group-hover:bg-primary px-2 py-0.5 rounded border border-white/20 group-hover:border-transparent transition-colors">
+                        <div className="flex items-center justify-between w-full mb-2">
+                          <span className="text-[10px] font-bold text-[#FDA377] bg-black/40 group-hover:bg-black/60 group-hover:text-white px-2 py-0.5 rounded border border-white/20 transition-colors">
                             0{idx + 1}
                           </span>
-                          <span className="material-symbols-outlined text-sm text-primary group-hover:text-black opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span className="material-symbols-outlined text-sm text-[#FDA377] group-hover:text-white opacity-50 group-hover:opacity-100 transition-all">
                             arrow_forward
                           </span>
                         </div>
                         <div>
-                          <div className="text-sm font-semibold text-white group-hover:text-black leading-tight mb-1">
+                          <div className="text-sm font-semibold text-white leading-tight mb-1">
                             {profileOpt.title}
                           </div>
-                          <p className="text-xs font-light text-white/75 group-hover:text-black/80 leading-snug">
+                          <p className="text-xs font-light text-white/80 group-hover:text-white/95 leading-snug">
                             {profileOpt.desc}
                           </p>
                         </div>
@@ -1359,17 +1524,17 @@ export default function MaquilasV3({ lang = "es" }) {
                         <button
                           key={opt}
                           onClick={() => handleNextStep("solution", opt, 3)}
-                          className={`w-full text-left p-3 border border-white/20 bg-white/10 hover:border-primary hover:bg-white hover:text-black transition-all duration-300 flex justify-between items-center group font-navigation cursor-pointer ${
+                          className={`w-full text-left p-3.5 border border-white/20 bg-white/10 hover:border-[#FDA377] hover:bg-[#8C4723] active:bg-[#733719] focus:outline-none focus:ring-2 focus:ring-[#FDA377] transition-all duration-300 flex justify-between items-center group font-navigation cursor-pointer ${
                             idx === 4 ? "md:col-span-2" : ""
                           }`}
                         >
                           <div className="flex items-center gap-2.5">
-                            <span className="text-[10px] font-bold text-primary group-hover:text-white bg-white/20 group-hover:bg-primary px-2 py-0.5 rounded border border-white/20 group-hover:border-transparent transition-colors">
+                            <span className="text-[10px] font-bold text-[#FDA377] bg-black/40 group-hover:bg-black/60 group-hover:text-white px-2 py-0.5 rounded border border-white/20 transition-colors">
                               {letters[idx]}
                             </span>
-                            <span className="text-xs sm:text-sm font-light text-white group-hover:text-black leading-tight">{opt}</span>
+                            <span className="text-xs sm:text-sm font-light text-white leading-tight">{opt}</span>
                           </div>
-                          <span className="material-symbols-outlined text-sm text-primary group-hover:text-black opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span className="material-symbols-outlined text-sm text-[#FDA377] group-hover:text-white opacity-50 group-hover:opacity-100 transition-all">
                             arrow_forward
                           </span>
                         </button>
@@ -1394,17 +1559,17 @@ export default function MaquilasV3({ lang = "es" }) {
                         <button
                           key={opt}
                           onClick={() => handleNextStep("objective", opt, 4)}
-                          className={`w-full text-left p-3 border border-white/20 bg-white/10 hover:border-primary hover:bg-white hover:text-black transition-all duration-300 flex justify-between items-center group font-navigation cursor-pointer ${
+                          className={`w-full text-left p-3.5 border border-white/20 bg-white/10 hover:border-[#FDA377] hover:bg-[#8C4723] active:bg-[#733719] focus:outline-none focus:ring-2 focus:ring-[#FDA377] transition-all duration-300 flex justify-between items-center group font-navigation cursor-pointer ${
                             idx === 4 ? "md:col-span-2" : ""
                           }`}
                         >
                           <div className="flex items-center gap-2.5">
-                            <span className="text-[10px] font-bold text-primary group-hover:text-white bg-white/20 group-hover:bg-primary px-2 py-0.5 rounded border border-white/20 group-hover:border-transparent transition-colors">
+                            <span className="text-[10px] font-bold text-[#FDA377] bg-black/40 group-hover:bg-black/60 group-hover:text-white px-2 py-0.5 rounded border border-white/20 transition-colors">
                               {letters[idx]}
                             </span>
-                            <span className="text-xs sm:text-sm font-light text-white group-hover:text-black leading-tight">{opt}</span>
+                            <span className="text-xs sm:text-sm font-light text-white leading-tight">{opt}</span>
                           </div>
-                          <span className="material-symbols-outlined text-sm text-primary group-hover:text-black opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span className="material-symbols-outlined text-sm text-[#FDA377] group-hover:text-white opacity-50 group-hover:opacity-100 transition-all">
                             arrow_forward
                           </span>
                         </button>
@@ -1429,17 +1594,17 @@ export default function MaquilasV3({ lang = "es" }) {
                         <button
                           key={opt}
                           onClick={() => handleNextStep("stage", opt, 5)}
-                          className={`w-full text-left p-3 border border-white/20 bg-white/10 hover:border-primary hover:bg-white hover:text-black transition-all duration-300 flex justify-between items-center group font-navigation cursor-pointer ${
+                          className={`w-full text-left p-3.5 border border-white/20 bg-white/10 hover:border-[#FDA377] hover:bg-[#8C4723] active:bg-[#733719] focus:outline-none focus:ring-2 focus:ring-[#FDA377] transition-all duration-300 flex justify-between items-center group font-navigation cursor-pointer ${
                             idx === 4 ? "md:col-span-2" : ""
                           }`}
                         >
                           <div className="flex items-center gap-2.5">
-                            <span className="text-[10px] font-bold text-primary group-hover:text-white bg-white/20 group-hover:bg-primary px-2 py-0.5 rounded border border-white/20 group-hover:border-transparent transition-colors">
+                            <span className="text-[10px] font-bold text-[#FDA377] bg-black/40 group-hover:bg-black/60 group-hover:text-white px-2 py-0.5 rounded border border-white/20 transition-colors">
                               {letters[idx]}
                             </span>
-                            <span className="text-xs sm:text-sm font-light text-white group-hover:text-black leading-tight">{opt}</span>
+                            <span className="text-xs sm:text-sm font-light text-white leading-tight">{opt}</span>
                           </div>
-                          <span className="material-symbols-outlined text-sm text-primary group-hover:text-black opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span className="material-symbols-outlined text-sm text-[#FDA377] group-hover:text-white opacity-50 group-hover:opacity-100 transition-all">
                             arrow_forward
                           </span>
                         </button>
