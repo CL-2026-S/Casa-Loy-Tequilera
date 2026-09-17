@@ -181,8 +181,10 @@ export default function MaquilasV3({ lang = "es" }) {
       seoDesc: "Destilería oficial NOM 1633 en Los Altos de Jalisco. Producción integral de marca privada, venta a granel, 3,600 Has. de agave propio y 13.5M L de capacidad anual.",
       
       // Hero
-      heroTitle1: "Maquila de Tequila y Marca Privada en México.",
-      heroTitle2: "Tu tequila nace en Los Altos de Jalisco.",
+      heroTitleLine1: "Maquila de Tequila",
+      heroTitleLine2: "y Marca Privada en México.",
+      heroSubLine1: "Tu tequila nace en",
+      heroSubLine2: "Los Altos de Jalisco",
       heroQuote: '"Tu visión. Nuestra experiencia."',
       heroDesc: "Destilería familiar NOM 1633 construida para fundadores, marcas existentes y distribuidores listos para crear con un verdadero origen detrás.",
       heroBtn: "Iniciar Mi Proyecto →",
@@ -302,8 +304,10 @@ export default function MaquilasV3({ lang = "es" }) {
       seoDesc: "Official NOM 1633 distillery in Los Altos de Jalisco. Full private label production, bulk tequila supply, 3,600 Has. estate agave, and 13.5M L annual capacity.",
 
       // Hero
-      heroTitle1: "Private Label Tequila Manufacturing in Mexico.",
-      heroTitle2: "Your tequila starts in Los Altos de Jalisco.",
+      heroTitleLine1: "Private Label Tequila",
+      heroTitleLine2: "Manufacturing in México.",
+      heroSubLine1: "Tu tequila nace en",
+      heroSubLine2: "Los Altos de Jalisco",
       heroQuote: '"Your vision. Our expertise."',
       heroDesc: "A family-owned NOM 1633 distillery built for founders, existing brands, and distributors ready to build with a real origin behind them.",
       heroBtn: "Start My Project →",
@@ -666,27 +670,38 @@ export default function MaquilasV3({ lang = "es" }) {
               fetchPriority={idx === 0 ? "high" : "low"}
             />
           ))}
-          {/* Subtle light vignette only behind text to preserve image appreciation */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/20 to-transparent z-10 pointer-events-none"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-transparent to-black/35 z-10 pointer-events-none"></div>
+          {/* Elegant diffused gradient vignette to ensure high text contrast and legibility */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/50 z-10 pointer-events-none"></div>
         </div>
 
         {/* Left-Aligned Content Container */}
         <div className="relative z-20 px-6 sm:px-10 lg:px-16 max-w-[1280px] mx-auto w-full py-20 lg:py-28">
-          <div className="max-w-3xl text-left space-y-5 animate-slide-left-right">
-            {/* Title with crisp text shadow for readability over bright images */}
-            <h1 className="font-serif text-[clamp(28px,4vw,56px)] leading-[1.1] tracking-tight font-light text-white [text-shadow:_0_2px_14px_rgb(0_0_0_/_65%)]">
-              {t.heroTitle1} <br />
-              <span className="font-normal text-white">{t.heroTitle2}</span>
+          <div className="relative max-w-3xl text-left space-y-6 animate-slide-left-right">
+            {/* Soft diffused aura specifically backing the text block */}
+            <div className="absolute -inset-6 sm:-inset-10 -z-10 bg-black/40 backdrop-blur-[2px] rounded-3xl pointer-events-none"></div>
+
+            {/* Title with exact requested structure: bold top lines + less-bold subtitle lines */}
+            <h1 className="font-serif leading-[1.08] tracking-tight text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
+              <span className="block font-medium text-[clamp(32px,4.5vw,60px)]">
+                {t.heroTitleLine1}
+              </span>
+              <span className="block font-medium text-[clamp(32px,4.5vw,60px)]">
+                {t.heroTitleLine2}
+              </span>
+              <span className="block font-light text-white/90 text-[clamp(24px,3.5vw,46px)] mt-2 sm:mt-3 leading-[1.12]">
+                <span className="block">{t.heroSubLine1}</span>
+                <span className="block">{t.heroSubLine2}</span>
+              </span>
             </h1>
 
-            {/* Italic Vision Quote */}
-            <div className="font-serif italic text-base sm:text-lg md:text-xl text-[#FDA377] font-normal tracking-wide [text-shadow:_0_2px_10px_rgb(0_0_0_/_65%)]">
+            {/* Enlarged Italic Vision Quote */}
+            <div className="font-serif italic text-2xl sm:text-3xl md:text-4xl text-[#FDA377] font-normal tracking-wide drop-shadow-[0_3px_12px_rgba(0,0,0,0.95)]">
               {t.heroQuote}
             </div>
 
             {/* Description Subtitle */}
-            <p className="font-body-lg text-white font-light leading-relaxed text-xs sm:text-sm md:text-base max-w-2xl pt-1 [text-shadow:_0_1px_8px_rgb(0_0_0_/_70%)]">
+            <p className="font-body-lg text-white/95 font-light leading-relaxed text-sm sm:text-base md:text-lg max-w-2xl pt-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
               {t.heroDesc}
             </p>
 
