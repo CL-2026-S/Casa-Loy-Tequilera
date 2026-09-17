@@ -523,11 +523,11 @@ export default function MaquilasV3({ lang = "es" }) {
     {
       num: "02",
       tag: lang === "es" ? "Cocimiento de Tradición" : "Artisanal Cooking",
-      name: lang === "es" ? "Hornos de Mampostería & Autoclave" : "Stone Ovens & Autoclave",
+      name: lang === "es" ? "Hornos de Mampostería, Autoclave & Serpentín de Vapor" : "Stone Ovens, Autoclaves & Steam-Coil Cookers",
       desc: lang === "es"
-        ? "Cocción tradicional en hornos de mampostería y autoclaves de acero para perfiles de alta calidad, repetibilidad y consistencia."
-        : "Traditional slow steam cooking in masonry brick ovens and controlled stainless autoclaves engineered for consistency and scale.",
-      specs: lang === "es" ? ["Hornos de Mampostería", "Autoclave Controlado", "Perfiles a la Medida"] : ["Stone Ovens", "Controlled Autoclave", "Custom Profiles"],
+        ? "Tres métodos de cocimiento: hornos de mampostería, autoclaves de acero y cocedores con serpentín de vapor para perfiles tradicionales, consistentes o de valor escalable."
+        : "Three cooking paths: traditional stone ovens, controlled autoclaves, and steam-coil cookers for traditional, consistent, or scalable value profiles.",
+      specs: lang === "es" ? ["Hornos de Mampostería", "Autoclave Controlado", "Serpentín de Vapor"] : ["Stone Ovens", "Controlled Autoclaves", "Steam-Coil Cookers"],
       images: [
         { 
           src: "/Cocimiento de Agave.webp", 
@@ -550,6 +550,17 @@ export default function MaquilasV3({ lang = "es" }) {
             ? "Cocción eficiente y controlada para desarrollar perfiles limpios, suaves y consistentes, ideales para marcas que buscan calidad, repetibilidad y capacidad de crecimiento."
             : "Efficient and controlled cooking to develop clean, smooth, and consistent tequila profiles, ideal for brands seeking quality, repeatability, and growth capacity.",
           specs: lang === "es" ? ["Autoclave Controlado", "Perfil Consistente", "Calidad & Repetibilidad"] : ["Controlled Autoclave", "Consistent Profile", "Quality & Repeatability"]
+        },
+        { 
+          src: "/Cocedores Serpentin Vapor Tequila Casa Loy.jpg", 
+          label: lang === "es" ? "Serpentín de Vapor" : "Steam-Coil Cookers",
+          copperTag: lang === "es" ? "02 · COCEDORES CON SERPENTÍN DE VAPOR" : "02 · STEAM-COIL JUICE COOKERS",
+          whiteTag: lang === "es" ? "PERFIL ESCALABLE DE VALOR" : "SCALABLE VALUE PROFILE",
+          tag: lang === "es" ? "Serpentín de Vapor" : "Steam-Coil Cookers",
+          desc: lang === "es"
+            ? "Método de cocimiento controlado para jugo crudo de agave, diseñado para marcas que buscan eficiencia, consistencia y producción escalable con un precio alineado al mercado."
+            : "A controlled cooking method for raw agave juice, designed for brands seeking efficiency, consistency, and scalable production with market-aligned pricing.",
+          specs: lang === "es" ? ["Serpentín de Vapor", "Perfil Escalable de Valor", "Eficiencia en Costo"] : ["Steam-Coil Cooker", "Scalable Value Profile", "Cost Efficiency"]
         }
       ]
     },
