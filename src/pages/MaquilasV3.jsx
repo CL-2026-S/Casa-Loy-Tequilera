@@ -574,8 +574,8 @@ export default function MaquilasV3({ lang = "es" }) {
           tag: lang === "es" ? "Tahona Tradicional" : "Volcanic Tahona",
           name: lang === "es" ? "Tahona Volcánica Ancestral" : "Ancestral Volcanic Stone Tahona",
           desc: lang === "es"
-            ? "Molienda tradicional con rueda de piedra volcánica para lotes de autor y perfiles artesanales, extrayendo jugos puros sin macerar la fibra en exceso para evitar taninos amargos."
-            : "Slow-rolling volcanic stone tahona wheel for small-batch author runs, gently pressing sweet nectar without crushing bitter stem tannins.",
+            ? "Molienda tradicional con piedra volcánica para perfiles artesanales, expresivos y con mayor carácter de agave. Ideal para marcas con enfoque premium, craft o de autor."
+            : "Traditional volcanic stone milling for artisanal, expressive profiles with profound agave character. Ideal for premium, craft, or author-led brand concepts.",
           specs: lang === "es" ? ["Piedra Volcánica", "Extracción Suave", "Lotes de Autor"] : ["Volcanic Stone", "Gentle Press", "Artisanal Batches"]
         },
         { 
