@@ -820,9 +820,9 @@ export default function MaquilasV3({ lang = "es" }) {
       />
 
       {/* ============================================================
-          §1. HERO BANNER (Dimensiones h-screen, difuminado estándar del sitio y 3 renglones)
+          §1. HERO BANNER (Ajuste visual de proporciones, sin colisión con navbar ni desborde)
           ============================================================ */}
-      <section className="relative h-screen w-full bg-zinc-950 overflow-hidden flex items-center">
+      <section className="relative min-h-screen w-full bg-zinc-950 overflow-hidden flex items-center">
         {/* Carousel Background Images - Exact Site Brightness and Transitions */}
         <div className="absolute inset-0 z-0">
           {heroImages.map((src, idx) => (
@@ -837,57 +837,57 @@ export default function MaquilasV3({ lang = "es" }) {
             />
           ))}
           {/* Site-Standard Gradient Overlays matching Home and Maquilas */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/45 z-10 pointer-events-none"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/55 z-10 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent z-10 pointer-events-none"></div>
         </div>
 
-        {/* Left-Aligned Content Container */}
-        <div className="relative z-20 px-6 sm:px-10 lg:px-16 max-w-[1280px] mx-auto w-full pt-16 pb-20">
-          <div className="max-w-3xl text-left space-y-5 animate-slide-left-right">
+        {/* Left-Aligned Content Container - Ample clearance below fixed Header (pt-28 sm:pt-32) */}
+        <div className="relative z-20 px-6 sm:px-10 lg:px-16 max-w-[1280px] mx-auto w-full pt-28 sm:pt-32 pb-16">
+          <div className="max-w-2xl lg:max-w-3xl text-left space-y-3.5 sm:space-y-4 animate-slide-left-right">
             {/* Title with exact requested structure: bold top lines + less-bold subtitle lines */}
-            <h1 className="font-serif leading-[1.08] tracking-tight text-white [text-shadow:_0_2px_14px_rgba(0,0,0,0.85)]">
-              <span className="block font-medium text-[clamp(32px,4.5vw,60px)]">
+            <h1 className="font-serif leading-[1.1] tracking-tight text-white [text-shadow:_0_2px_14px_rgba(0,0,0,0.85)]">
+              <span className="block font-medium text-[clamp(24px,3vw,42px)]">
                 {t.heroTitleLine1}
               </span>
-              <span className="block font-medium text-[clamp(32px,4.5vw,60px)]">
+              <span className="block font-medium text-[clamp(24px,3vw,42px)]">
                 {t.heroTitleLine2}
               </span>
-              <span className="block font-light text-white/90 text-[clamp(24px,3.5vw,46px)] mt-2 sm:mt-3 leading-[1.12]">
+              <span className="block font-light text-white/90 text-[clamp(17px,2.1vw,28px)] mt-1.5 sm:mt-2 leading-[1.18]">
                 <span className="block">{t.heroSubLine1}</span>
                 <span className="block">{t.heroSubLine2}</span>
               </span>
             </h1>
 
-            {/* Enlarged Italic Vision Quote */}
-            <div className="font-serif italic text-2xl sm:text-3xl md:text-4xl text-[#FDA377] font-normal tracking-wide [text-shadow:_0_2px_12px_rgba(0,0,0,0.85)]">
+            {/* Italic Vision Quote */}
+            <div className="font-serif italic text-lg sm:text-xl md:text-2xl text-[#FDA377] font-normal tracking-wide [text-shadow:_0_2px_12px_rgba(0,0,0,0.85)]">
               {t.heroQuote}
             </div>
 
             {/* Description Subtitle structured in exactly 3 lines as requested */}
-            <p className="font-body-lg text-white font-light leading-relaxed text-sm sm:text-base md:text-[17px] pt-1 [text-shadow:_0_2px_10px_rgba(0,0,0,0.85)]">
+            <p className="font-body-lg text-white/95 font-light leading-relaxed text-xs sm:text-[13px] md:text-sm pt-0.5 [text-shadow:_0_2px_10px_rgba(0,0,0,0.85)] max-w-xl">
               <span className="block">{t.heroDescLine1}</span>
               <span className="block">{t.heroDescLine2}</span>
               <span className="block">{t.heroDescLine3}</span>
             </p>
 
             {/* Action Buttons matching the site's official style */}
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-stretch sm:items-center pt-4">
+            <div className="flex flex-col sm:flex-row gap-3.5 sm:gap-4 items-stretch sm:items-center pt-2">
               <a
                 href="#quiz"
-                className="bg-[#8C4723] border border-[#8C4723] hover:bg-[#a6562b] hover:border-[#a6562b] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-medium py-3.5 px-8 transition-all duration-500 min-w-[200px] text-center shadow-lg rounded-none cursor-pointer"
+                className="bg-[#8C4723] border border-[#8C4723] hover:bg-[#a6562b] hover:border-[#a6562b] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-medium py-3 px-7 transition-all duration-500 min-w-[180px] sm:min-w-[200px] text-center shadow-lg rounded-none cursor-pointer"
               >
                 {t.heroBtn}
               </a>
               <a
                 href="#agenda-llamada"
-                className="border border-white/60 hover:bg-[#8C4723] hover:border-[#8C4723] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-medium py-3.5 px-8 transition-all duration-500 min-w-[200px] text-center rounded-none cursor-pointer"
+                className="border border-white/60 hover:bg-[#8C4723] hover:border-[#8C4723] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-medium py-3 px-7 transition-all duration-500 min-w-[180px] sm:min-w-[200px] text-center rounded-none cursor-pointer"
               >
                 {t.heroBtnSec}
               </a>
             </div>
 
             {/* Carousel Slide Indicators */}
-            <div className="flex items-center gap-2 pt-6">
+            <div className="flex items-center gap-2 pt-3">
               {heroImages.map((_, i) => (
                 <button
                   key={i}
