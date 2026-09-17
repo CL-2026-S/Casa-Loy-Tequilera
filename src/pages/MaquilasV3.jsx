@@ -189,13 +189,12 @@ export default function MaquilasV3({ lang = "es" }) {
       heroBtnSec: "Agendar Llamada Técnica",
       
       // Trust Bar
-      trustNom: "NOM 1633 CRT",
-      trustRegion: "Los Altos de Jalisco",
-      trustGroup: "Grupo Orbe XXI (60+ Años)",
-      trustAgave: "3,600 Has. Agave Propio (1992)",
-      trustCapacity: "13.5M L / Año Capacidad",
-      trustControl: "Control Lote por Lote",
-      trustFree: "100% Additive Free Verified",
+      trustNom: "NOM 1633",
+      trustRegion: "LOS ALTOS DE JALISCO",
+      trustFamily: "FAMILY-OWNED",
+      trustRoots: "AGAVE ROOTS SINCE 1992",
+      trustBatch: "BATCH CONTROL",
+      trustExport: "EXPORT COORDINATION",
 
       // Why Casa Loy
       whyEyebrow: "INFRAESTRUCTURA & CERTEZA OPERATIVA",
@@ -311,13 +310,12 @@ export default function MaquilasV3({ lang = "es" }) {
       heroBtnSec: "Book a Technical Call",
 
       // Trust Bar
-      trustNom: "NOM 1633 CRT",
-      trustRegion: "Los Altos de Jalisco",
-      trustGroup: "Grupo Orbe XXI (60+ Years)",
-      trustAgave: "3,600 Has. Estate Agave (1992)",
-      trustCapacity: "13.5M L / Year Capacity",
-      trustControl: "Batch-by-Batch QA",
-      trustFree: "100% Additive Free Verified",
+      trustNom: "NOM 1633",
+      trustRegion: "LOS ALTOS DE JALISCO",
+      trustFamily: "FAMILY-OWNED",
+      trustRoots: "AGAVE ROOTS SINCE 1992",
+      trustBatch: "BATCH CONTROL",
+      trustExport: "EXPORT COORDINATION",
 
       // Why Casa Loy
       whyEyebrow: "INFRASTRUCTURE & OPERATIONAL CERTAINTY",
@@ -546,7 +544,7 @@ export default function MaquilasV3({ lang = "es" }) {
       specs: ["Alambiques de Cobre", "Columnas Continuas", "13.5M L / Año"],
       images: [
         { src: "/Destilación.webp", label: lang === "es" ? "Alambiques de Cobre" : "Copper Pot Stills" },
-        { src: "/Columnas Destilacion Tequila.jpg", label: lang === "es" ? "Columnas Continuas" : "Continuous Columns" }
+        { src: "/Columnas Destilacion Tequila Casa Loy.jpg", label: lang === "es" ? "Columnas Continuas" : "Continuous Columns" }
       ]
     },
     {
@@ -762,23 +760,33 @@ export default function MaquilasV3({ lang = "es" }) {
         </div>
       </section>
 
-      {/* TRUST BAR (Franja ejecutiva en tonos cálidos ivory idéntica a Home) */}
-      <div className="bg-[#F6F2EA] border-y border-[#1c1c18]/10 py-4.5 shadow-sm">
-        <div className="max-w-[1240px] mx-auto px-6">
-          <div className="flex flex-wrap justify-center items-center gap-y-2.5 gap-x-5 text-center">
-            <span className="font-navigation text-[11px] font-bold uppercase tracking-[0.18em] text-[#8C4723]">{t.trustNom}</span>
+      {/* TRUST BAR (NOM 1633 · LOS ALTOS DE JALISCO · FAMILY-OWNED · AGAVE ROOTS SINCE 1992 · BATCH CONTROL · EXPORT COORDINATION) */}
+      <div className="bg-[#F6F2EA] border-y border-[#1c1c18]/10 py-3.5 sm:py-4 shadow-sm">
+        <div className="max-w-[1300px] mx-auto px-6">
+          <div className="flex flex-wrap justify-center items-center gap-y-2 gap-x-4 sm:gap-x-6 text-center">
+            <span className="font-navigation text-[11px] sm:text-xs font-bold uppercase tracking-widest text-[#8C4723]">
+              {t.trustNom}
+            </span>
+            <span className="text-[#8C4723] text-xs font-semibold select-none hidden sm:inline">✦</span>
+            <span className="font-navigation text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-[#1c1c18]">
+              {t.trustRegion}
+            </span>
+            <span className="text-[#8C4723] text-xs font-semibold select-none hidden sm:inline">✦</span>
+            <span className="font-navigation text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-[#1c1c18]">
+              {t.trustFamily}
+            </span>
+            <span className="text-[#8C4723] text-xs font-semibold select-none hidden md:inline">✦</span>
+            <span className="font-navigation text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-[#1c1c18]">
+              {t.trustRoots}
+            </span>
             <span className="text-[#8C4723] text-xs font-semibold select-none hidden lg:inline">✦</span>
-            <span className="font-navigation text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1c1c18]">{t.trustRegion}</span>
+            <span className="font-navigation text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-[#1c1c18]">
+              {t.trustBatch}
+            </span>
             <span className="text-[#8C4723] text-xs font-semibold select-none hidden lg:inline">✦</span>
-            <span className="font-navigation text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1c1c18]">{t.trustGroup}</span>
-            <span className="text-[#8C4723] text-xs font-semibold select-none hidden lg:inline">✦</span>
-            <span className="font-navigation text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1c1c18]">{t.trustAgave}</span>
-            <span className="text-[#8C4723] text-xs font-semibold select-none hidden lg:inline">✦</span>
-            <span className="font-navigation text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1c1c18]">{t.trustCapacity}</span>
-            <span className="text-[#8C4723] text-xs font-semibold select-none hidden lg:inline">✦</span>
-            <span className="font-navigation text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1c1c18]">{t.trustControl}</span>
-            <span className="text-[#8C4723] text-xs font-semibold select-none hidden lg:inline">✦</span>
-            <span className="font-navigation text-[11px] font-bold uppercase tracking-[0.18em] text-emerald-800">{t.trustFree}</span>
+            <span className="font-navigation text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-[#1c1c18]">
+              {t.trustExport}
+            </span>
           </div>
         </div>
       </div>
