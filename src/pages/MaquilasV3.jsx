@@ -499,8 +499,9 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Campo de Agave Ayotlán Casa Loy Tequilera.webp", 
           label: lang === "es" ? "Campos de Agave" : "Agave Fields",
-          tag: lang === "es" ? "Campos de Agave" : "Agave Fields",
-          name: lang === "es" ? "Campos de Agave en Los Altos" : "Agave Fields in The highlands of Jalisco",
+          tag: lang === "es" ? "Campos de Agave en los Altos de Jalisco" : "Agave Fields in The highlands of Jalisco",
+          name: lang === "es" ? "Campos de Agave en los Altos de Jalisco" : "Agave Fields in The highlands of Jalisco",
+          titleAsBadge: true,
           desc: lang === "es" 
             ? "Más de 3,600 hectáreas de cultivo propio en Ayotlán, Jalisco, a más de 1,600 metros de altura con suelos rojos volcánicos ricos en minerales."
             : "Over 3,600 hectares of estate agaves in Ayotlán, Jalisco, grown above 1,600 meters elevation in mineral-rich red volcanic soil.",
@@ -1187,19 +1188,29 @@ export default function MaquilasV3({ lang = "es" }) {
                     {/* Overlaid Info */}
                     <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7 flex flex-col sm:flex-row sm:items-end justify-between gap-3 z-10">
                       <div className="space-y-1.5 max-w-2xl">
-                        <div className="flex items-center gap-2">
-                          <span className="font-navigation text-[9px] sm:text-[10px] text-white uppercase tracking-[0.25em] bg-[#8C4723] px-2.5 py-0.5 font-semibold inline-block rounded-none">
-                            {currentImgObj.badge || `${currentStation.num} · ${currentImgObj.tag || currentStation.tag}`}
-                          </span>
-                          {currentImgObj.label && currentImgObj.label !== (currentImgObj.tag || currentStation.tag) && (
-                            <span className="font-navigation text-[9px] sm:text-[10px] text-white/90 uppercase tracking-wider bg-white/15 backdrop-blur-md px-2 py-0.5 border border-white/20">
-                              {currentImgObj.label}
-                            </span>
-                          )}
-                        </div>
-                        <h3 className="font-serif text-xl sm:text-2xl text-white font-light">
-                          {currentImgObj.name || currentStation.name}
-                        </h3>
+                        {currentImgObj.titleAsBadge ? (
+                          <div className="mb-1">
+                            <h3 className="font-serif text-xl sm:text-2xl text-white font-light bg-[#8C4723] px-3.5 py-1 inline-block rounded-none shadow-sm">
+                              {currentImgObj.name || currentStation.name}
+                            </h3>
+                          </div>
+                        ) : (
+                          <>
+                            <div className="flex items-center gap-2">
+                              <span className="font-navigation text-[9px] sm:text-[10px] text-white uppercase tracking-[0.25em] bg-[#8C4723] px-2.5 py-0.5 font-semibold inline-block rounded-none">
+                                {currentImgObj.badge || `${currentStation.num} · ${currentImgObj.tag || currentStation.tag}`}
+                              </span>
+                              {currentImgObj.label && currentImgObj.label !== (currentImgObj.tag || currentStation.tag) && (
+                                <span className="font-navigation text-[9px] sm:text-[10px] text-white/90 uppercase tracking-wider bg-white/15 backdrop-blur-md px-2 py-0.5 border border-white/20">
+                                  {currentImgObj.label}
+                                </span>
+                              )}
+                            </div>
+                            <h3 className="font-serif text-xl sm:text-2xl text-white font-light">
+                              {currentImgObj.name || currentStation.name}
+                            </h3>
+                          </>
+                        )}
                         <p className="font-body-md text-white/90 leading-relaxed font-light text-xs sm:text-sm max-w-xl">
                           {currentImgObj.desc || currentStation.desc}
                         </p>
