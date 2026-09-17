@@ -490,7 +490,7 @@ export default function MaquilasV3({ lang = "es" }) {
     {
       num: "01",
       tag: lang === "es" ? "Recepción & Jima" : "Harvest & Intake",
-      name: lang === "es" ? "Plantación, Carga en Campo & Jima" : "Plantations, Field Loading & Harvest",
+      name: lang === "es" ? "Campos de Agave, Carga en Campo & Jima" : "Agave Fields, Field Loading & Harvest",
       desc: lang === "es"
         ? "Recepción directa de nuestras 3,600 hectáreas en Los Altos de Jalisco. Selección de piñas en plenitud de maduración (6-7 años) con medición de grados Brix."
         : "Direct intake from our 3,600 hectares in The highlands of Jalisco. Hand-selected agaves at peak maturity (6-7 years) tested for optimal natural Brix sugars.",
@@ -498,9 +498,9 @@ export default function MaquilasV3({ lang = "es" }) {
       images: [
         { 
           src: "/Campo de Agave Ayotlán Casa Loy Tequilera.webp", 
-          label: lang === "es" ? "Plantación Los Altos" : "The highlands of Jalisco",
-          tag: lang === "es" ? "Cultivo de Origen" : "The highlands of Jalisco",
-          name: lang === "es" ? "Plantaciones de Agave en Los Altos" : "Agave Plantations in The highlands of Jalisco",
+          label: lang === "es" ? "Campos de Agave" : "Agave Fields",
+          tag: lang === "es" ? "Campos de Agave" : "Agave Fields",
+          name: lang === "es" ? "Campos de Agave en Los Altos" : "Agave Fields in The highlands of Jalisco",
           desc: lang === "es" 
             ? "Más de 3,600 hectáreas de cultivo propio en Ayotlán, Jalisco, a más de 2,000 msnm con suelos rojos volcánicos ricos en hierro y clima templado."
             : "Over 3,600 hectares of estate agaves in Ayotlán, Jalisco, grown above 2,000 meters elevation in mineral-rich red volcanic soil.",
