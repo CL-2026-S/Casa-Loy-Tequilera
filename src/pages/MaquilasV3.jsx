@@ -643,34 +643,45 @@ export default function MaquilasV3({ lang = "es" }) {
     },
     {
       num: "05",
-      tag: lang === "es" ? "Destilación Dual" : "Distillation",
-      name: lang === "es" ? "Alambiques de Cobre & Columnas" : "Copper Pot Stills & Columns",
+      tag: lang === "es" ? "Destilación" : "Distillation",
+      name: lang === "es" ? "Alambiques de Cobre, Acero con Platillos & Columnas" : "Copper Pots, Stainless with Copper Plates & Columns",
       desc: lang === "es"
-        ? "Alambiques tradicionales de cobre para cortes precisos de cabeza y cola, complementados con columnas continuas europeas de alta eficiencia."
-        : "Traditional copper pot stills for precise cuts and author signatures, complemented with high-efficiency European continuous columns.",
-      specs: ["Alambiques de Cobre", "Columnas Continuas", "13.5M L / Año"],
+        ? "Tres rutas de destilación: alambiques tradicionales de cobre puro, alambiques de acero inoxidable con platillos de cobre y columnas continuas para perfiles de autor, balanceados o escalables."
+        : "Three distillation routes: traditional copper pot stills, stainless steel stills with copper plates, and continuous columns for signature, balanced, or scalable profiles.",
+      specs: lang === "es" ? ["Alambiques de Cobre", "Acero con Platillos", "Columnas Continuas"] : ["Copper Pot Stills", "Stainless & Copper Plates", "Continuous Columns"],
       images: [
         { 
           src: "/Destilación.webp", 
           label: lang === "es" ? "Alambiques de Cobre" : "Copper Pot Stills",
           copperTag: lang === "es" ? "05 · ALAMBIQUES DE COBRE" : "05 · COPPER POT STILLS",
-          whiteTag: lang === "es" ? "DOBLE DESTILACIÓN LENTA" : "SLOW DOUBLE DISTILLATION",
+          whiteTag: lang === "es" ? "PERFIL CON MAYOR CARÁCTER" : "CHARACTER-DRIVEN PROFILE",
           tag: lang === "es" ? "Alambiques de Cobre" : "Copper Pot Stills",
           desc: lang === "es"
-            ? "Doble destilación lenta en alambiques de cobre puro, eliminando compuestos sulfurosos y permitiendo cortes milimétricos de cabezas y colas para una textura sedosa."
-            : "Slow double distillation in pure copper pot stills, catalyzing sulfides and allowing precise cutpoints for a velvety, round mouthfeel.",
-          specs: lang === "es" ? ["Cobre Puro", "Doble Destilación", "Cortes Precisos"] : ["Pure Copper", "Double Distilled", "Silky Texture"]
+            ? "La destilación en alambiques de cobre permite desarrollar perfiles con mayor profundidad aromática, textura y carácter expresivo de agave. Esta ruta es ideal para marcas que buscan una expresión más tradicional, artesanal o de autor."
+            : "Copper pot still distillation develops tequila profiles with greater aromatic depth, texture, and expressive agave character. This route is ideal for brands seeking a more traditional, craft, or signature expression.",
+          specs: lang === "es" ? ["Perfil con Mayor Carácter", "Tradicional & Artesanal", "Lotes de Autor"] : ["Character-Driven", "Craft & Traditional", "Signature Batches"]
+        },
+        { 
+          src: "/Alambiques Acero Inoxidable Platillos Cobre Casa Loy.jpg", 
+          label: lang === "es" ? "Acero con Platillos" : "Stainless with Copper Plates",
+          copperTag: lang === "es" ? "05 · ALAMBIQUES DE ACERO CON PLATILLOS DE COBRE" : "05 · STAINLESS STILLS WITH COPPER PLATES",
+          whiteTag: lang === "es" ? "PERFIL BALANCEADO" : "BALANCED PROFILE",
+          tag: lang === "es" ? "Acero con Platillos de Cobre" : "Stainless with Copper Plates",
+          desc: lang === "es"
+            ? "La destilación en alambiques de acero inoxidable con platillos internos de cobre ofrece un balance entre precisión, limpieza, interacción con cobre y consistencia de perfil. Esta ruta está diseñada para marcas que buscan expresiones suaves, refinadas y bien equilibradas."
+            : "Distillation in stainless steel pot stills with internal copper plates offers a balance between precision, cleanliness, copper interaction, and profile consistency. This route is designed for brands seeking smooth, refined, and well-balanced tequila expressions.",
+          specs: lang === "es" ? ["Perfil Balanceado", "Suavidad & Control", "Consistencia entre Lotes"] : ["Balanced Profile", "Softness & Control", "Batch Consistency"]
         },
         { 
           src: "/Columnas Destilacion Tequila Casa Loy.jpg", 
           label: lang === "es" ? "Columnas Continuas" : "Continuous Columns",
-          copperTag: lang === "es" ? "05 · COLUMNAS CONTINUAS" : "05 · CONTINUOUS COLUMNS",
-          whiteTag: lang === "es" ? "13.5M LITROS ANUALES" : "13.5M LITERS ANNUAL CAPACITY",
-          tag: lang === "es" ? "Columnas Continuas" : "Continuous Columns",
+          copperTag: lang === "es" ? "05 · DESTILACIÓN CONTINUA EN COLUMNA" : "05 · CONTINUOUS COLUMN DISTILLATION",
+          whiteTag: lang === "es" ? "PERFIL ESCALABLE Y CONSISTENTE" : "SCALABLE CONSISTENT PROFILE",
+          tag: lang === "es" ? "Destilación Continua en Columna" : "Continuous Column Distillation",
           desc: lang === "es"
-            ? "Torres de destilación continua europea diseñadas para perfiles de máxima pureza, balance y capacidad industrial de 13.5 millones de litros anuales."
-            : "European continuous distillation towers engineered for ultra-pure spirit profiles, thermal efficiency, and guaranteed 13.5M L annual output.",
-          specs: lang === "es" ? ["13.5M L / Año", "Columnas Continuas", "Alta Pureza"] : ["13.5M L / Year", "Continuous Towers", "Ultra Pure Spirit"]
+            ? "La destilación continua en columna está diseñada para marcas que requieren perfiles limpios, consistencia, eficiencia y volumen escalable, manteniendo el tequila alineado al mercado objetivo."
+            : "Continuous column distillation is designed for brands that require clean profiles, consistency, efficiency, and scalable volume while keeping the tequila aligned with the target market.",
+          specs: lang === "es" ? ["Perfil Escalable y Consistente", "Eficiencia en Volumen", "Crecimiento de Marca"] : ["Scalable Consistent Profile", "Volume Efficiency", "Brand Growth"]
         }
       ]
     },
