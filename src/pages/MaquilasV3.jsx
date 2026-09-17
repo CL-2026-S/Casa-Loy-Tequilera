@@ -521,47 +521,50 @@ export default function MaquilasV3({ lang = "es" }) {
     {
       num: "02",
       tag: lang === "es" ? "Cocimiento de Tradición" : "Artisanal Cooking",
-      name: lang === "es" ? "Hornos de Mampostería & Cocción al Vapor" : "Masonry Ovens & Controlled Steam",
+      name: lang === "es" ? "Hornos de Mampostería & Autoclave" : "Stone Ovens & Autoclave",
       desc: lang === "es"
-        ? "Cocción tradicional en hornos de mampostería y cámaras de vapor a baja presión, transformando pacientemente los almidones del agave en mieles aromáticas y ricas notas frutales."
-        : "Traditional slow cooking in masonry brick ovens and low-pressure steam chambers, patiently transforming agave starches into rich honeys and varietal aromas.",
-      specs: lang === "es" ? ["Hornos de Mampostería", "Vapor Controlado", "Mieles de Agave"] : ["Masonry Ovens", "Controlled Steam", "Agave Honeys"],
+        ? "Cocción tradicional en hornos de mampostería y autoclaves de acero para perfiles de alta calidad, repetibilidad y consistencia."
+        : "Traditional slow steam cooking in masonry brick ovens and controlled stainless autoclaves engineered for consistency and scale.",
+      specs: lang === "es" ? ["Hornos de Mampostería", "Autoclave Controlado", "Perfiles a la Medida"] : ["Stone Ovens", "Controlled Autoclave", "Custom Profiles"],
       images: [
         { 
           src: "/Cocimiento de Agave.webp", 
-          label: lang === "es" ? "Hornos de Mampostería" : "Brick Masonry Ovens",
-          tag: lang === "es" ? "Hornos de Mampostería" : "Brick Masonry Ovens",
-          name: lang === "es" ? "Hornos Tradicionales de Mampostería" : "Traditional Brick Masonry Ovens",
+          label: lang === "es" ? "Hornos de Mampostería" : "Traditional Stone Ovens",
+          tag: lang === "es" ? "Hornos de Mampostería / Perfil Premium Tradicional" : "Stone Ovens / Traditional Premium Profile",
+          badge: lang === "es" ? "02 · HORNOS DE MAMPOSTERÍA / PERFIL PREMIUM TRADICIONAL" : "02 · STONE OVENS / TRADITIONAL PREMIUM PROFILE",
+          name: lang === "es" ? "Hornos Tradicionales de Mampostería" : "Traditional Stone Ovens",
           desc: lang === "es"
-            ? "Cocimiento lento al vapor en hornos de mampostería para desarrollar perfiles premium, suaves y expresivos, con notas de agave cocido, caramelo y miel."
-            : "Slow steam cooking in brick masonry ovens to develop premium, smooth, and expressive profiles, with notes of cooked agave, caramel, and honey.",
-          specs: lang === "es" ? ["Hornos de Mampostería", "Perfil Premium", "Agave Cocido & Miel"] : ["Brick Masonry Ovens", "Premium Profile", "Cooked Agave & Honey"]
+            ? "Cocimiento lento al vapor en hornos de mampostería para desarrollar un perfil premium con notas de agave cocido, caramelo, miel y mayor profundidad aromática."
+            : "Slow steam cooking in stone ovens to create a premium tequila profile with cooked agave character, caramel notes, honey, and deeper aromatic complexity.",
+          specs: lang === "es" ? ["Hornos de Mampostería", "Perfil Premium Tradicional", "Caramelo & Miel"] : ["Stone Ovens", "Traditional Premium", "Caramel & Honey Notes"]
         },
         { 
           src: "/Autoclaves Acero Inoxidable Casa Loy.jpg", 
-          label: lang === "es" ? "Cocción al Vapor" : "Controlled Steam",
-          tag: lang === "es" ? "Cocción al Vapor" : "Controlled Steam",
-          name: lang === "es" ? "Cocimiento al Vapor a Baja Presión" : "Low-Pressure Steam Cooking",
+          label: lang === "es" ? "Autoclave" : "Controlled Autoclave",
+          tag: lang === "es" ? "Autoclave / Perfil Premium Consistente" : "Autoclave / Premium Consistent Profile",
+          badge: lang === "es" ? "04 · AUTOCLAVE / PERFIL PREMIUM CONSISTENTE" : "04 · AUTOCLAVE / PREMIUM CONSISTENT PROFILE",
+          name: lang === "es" ? "Cocimiento Controlado en Autoclave" : "Controlled Autoclave Cooking",
           desc: lang === "es"
-            ? "Cocción suave y controlada con inyección de vapor limpio a baja presión, protegiendo las mieles vivas del agave maduro para resaltar un perfil fresco, noble y de gran pureza herbal y cítrica."
-            : "Gentle low-pressure clean steam cooking that protects the delicate honeys of mature agave, highlighting crisp herbal, citrus, and fresh fruit notes.",
-          specs: lang === "es" ? ["Vapor a Baja Presión", "Mieles Vírgenes", "Perfil Fresco & Herbal"] : ["Low-Pressure Steam", "Pure Agave Honeys", "Fresh Herbal Profile"]
+            ? "Cocción eficiente y controlada para desarrollar perfiles limpios, suaves y consistentes, ideales para marcas que buscan calidad, repetibilidad y capacidad de crecimiento."
+            : "Efficient and controlled cooking to develop clean, smooth, and consistent tequila profiles, ideal for brands seeking quality, repeatability, and growth capacity.",
+          specs: lang === "es" ? ["Autoclave Controlado", "Perfil Premium Consistente", "Calidad & Repetibilidad"] : ["Controlled Autoclave", "Consistent Profile", "Quality & Repeatability"]
         }
       ]
     },
     {
       num: "03",
       tag: lang === "es" ? "Extracción Noble" : "Gentle Extraction",
-      name: lang === "es" ? "Tahona Volcánica & Molino de Tornillo" : "Volcanic Tahona & Screw Mill",
+      name: lang === "es" ? "Tahona, Molino de Tornillo & Extracción en Crudo" : "Volcanic Tahona, Screw Mill & Raw Extraction",
       desc: lang === "es"
-        ? "Molienda tradicional en tahona volcánica ancestral para lotes de autor y extracción suave mediante molino de tornillo para un prensado continuo y controlado."
-        : "Ancestral volcanic stone tahona for author small-batches and continuous screw mill for gentle, non-destructive juice extraction.",
-      specs: lang === "es" ? ["Tahona Tradicional", "Molino de Tornillo", "Extracción Suave"] : ["Volcanic Tahona", "Screw Mill", "Gentle Extraction"],
+        ? "Múltiples rutas de extracción para adaptar el perfil y la escala: tahona volcánica ancestral, molino de tornillo de prensado noble y extracción en crudo."
+        : "Multiple extraction paths tailored to profile and scale: ancestral volcanic stone tahona, gentle screw mill pressing, and raw extraction.",
+      specs: lang === "es" ? ["Tahona Tradicional", "Molino de Tornillo", "Extracción en Crudo"] : ["Volcanic Tahona", "Screw Mill", "Raw Extraction"],
       images: [
         { 
           src: "/Tahona Agave Molienda.webp", 
           label: lang === "es" ? "Tahona Tradicional" : "Volcanic Tahona",
           tag: lang === "es" ? "Tahona Tradicional" : "Volcanic Tahona",
+          badge: lang === "es" ? "03 · TAHONA VOLCÁNICA ANCESTRAL" : "03 · ANCESTRAL VOLCANIC TAHONA",
           name: lang === "es" ? "Tahona Volcánica Ancestral" : "Ancestral Volcanic Stone Tahona",
           desc: lang === "es"
             ? "Molienda tradicional con piedra volcánica para perfiles artesanales, expresivos y con mayor carácter de agave. Ideal para marcas con enfoque premium, craft o de autor."
@@ -571,12 +574,24 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Molino Rosh Molienda Agave Casa Loy.jpg", 
           label: lang === "es" ? "Molino de Tornillo" : "Screw Mill",
-          tag: lang === "es" ? "Extracción Noble" : "Gentle Extraction",
+          tag: lang === "es" ? "Molino de Tornillo" : "Screw Mill",
+          badge: lang === "es" ? "05 · MOLINO DE TORNILLO / EXTRACCIÓN NOBLE" : "05 · SCREW MILL / GENTLE EXTRACTION",
           name: lang === "es" ? "Molino de Tornillo" : "Screw Mill",
           desc: lang === "es"
             ? "Mediante un prensado continuo y controlado, extraemos los jugos del agave cocido sin triturar agresivamente sus fibras. Esta tecnología, también utilizada en la industria vinícola, permite una extracción suave, uniforme y eficiente."
             : "Through a continuous, controlled pressing process, we extract the juices from the cooked agave without crushing its fibers. This technology, also used in winemaking, allows for a gentle, consistent, and efficient extraction.",
           specs: lang === "es" ? ["Prensado Continuo", "Extracción Suave", "Inspiración Vinícola"] : ["Continuous Press", "Gentle Extraction", "Winemaking Tech"]
+        },
+        { 
+          src: "/Molino Desgarrador Agave.jpg", 
+          label: lang === "es" ? "Extracción en Crudo" : "Raw Extraction",
+          tag: lang === "es" ? "Extracción en Crudo / Perfil Comercial Escalable" : "Raw Extraction / Scalable Commercial Profile",
+          badge: lang === "es" ? "06 · EXTRACCIÓN EN CRUDO / PERFIL COMERCIAL ESCALABLE" : "06 · RAW EXTRACTION / SCALABLE COMMERCIAL PROFILE",
+          name: lang === "es" ? "Extracción de Agave en Crudo" : "Raw Agave Extraction",
+          desc: lang === "es"
+            ? "Ruta de extracción controlada para marcas que buscan eficiencia, consistencia y producción escalable, manteniendo el perfil del tequila alineado al mercado objetivo."
+            : "A controlled extraction path for brands seeking efficiency, consistency, and scalable production while keeping the tequila profile aligned with market needs.",
+          specs: lang === "es" ? ["Extracción en Crudo", "Perfil Comercial Escalable", "Eficiencia & Escala"] : ["Raw Extraction", "Scalable Commercial", "Efficiency & Scale"]
         }
       ]
     },
@@ -1174,7 +1189,7 @@ export default function MaquilasV3({ lang = "es" }) {
                       <div className="space-y-1.5 max-w-2xl">
                         <div className="flex items-center gap-2">
                           <span className="font-navigation text-[9px] sm:text-[10px] text-white uppercase tracking-[0.25em] bg-[#8C4723] px-2.5 py-0.5 font-semibold inline-block rounded-none">
-                            {currentStation.num} · {currentImgObj.tag || currentStation.tag}
+                            {currentImgObj.badge || `${currentStation.num} · ${currentImgObj.tag || currentStation.tag}`}
                           </span>
                           {currentImgObj.label && currentImgObj.label !== (currentImgObj.tag || currentStation.tag) && (
                             <span className="font-navigation text-[9px] sm:text-[10px] text-white/90 uppercase tracking-wider bg-white/15 backdrop-blur-md px-2 py-0.5 border border-white/20">
