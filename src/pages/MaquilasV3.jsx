@@ -499,7 +499,7 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Campo de Agave Ayotlán Casa Loy Tequilera.webp", 
           label: lang === "es" ? "Campos de Agave" : "Agave Fields",
-          copperTag: lang === "es" ? "CAMPOS DE AGAVE" : "AGAVE FIELDS",
+          copperTag: lang === "es" ? "01 · CAMPOS DE AGAVE" : "01 · AGAVE FIELDS",
           whiteTag: lang === "es" ? "Los Altos de Jalisco" : "The highlands of Jalisco",
           tag: lang === "es" ? "Campos de Agave" : "Agave Fields",
           desc: lang === "es" 
@@ -510,7 +510,7 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Jima.webp", 
           label: lang === "es" ? "Jima de Agave" : "Agave Harvesting",
-          copperTag: lang === "es" ? "JIMA DE AGAVE" : "AGAVE HARVESTING",
+          copperTag: lang === "es" ? "01 · JIMA DE AGAVE" : "01 · AGAVE HARVESTING",
           whiteTag: lang === "es" ? "Jima al Ras" : "Close-Shave Harvesting",
           tag: lang === "es" ? "Jima de Agave" : "Agave Harvesting",
           desc: lang === "es"
