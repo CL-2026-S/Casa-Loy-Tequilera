@@ -694,7 +694,7 @@ export default function AboutUs({ t, lang, setPage }) {
       title: "La Tierra Prometida",
       desc: "Todo comienza en el silencio de la tierra roja de Ayotlán. Aquí, a 2,000 metros de altura, plantamos a mano el futuro. Cada hijuelo de agave azul es una promesa de paciencia; un compromiso que dormirá bajo el sol de Jalisco durante siete largos años, absorbiendo los minerales que darán alma a nuestro tequila.",
       img: "/Empleado Casa Loy Tequilera Siembra.webp",
-      detail: "Suelo: Arcilloso-rojizo de los Altos de Jalisco a 2,000 msnm.",
+      detail: "Suelo: Arcilloso-rojizo de los Altos de Jalisco a 2,000 metros de altura.",
     },
     {
       num: "02",

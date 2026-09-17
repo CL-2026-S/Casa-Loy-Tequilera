@@ -490,7 +490,7 @@ export default function MaquilasV3({ lang = "es" }) {
     {
       num: "01",
       tag: lang === "es" ? "Recepción & Jima" : "Harvest & Intake",
-      name: lang === "es" ? "Campos de Agave, Carga en Campo & Jima" : "Agave Fields, Field Loading & Harvest",
+      name: lang === "es" ? "Campos de Agave & Jima" : "Agave Fields & Harvest",
       desc: lang === "es"
         ? "Recepción directa de nuestras 3,600 hectáreas en Los Altos de Jalisco. Selección de piñas en plenitud de maduración (6-7 años) con medición de grados Brix."
         : "Direct intake from our 3,600 hectares in The highlands of Jalisco. Hand-selected agaves at peak maturity (6-7 years) tested for optimal natural Brix sugars.",
@@ -502,19 +502,9 @@ export default function MaquilasV3({ lang = "es" }) {
           tag: lang === "es" ? "Campos de Agave" : "Agave Fields",
           name: lang === "es" ? "Campos de Agave en Los Altos" : "Agave Fields in The highlands of Jalisco",
           desc: lang === "es" 
-            ? "Más de 3,600 hectáreas de cultivo propio en Ayotlán, Jalisco, a más de 2,000 msnm con suelos rojos volcánicos ricos en hierro y clima templado."
+            ? "Más de 3,600 hectáreas de cultivo propio en Ayotlán, Jalisco, a más de 2,000 metros de altura con suelos rojos volcánicos ricos en hierro y clima templado."
             : "Over 3,600 hectares of estate agaves in Ayotlán, Jalisco, grown above 2,000 meters elevation in mineral-rich red volcanic soil.",
           specs: lang === "es" ? ["3,600 Has. Propias", "Los Altos de Jalisco", "Suelo Volcánico"] : ["3,600 Estate Has.", "The highlands of Jalisco", "Volcanic Soil"]
-        },
-        { 
-          src: "/Jima Carga Camion Agave Casa Loy.jpg", 
-          label: lang === "es" ? "Carga en Campo" : "Field Loading",
-          tag: lang === "es" ? "Logística de Campo" : "Field Transport",
-          name: lang === "es" ? "Carga y Logística de Campo" : "Field Loading & Transport Logistics",
-          desc: lang === "es"
-            ? "Carga directa de piñas maduras en camiones de volteo para su traslado inmediato a la destilería, garantizando frescura total sin fermentaciones espontáneas."
-            : "Direct loading of harvested agaves onto dedicated field trucks heading straight to the distillery, ensuring pristine freshness and zero premature souring.",
-          specs: lang === "es" ? ["Logística Inmediata", "Piñas Frescas", "Transporte Propio"] : ["Direct Logistics", "Fresh Harvest", "Dedicated Fleet"]
         },
         { 
           src: "/Jima.webp", 
