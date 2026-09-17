@@ -86,7 +86,7 @@ export default function MaquilasV3({ lang = "es" }) {
     const el = agaveRef.current;
     if (!el) return;
     if (!("IntersectionObserver" in window)) {
-      setCounters({ msnm: 2000, has: 3600, plants: 10.8 });
+      setCounters({ msnm: 1600, has: 3600, plants: 10.8 });
       return;
     }
     const obs = new IntersectionObserver(([entry]) => {
@@ -108,14 +108,14 @@ export default function MaquilasV3({ lang = "es" }) {
       const progress = Math.min(elapsed / duration, 1);
       const ease = 1 - Math.pow(1 - progress, 3);
       setCounters({
-        msnm: Math.round(2000 * ease),
+        msnm: Math.round(1600 * ease),
         has: Math.round(3600 * ease),
         plants: Number((10.8 * ease).toFixed(1))
       });
       if (progress < 1) {
         requestAnimationFrame(frame);
       } else {
-        setCounters({ msnm: 2000, has: 3600, plants: 10.8 });
+        setCounters({ msnm: 1600, has: 3600, plants: 10.8 });
       }
     };
     requestAnimationFrame(frame);
@@ -502,8 +502,8 @@ export default function MaquilasV3({ lang = "es" }) {
           tag: lang === "es" ? "Campos de Agave" : "Agave Fields",
           name: lang === "es" ? "Campos de Agave en Los Altos" : "Agave Fields in The highlands of Jalisco",
           desc: lang === "es" 
-            ? "Más de 3,600 hectáreas de cultivo propio en Ayotlán, Jalisco, a más de 2,000 metros de altura con suelos rojos volcánicos ricos en minerales."
-            : "Over 3,600 hectares of estate agaves in Ayotlán, Jalisco, grown above 2,000 meters elevation in mineral-rich red volcanic soil.",
+            ? "Más de 3,600 hectáreas de cultivo propio en Ayotlán, Jalisco, a más de 1,600 metros de altura con suelos rojos volcánicos ricos en minerales."
+            : "Over 3,600 hectares of estate agaves in Ayotlán, Jalisco, grown above 1,600 meters elevation in mineral-rich red volcanic soil.",
           specs: lang === "es" ? ["3,600 Has. Propias", "Los Altos de Jalisco", "Suelo Volcánico"] : ["3,600 Estate Has.", "The highlands of Jalisco", "Volcanic Soil"]
         },
         { 
@@ -533,9 +533,9 @@ export default function MaquilasV3({ lang = "es" }) {
           tag: lang === "es" ? "Hornos de Mampostería" : "Masonry Brick Ovens",
           name: lang === "es" ? "Hornos Tradicionales de Mampostería" : "Traditional Masonry Brick Ovens",
           desc: lang === "es"
-            ? "Cocimiento lento al vapor durante 36 a 48 horas en hornos de mampostería, convirtiendo almidones en fructosa y desarrollando notas profundas de caramelo y miel cocida."
-            : "Slow 36-48 hour steam cooking inside thick masonry brick ovens, transforming natural starches into sweet, rich caramel aromas.",
-          specs: lang === "es" ? ["Hornos de Mampostería", "Cocción Lenta 48h", "Notas Caramelizadas"] : ["Masonry Ovens", "Slow 48h Steam", "Caramelized Profile"]
+            ? "Cocimiento lento al vapor durante 48 horas + en hornos de mampostería, convirtiendo almidones en fructosa y desarrollando notas profundas de caramelo y miel cocida."
+            : "Slow 48+ hour steam cooking inside thick masonry brick ovens, transforming natural starches into sweet, rich caramel aromas.",
+          specs: lang === "es" ? ["Hornos de Mampostería", "Cocción Lenta 48h+", "Notas Caramelizadas"] : ["Masonry Ovens", "Slow 48h+ Steam", "Caramelized Profile"]
         },
         { 
           src: "/Autoclaves Acero Inoxidable Casa Loy.jpg", 
@@ -551,12 +551,12 @@ export default function MaquilasV3({ lang = "es" }) {
     },
     {
       num: "03",
-      tag: lang === "es" ? "Extracción Noble" : "Noble Extraction",
-      name: lang === "es" ? "Tahona Volcánica & Tren de Molienda" : "Volcanic Tahona & Shredder Mill",
+      tag: lang === "es" ? "Extracción Noble" : "Gentle Extraction",
+      name: lang === "es" ? "Tahona Volcánica & Molino de Tornillo" : "Volcanic Tahona & Screw Mill",
       desc: lang === "es"
-        ? "Tahona volcánica ancestral para lotes de autor y tren de molienda mecánico de alta capacidad con tolvas industriales para extracción suave de azúcares."
-        : "Ancestral volcanic stone tahona for author small-batches and high-throughput industrial shredder roller line for gentle sugar extraction.",
-      specs: ["Tahona Tradicional", "Tren de Molienda ROSH", "Extracción Suave"],
+        ? "Molienda tradicional en tahona volcánica ancestral para lotes de autor y extracción suave mediante molino de tornillo para un prensado continuo y controlado."
+        : "Ancestral volcanic stone tahona for author small-batches and continuous screw mill for gentle, non-destructive juice extraction.",
+      specs: lang === "es" ? ["Tahona Tradicional", "Molino de Tornillo", "Extracción Suave"] : ["Volcanic Tahona", "Screw Mill", "Gentle Extraction"],
       images: [
         { 
           src: "/Tahona Agave Molienda.webp", 
@@ -570,13 +570,13 @@ export default function MaquilasV3({ lang = "es" }) {
         },
         { 
           src: "/Molino Rosh Molienda Agave Casa Loy.jpg", 
-          label: lang === "es" ? "Tren de Molienda" : "Shredder Mill Line",
-          tag: lang === "es" ? "Tren de Molienda ROSH" : "ROSH Mill Line",
-          name: lang === "es" ? "Tren de Molienda Industrial ROSH" : "ROSH Industrial Shredder Roller Mill",
+          label: lang === "es" ? "Molino de Tornillo" : "Screw Mill",
+          tag: lang === "es" ? "Extracción Noble" : "Gentle Extraction",
+          name: lang === "es" ? "Molino de Tornillo" : "Screw Mill",
           desc: lang === "es"
-            ? "Línea mecanizada con desfibradora de alta velocidad y batería de molinos de rodillos ROSH, garantizando extracción continua de alta eficiencia a escala industrial."
-            : "High-throughput mechanized ROSH shredder and roller line delivering clean, high-yield agave sugar extraction at industrial scale.",
-          specs: lang === "es" ? ["Molino ROSH", "Alta Capacidad", "Rendimiento Constante"] : ["ROSH Mill Line", "Industrial Scale", "High-Yield Output"]
+            ? "Mediante un prensado continuo y controlado, extraemos los jugos del agave cocido sin triturar agresivamente sus fibras. Esta tecnología, también utilizada en la industria vinícola, permite una extracción suave, uniforme y eficiente."
+            : "Through a continuous, controlled pressing process, we extract the juices from the cooked agave without crushing its fibers. This technology, also used in winemaking, allows for a gentle, consistent, and efficient extraction.",
+          specs: lang === "es" ? ["Prensado Continuo", "Extracción Suave", "Inspiración Vinícola"] : ["Continuous Press", "Gentle Extraction", "Winemaking Tech"]
         }
       ]
     },

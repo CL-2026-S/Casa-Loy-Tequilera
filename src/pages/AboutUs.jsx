@@ -627,9 +627,9 @@ export default function AboutUs({ t, lang, setPage }) {
       num: "01",
       timelineLabel: "Plantation",
       title: "The Promised Land",
-      desc: "It all begins in the silence of Ayotlán's red soil. Here, at an altitude of 2,000 meters, we plant the future by hand. Each blue agave pup is a promise of patience; a commitment that will sleep under the Jalisco sun for seven long years, absorbing the minerals that will give soul to our tequila.",
+      desc: "It all begins in the silence of Ayotlán's red soil. Here, at an altitude of 1,600 meters, we plant the future by hand. Each blue agave pup is a promise of patience; a commitment that will sleep under the Jalisco sun for seven long years, absorbing the minerals that will give soul to our tequila.",
       img: "/Empleado Casa Loy Tequilera Siembra.webp",
-      detail: "Terroir: Iron-rich red clay in The highlands of Jalisco at 2,000 meters.",
+      detail: "Terroir: Iron-rich red clay in The highlands of Jalisco at 1,600 meters.",
     },
     {
       num: "02",
@@ -692,9 +692,9 @@ export default function AboutUs({ t, lang, setPage }) {
       num: "01",
       timelineLabel: "Siembra",
       title: "La Tierra Prometida",
-      desc: "Todo comienza en el silencio de la tierra roja de Ayotlán. Aquí, a 2,000 metros de altura, plantamos a mano el futuro. Cada hijuelo de agave azul es una promesa de paciencia; un compromiso que dormirá bajo el sol de Jalisco durante siete largos años, absorbiendo los minerales que darán alma a nuestro tequila.",
+      desc: "Todo comienza en el silencio de la tierra roja de Ayotlán. Aquí, a 1,600 metros de altura, plantamos a mano el futuro. Cada hijuelo de agave azul es una promesa de paciencia; un compromiso que dormirá bajo el sol de Jalisco durante siete largos años, absorbiendo los minerales que darán alma a nuestro tequila.",
       img: "/Empleado Casa Loy Tequilera Siembra.webp",
-      detail: "Suelo: Arcilloso-rojizo de los Altos de Jalisco a 2,000 metros de altura.",
+      detail: "Suelo: Arcilloso-rojizo de los Altos de Jalisco a 1,600 metros de altura.",
     },
     {
       num: "02",
