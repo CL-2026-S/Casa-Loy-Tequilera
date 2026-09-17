@@ -1191,7 +1191,7 @@ export default function MaquilasV3({ lang = "es" }) {
                       <div className="space-y-1.5 max-w-2xl">
                         {currentImgObj.titleAsBadge ? (
                           <div className="mb-1">
-                            <h3 className="font-serif text-[17px] sm:text-[21px] text-white font-light bg-[#8C4723] px-3.5 py-1 inline-block rounded-none shadow-sm">
+                            <h3 className="font-serif text-[14px] sm:text-[15px] text-white font-light bg-[#8C4723] px-3 py-0.5 inline-block rounded-none shadow-sm">
                               {currentImgObj.name || currentStation.name}
                             </h3>
                           </div>
