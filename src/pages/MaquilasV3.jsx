@@ -511,12 +511,12 @@ export default function MaquilasV3({ lang = "es" }) {
           src: "/Jima.webp", 
           label: lang === "es" ? "Jima de Agave" : "Agave Harvesting",
           copperTag: lang === "es" ? "01 · JIMA DE AGAVE" : "01 · AGAVE HARVESTING",
-          whiteTag: lang === "es" ? "Jima al Ras" : "Close-Shave Harvesting",
+          whiteTag: lang === "es" ? "Jima Baja" : "Close-Shave Harvesting",
           tag: lang === "es" ? "Jima de Agave" : "Agave Harvesting",
           desc: lang === "es"
             ? "Corte y rasurado de penca al ras por jimadores experimentados en agaves madurados 6-7 años, concentrando únicamente los azúcares nobles y grados Brix ideales."
             : "Close-shave jimador harvesting of 6-7 year agaves at peak physiological maturity, isolating the sweet core and maximizing natural Brix sugar levels.",
-          specs: lang === "es" ? ["Jima al Ras", "6-7 Años Madurez", "Altos Grados Brix"] : ["Close Shave Cut", "6-7 Year Maturity", "Peak Brix Sugars"]
+          specs: lang === "es" ? ["Jima Baja", "6-7 Años Madurez", "Altos Grados Brix"] : ["Close Shave Cut", "6-7 Year Maturity", "Peak Brix Sugars"]
         }
       ]
     },
