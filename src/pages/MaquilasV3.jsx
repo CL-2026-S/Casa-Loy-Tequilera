@@ -798,90 +798,126 @@ export default function MaquilasV3({ lang = "es" }) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             <Reveal delay={100}>
-              <div className="p-5 sm:p-6 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
+              <div className="p-6 sm:p-7 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
                 <div>
-                  <span className="font-serif text-2xl font-light text-primary block mb-1">01</span>
-                  <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-1">
-                    {lang === "es" ? "Terruño de Origen" : "Highlands Terroir"}
-                  </span>
-                  <h3 className="font-serif text-xl font-bold text-[#1c1c18] mb-1.5">NOM 1633, Los Altos</h3>
+                  <div className="flex items-center justify-between mb-2.5">
+                    <span className="font-navigation text-[10px] sm:text-[11px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
+                      {lang === "es" ? "Origen" : "Origin"}
+                    </span>
+                    <span className="font-serif text-lg font-light text-[#8C4723]/60">01</span>
+                  </div>
+                  <h3 className="font-serif text-lg sm:text-xl font-bold text-[#1c1c18] mb-2 leading-snug">
+                    NOM 1633, Los Altos de Jalisco
+                  </h3>
                   <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
-                    {lang === "es" ? "Ayotlán a más de 2,000 msnm con suelos rojos volcánicos ricos en hierro y microclima con oscilación térmica ideal." : "Ayotlán above 2,000m elevation with red volcanic soil and optimal thermal day/night swing."}
+                    {lang === "es"
+                      ? "Producción protegida bajo denominación de origen en los Altos de Jalisco."
+                      : "Designation of origin protected production in Jalisco highlands."}
                   </p>
                 </div>
               </div>
             </Reveal>
 
             <Reveal delay={150}>
-              <div className="p-5 sm:p-6 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
+              <div className="p-6 sm:p-7 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
                 <div>
-                  <span className="font-serif text-2xl font-light text-primary block mb-1">02</span>
-                  <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-1">
-                    {lang === "es" ? "Respaldo Industrial" : "Industrial Group"}
-                  </span>
-                  <h3 className="font-serif text-xl font-bold text-[#1c1c18] mb-1.5">Grupo Orbe XXI (60+ {lang === "es" ? "Años" : "Years"})</h3>
+                  <div className="flex items-center justify-between mb-2.5">
+                    <span className="font-navigation text-[10px] sm:text-[11px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
+                      {lang === "es" ? "Estructura" : "Structure"}
+                    </span>
+                    <span className="font-serif text-lg font-light text-[#8C4723]/60">02</span>
+                  </div>
+                  <h3 className="font-serif text-lg sm:text-xl font-bold text-[#1c1c18] mb-2 leading-snug">
+                    {lang === "es" ? "Empresa familiar, tres generaciones" : "Family-owned, three generations"}
+                  </h3>
                   <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
-                    {lang === "es" ? "Consorcio agroindustrial con más de 2,900 colaboradores y empresas líderes hermanas como TeknoAgrox y Nutriagaves." : "Multinational consortium with 2,900+ employees and sister agro-tech leaders TeknoAgrox and Nutriagaves."}
+                    {lang === "es"
+                      ? "Compromiso generacional, trato directo sin burocracia y alianzas sólidas."
+                      : "Long-term commitment, direct leadership and stable partnerships."}
                   </p>
                 </div>
               </div>
             </Reveal>
 
             <Reveal delay={200}>
-              <div className="p-5 sm:p-6 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
+              <div className="p-6 sm:p-7 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
                 <div>
-                  <span className="font-serif text-2xl font-light text-primary block mb-1">03</span>
-                  <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-1">
-                    {lang === "es" ? "Reserva Propia" : "Estate Reserve"}
-                  </span>
-                  <h3 className="font-serif text-xl font-bold text-[#1c1c18] mb-1.5">3,600 Has. {lang === "es" ? "de Agave" : "Estate Agave"}</h3>
+                  <div className="flex items-center justify-between mb-2.5">
+                    <span className="font-navigation text-[10px] sm:text-[11px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
+                      {lang === "es" ? "Agave" : "Agave"}
+                    </span>
+                    <span className="font-serif text-lg font-light text-[#8C4723]/60">03</span>
+                  </div>
+                  <h3 className="font-serif text-lg sm:text-xl font-bold text-[#1c1c18] mb-2 leading-snug">
+                    {lang === "es" ? "Cultivo propio desde 1992" : "Own cultivation since 1992"}
+                  </h3>
                   <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
-                    {lang === "es" ? "10.8 millones de plantas propias cultivadas desde 1992 que blindan tu costo por litro contra la especulación spot." : "10.8 million estate agaves since 1992 insulating your brand margins against open spot agave speculation."}
+                    {lang === "es"
+                      ? "3,600 hectáreas que blindan tu costo por litro y garantizan abasto continuo."
+                      : "3,600 hectares ensuring price security and guaranteed supply."}
                   </p>
                 </div>
               </div>
             </Reveal>
 
             <Reveal delay={250}>
-              <div className="p-5 sm:p-6 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
+              <div className="p-6 sm:p-7 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
                 <div>
-                  <span className="font-serif text-2xl font-light text-primary block mb-1">04</span>
-                  <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-1">
-                    {lang === "es" ? "Trato Técnico Directo" : "Direct Engineering"}
-                  </span>
-                  <h3 className="font-serif text-xl font-bold text-[#1c1c18] mb-1.5">{lang === "es" ? "Sin Intermediarios" : "No Middlemen Brokers"}</h3>
+                  <div className="flex items-center justify-between mb-2.5">
+                    <span className="font-navigation text-[10px] sm:text-[11px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
+                      {lang === "es" ? "Equipo" : "Team"}
+                    </span>
+                    <span className="font-serif text-lg font-light text-[#8C4723]/60">04</span>
+                  </div>
+                  <h3 className="font-serif text-lg sm:text-xl font-bold text-[#1c1c18] mb-2 leading-snug">
+                    {lang === "es" ? "Personas reales detrás de cada proyecto" : "Real people behind every project"}
+                  </h3>
                   <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
-                    {lang === "es" ? "Comunicación directa con maestros destiladores, ingenieros químicos y coordinadores de aduanas y exportación." : "Direct work sessions with master distillers, laboratory chemists, and export compliance specialists."}
+                    {lang === "es"
+                      ? "Maestros tequileros, ingenieros químicos y coordinadores de exportación."
+                      : "Master distillers, chemical engineers, and international trade advisers."}
                   </p>
                 </div>
               </div>
             </Reveal>
 
             <Reveal delay={300}>
-              <div className="p-5 sm:p-6 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
+              <div className="p-6 sm:p-7 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
                 <div>
-                  <span className="font-serif text-2xl font-light text-primary block mb-1">05</span>
-                  <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-1">
-                    {lang === "es" ? "Escala & Flexibilidad" : "Scale & Versatility"}
-                  </span>
-                  <h3 className="font-serif text-xl font-bold text-[#1c1c18] mb-1.5">13.5M {lang === "es" ? "Litros / Año" : "Liters / Year"}</h3>
+                  <div className="flex items-center justify-between mb-2.5">
+                    <span className="font-navigation text-[10px] sm:text-[11px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
+                      {lang === "es" ? "Infraestructura" : "Infrastructure"}
+                    </span>
+                    <span className="font-serif text-lg font-light text-[#8C4723]/60">05</span>
+                  </div>
+                  <h3 className="font-serif text-lg sm:text-xl font-bold text-[#1c1c18] mb-2 leading-snug">
+                    {lang === "es" ? "Construida para proyectos serios y en crecimiento" : "Built for serious, growing projects"}
+                  </h3>
                   <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
-                    {lang === "es" ? "Hornos de mampostería (240t), autoclaves (80t), tahona volcánica, alambiques de cobre y columnas continuas." : "Traditional brick ovens (240t), autoclaves (80t), volcanic tahona, copper pot stills, and continuous columns."}
+                    {lang === "es"
+                      ? "Flexibilidad industrial desde lotes piloto hasta tanques de granel."
+                      : "Industrial scale flexibility from pilot runs to bulk containers."}
                   </p>
                 </div>
               </div>
             </Reveal>
 
             <Reveal delay={350}>
-              <div className="p-5 sm:p-6 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
+              <div className="p-6 sm:p-7 bg-white border border-[#1c1c18]/10 flex flex-col justify-between transition-all duration-500 hover:border-[#8C4723]/40 hover:shadow-md rounded-none h-full">
                 <div>
-                  <span className="font-serif text-2xl font-light text-primary block mb-1">06</span>
-                  <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.25em] font-semibold block mb-1">
-                    {lang === "es" ? "Control Químico" : "Batch Traceability"}
-                  </span>
-                  <h3 className="font-serif text-xl font-bold text-[#1c1c18] mb-1.5">{lang === "es" ? "Cromatografía de Gases" : "Gas Chromatography QA"}</h3>
+                  <div className="flex items-center justify-between mb-2.5">
+                    <span className="font-navigation text-[10px] sm:text-[11px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
+                      {lang === "es" ? "Calidad" : "Quality"}
+                    </span>
+                    <span className="font-serif text-lg font-light text-[#8C4723]/60">06</span>
+                  </div>
+                  <h3 className="font-serif text-lg sm:text-xl font-bold text-[#1c1c18] mb-2 leading-snug">
+                    {lang === "es" ? "Control de lote en cada producción" : "Batch control on every production"}
+                  </h3>
                   <p className="font-body-md text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
-                    {lang === "es" ? "Tasting Lab in-house con validación analítica lote a lote y sellos internacionales: USDA, Kosher y Additive Free." : "In-house lab with batch-by-batch chromatographic reports and USDA, Kosher, and Additive Free certifications."}
+                    {lang === "es"
+                      ? "Laboratorio interno y verificación estricta de cumplimiento CRT por lote."
+                      : "Internal laboratory and CRT compliance verification on every run."}
                   </p>
                 </div>
               </div>
