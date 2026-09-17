@@ -834,15 +834,15 @@ export default function MaquilasV3({ lang = "es" }) {
         {/* Left-Aligned Content Container - Ample clearance below fixed Header (pt-28 sm:pt-32) */}
         <div className="relative z-20 px-6 sm:px-10 lg:px-16 max-w-[1280px] mx-auto w-full pt-28 sm:pt-32 pb-16">
           <div className="max-w-2xl lg:max-w-3xl text-left space-y-3.5 sm:space-y-4 animate-slide-left-right">
-            {/* Title with exact requested structure: bold top lines + less-bold subtitle lines */}
-            <h1 className="font-serif leading-[1.1] tracking-tight text-white [text-shadow:_0_2px_14px_rgba(0,0,0,0.85)]">
-              <span className="block font-medium text-[clamp(24px,3vw,42px)]">
+            {/* Title with exact requested structure: enlarged bold top lines + less-bold subtitle lines */}
+            <h1 className="font-serif leading-[1.08] tracking-tight text-white [text-shadow:_0_2px_14px_rgba(0,0,0,0.85)]">
+              <span className="block font-medium text-[clamp(28px,3.8vw,50px)]">
                 {t.heroTitleLine1}
               </span>
-              <span className="block font-medium text-[clamp(24px,3vw,42px)]">
+              <span className="block font-medium text-[clamp(28px,3.8vw,50px)]">
                 {t.heroTitleLine2}
               </span>
-              <span className="block font-light text-white/90 text-[clamp(17px,2.1vw,28px)] mt-1.5 sm:mt-2 leading-[1.18]">
+              <span className="block font-light text-white/90 text-[clamp(18px,2.2vw,30px)] mt-1.5 sm:mt-2.5 leading-[1.16]">
                 <span className="block">{t.heroSubLine1}</span>
                 <span className="block">{t.heroSubLine2}</span>
               </span>
