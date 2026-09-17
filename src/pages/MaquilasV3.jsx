@@ -499,9 +499,9 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Campo de Agave Ayotlán Casa Loy Tequilera.webp", 
           label: lang === "es" ? "Campos de Agave" : "Agave Fields",
-          tag: lang === "es" ? "Campos de Agave en los Altos de Jalisco" : "Agave Fields in The highlands of Jalisco",
-          name: lang === "es" ? "Campos de Agave en los Altos de Jalisco" : "Agave Fields in The highlands of Jalisco",
-          titleAsBadge: true,
+          copperTag: lang === "es" ? "CAMPOS DE AGAVE" : "AGAVE FIELDS",
+          whiteTag: lang === "es" ? "Los Altos de Jalisco" : "The highlands of Jalisco",
+          tag: lang === "es" ? "Campos de Agave" : "Agave Fields",
           desc: lang === "es" 
             ? "Más de 3,600 hectáreas de cultivo propio en Ayotlán, Jalisco, a más de 1,600 metros de altura con suelos rojos volcánicos ricos en minerales."
             : "Over 3,600 hectares of estate agaves in Ayotlán, Jalisco, grown above 1,600 meters elevation in mineral-rich red volcanic soil.",
@@ -510,9 +510,9 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Jima.webp", 
           label: lang === "es" ? "Jima de Agave" : "Agave Harvesting",
-          tag: lang === "es" ? "Jima al Ras" : "Close-Shave Harvesting",
-          name: lang === "es" ? "Jima al Ras" : "Close-Shave Harvesting",
-          titleAsBadge: true,
+          copperTag: lang === "es" ? "JIMA DE AGAVE" : "AGAVE HARVESTING",
+          whiteTag: lang === "es" ? "Jima al Ras" : "Close-Shave Harvesting",
+          tag: lang === "es" ? "Jima de Agave" : "Agave Harvesting",
           desc: lang === "es"
             ? "Corte y rasurado de penca al ras por jimadores experimentados en agaves madurados 6-7 años, concentrando únicamente los azúcares nobles y grados Brix ideales."
             : "Close-shave jimador harvesting of 6-7 year agaves at peak physiological maturity, isolating the sweet core and maximizing natural Brix sugar levels.",
@@ -1189,11 +1189,14 @@ export default function MaquilasV3({ lang = "es" }) {
                     {/* Overlaid Info */}
                     <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7 flex flex-col sm:flex-row sm:items-end justify-between gap-3 z-10">
                       <div className="space-y-1.5 max-w-2xl">
-                        {currentImgObj.titleAsBadge ? (
-                          <div className="mb-1">
-                            <h3 className="font-serif text-[14px] sm:text-[15px] text-white font-light bg-[#8C4723] px-3 py-0.5 inline-block rounded-none shadow-sm">
-                              {currentImgObj.name || currentStation.name}
-                            </h3>
+                        {currentImgObj.copperTag && currentImgObj.whiteTag ? (
+                          <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                            <span className="font-navigation text-[13.5px] sm:text-[15px] text-white uppercase tracking-[0.2em] bg-[#8C4723] px-3.5 py-1 font-semibold inline-block rounded-none shadow-sm">
+                              {currentImgObj.copperTag}
+                            </span>
+                            <span className="font-navigation text-[13.5px] sm:text-[15px] text-white uppercase tracking-wider bg-white/15 backdrop-blur-md px-3 py-1 border border-white/20 inline-block rounded-none shadow-sm">
+                              {currentImgObj.whiteTag}
+                            </span>
                           </div>
                         ) : (
                           <>
