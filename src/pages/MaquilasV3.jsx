@@ -502,7 +502,7 @@ export default function MaquilasV3({ lang = "es" }) {
           tag: lang === "es" ? "Campos de Agave" : "Agave Fields",
           name: lang === "es" ? "Campos de Agave en Los Altos" : "Agave Fields in The highlands of Jalisco",
           desc: lang === "es" 
-            ? "Más de 3,600 hectáreas de cultivo propio en Ayotlán, Jalisco, a más de 2,000 metros de altura con suelos rojos volcánicos ricos en hierro y clima templado."
+            ? "Más de 3,600 hectáreas de cultivo propio en Ayotlán, Jalisco, a más de 2,000 metros de altura con suelos rojos volcánicos ricos en minerales."
             : "Over 3,600 hectares of estate agaves in Ayotlán, Jalisco, grown above 2,000 meters elevation in mineral-rich red volcanic soil.",
           specs: lang === "es" ? ["3,600 Has. Propias", "Los Altos de Jalisco", "Suelo Volcánico"] : ["3,600 Estate Has.", "The highlands of Jalisco", "Volcanic Soil"]
         },
