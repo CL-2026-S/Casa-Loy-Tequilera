@@ -529,13 +529,13 @@ export default function MaquilasV3({ lang = "es" }) {
       images: [
         { 
           src: "/Cocimiento de Agave.webp", 
-          label: lang === "es" ? "Hornos de Mampostería" : "Masonry Brick Ovens",
-          tag: lang === "es" ? "Hornos de Mampostería" : "Masonry Brick Ovens",
-          name: lang === "es" ? "Hornos Tradicionales de Mampostería" : "Traditional Masonry Brick Ovens",
+          label: lang === "es" ? "Hornos de Mampostería" : "Brick Masonry Ovens",
+          tag: lang === "es" ? "Hornos de Mampostería" : "Brick Masonry Ovens",
+          name: lang === "es" ? "Hornos Tradicionales de Mampostería" : "Traditional Brick Masonry Ovens",
           desc: lang === "es"
-            ? "Cocimiento lento al vapor durante 48 horas + en hornos de mampostería, convirtiendo almidones en fructosa y desarrollando notas profundas de caramelo y miel cocida."
-            : "Slow 48+ hour steam cooking inside thick masonry brick ovens, transforming natural starches into sweet, rich caramel aromas.",
-          specs: lang === "es" ? ["Hornos de Mampostería", "Cocción Lenta 48h+", "Notas Caramelizadas"] : ["Masonry Ovens", "Slow 48h+ Steam", "Caramelized Profile"]
+            ? "Cocimiento lento al vapor en hornos de mampostería para desarrollar perfiles premium, suaves y expresivos, con notas de agave cocido, caramelo y miel."
+            : "Slow steam cooking in brick masonry ovens to develop premium, smooth, and expressive profiles, with notes of cooked agave, caramel, and honey.",
+          specs: lang === "es" ? ["Hornos de Mampostería", "Perfil Premium", "Agave Cocido & Miel"] : ["Brick Masonry Ovens", "Premium Profile", "Cooked Agave & Honey"]
         },
         { 
           src: "/Autoclaves Acero Inoxidable Casa Loy.jpg", 
