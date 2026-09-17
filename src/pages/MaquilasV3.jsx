@@ -530,32 +530,32 @@ export default function MaquilasV3({ lang = "es" }) {
     },
     {
       num: "02",
-      tag: lang === "es" ? "Cocimiento Dual" : "Cooking Process",
-      name: lang === "es" ? "Hornos de Mampostería & Autoclaves" : "Brick Ovens & Pressure Autoclaves",
+      tag: lang === "es" ? "Cocimiento de Tradición" : "Artisanal Cooking",
+      name: lang === "es" ? "Hornos de Mampostería & Cocción al Vapor" : "Masonry Ovens & Controlled Steam",
       desc: lang === "es"
-        ? "Capacidad combinada de horneado: 240 toneladas en hornos tradicionales de mampostería para notas caramelizadas y 80 toneladas en autoclaves cilíndricos de alta presión."
-        : "Versatile cooking: 240 metric tons in traditional masonry brick ovens and 80 tons in high-pressure stainless steel autoclaves.",
-      specs: ["240t Hornos Mampostería", "80t Autoclaves", "Vapor Controlado"],
+        ? "Cocción tradicional en hornos de mampostería y cámaras de vapor a baja presión, transformando pacientemente los almidones del agave en mieles aromáticas y ricas notas frutales."
+        : "Traditional slow cooking in masonry brick ovens and low-pressure steam chambers, patiently transforming agave starches into rich honeys and varietal aromas.",
+      specs: lang === "es" ? ["Hornos de Mampostería", "Vapor Controlado", "Mieles de Agave"] : ["Masonry Ovens", "Controlled Steam", "Agave Honeys"],
       images: [
         { 
           src: "/Cocimiento de Agave.webp", 
-          label: lang === "es" ? "Hornos de Mampostería" : "Brick Masonry Ovens",
-          tag: lang === "es" ? "Hornos de Mampostería" : "Brick Masonry Ovens",
-          name: lang === "es" ? "Hornos Tradicionales de Mampostería (240t)" : "Traditional Brick Masonry Ovens (240t)",
+          label: lang === "es" ? "Hornos de Mampostería" : "Masonry Brick Ovens",
+          tag: lang === "es" ? "Hornos de Mampostería" : "Masonry Brick Ovens",
+          name: lang === "es" ? "Hornos Tradicionales de Mampostería" : "Traditional Masonry Brick Ovens",
           desc: lang === "es"
             ? "Cocimiento lento al vapor durante 36 a 48 horas en hornos de mampostería, convirtiendo almidones en fructosa y desarrollando notas profundas de caramelo y miel cocida."
             : "Slow 36-48 hour steam cooking inside thick masonry brick ovens, transforming natural starches into sweet, rich caramel aromas.",
-          specs: lang === "es" ? ["240t Capacidad", "Cocción Lenta 48h", "Notas Caramelizadas"] : ["240t Capacity", "Slow 48h Steam", "Caramelized Profile"]
+          specs: lang === "es" ? ["Hornos de Mampostería", "Cocción Lenta 48h", "Notas Caramelizadas"] : ["Masonry Ovens", "Slow 48h Steam", "Caramelized Profile"]
         },
         { 
           src: "/Autoclaves Acero Inoxidable Casa Loy.jpg", 
-          label: lang === "es" ? "Autoclaves de Acero" : "Pressure Autoclaves",
-          tag: lang === "es" ? "Autoclaves de Acero" : "Pressure Autoclaves",
-          name: lang === "es" ? "Autoclaves de Acero Inoxidable (80t)" : "Stainless Steel Pressure Autoclaves (80t)",
+          label: lang === "es" ? "Cocción al Vapor" : "Controlled Steam",
+          tag: lang === "es" ? "Cocción al Vapor" : "Controlled Steam",
+          name: lang === "es" ? "Cocimiento al Vapor a Baja Presión" : "Low-Pressure Steam Cooking",
           desc: lang === "es"
-            ? "Batería de autoclaves cilíndricos de alta presión para una hidrólisis rápida, homogénea y estéril, ideal para perfiles frescos con gran pureza herbal y cítrica."
-            : "High-pressure stainless steel cylindrical autoclaves ensuring uniform thermal hydrolysis while retaining bright agave freshness and crisp herbal notes.",
-          specs: lang === "es" ? ["80t Capacidad", "Acero Inoxidable", "Hidrólisis Homogénea"] : ["80t Capacity", "Stainless Steel", "Clean Hydrolysis"]
+            ? "Cocción suave y controlada con inyección de vapor limpio a baja presión, protegiendo las mieles vivas del agave maduro para resaltar un perfil fresco, noble y de gran pureza herbal y cítrica."
+            : "Gentle low-pressure clean steam cooking that protects the delicate honeys of mature agave, highlighting crisp herbal, citrus, and fresh fruit notes.",
+          specs: lang === "es" ? ["Vapor a Baja Presión", "Mieles Vírgenes", "Perfil Fresco & Herbal"] : ["Low-Pressure Steam", "Pure Agave Honeys", "Fresh Herbal Profile"]
         }
       ]
     },
