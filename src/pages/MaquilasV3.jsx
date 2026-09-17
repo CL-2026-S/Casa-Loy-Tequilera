@@ -1191,10 +1191,10 @@ export default function MaquilasV3({ lang = "es" }) {
                       <div className="space-y-1.5 max-w-2xl">
                         {currentImgObj.copperTag && currentImgObj.whiteTag ? (
                           <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                            <span className="font-navigation text-[13.5px] sm:text-[15px] text-white uppercase tracking-[0.2em] bg-[#8C4723] px-3.5 py-1 font-semibold inline-block rounded-none shadow-sm">
+                            <span className="font-navigation text-[11.5px] sm:text-[13px] text-white uppercase tracking-[0.2em] bg-[#8C4723] px-3 py-0.5 font-semibold inline-block rounded-none shadow-sm">
                               {currentImgObj.copperTag}
                             </span>
-                            <span className="font-navigation text-[13.5px] sm:text-[15px] text-white uppercase tracking-wider bg-white/15 backdrop-blur-md px-3 py-1 border border-white/20 inline-block rounded-none shadow-sm">
+                            <span className="font-navigation text-[11.5px] sm:text-[13px] text-white uppercase tracking-wider bg-white/15 backdrop-blur-md px-2.5 py-0.5 border border-white/20 inline-block rounded-none shadow-sm">
                               {currentImgObj.whiteTag}
                             </span>
                           </div>
