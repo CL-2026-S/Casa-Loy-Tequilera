@@ -532,24 +532,24 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Cocimiento de Agave.webp", 
           label: lang === "es" ? "Hornos de Mampostería" : "Traditional Stone Ovens",
-          tag: lang === "es" ? "Hornos de Mampostería / Perfil Premium Tradicional" : "Stone Ovens / Traditional Premium Profile",
-          badge: lang === "es" ? "02 · HORNOS DE MAMPOSTERÍA / PERFIL PREMIUM TRADICIONAL" : "02 · STONE OVENS / TRADITIONAL PREMIUM PROFILE",
-          name: lang === "es" ? "Hornos Tradicionales de Mampostería" : "Traditional Stone Ovens",
+          copperTag: lang === "es" ? "02 · HORNOS DE MAMPOSTERÍA" : "02 · STONE OVENS",
+          whiteTag: lang === "es" ? "PERFIL TRADICIONAL" : "TRADITIONAL PROFILE",
+          tag: lang === "es" ? "Hornos de Mampostería" : "Traditional Stone Ovens",
           desc: lang === "es"
-            ? "Cocimiento lento al vapor en hornos de mampostería para desarrollar un perfil premium con notas de agave cocido, caramelo, miel y mayor profundidad aromática."
-            : "Slow steam cooking in stone ovens to create a premium tequila profile with cooked agave character, caramel notes, honey, and deeper aromatic complexity.",
-          specs: lang === "es" ? ["Hornos de Mampostería", "Perfil Premium Tradicional", "Caramelo & Miel"] : ["Stone Ovens", "Traditional Premium", "Caramel & Honey Notes"]
+            ? "Cocimiento lento al vapor en hornos de mampostería para desarrollar un perfil tradicional con notas de agave cocido, caramelo, miel y mayor profundidad aromática."
+            : "Slow steam cooking in stone ovens to create a traditional tequila profile with cooked agave character, caramel notes, honey, and deeper aromatic complexity.",
+          specs: lang === "es" ? ["Hornos de Mampostería", "Perfil Tradicional", "Caramelo & Miel"] : ["Stone Ovens", "Traditional Profile", "Caramel & Honey Notes"]
         },
         { 
           src: "/Autoclaves Acero Inoxidable Casa Loy.jpg", 
           label: lang === "es" ? "Autoclave" : "Controlled Autoclave",
-          tag: lang === "es" ? "Autoclave / Perfil Premium Consistente" : "Autoclave / Premium Consistent Profile",
-          badge: lang === "es" ? "04 · AUTOCLAVE / PERFIL PREMIUM CONSISTENTE" : "04 · AUTOCLAVE / PREMIUM CONSISTENT PROFILE",
-          name: lang === "es" ? "Cocimiento Controlado en Autoclave" : "Controlled Autoclave Cooking",
+          copperTag: lang === "es" ? "02 · AUTOCLAVE" : "02 · CONTROLLED AUTOCLAVE",
+          whiteTag: lang === "es" ? "PERFIL CONSISTENTE" : "CONSISTENT PROFILE",
+          tag: lang === "es" ? "Autoclave" : "Controlled Autoclave",
           desc: lang === "es"
             ? "Cocción eficiente y controlada para desarrollar perfiles limpios, suaves y consistentes, ideales para marcas que buscan calidad, repetibilidad y capacidad de crecimiento."
             : "Efficient and controlled cooking to develop clean, smooth, and consistent tequila profiles, ideal for brands seeking quality, repeatability, and growth capacity.",
-          specs: lang === "es" ? ["Autoclave Controlado", "Perfil Premium Consistente", "Calidad & Repetibilidad"] : ["Controlled Autoclave", "Consistent Profile", "Quality & Repeatability"]
+          specs: lang === "es" ? ["Autoclave Controlado", "Perfil Consistente", "Calidad & Repetibilidad"] : ["Controlled Autoclave", "Consistent Profile", "Quality & Repeatability"]
         }
       ]
     },
@@ -565,9 +565,9 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Tahona Agave Molienda.webp", 
           label: lang === "es" ? "Tahona Tradicional" : "Volcanic Tahona",
+          copperTag: lang === "es" ? "03 · TAHONA VOLCÁNICA" : "03 · VOLCANIC TAHONA",
+          whiteTag: lang === "es" ? "MOLIENDA ANCESTRAL" : "ANCESTRAL MILLING",
           tag: lang === "es" ? "Tahona Tradicional" : "Volcanic Tahona",
-          badge: lang === "es" ? "03 · TAHONA VOLCÁNICA ANCESTRAL" : "03 · ANCESTRAL VOLCANIC TAHONA",
-          name: lang === "es" ? "Tahona Volcánica Ancestral" : "Ancestral Volcanic Stone Tahona",
           desc: lang === "es"
             ? "Molienda tradicional con piedra volcánica para perfiles artesanales, expresivos y con mayor carácter de agave. Ideal para marcas con enfoque premium, craft o de autor."
             : "Traditional volcanic stone milling for artisanal, expressive profiles with profound agave character. Ideal for premium, craft, or author-led brand concepts.",
@@ -576,9 +576,9 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Molino Rosh Molienda Agave Casa Loy.jpg", 
           label: lang === "es" ? "Molino de Tornillo" : "Screw Mill",
+          copperTag: lang === "es" ? "03 · MOLINO DE TORNILLO" : "03 · SCREW MILL",
+          whiteTag: lang === "es" ? "EXTRACCIÓN NOBLE" : "GENTLE EXTRACTION",
           tag: lang === "es" ? "Molino de Tornillo" : "Screw Mill",
-          badge: lang === "es" ? "05 · MOLINO DE TORNILLO / EXTRACCIÓN NOBLE" : "05 · SCREW MILL / GENTLE EXTRACTION",
-          name: lang === "es" ? "Molino de Tornillo" : "Screw Mill",
           desc: lang === "es"
             ? "Mediante un prensado continuo y controlado, extraemos los jugos del agave cocido sin triturar agresivamente sus fibras. Esta tecnología, también utilizada en la industria vinícola, permite una extracción suave, uniforme y eficiente."
             : "Through a continuous, controlled pressing process, we extract the juices from the cooked agave without crushing its fibers. This technology, also used in winemaking, allows for a gentle, consistent, and efficient extraction.",
@@ -587,9 +587,9 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Molino Desgarrador Agave.jpg", 
           label: lang === "es" ? "Extracción en Crudo" : "Raw Extraction",
-          tag: lang === "es" ? "Extracción en Crudo / Perfil Comercial Escalable" : "Raw Extraction / Scalable Commercial Profile",
-          badge: lang === "es" ? "06 · EXTRACCIÓN EN CRUDO / PERFIL COMERCIAL ESCALABLE" : "06 · RAW EXTRACTION / SCALABLE COMMERCIAL PROFILE",
-          name: lang === "es" ? "Extracción de Agave en Crudo" : "Raw Agave Extraction",
+          copperTag: lang === "es" ? "03 · EXTRACCIÓN EN CRUDO" : "03 · RAW EXTRACTION",
+          whiteTag: lang === "es" ? "PERFIL COMERCIAL ESCALABLE" : "SCALABLE COMMERCIAL PROFILE",
+          tag: lang === "es" ? "Extracción en Crudo" : "Raw Extraction",
           desc: lang === "es"
             ? "Ruta de extracción controlada para marcas que buscan eficiencia, consistencia y producción escalable, manteniendo el perfil del tequila alineado al mercado objetivo."
             : "A controlled extraction path for brands seeking efficiency, consistency, and scalable production while keeping the tequila profile aligned with market needs.",
@@ -604,27 +604,29 @@ export default function MaquilasV3({ lang = "es" }) {
       desc: lang === "es"
         ? "Fermentación abierta tradicional para enriquecer ésteres frutales y batería de tanques de acero inoxidable cerrados con control térmico automatizado."
         : "Traditional open wooden/steel vats for fruit-forward esters and automated temperature-controlled closed stainless tanks.",
-      specs: ["Open Fermentation", "Closed Fermentation", "Levaduras Propias"],
+      specs: lang === "es" ? ["Fermentación Abierta", "Fermentación Cerrada", "Levaduras Propias"] : ["Open Fermentation", "Closed Fermentation", "Proprietary Yeasts"],
       images: [
         { 
           src: "/Fermentación.webp", 
-          label: lang === "es" ? "Open Fermentation" : "Open Fermentation",
-          tag: lang === "es" ? "Open Fermentation" : "Open Fermentation",
-          name: lang === "es" ? "Tinas de Fermentación Abierta" : "Open Fermentation Vats",
+          label: lang === "es" ? "Fermentación Abierta" : "Open Fermentation",
+          copperTag: lang === "es" ? "04 · FERMENTACIÓN ABIERTA" : "04 · OPEN FERMENTATION",
+          whiteTag: lang === "es" ? "MICROFLORA SILVESTRE" : "WILD MICROFLORA",
+          tag: lang === "es" ? "Fermentación Abierta" : "Open Fermentation",
           desc: lang === "es"
             ? "Fermentación en tinas abiertas que captura la microflora silvestre de Los Altos de Jalisco, desarrollando perfiles aromáticos complejos con notas frutales y florales únicas."
             : "Traditional open fermentation vats interacting with highland ambient air to cultivate distinct floral and fruit aromatic esters.",
-          specs: lang === "es" ? ["Open Fermentation", "Microflora Nativa", "Ésteres Frutales"] : ["Open Fermentation", "Native Microflora", "Fruit Esters"]
+          specs: lang === "es" ? ["Fermentación Abierta", "Microflora Nativa", "Ésteres Frutales"] : ["Open Fermentation", "Native Microflora", "Fruit Esters"]
         },
         { 
           src: "/Tanques Fermentacion Cerrada Acero Casa Loy.jpg", 
-          label: lang === "es" ? "Closed Fermentation" : "Closed Fermentation",
-          tag: lang === "es" ? "Closed Fermentation" : "Closed Fermentation",
-          name: lang === "es" ? "Tanques de Fermentación Cerrada en Acero" : "Closed Stainless Fermentation Tanks",
+          label: lang === "es" ? "Fermentación Cerrada" : "Closed Fermentation",
+          copperTag: lang === "es" ? "04 · FERMENTACIÓN CERRADA" : "04 · CLOSED FERMENTATION",
+          whiteTag: lang === "es" ? "CONTROL TÉRMICO AUTOMATIZADO" : "AUTOMATED THERMAL CONTROL",
+          tag: lang === "es" ? "Fermentación Cerrada" : "Closed Fermentation",
           desc: lang === "es"
             ? "Batería de tanques cerrados de acero inoxidable grado alimenticio con camisas térmicas automatizadas, garantizando fermentaciones limpias, homogéneas y 100% reproducibles."
             : "Closed food-grade stainless steel fermentation tanks equipped with automated thermal jackets for sterile, repeatable, and temperature-stable fermentations.",
-          specs: lang === "es" ? ["Closed Fermentation", "Control Térmico", "Acero Grado Alimenticio"] : ["Closed Fermentation", "Thermal Jacketed", "Batch Consistency"]
+          specs: lang === "es" ? ["Fermentación Cerrada", "Control Térmico", "Acero Grado Alimenticio"] : ["Closed Fermentation", "Thermal Jacketed", "Batch Consistency"]
         }
       ]
     },
@@ -640,8 +642,9 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Destilación.webp", 
           label: lang === "es" ? "Alambiques de Cobre" : "Copper Pot Stills",
+          copperTag: lang === "es" ? "05 · ALAMBIQUES DE COBRE" : "05 · COPPER POT STILLS",
+          whiteTag: lang === "es" ? "DOBLE DESTILACIÓN LENTA" : "SLOW DOUBLE DISTILLATION",
           tag: lang === "es" ? "Alambiques de Cobre" : "Copper Pot Stills",
-          name: lang === "es" ? "Alambiques Tradicionales de Cobre" : "Traditional Copper Pot Stills",
           desc: lang === "es"
             ? "Doble destilación lenta en alambiques de cobre puro, eliminando compuestos sulfurosos y permitiendo cortes milimétricos de cabezas y colas para una textura sedosa."
             : "Slow double distillation in pure copper pot stills, catalyzing sulfides and allowing precise cutpoints for a velvety, round mouthfeel.",
@@ -650,8 +653,9 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Columnas Destilacion Tequila Casa Loy.jpg", 
           label: lang === "es" ? "Columnas Continuas" : "Continuous Columns",
+          copperTag: lang === "es" ? "05 · COLUMNAS CONTINUAS" : "05 · CONTINUOUS COLUMNS",
+          whiteTag: lang === "es" ? "13.5M LITROS ANUALES" : "13.5M LITERS ANNUAL CAPACITY",
           tag: lang === "es" ? "Columnas Continuas" : "Continuous Columns",
-          name: lang === "es" ? "Columnas Continuas de Alta Eficiencia" : "High-Efficiency Continuous Columns",
           desc: lang === "es"
             ? "Torres de destilación continua europea diseñadas para perfiles de máxima pureza, balance y capacidad industrial de 13.5 millones de litros anuales."
             : "European continuous distillation towers engineered for ultra-pure spirit profiles, thermal efficiency, and guaranteed 13.5M L annual output.",
@@ -671,8 +675,9 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Pasillo Cava de Añejamiento.webp", 
           label: lang === "es" ? "Cava Subterránea" : "Underground Cellar",
+          copperTag: lang === "es" ? "06 · CAVA SUBTERRÁNEA" : "06 · UNDERGROUND CELLAR",
+          whiteTag: lang === "es" ? "MICROCLIMA CONTROLADO" : "STEADY MICROCLIMATE",
           tag: lang === "es" ? "Cava Subterránea" : "Underground Cellar",
-          name: lang === "es" ? "Cava Subterránea de Barricas" : "Underground Maturation Cellar",
           desc: lang === "es"
             ? "Bóveda subterránea con microclima controlado que garantiza estabilidad de temperatura y humedad, reduciendo mermas y favoreciendo una maduración pausada."
             : "Underground vaulted cellars with natural thermal and humidity stability ensuring a steady, undisturbed wood maturation.",
@@ -681,8 +686,9 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Cava de Añejamiento.webp", 
           label: lang === "es" ? "Guarda en Barricas" : "Oak Casks Reserve",
+          copperTag: lang === "es" ? "06 · PROGRAMA DE BARRICAS" : "06 · BARREL PORTFOLIO",
+          whiteTag: lang === "es" ? "ROBLE AMERICANO, BOURBON & FRANCÉS" : "AMERICAN, BOURBON & FRENCH OAK",
           tag: lang === "es" ? "Tipos de Barricas" : "Barrel Portfolio",
-          name: lang === "es" ? "Roble Americano, Bourbon & Roble Francés" : "American Oak, Bourbon & French Oak Casks",
           desc: lang === "es"
             ? "Portafolio versátil de maduración: Roble Blanco Americano nuevo, barricas seleccionadas de primer uso de Bourbon, Roble Francés y acabados especiales para perfiles Reposado, Añejo y Extra Añejo."
             : "Custom wood program featuring virgin American White Oak, selected first-fill Bourbon casks, and French Oak tailored for Reposado, Añejo, and Extra Añejo expressions.",
@@ -702,8 +708,9 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Laboratorio Maquilas.webp", 
           label: lang === "es" ? "Laboratorio de Calidad" : "Analytical Lab",
+          copperTag: lang === "es" ? "07 · LABORATORIO DE CONTROL" : "07 · IN-HOUSE TESTING LAB",
+          whiteTag: lang === "es" ? "CERTIFICACIÓN CRT LOTE POR LOTE" : "BATCH CRT COMPLIANCE",
           tag: lang === "es" ? "Laboratorio de Calidad" : "Analytical Lab",
-          name: lang === "es" ? "Laboratorio de Control y Cumplimiento CRT" : "In-House Quality & CRT Compliance Lab",
           desc: lang === "es"
             ? "Monitoreo químico y analítico lote por lote verificando parámetros fisicoquímicos (alcoholimetría, metanol, ésteres) para certificación oficial y exportación global."
             : "Batch-by-batch laboratory testing and chemical verification measuring proof, esters, and congeners to guarantee CRT certification and international market compliance.",
@@ -712,8 +719,9 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Recorrido Diamante Cava Cata.webp", 
           label: lang === "es" ? "Tasting Lab en Cava" : "In-Cellar Tasting Lab",
+          copperTag: lang === "es" ? "07 · TASTING LAB EN CAVA" : "07 · IN-CELLAR TASTING LAB",
+          whiteTag: lang === "es" ? "PERFILADO ORGANOLÉPTICO" : "SENSORY PROFILING",
           tag: lang === "es" ? "Tasting Lab en Cava" : "In-Cellar Tasting Lab",
-          name: lang === "es" ? "Tasting Lab y Panel Sensorial en Cava" : "In-Cellar Sensory Tasting Lab",
           desc: lang === "es"
             ? "Espacio exclusivo de cata en cava subterránea para perfilar organolépticamente el destilado junto con el cliente y maestros tequileros."
             : "Exclusive in-cellar tasting salon to define, calibrate, and lock in your brand's unique sensory profile alongside our master distillers.",
@@ -733,8 +741,9 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Linea Embotellado Tanque Envasado Casa Loy.jpg", 
           label: lang === "es" ? "Línea de Envasado" : "Packaging Line",
+          copperTag: lang === "es" ? "08 · LÍNEA DE ENVASADO" : "08 · PACKAGING LINE",
+          whiteTag: lang === "es" ? "TANQUES TEN-01 DEDICADOS" : "DEDICATED TEN-01 TANKS",
           tag: lang === "es" ? "Línea de Envasado" : "Packaging Line",
-          name: lang === "es" ? "Línea de Envasado y Tanques TEN-01" : "Packaging Line & TEN-01 Holding Tanks",
           desc: lang === "es"
             ? "Tanques de reposo de envasado dedicados (20,000+ L) y línea de embotellado continuo con dosificación volumétrica de alta precisión y taponado hermético."
             : "Dedicated holding tanks (20,000+ L) and automated bottling line with high-precision volumetric dosing and hermetic corking.",
@@ -743,8 +752,9 @@ export default function MaquilasV3({ lang = "es" }) {
         { 
           src: "/Embotellado 2.webp", 
           label: lang === "es" ? "Inspección de Calidad" : "Quality Inspection",
+          copperTag: lang === "es" ? "08 · INSPECCIÓN DE CALIDAD" : "08 · QUALITY INSPECTION",
+          whiteTag: lang === "es" ? "MESA LUMÍNICA DE EXPORTACIÓN" : "LIGHT TABLE OPTICAL QA",
           tag: lang === "es" ? "Inspección de Calidad" : "Quality Inspection",
-          name: lang === "es" ? "Mesa Lumínica e Inspección de Calidad" : "Light Table QA & Quality Inspection",
           desc: lang === "es"
             ? "Inspección óptica botella por botella en mesa lumínica, control de sellado de corcho, marbete fiscal, etiquetado y embalaje seguro conforme a normativas de exportación."
             : "Bottle-by-bottle optical inspection on light tables, cork seal verification, tax strip alignment, and export-grade master boxing.",
@@ -1189,32 +1199,16 @@ export default function MaquilasV3({ lang = "es" }) {
                     {/* Overlaid Info */}
                     <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7 flex flex-col sm:flex-row sm:items-end justify-between gap-3 z-10">
                       <div className="space-y-1.5 max-w-2xl">
-                        {currentImgObj.copperTag && currentImgObj.whiteTag ? (
-                          <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                            <span className="font-navigation text-[10.5px] sm:text-[12px] text-white uppercase tracking-[0.2em] bg-[#8C4723] px-3 py-0.5 font-semibold inline-block rounded-none shadow-sm">
-                              {currentImgObj.copperTag}
-                            </span>
+                        <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                          <span className="font-navigation text-[10.5px] sm:text-[12px] text-white uppercase tracking-[0.2em] bg-[#8C4723] px-3 py-0.5 font-semibold inline-block rounded-none shadow-sm">
+                            {currentImgObj.copperTag || `${currentStation.num} · ${currentImgObj.tag || currentStation.tag}`}
+                          </span>
+                          {(currentImgObj.whiteTag || currentImgObj.label) && (
                             <span className="font-navigation text-[10.5px] sm:text-[12px] text-white uppercase tracking-wider bg-white/15 backdrop-blur-md px-2.5 py-0.5 border border-white/20 inline-block rounded-none shadow-sm">
-                              {currentImgObj.whiteTag}
+                              {currentImgObj.whiteTag || currentImgObj.label}
                             </span>
-                          </div>
-                        ) : (
-                          <>
-                            <div className="flex items-center gap-2">
-                              <span className="font-navigation text-[9px] sm:text-[10px] text-white uppercase tracking-[0.25em] bg-[#8C4723] px-2.5 py-0.5 font-semibold inline-block rounded-none">
-                                {currentImgObj.badge || `${currentStation.num} · ${currentImgObj.tag || currentStation.tag}`}
-                              </span>
-                              {currentImgObj.label && currentImgObj.label !== (currentImgObj.tag || currentStation.tag) && (
-                                <span className="font-navigation text-[9px] sm:text-[10px] text-white/90 uppercase tracking-wider bg-white/15 backdrop-blur-md px-2 py-0.5 border border-white/20">
-                                  {currentImgObj.label}
-                                </span>
-                              )}
-                            </div>
-                            <h3 className="font-serif text-xl sm:text-2xl text-white font-light">
-                              {currentImgObj.name || currentStation.name}
-                            </h3>
-                          </>
-                        )}
+                          )}
+                        </div>
                         <p className="font-body-md text-white/90 leading-relaxed font-light text-xs sm:text-sm max-w-xl">
                           {currentImgObj.desc || currentStation.desc}
                         </p>
