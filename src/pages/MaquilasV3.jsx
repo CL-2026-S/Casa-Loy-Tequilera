@@ -1062,8 +1062,8 @@ export default function MaquilasV3({ lang = "es" }) {
                   </h3>
                   <p className="font-body-md text-[#53443a] font-light leading-snug text-[11.5px] sm:text-xs lg:text-[12.5px]">
                     {lang === "es"
-                      ? "Flexibilidad industrial desde lotes piloto hasta tanques de granel."
-                      : "Industrial scale flexibility from pilot runs to bulk containers."}
+                      ? "Perfiles artesanales, producción escalable y estructura preparada para acompañar marcas con visión de largo plazo."
+                      : "Artisanal profiles, scalable production, and dedicated infrastructure built to support long-term brand visions."}
                   </p>
                 </div>
               </div>

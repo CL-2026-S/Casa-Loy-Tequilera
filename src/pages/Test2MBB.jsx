@@ -137,14 +137,14 @@ export default function Test2MBB({ lang = "es", setPage }) {
         { wk: "Structure", h3: "Family-owned, three generations", desc: "Long-term commitment, direct leadership and stable partnerships.", anchor: "#social-proof" },
         { wk: "Agave", h3: "Own cultivation since 1992", desc: "3,600 hectares ensuring price security and guaranteed supply.", anchor: "#agave-supply" },
         { wk: "Team", h3: "Real people behind every project", desc: "Master distillers, chemical engineers, and international trade advisers.", anchor: "#social-proof" },
-        { wk: "Infrastructure", h3: "Built for serious, growing projects", desc: "Industrial scale flexibility from pilot runs to bulk containers.", anchor: "#methods" },
+        { wk: "Infrastructure", h3: "Built for serious, growing projects", desc: "Artisanal profiles, scalable production, and dedicated infrastructure built to support long-term brand visions.", anchor: "#methods" },
         { wk: "Quality", h3: "Batch control on every production", desc: "Internal laboratory and CRT compliance verification on every run.", anchor: "#quality-compliance" }
       ] : [
         { wk: "Origen", h3: "NOM 1633, Los Altos de Jalisco", desc: "Producción protegida bajo denominación de origen en los Altos de Jalisco.", anchor: "#agave-supply" },
         { wk: "Estructura", h3: "Empresa familiar, tres generaciones", desc: "Historia real, compromiso generacional, trato directo y alianzas sólidas.", anchor: "#social-proof" },
         { wk: "Agave", h3: "Cultivo propio desde 1992", desc: "3,600 hectáreas que blindan tu costo por litro y garantizan abasto continuo.", anchor: "#agave-supply" },
         { wk: "Equipo", h3: "Personas reales detrás de cada proyecto", desc: "Maestros tequileros, ingenieros químicos y coordinadores de exportación.", anchor: "#social-proof" },
-        { wk: "Infraestructura", h3: "Construida para proyectos serios y en crecimiento", desc: "Flexibilidad industrial desde lotes piloto hasta tanques de granel.", anchor: "#methods" },
+        { wk: "Infraestructura", h3: "Construida para proyectos serios y en crecimiento", desc: "Perfiles artesanales, producción escalable y estructura preparada para acompañar marcas con visión de largo plazo.", anchor: "#methods" },
         { wk: "Calidad", h3: "Control de lote en cada producción", desc: "Laboratorio interno y verificación estricta de cumplimiento CRT por lote.", anchor: "#quality-compliance" }
       ]
     },
