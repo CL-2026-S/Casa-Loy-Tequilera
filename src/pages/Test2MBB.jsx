@@ -137,7 +137,7 @@ export default function Test2MBB({ lang = "es", setPage }) {
         { wk: "Structure", h3: "Family-owned, three generations", desc: "Long-term commitment, direct leadership and stable partnerships.", anchor: "#social-proof" },
         { wk: "Agave", h3: "Own cultivation since 1992", desc: "3,600 hectares ensuring price security and guaranteed supply.", anchor: "#agave-supply" },
         { wk: "Team", h3: "Real people behind every project", desc: "Master distillers, chemical engineers, and international trade advisers.", anchor: "#social-proof" },
-        { wk: "Infrastructure", h3: "Built for serious, growing projects", desc: "Artisanal profiles, scalable production, and dedicated infrastructure built to support long-term brand visions.", anchor: "#methods" },
+        { wk: "Infrastructure", h3: "Built for serious and growing projects", desc: "Artisanal profiles, scalable production, and a structure prepared to support brands with a long-term vision.", anchor: "#methods" },
         { wk: "Quality", h3: "Batch control on every production", desc: "Internal laboratory and CRT compliance verification on every run.", anchor: "#quality-compliance" }
       ] : [
         { wk: "Origen", h3: "NOM 1633, Los Altos de Jalisco", desc: "Producción protegida bajo denominación de origen en los Altos de Jalisco.", anchor: "#agave-supply" },

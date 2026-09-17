@@ -1058,12 +1058,12 @@ export default function MaquilasV3({ lang = "es" }) {
                     <span className="font-serif text-base sm:text-lg font-light text-[#8C4723]/60">05</span>
                   </div>
                   <h3 className="font-serif text-[15px] sm:text-base lg:text-[17px] font-bold text-[#1c1c18] mb-1 leading-snug">
-                    {lang === "es" ? "Construida para proyectos serios y en crecimiento" : "Built for serious, growing projects"}
+                    {lang === "es" ? "Construida para proyectos serios y en crecimiento" : "Built for serious and growing projects"}
                   </h3>
                   <p className="font-body-md text-[#53443a] font-light leading-snug text-[11.5px] sm:text-xs lg:text-[12.5px]">
                     {lang === "es"
                       ? "Perfiles artesanales, producción escalable y estructura preparada para acompañar marcas con visión de largo plazo."
-                      : "Artisanal profiles, scalable production, and dedicated infrastructure built to support long-term brand visions."}
+                      : "Artisanal profiles, scalable production, and a structure prepared to support brands with a long-term vision."}
                   </p>
                 </div>
               </div>
