@@ -206,8 +206,8 @@ export default function MaquilasV3({ lang = "es" }) {
 
       // Inside Casa Loy
       insideEyebrow: "INSTALACIONES & CAPACIDAD INDUSTRIAL",
-      insideTitle: "Dentro de Casa Loy",
-      insideSub: "Recorre interactivamente las 8 estaciones de nuestra destilería en Ayotlán, Jalisco.",
+      insideTitle: "Inside Casa Loy",
+      insideSub: "From agave to bottle.",
 
       // Solutions
       solutionsEyebrow: "SOLUCIONES",
@@ -331,7 +331,7 @@ export default function MaquilasV3({ lang = "es" }) {
       // Inside Casa Loy
       insideEyebrow: "FACILITIES & INDUSTRIAL CAPACITY",
       insideTitle: "Inside Casa Loy",
-      insideSub: "Take an interactive journey through the 8 stations of our distillery in Ayotlán, Jalisco.",
+      insideSub: "From agave to bottle.",
 
       // Solutions
       solutionsEyebrow: "SOLUTIONS",
@@ -611,33 +611,33 @@ export default function MaquilasV3({ lang = "es" }) {
     {
       num: "04",
       tag: lang === "es" ? "Fermentación" : "Fermentation",
-      name: lang === "es" ? "Tanques Abiertos & Tanques Cerrados" : "Open Tanks & Closed Stainless Tanks",
+      name: lang === "es" ? "Fermentación Abierta & Fermentación Cerrada" : "Open-Air & Closed Stainless Fermentation",
       desc: lang === "es"
-        ? "Fermentación en tanques abiertos tradicionales para enriquecer ésteres frutales y batería de tanques de acero inoxidable cerrados con control térmico automatizado."
-        : "Traditional open tanks for fruit-forward esters and automated temperature-controlled closed stainless tanks.",
-      specs: lang === "es" ? ["Tanques Abiertos", "Tanques Cerrados", "Levaduras Propias"] : ["Open Tanks", "Closed Tanks", "Proprietary Yeasts"],
+        ? "Fermentación en tanques abiertos para perfiles expresivos y batería de tanques cerrados de acero inoxidable para máxima consistencia y estabilidad lote por lote."
+        : "Open-air tank fermentation for expressive agave character and closed stainless steel tanks for maximum batch-to-batch consistency.",
+      specs: lang === "es" ? ["Fermentación Abierta", "Fermentación Cerrada", "Levaduras Propias"] : ["Open Fermentation", "Closed Fermentation", "Proprietary Yeasts"],
       images: [
         { 
           src: "/Fermentación.webp", 
-          label: lang === "es" ? "Tanques Abiertos" : "Open Tanks",
-          copperTag: lang === "es" ? "04 · TANQUES ABIERTOS" : "04 · OPEN TANKS",
-          whiteTag: lang === "es" ? "MICROFLORA SILVESTRE" : "WILD MICROFLORA",
-          tag: lang === "es" ? "Tanques Abiertos" : "Open Tanks",
+          label: lang === "es" ? "Fermentación Abierta" : "Open-Air Fermentation",
+          copperTag: lang === "es" ? "04 · FERMENTACIÓN ABIERTA" : "04 · OPEN FERMENTATION",
+          whiteTag: lang === "es" ? "PERFIL EXPRESIVO" : "EXPRESSIVE PROFILE",
+          tag: lang === "es" ? "Fermentación Abierta" : "Open-Air Fermentation",
           desc: lang === "es"
-            ? "Fermentación en tanques abiertos que captura la microflora silvestre de Los Altos de Jalisco, desarrollando perfiles aromáticos complejos con notas frutales y florales únicas."
-            : "Fermentation in open tanks interacting with highland ambient air to cultivate distinct floral and fruit aromatic esters.",
-          specs: lang === "es" ? ["Tanques Abiertos", "Microflora Nativa", "Ésteres Frutales"] : ["Open Tanks", "Native Microflora", "Fruit Esters"]
+            ? "Método tradicional de fermentación en tanques abiertos de acero inoxidable, diseñado para desarrollar complejidad aromática, carácter natural y perfiles de agave más expresivos, con notas cítricas, frutales y florales."
+            : "A traditional fermentation method in open stainless steel tanks, developing aromatic complexity, natural character, and expressive agave profiles with citrus, fruity, and floral notes.",
+          specs: lang === "es" ? ["Fermentación Abierta", "Perfil Expresivo", "Notas Frutales & Florales"] : ["Open Fermentation", "Expressive Profile", "Fruity & Floral Notes"]
         },
         { 
           src: "/Tanques Fermentacion Cerrada Acero Casa Loy.jpg", 
-          label: lang === "es" ? "Tanques Cerrados" : "Closed Tanks",
-          copperTag: lang === "es" ? "04 · TANQUES CERRADOS" : "04 · CLOSED TANKS",
-          whiteTag: lang === "es" ? "CONTROL TÉRMICO AUTOMATIZADO" : "AUTOMATED THERMAL CONTROL",
-          tag: lang === "es" ? "Tanques Cerrados" : "Closed Tanks",
+          label: lang === "es" ? "Fermentación Cerrada" : "Closed Fermentation",
+          copperTag: lang === "es" ? "04 · FERMENTACIÓN CERRADA" : "04 · CLOSED FERMENTATION",
+          whiteTag: lang === "es" ? "PERFIL CONTROLADO" : "CONTROLLED PROFILE",
+          tag: lang === "es" ? "Fermentación Cerrada" : "Closed Fermentation",
           desc: lang === "es"
-            ? "Batería de tanques cerrados de acero inoxidable grado alimenticio con camisas térmicas automatizadas, garantizando fermentaciones limpias, homogéneas y 100% reproducibles."
-            : "Closed food-grade stainless steel fermentation tanks equipped with automated thermal jackets for sterile, repeatable, and temperature-stable fermentations.",
-          specs: lang === "es" ? ["Tanques Cerrados", "Control Térmico", "Acero Grado Alimenticio"] : ["Closed Tanks", "Thermal Jacketed", "Batch Consistency"]
+            ? "Método de fermentación controlada en tanques cerrados de acero inoxidable, diseñado para preservar un perfil limpio, mejorar la consistencia y desarrollar un carácter refinado de agave con mayor estabilidad entre lotes."
+            : "A controlled fermentation method in closed stainless steel tanks, designed to preserve a clean profile, enhance consistency, and develop refined agave character with greater batch-to-batch stability.",
+          specs: lang === "es" ? ["Fermentación Cerrada", "Perfil Controlado", "Estabilidad entre Lotes"] : ["Closed Fermentation", "Controlled Profile", "Batch Stability"]
         }
       ]
     },
