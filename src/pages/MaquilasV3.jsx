@@ -682,16 +682,6 @@ export default function MaquilasV3({ lang = "es" }) {
             ? "Portafolio versátil de maduración: Roble Blanco Americano nuevo, barricas seleccionadas de primer uso de Bourbon, Roble Francés y acabados especiales para perfiles Reposado, Añejo y Extra Añejo."
             : "Custom wood program featuring virgin American White Oak, selected first-fill Bourbon casks, and French Oak tailored for Reposado, Añejo, and Extra Añejo expressions.",
           specs: lang === "es" ? ["Roble Americano", "Barricas de Bourbon", "Roble Francés"] : ["American White Oak", "Bourbon Casks", "French Oak"]
-        },
-        { 
-          src: "/Cava Tequilera Casa Loy.webp", 
-          label: lang === "es" ? "Bóveda de Cavas" : "Cask Vault",
-          tag: lang === "es" ? "Lotes de Autor" : "Special Reserves",
-          name: lang === "es" ? "Bóveda de Maduración y Lotes Especiales" : "Maturation Vault & Special Reserves",
-          desc: lang === "es"
-            ? "Espacio de guarda prolongada para formulación de lotes exclusivos, donde el destilado adquiere notas nobles de vainilla, cacao y caramelo tostado sin aditivos."
-            : "Prolonged wood-contact resting chambers where tequila naturally develops amber hues, toasted vanilla, cocoa, and rich caramel notes without artificial additives.",
-          specs: lang === "es" ? ["Maduración Prolongada", "Libre de Aditivos", "Perfiles de Autor"] : ["Extended Maturation", "Additive Free", "Author Profiles"]
         }
       ]
     },
