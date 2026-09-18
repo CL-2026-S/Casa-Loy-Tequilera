@@ -205,9 +205,9 @@ export default function MaquilasV3({ lang = "es" }) {
       whySub: "Seis pilares que blindan la calidad, el costo y la entrega continua de tu destilado.",
 
       // Inside Casa Loy
-      insideEyebrow: "INSTALACIONES & CAPACIDAD INDUSTRIAL",
-      insideTitle: "Inside Casa Loy",
-      insideSub: "From agave to bottle.",
+      insideEyebrow: "Inside Casa Loy",
+      insideTitle: "From agave to the bottle",
+      insideSub: "Recorre interactivamente las 8 estaciones de nuestra destilería en Ayotlán, Jalisco.",
 
       // Solutions
       solutionsEyebrow: "SOLUCIONES",
@@ -329,9 +329,9 @@ export default function MaquilasV3({ lang = "es" }) {
       whySub: "Six pillars safeguarding liquid quality, cost control, and uninterrupted delivery.",
 
       // Inside Casa Loy
-      insideEyebrow: "FACILITIES & INDUSTRIAL CAPACITY",
-      insideTitle: "Inside Casa Loy",
-      insideSub: "From agave to bottle.",
+      insideEyebrow: "Inside Casa Loy",
+      insideTitle: "From agave to the bottle",
+      insideSub: "Take an interactive journey through the 8 stations of our distillery in Ayotlán, Jalisco.",
 
       // Solutions
       solutionsEyebrow: "SOLUTIONS",
