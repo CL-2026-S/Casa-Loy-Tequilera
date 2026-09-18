@@ -147,7 +147,7 @@ export const translations = {
       card2Action: "View Menu & Bookings",
     },
     footer: {
-      brandDesc: "Elevando the essence of Jalisco through the art of distillation since 1937.",
+      brandDesc: "Elevating the essence of Jalisco through the art of distillation since 1937.",
       explore: "Explore",
       links: ["Our History", "Editorial Blog", "Experiences", "Careers"],
       contact: "Contact",

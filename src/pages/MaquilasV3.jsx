@@ -194,10 +194,10 @@ export default function MaquilasV3({ lang = "es" }) {
       // Trust Bar
       trustNom: "NOM 1633",
       trustRegion: "LOS ALTOS DE JALISCO",
-      trustFamily: "FAMILY-OWNED",
-      trustRoots: "AGAVE ROOTS SINCE 1992",
-      trustBatch: "BATCH CONTROL",
-      trustExport: "EXPORT COORDINATION",
+      trustFamily: "EMPRESA FAMILIAR",
+      trustRoots: "RAÍCES AGAVERAS DESDE 1992",
+      trustBatch: "CONTROL POR LOTE",
+      trustExport: "COORDINACIÓN DE EXPORTACIÓN",
 
       // Why Casa Loy
       whyEyebrow: "INFRAESTRUCTURA & CERTEZA OPERATIVA",
@@ -205,8 +205,8 @@ export default function MaquilasV3({ lang = "es" }) {
       whySub: "Seis pilares que blindan la calidad, el costo y la entrega continua de tu destilado.",
 
       // Inside Casa Loy
-      insideEyebrow: "Inside Casa Loy",
-      insideTitle: "From agave to the bottle",
+      insideEyebrow: "Dentro de Casa Loy",
+      insideTitle: "Del agave a la botella",
       insideSub: "Recorre interactivamente las 8 estaciones de nuestra destilería en Ayotlán, Jalisco.",
 
       // Solutions
@@ -227,10 +227,10 @@ export default function MaquilasV3({ lang = "es" }) {
       ndaText: "Convenio de Confidencialidad (NDA) disponible para todo proyecto",
       step0Title: "Encuentra la ruta correcta para tu proyecto",
       step0Opts: [
-        { title: "Founders", desc: "Construyendo una marca de tequila desde cero" },
-        { title: "Existing Brands", desc: "Buscando un mejor socio de producción y maquila" },
-        { title: "Distributors / Importers", desc: "Incursionando en tequila como nueva categoría" },
-        { title: "Bulk Buyers", desc: "Abastecimiento de volumen continuo con perfil definido" }
+        { title: "Fundadores", desc: "Construyendo una marca de tequila desde cero" },
+        { title: "Marcas Existentes", desc: "Buscando un mejor socio de producción y maquila" },
+        { title: "Distribuidores / Importadores", desc: "Incursionando en tequila como nueva categoría" },
+        { title: "Compradores a Granel", desc: "Abastecimiento de volumen continuo con perfil definido" }
       ],
       step1Title: "¿Qué solución necesitas actualmente?",
       step2Title: "¿Cuál es tu objetivo principal?",
@@ -238,7 +238,7 @@ export default function MaquilasV3({ lang = "es" }) {
 
       step1Opts: [
         "Desarrollo integral de Marca Privada",
-        "Desarrollo de marca privada (Private Label)",
+        "Desarrollo de marca privada",
         "Compra de tequila a granel",
         "Embotellado para mi marca",
         "Desarrollo desde cero"
@@ -309,8 +309,8 @@ export default function MaquilasV3({ lang = "es" }) {
       heroTitleLine2: "Manufacturing in México.",
       heroSubLine: "Your tequila starts in The highlands of Jalisco",
       heroQuote: '"Your vision. Our expertise."',
-      heroDescLine1: "Destileria familiar NOM1633 distillery built for founders,",
-      heroDescLine2: "existing brands, and distributiors ready to build with a real",
+      heroDescLine1: "Family-owned NOM 1633 distillery built for founders,",
+      heroDescLine2: "existing brands, and distributors ready to build with a real",
       heroDescLine3: "origin behind them.",
       heroBtn: "Start My Project →",
       heroBtnSec: "Book a Technical Call",
@@ -362,7 +362,7 @@ export default function MaquilasV3({ lang = "es" }) {
 
       step1Opts: [
         "Full private label tequila production",
-        "Private label development (Private Label)",
+        "Private label brand development",
         "Bulk tequila purchase",
         "Bottling for my brand",
         "Development from scratch"
@@ -692,7 +692,7 @@ export default function MaquilasV3({ lang = "es" }) {
       desc: lang === "es"
         ? "Capacidad de 1.2 millones de litros en barricas seleccionadas de Roble Blanco Americano, Bourbon y Roble Francés bajo condiciones subterráneas estables."
         : "1.2 Million liters capacity across select American Oak, Bourbon, and French Oak casks in climate-controlled underground cellars.",
-      specs: ["Roble Americano", "Barricas Bourbon", "Roble Francés"],
+      specs: lang === "es" ? ["Roble Americano", "Barricas Bourbon", "Roble Francés"] : ["American Oak", "Bourbon Casks", "French Oak"],
       images: [
         { 
           src: "/Pasillo Cava de Añejamiento.webp", 
@@ -725,7 +725,7 @@ export default function MaquilasV3({ lang = "es" }) {
       desc: lang === "es"
         ? "Control de calidad analítico lote por lote y Tasting Lab exclusivo para catas sensoriales de perfilado líquido con el cliente."
         : "Batch-by-batch analytical QA and exclusive in-cellar tasting lab sessions to fine-tune your liquid's exact organoleptic signature.",
-      specs: ["Tasting Lab en Cava", "Panel Sensorial", "Control de Calidad"],
+      specs: lang === "es" ? ["Tasting Lab en Cava", "Panel Sensorial", "Control de Calidad"] : ["In-Cellar Tasting Lab", "Sensory Panel", "Quality Control"],
       images: [
         { 
           src: "/Laboratorio Maquilas.webp", 
@@ -758,7 +758,7 @@ export default function MaquilasV3({ lang = "es" }) {
       desc: lang === "es"
         ? "Tanques de envasado dedicados TEN-01, llenado volumétrico de precisión e inspección individual en mesa lumínica para exportación."
         : "Dedicated TEN-01 packaging tanks, precision volumetric bottling, and bottle-by-bottle light table optical QA inspection for global export.",
-      specs: ["Línea de Envasado", "Inspección de Calidad", "Apto para Exportación"],
+      specs: lang === "es" ? ["Línea de Envasado", "Inspección de Calidad", "Apto para Exportación"] : ["Packaging Line", "Quality Inspection", "Export Ready"],
       images: [
         { 
           src: "/Linea Embotellado Tanque Envasado Casa Loy.jpg", 
@@ -1816,7 +1816,7 @@ export default function MaquilasV3({ lang = "es" }) {
                           {idx + 1}
                         </span>
                         <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.2em] font-semibold">
-                          PASO {step.num}
+                          {lang === "es" ? "PASO" : "STEP"} {step.num}
                         </span>
                       </div>
                       {idx < 6 && (
@@ -1913,7 +1913,9 @@ export default function MaquilasV3({ lang = "es" }) {
                           <h4 className="font-serif text-base font-semibold text-[#1c1c18]">
                             {lang === "es" ? "Energía Solar Fotovoltaica" : "Solar Energy"}
                           </h4>
-                          <span className="font-navigation text-[8px] uppercase tracking-wider text-[#8C4723] font-bold">Clean Energy</span>
+                          <span className="font-navigation text-[8px] uppercase tracking-wider text-[#8C4723] font-bold">
+                            {lang === "es" ? "Energía Limpia" : "Clean Energy"}
+                          </span>
                         </div>
                         <p className="font-body-md text-[#53443a] text-xs leading-relaxed font-light">
                           {lang === "es"
@@ -1935,7 +1937,9 @@ export default function MaquilasV3({ lang = "es" }) {
                           <h4 className="font-serif text-base font-semibold text-[#1c1c18]">
                             {lang === "es" ? "Manejo de Vinazas & Centro de Composta" : "Vinazas Management & Composting"}
                           </h4>
-                          <span className="font-navigation text-[8px] uppercase tracking-wider text-[#8C4723] font-bold">Zero Waste</span>
+                          <span className="font-navigation text-[8px] uppercase tracking-wider text-[#8C4723] font-bold">
+                            {lang === "es" ? "Cero Residuos" : "Zero Waste"}
+                          </span>
                         </div>
                         <p className="font-body-md text-[#53443a] text-xs leading-relaxed font-light">
                           {lang === "es"
@@ -1957,7 +1961,9 @@ export default function MaquilasV3({ lang = "es" }) {
                           <h4 className="font-serif text-base font-semibold text-[#1c1c18]">
                             {lang === "es" ? "Desarrollo Social & Familiar" : "Social & Family Development"}
                           </h4>
-                          <span className="font-navigation text-[8px] uppercase tracking-wider text-[#8C4723] font-bold">Fair Labor</span>
+                          <span className="font-navigation text-[8px] uppercase tracking-wider text-[#8C4723] font-bold">
+                            {lang === "es" ? "Comercio Justo" : "Fair Labor"}
+                          </span>
                         </div>
                         <p className="font-body-md text-[#53443a] text-xs leading-relaxed font-light">
                           {lang === "es"
@@ -2117,7 +2123,7 @@ export default function MaquilasV3({ lang = "es" }) {
                   </p>
                 </div>
                 <span className="font-navigation text-[9px] text-primary font-bold uppercase bg-[#F6F2EA] px-2.5 py-0.5 border border-[#1c1c18]/10 rounded-none tracking-wider">
-                  30 Minutos
+                  {lang === "es" ? "30 Minutos" : "30 Minutes"}
                 </span>
               </div>
 
