@@ -489,7 +489,7 @@ export default function MaquilasV3({ lang = "es" }) {
   const stations = [
     {
       num: "01",
-      tag: lang === "es" ? "Recepción & Jima" : "Harvest & Intake",
+      tag: lang === "es" ? "Jima" : "Harvest",
       name: lang === "es" ? "Campos de Agave & Jima" : "Agave Fields & Harvest",
       desc: lang === "es"
         ? "Recepción directa de nuestras 3,600 hectáreas en Los Altos de Jalisco. Selección de piñas en plenitud de maduración (6-7 años) con medición de grados Brix."
@@ -522,7 +522,7 @@ export default function MaquilasV3({ lang = "es" }) {
     },
     {
       num: "02",
-      tag: lang === "es" ? "Cocimiento de Tradición" : "Artisanal Cooking",
+      tag: lang === "es" ? "Cocimiento" : "Cooking",
       name: lang === "es" ? "Hornos de Mampostería, Autoclave & Serpentín de Vapor" : "Stone Ovens, Autoclaves & Steam-Coil Cookers",
       desc: lang === "es"
         ? "Tres métodos de cocimiento: hornos de mampostería, autoclaves de acero y cocedores con serpentín de vapor para perfiles tradicionales, consistentes o de valor escalable."
@@ -566,7 +566,7 @@ export default function MaquilasV3({ lang = "es" }) {
     },
     {
       num: "03",
-      tag: lang === "es" ? "Extracción Noble" : "Gentle Extraction",
+      tag: lang === "es" ? "Molienda" : "Milling",
       name: lang === "es" ? "Tahona, Molino de Tornillo & Extracción en Crudo" : "Volcanic Tahona, Screw Mill & Raw Extraction",
       desc: lang === "es"
         ? "Múltiples rutas de extracción para adaptar el perfil y la escala: tahona volcánica ancestral, molino de tornillo de prensado noble y extracción en crudo."
@@ -687,7 +687,7 @@ export default function MaquilasV3({ lang = "es" }) {
     },
     {
       num: "06",
-      tag: lang === "es" ? "Maduración de Barricas" : "Barrel Maturation",
+      tag: lang === "es" ? "Maduración" : "Maturation",
       name: lang === "es" ? "Cava de Maduración y Barricas" : "Maturation Cellar & Barrel Program",
       desc: lang === "es"
         ? "Capacidad de 1.2 millones de litros en barricas seleccionadas de Roble Blanco Americano, Bourbon y Roble Francés bajo condiciones subterráneas estables."
