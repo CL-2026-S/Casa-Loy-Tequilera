@@ -5157,7 +5157,7 @@ export default function AdminPanel({
           )}
 
           {/* TAB: CMS modules (Banners, Dishes, Blog with IA, Jobs, POS CRUD) */}
-          {(userHasRole("admin") || userHasRole("editor") || userHasRole("rh")) && activeTab === "cms" && (
+          {(userHasRole("admin") || userHasRole("editor") || userHasRole("rh") || userHasRole("lead_maquila")) && activeTab === "cms" && (
             <div className="space-y-6 text-left">
               
               {/* CMS Quick Pill Switcher (Shopify Polaris Segmented Control) */}
@@ -5168,7 +5168,8 @@ export default function AdminPanel({
                   { id: "blog", label: "Blog & Redactor IA", icon: "auto_awesome", roles: ["admin", "editor"] },
                   { id: "pos", label: "Puntos de Venta", icon: "storefront", roles: ["admin", "editor"] },
                   { id: "jobs", label: "Vacantes", icon: "work", roles: ["admin", "editor", "rh"] },
-                  { id: "applications", label: "Postulantes / CVs", icon: "badge", roles: ["admin", "rh"] }
+                  { id: "applications", label: "Postulantes / CVs", icon: "badge", roles: ["admin", "rh"] },
+                  { id: "solutions", label: "Hub de Soluciones", icon: "handshake", roles: ["admin", "editor", "lead_maquila"] }
                 ].filter(sub => sub.roles.some(roleOpt => userHasRole(roleOpt))).map(sub => (
                   <button
                     key={sub.id}
@@ -6206,6 +6207,253 @@ export default function AdminPanel({
             </div>
           )}
 
+
+          {/* CMS Solutions Hub */}
+          {cmsTab === "solutions" && (
+            <div className="space-y-6 text-left">
+              <div className="flex justify-between items-center border-b border-stone-200 pb-2">
+                <h6 className="font-serif text-sm font-bold text-[#8C4723] uppercase tracking-wide">
+                  Hub de Soluciones (Landing Page)
+                </h6>
+                <div className="flex items-center gap-2">
+                  <label className="text-xs font-bold text-stone-500 uppercase">Idioma:</label>
+                  <select 
+                    value={solutionsCmsLang} 
+                    onChange={(e) => setSolutionsCmsLang(e.target.value)}
+                    className="bg-white border border-stone-200 p-1 text-xs focus:outline-none text-[#1c1c18]"
+                  >
+                    <option value="en">Inglés (EN)</option>
+                    <option value="es">Español (ES)</option>
+                  </select>
+                </div>
+              </div>
+
+              {solutionsCmsData ? (
+                <form onSubmit={handleSaveSolutionsCms} className="bg-stone-50 border border-stone-200/60 p-6 space-y-4 max-w-4xl font-sans">
+                  {solutionsCmsMessage && (
+                    <div className={`p-2 text-xs font-bold ${solutionsCmsMessage.includes("Error") ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}>
+                      {solutionsCmsMessage}
+                    </div>
+                  )}
+
+                  <div className="space-y-6">
+                    {/* Header Texts */}
+                    <div className="bg-white p-4 border border-stone-200 space-y-3">
+                      <h6 className="text-xs font-bold text-[#8C4723] uppercase">Sección Principal (Hero)</h6>
+                      <div>
+                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Título Principal</label>
+                        <input
+                          type="text"
+                          value={solutionsCmsData.heroTitle || ""}
+                          onChange={(e) => setSolutionsCmsData({...solutionsCmsData, heroTitle: e.target.value})}
+                          className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Subtítulo (Descripción)</label>
+                        <textarea
+                          rows="2"
+                          value={solutionsCmsData.heroDesc || ""}
+                          onChange={(e) => setSolutionsCmsData({...solutionsCmsData, heroDesc: e.target.value})}
+                          className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Enlaces y URLs */}
+                    <div className="bg-white p-4 border border-stone-200 space-y-3">
+                      <h6 className="text-xs font-bold text-[#8C4723] uppercase">URLs y Enlaces</h6>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Enlace "Quiénes somos"</label>
+                          <input
+                            type="text"
+                            value={solutionsCmsData.aboutUsUrl || ""}
+                            onChange={(e) => setSolutionsCmsData({...solutionsCmsData, aboutUsUrl: e.target.value})}
+                            placeholder="/nosotros o https://..."
+                            className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Enlace "Blog B2B"</label>
+                          <input
+                            type="text"
+                            value={solutionsCmsData.blogB2BUrl || ""}
+                            onChange={(e) => setSolutionsCmsData({...solutionsCmsData, blogB2BUrl: e.target.value})}
+                            placeholder="/blog o https://..."
+                            className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                          />
+                        </div>
+                        <div className="md:col-span-2">
+                          <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">URL de Agenda (Cal.com)</label>
+                          <input
+                            type="text"
+                            value={solutionsCmsData.callCardUrl || ""}
+                            onChange={(e) => setSolutionsCmsData({...solutionsCmsData, callCardUrl: e.target.value})}
+                            placeholder="https://cal.com/internationalcasaloy/30min"
+                            className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Cards */}
+                    <div className="bg-white p-4 border border-stone-200 space-y-3">
+                      <h6 className="text-xs font-bold text-[#8C4723] uppercase">Tarjetas de Soluciones</h6>
+                      {solutionsCmsData.cards && solutionsCmsData.cards.map((card, idx) => (
+                        <div key={card.id || idx} className="border-l-2 border-[#8C4723] pl-3 py-1 space-y-2 mb-3">
+                          <label className="block text-[10px] font-bold text-stone-850 uppercase">{card.id}</label>
+                          <input
+                            type="text"
+                            value={card.title}
+                            onChange={(e) => {
+                              const newCards = [...solutionsCmsData.cards];
+                              newCards[idx].title = e.target.value;
+                              setSolutionsCmsData({...solutionsCmsData, cards: newCards});
+                            }}
+                            className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                            placeholder="Título de la tarjeta"
+                          />
+                          <textarea
+                            rows="2"
+                            value={card.desc}
+                            onChange={(e) => {
+                              const newCards = [...solutionsCmsData.cards];
+                              newCards[idx].desc = e.target.value;
+                              setSolutionsCmsData({...solutionsCmsData, cards: newCards});
+                            }}
+                            className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                            placeholder="Descripción de la tarjeta"
+                          />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Form Texts */}
+                    <div className="bg-white p-4 border border-stone-200 space-y-3">
+                      <h6 className="text-xs font-bold text-[#8C4723] uppercase">Textos del Formulario</h6>
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Título del Formulario</label>
+                            <input
+                              type="text"
+                              value={solutionsCmsData.form?.title || ""}
+                              onChange={(e) => setSolutionsCmsData({...solutionsCmsData, form: {...solutionsCmsData.form, title: e.target.value}})}
+                              className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Descripción corta</label>
+                            <textarea
+                              rows="2"
+                              value={solutionsCmsData.form?.desc || ""}
+                              onChange={(e) => setSolutionsCmsData({...solutionsCmsData, form: {...solutionsCmsData.form, desc: e.target.value}})}
+                              className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                            />
+                          </div>
+                        </div>
+                        
+                        <h6 className="text-[10px] font-bold text-stone-500 uppercase mt-4 mb-2 border-b border-stone-100 pb-1">Preguntas (Etiquetas)</h6>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Etiqueta: Nombre</label>
+                            <input
+                              type="text"
+                              value={solutionsCmsData.form?.nameLabel || ""}
+                              onChange={(e) => setSolutionsCmsData({...solutionsCmsData, form: {...solutionsCmsData.form, nameLabel: e.target.value}})}
+                              className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Etiqueta: Empresa</label>
+                            <input
+                              type="text"
+                              value={solutionsCmsData.form?.companyLabel || ""}
+                              onChange={(e) => setSolutionsCmsData({...solutionsCmsData, form: {...solutionsCmsData.form, companyLabel: e.target.value}})}
+                              className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Etiqueta: Email</label>
+                            <input
+                              type="text"
+                              value={solutionsCmsData.form?.emailLabel || ""}
+                              onChange={(e) => setSolutionsCmsData({...solutionsCmsData, form: {...solutionsCmsData.form, emailLabel: e.target.value}})}
+                              className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Etiqueta: Teléfono</label>
+                            <input
+                              type="text"
+                              value={solutionsCmsData.form?.phoneLabel || ""}
+                              onChange={(e) => setSolutionsCmsData({...solutionsCmsData, form: {...solutionsCmsData.form, phoneLabel: e.target.value}})}
+                              className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Etiqueta: Volumen</label>
+                            <input
+                              type="text"
+                              value={solutionsCmsData.form?.volumeLabel || ""}
+                              onChange={(e) => setSolutionsCmsData({...solutionsCmsData, form: {...solutionsCmsData.form, volumeLabel: e.target.value}})}
+                              className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Etiqueta: Tiempo estimado</label>
+                            <input
+                              type="text"
+                              value={solutionsCmsData.form?.timelineLabel || ""}
+                              onChange={(e) => setSolutionsCmsData({...solutionsCmsData, form: {...solutionsCmsData.form, timelineLabel: e.target.value}})}
+                              className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Success Texts */}
+                    <div className="bg-white p-4 border border-stone-200 space-y-3">
+                      <h6 className="text-xs font-bold text-[#8C4723] uppercase">Pantalla de Éxito</h6>
+                      <div>
+                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Título</label>
+                        <input
+                          type="text"
+                          value={solutionsCmsData.success?.title || ""}
+                          onChange={(e) => setSolutionsCmsData({...solutionsCmsData, success: {...solutionsCmsData.success, title: e.target.value}})}
+                          className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Mensaje principal (Subtítulo)</label>
+                        <textarea
+                          rows="2"
+                          value={solutionsCmsData.success?.subtitle || ""}
+                          onChange={(e) => setSolutionsCmsData({...solutionsCmsData, success: {...solutionsCmsData.success, subtitle: e.target.value}})}
+                          className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSavingSolutionsCms}
+                    className="w-full bg-[#8C4723] hover:bg-[#70381b] text-white py-3 text-xs font-semibold uppercase tracking-widest cursor-pointer shadow-md transition-colors disabled:opacity-50 mt-4"
+                  >
+                    {isSavingSolutionsCms ? "Guardando..." : "Guardar Cambios"}
+                  </button>
+                </form>
+              ) : (
+                <div className="py-8 text-center text-stone-400 italic text-xs">
+                  Cargando información...
+                </div>
+              )}
+            </div>
+          )}
+
           {/* TAB: Personal & RBAC (Admin only) */}
           {activeTab === "users" && userHasRole("admin") && (
             <div className="space-y-6 text-left">
@@ -6535,18 +6783,7 @@ export default function AdminPanel({
                   <div className="flex gap-2">
                     <button
                       onClick={() => {
-                        setShowSolutionsCms(!showSolutionsCms);
-                        setShowMaquilaManualForm(false);
-                      }}
-                      className="text-xs bg-stone-200 hover:bg-stone-300 text-stone-800 font-semibold uppercase tracking-wider px-4 py-2.5 flex items-center gap-1.5 cursor-pointer transition-colors"
-                    >
-                      <span className="material-symbols-outlined text-xs">edit</span>
-                      {showSolutionsCms ? "Cerrar Editor" : "Editar Contenido"}
-                    </button>
-                    <button
-                      onClick={() => {
                         setShowMaquilaManualForm(!showMaquilaManualForm);
-                        setShowSolutionsCms(false);
                       }}
                       className="text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white font-semibold uppercase tracking-wider px-4 py-2.5 flex items-center gap-1.5 cursor-pointer transition-colors"
                     >
@@ -6658,154 +6895,6 @@ export default function AdminPanel({
                     className="w-full bg-[#8C4723] hover:bg-[#70381b] text-white py-3 text-xs font-semibold uppercase tracking-widest cursor-pointer shadow-md transition-colors disabled:opacity-50"
                   >
                     {isSubmittingMaquilaManual ? "Guardando..." : "Registrar Lead y Programar Correo"}
-                  </button>
-                </form>
-              )}
-
-              {/* Formulario CMS Soluciones */}
-              {showSolutionsCms && solutionsCmsData && (
-                <form onSubmit={handleSaveSolutionsCms} className="bg-stone-50 border border-stone-200/60 p-6 space-y-4 max-w-4xl mx-auto text-left font-sans mb-6">
-                  <div className="flex justify-between items-center border-b border-stone-200 pb-2">
-                    <h6 className="font-serif text-sm font-bold text-stone-850 uppercase tracking-wide">
-                      Editar Textos: Hub de Soluciones
-                    </h6>
-                    <div className="flex items-center gap-2">
-                      <label className="text-xs font-bold text-stone-500 uppercase">Idioma:</label>
-                      <select 
-                        value={solutionsCmsLang} 
-                        onChange={(e) => setSolutionsCmsLang(e.target.value)}
-                        className="bg-white border border-stone-200 p-1 text-xs focus:outline-none"
-                      >
-                        <option value="en">Inglés (EN)</option>
-                        <option value="es">Español (ES)</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {solutionsCmsMessage && (
-                    <div className={`p-2 text-xs font-bold ${solutionsCmsMessage.includes("Error") ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}>
-                      {solutionsCmsMessage}
-                    </div>
-                  )}
-
-                  <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
-                    {/* Header Texts */}
-                    <div className="bg-white p-4 border border-stone-200 space-y-3">
-                      <h6 className="text-xs font-bold text-[#8C4723] uppercase">Sección Principal (Hero)</h6>
-                      <div>
-                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Brand Header</label>
-                        <input
-                          type="text"
-                          value={solutionsCmsData.brandHeader}
-                          onChange={(e) => setSolutionsCmsData({...solutionsCmsData, brandHeader: e.target.value})}
-                          className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Título Principal</label>
-                        <input
-                          type="text"
-                          value={solutionsCmsData.heroTitle}
-                          onChange={(e) => setSolutionsCmsData({...solutionsCmsData, heroTitle: e.target.value})}
-                          className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Subtítulo (Descripción)</label>
-                        <textarea
-                          rows="2"
-                          value={solutionsCmsData.heroDesc}
-                          onChange={(e) => setSolutionsCmsData({...solutionsCmsData, heroDesc: e.target.value})}
-                          className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Cards */}
-                    <div className="bg-white p-4 border border-stone-200 space-y-3">
-                      <h6 className="text-xs font-bold text-[#8C4723] uppercase">Tarjetas de Soluciones</h6>
-                      {solutionsCmsData.cards && solutionsCmsData.cards.map((card, idx) => (
-                        <div key={card.id || idx} className="border-l-2 border-[#8C4723] pl-3 py-1 space-y-2 mb-3">
-                          <label className="block text-[10px] font-bold text-stone-850 uppercase">{card.id}</label>
-                          <input
-                            type="text"
-                            value={card.title}
-                            onChange={(e) => {
-                              const newCards = [...solutionsCmsData.cards];
-                              newCards[idx].title = e.target.value;
-                              setSolutionsCmsData({...solutionsCmsData, cards: newCards});
-                            }}
-                            className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
-                            placeholder="Título de la tarjeta"
-                          />
-                          <textarea
-                            rows="2"
-                            value={card.desc}
-                            onChange={(e) => {
-                              const newCards = [...solutionsCmsData.cards];
-                              newCards[idx].desc = e.target.value;
-                              setSolutionsCmsData({...solutionsCmsData, cards: newCards});
-                            }}
-                            className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
-                            placeholder="Descripción de la tarjeta"
-                          />
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Form Texts */}
-                    <div className="bg-white p-4 border border-stone-200 space-y-3">
-                      <h6 className="text-xs font-bold text-[#8C4723] uppercase">Textos del Formulario</h6>
-                      <div>
-                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Título del Formulario</label>
-                        <input
-                          type="text"
-                          value={solutionsCmsData.form?.title || ""}
-                          onChange={(e) => setSolutionsCmsData({...solutionsCmsData, form: {...solutionsCmsData.form, title: e.target.value}})}
-                          className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Descripción del Formulario</label>
-                        <textarea
-                          rows="2"
-                          value={solutionsCmsData.form?.desc || ""}
-                          onChange={(e) => setSolutionsCmsData({...solutionsCmsData, form: {...solutionsCmsData.form, desc: e.target.value}})}
-                          className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Success Texts */}
-                    <div className="bg-white p-4 border border-stone-200 space-y-3">
-                      <h6 className="text-xs font-bold text-[#8C4723] uppercase">Pantalla de Éxito</h6>
-                      <div>
-                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Título</label>
-                        <input
-                          type="text"
-                          value={solutionsCmsData.success?.title || ""}
-                          onChange={(e) => setSolutionsCmsData({...solutionsCmsData, success: {...solutionsCmsData.success, title: e.target.value}})}
-                          className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Mensaje principal (Subtítulo)</label>
-                        <textarea
-                          rows="2"
-                          value={solutionsCmsData.success?.subtitle || ""}
-                          onChange={(e) => setSolutionsCmsData({...solutionsCmsData, success: {...solutionsCmsData.success, subtitle: e.target.value}})}
-                          className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isSavingSolutionsCms}
-                    className="w-full bg-[#8C4723] hover:bg-[#70381b] text-white py-3 text-xs font-semibold uppercase tracking-widest cursor-pointer shadow-md transition-colors disabled:opacity-50 mt-4"
-                  >
-                    {isSavingSolutionsCms ? "Guardando..." : "Guardar Cambios"}
                   </button>
                 </form>
               )}

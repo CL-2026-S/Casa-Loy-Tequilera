@@ -213,7 +213,14 @@ export default function SolutionsHub({ lang = "en", setPage }) {
     fetchContent();
   }, [lang]);
 
-  const t = dynamicContent || (content[lang] || content.en);
+  const baseContent = content[lang] || content.en;
+  const t = dynamicContent ? {
+    ...baseContent,
+    ...dynamicContent,
+    form: { ...baseContent.form, ...(dynamicContent.form || {}) },
+    success: { ...baseContent.success, ...(dynamicContent.success || {}) },
+    cards: dynamicContent.cards && dynamicContent.cards.length > 0 ? dynamicContent.cards : baseContent.cards
+  } : baseContent;
 
   const handleCardClick = (solutionValue) => {
     setFormData(prev => ({
@@ -403,7 +410,7 @@ export default function SolutionsHub({ lang = "en", setPage }) {
 
               {/* Minimalist Secondary Action: Agenda tu llamada (Cal.com) */}
               <a
-                href="https://cal.com/internationalcasaloy/30min"
+                href={t.callCardUrl || "https://cal.com/internationalcasaloy/30min"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full bg-white border border-[#EDE7DE] hover:border-[#8C4723]/60 rounded-xl p-3.5 sm:p-4 text-left shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_6px_18px_rgba(140,71,35,0.08)] transition-all duration-200 transform hover:-translate-y-0.5 active:scale-[0.99] flex items-center justify-between gap-3 cursor-pointer mb-2.5 group"
@@ -439,7 +446,7 @@ export default function SolutionsHub({ lang = "en", setPage }) {
 
               {/* Secondary Link: About us */}
               <Link
-                to={lang === "es" ? "/quienes-somos" : "/about"}
+                to={t.aboutUsUrl || (lang === "es" ? "/quienes-somos" : "/about")}
                 className="font-navigation text-[12px] text-[#53443a] hover:text-[#8C4723] transition-colors py-1 font-medium flex items-center gap-1 group"
               >
                 <span>{t.aboutUs}</span>
@@ -456,7 +463,7 @@ export default function SolutionsHub({ lang = "en", setPage }) {
 
               {/* B2B Blog Button */}
               <Link
-                to="/blog"
+                to={t.blogB2BUrl || "/blog"}
                 className="w-full py-2.5 px-5 rounded-xl bg-white border border-[#EDE7DE] hover:border-[#8C4723]/50 hover:text-[#8C4723] text-[#1c1c18] font-navigation text-[12px] sm:text-[13px] font-semibold shadow-sm transition-all duration-200 text-center block mb-4"
               >
                 {t.blogB2B}
