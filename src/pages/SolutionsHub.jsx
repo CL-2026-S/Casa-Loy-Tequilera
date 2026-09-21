@@ -65,11 +65,10 @@ export default function SolutionsHub({ lang = "en", setPage }) {
       talkToUs: "Talk to us",
       aboutUs: "About us ↗",
       callCard: {
-        badge: "Direct Calendar",
         duration: "30 min",
-        title: "Schedule your technical call",
-        subtitle: "1-on-1 consultation directly with distillery • Cal.com",
-        cta: "Book slot"
+        title: "Schedule your call",
+        subtitle: "Speak with our team of specialists",
+        cta: "Book"
       },
       orGetInformed: "OR GET INFORMED",
       blogB2B: "Blog B2B",
@@ -143,10 +142,9 @@ export default function SolutionsHub({ lang = "en", setPage }) {
       talkToUs: "Hablemos",
       aboutUs: "Quiénes somos ↗",
       callCard: {
-        badge: "Agenda Directa",
         duration: "30 min",
-        title: "Agenda tu llamada técnica",
-        subtitle: "Videollamada 1 a 1 con destilería • Sin esperas",
+        title: "Agenda tu llamada",
+        subtitle: "Habla con nuestro equipo especialista",
         cta: "Agendar"
       },
       orGetInformed: "O INFÓRMATE",
@@ -375,50 +373,39 @@ export default function SolutionsHub({ lang = "en", setPage }) {
                 </svg>
               </button>
 
-              {/* Visual Secondary Action: Agenda tu llamada (Cal.com Direct Booking Card) */}
+              {/* Minimalist Secondary Action: Agenda tu llamada (Cal.com) */}
               <a
                 href="https://cal.com/internationalcasaloy/30min"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full relative overflow-hidden rounded-2xl bg-gradient-to-br from-white via-[#FAF7F2] to-white border border-[#8C4723]/30 hover:border-[#8C4723] p-3.5 sm:p-4 text-left shadow-[0_2px_12px_rgba(140,71,35,0.06)] hover:shadow-[0_8px_24px_rgba(140,71,35,0.14)] transition-all duration-200 transform hover:-translate-y-0.5 active:scale-[0.99] cursor-pointer mb-2.5 group block"
+                className="w-full bg-white border border-[#EDE7DE] hover:border-[#8C4723]/60 rounded-xl p-3.5 sm:p-4 text-left shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_6px_18px_rgba(140,71,35,0.08)] transition-all duration-200 transform hover:-translate-y-0.5 active:scale-[0.99] flex items-center justify-between gap-3 cursor-pointer mb-2.5 group"
               >
-                {/* Top micro badges */}
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-[10px] sm:text-[10.5px] font-navigation font-semibold tracking-wide">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>{t.callCard.badge}</span>
-                  </div>
-                  <span className="font-navigation text-[10.5px] text-[#867369] font-medium tracking-wide">
-                    {t.callCard.duration}
-                  </span>
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-[#FAF6F0] border border-[#EDE7DE] text-[#8C4723] group-hover:bg-[#8C4723] group-hover:text-white group-hover:border-[#8C4723] flex items-center justify-center transition-colors flex-shrink-0">
+                  <svg className="w-4 h-4 fill-none stroke-current stroke-[1.8]" viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
                 </div>
 
-                {/* Main visual row */}
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-10 h-10 rounded-xl bg-[#8C4723]/10 text-[#8C4723] flex items-center justify-center group-hover:bg-[#8C4723] group-hover:text-white transition-colors duration-200 flex-shrink-0">
-                      <svg className="w-5 h-5 fill-none stroke-current stroke-[1.8]" viewBox="0 0 24 24">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                        <line x1="16" y1="2" x2="16" y2="6" />
-                        <line x1="8" y1="2" x2="8" y2="6" />
-                        <line x1="3" y1="10" x2="21" y2="10" />
-                      </svg>
-                    </div>
-                    <div className="min-w-0 text-left">
-                      <h3 className="font-serif text-[15px] sm:text-[16px] font-semibold text-[#1c1c18] group-hover:text-[#8C4723] transition-colors leading-snug">
-                        {t.callCard.title}
-                      </h3>
-                      <p className="font-navigation text-[11px] sm:text-[11.5px] text-[#53443a] leading-tight mt-0.5">
-                        {t.callCard.subtitle}
-                      </p>
-                    </div>
+                <div className="flex-1 pr-1 text-left min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-serif text-[15px] sm:text-[16px] font-semibold text-[#1c1c18] group-hover:text-[#8C4723] transition-colors leading-snug">
+                      {t.callCard.title}
+                    </h3>
+                    <span className="font-navigation text-[9.5px] sm:text-[10px] font-medium text-[#867369] px-1.5 py-0.5 rounded bg-[#FAF6F0] border border-[#EDE7DE]">
+                      {t.callCard.duration}
+                    </span>
                   </div>
+                  <p className="font-navigation text-[11px] sm:text-[11.5px] text-[#53443a] font-normal mt-0.5 leading-snug">
+                    {t.callCard.subtitle}
+                  </p>
+                </div>
 
-                  {/* Right CTA action */}
-                  <div className="flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#8C4723] group-hover:bg-[#723606] text-white font-navigation text-[11.5px] sm:text-[12px] font-semibold shadow-sm transition-colors">
-                    <span>{t.callCard.cta}</span>
-                    <span className="group-hover:translate-x-0.5 transition-transform text-[11px]">↗</span>
-                  </div>
+                <div className="text-[#867369] group-hover:text-[#8C4723] group-hover:translate-x-0.5 transition-all duration-200 flex items-center gap-1 text-[11.5px] sm:text-[12px] font-navigation font-semibold flex-shrink-0">
+                  <span>{t.callCard.cta}</span>
+                  <span className="text-[13px]">↗</span>
                 </div>
               </a>
 
