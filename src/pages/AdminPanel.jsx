@@ -2833,6 +2833,14 @@ export default function AdminPanel({
           onClick: () => { setActiveTab("cms"); setCmsTab("pos"); setSidebarOpen(false); },
           isActive: activeTab === "cms" && cmsTab === "pos",
         },
+        {
+          id: "cms_solutions",
+          label: "Hub de Soluciones",
+          icon: "handshake",
+          roles: ["admin", "editor", "lead_maquila"],
+          onClick: () => { setActiveTab("cms"); setCmsTab("solutions"); setSidebarOpen(false); },
+          isActive: activeTab === "cms" && cmsTab === "solutions",
+        },
       ]
     },
     {
