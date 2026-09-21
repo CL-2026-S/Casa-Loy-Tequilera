@@ -114,6 +114,7 @@ export default async function handler(req, res) {
   } = req.body || {};
 
   const isSolutions = origin === 'solutions' || origin === 'solutions_hub';
+  const isManual = creation_mode === 'manual' || origin === 'manual';
 
   // If manual creation, verify authentication and minimum fields
   if (isManual) {

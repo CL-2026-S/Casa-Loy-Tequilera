@@ -7,6 +7,7 @@ export default function SolutionsHub({ lang = "en", setPage }) {
   const [view, setView] = useState("hub"); // "hub" | "form" | "success"
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isQualified, setIsQualified] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -110,7 +111,7 @@ export default function SolutionsHub({ lang = "en", setPage }) {
         subtitle: "We have received your project details. If your answers match our production schedule, you can book a 30-minute consultation directly below:",
         bookCall: "Schedule 30-min Technical Call (Cal.com)",
         whatsappCta: "Prefer WhatsApp? Chat with our team",
-        backToHub: "Return to Solutions Hub",
+        backToHub: "Return to Solutions",
         exploreBrands: "Explore Casa Loy Brands"
       }
     },
@@ -187,13 +188,32 @@ export default function SolutionsHub({ lang = "en", setPage }) {
         subtitle: "Hemos recibido los detalles de tu proyecto. Si tus respuestas coinciden con nuestra capacidad de producción, puedes agendar una videollamada técnica de 30 minutos a continuación:",
         bookCall: "Agendar videollamada técnica de 30 min (Cal.com)",
         whatsappCta: "¿Prefieres WhatsApp? Escríbenos directamente",
-        backToHub: "Volver al Hub de Soluciones",
+        backToHub: "Volver a Soluciones",
         exploreBrands: "Conoce las Marcas de Casa Loy"
       }
     }
   };
 
-  const t = content[lang] || content.en;
+  const [dynamicContent, setDynamicContent] = useState(null);
+
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const response = await fetch(`/api/solutions-content?lang=${lang}`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data) {
+            setDynamicContent(data);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch solutions content", err);
+      }
+    };
+    fetchContent();
+  }, [lang]);
+
+  const t = dynamicContent || (content[lang] || content.en);
 
   const handleCardClick = (solutionValue) => {
     setFormData(prev => ({
@@ -229,6 +249,14 @@ export default function SolutionsHub({ lang = "en", setPage }) {
     }
 
     setIsSubmitting(true);
+
+    // Evaluate qualification based on answers
+    const isReadyNow = formData.timeline === "Ready to move now" || formData.timeline === "Listo para comenzar ahora";
+    const isOneToThreeMonths = formData.timeline === "1–3 months" || formData.timeline === "En 1 a 3 meses";
+    
+    // Qualifying logic: if they are ready now or in 1-3 months, we show them the calendar.
+    const qualified = isReadyNow || isOneToThreeMonths;
+    setIsQualified(qualified);
 
     try {
       const payload = {
@@ -719,44 +747,51 @@ export default function SolutionsHub({ lang = "en", setPage }) {
                 {t.success.title}
               </h2>
               <p className="font-navigation text-[13px] sm:text-[14px] text-[#53443a] leading-relaxed mb-6 font-normal">
-                {t.success.subtitle}
+                {isQualified 
+                  ? t.success.subtitle 
+                  : (lang === "es" 
+                      ? "Hemos recibido los detalles de tu proyecto. Un especialista de nuestro equipo revisará tus especificaciones y se pondrá en contacto contigo a la brevedad." 
+                      : "We have received your project details. A specialist from our team will review your specifications and get in touch with you shortly.")
+                }
               </p>
 
-              {/* Calendar Scheduling Button */}
-              <div className="space-y-3 mb-6">
-                <a
-                  href="https://cal.com/internationalcasaloy/30min"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-3.5 px-6 rounded-xl bg-[#8C4723] hover:bg-[#723606] text-white font-navigation text-[13.5px] font-semibold tracking-wide shadow-md transition-all flex items-center justify-center gap-2 group"
-                >
-                  <svg className="w-4 h-4 fill-none stroke-current stroke-[2]" viewBox="0 0 24 24">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                    <line x1="16" y1="2" x2="16" y2="6" />
-                    <line x1="8" y1="2" x2="8" y2="6" />
-                    <line x1="3" y1="10" x2="21" y2="10" />
-                  </svg>
-                  <span>{t.success.bookCall}</span>
-                  <span className="group-hover:translate-x-0.5 transition-transform">↗</span>
-                </a>
+              {/* Calendar Scheduling Button (Only if Qualified) */}
+              {isQualified && (
+                <div className="space-y-3 mb-6">
+                  <a
+                    href="https://cal.com/internationalcasaloy/30min"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-3.5 px-6 rounded-xl bg-[#8C4723] hover:bg-[#723606] text-white font-navigation text-[13.5px] font-semibold tracking-wide shadow-md transition-all flex items-center justify-center gap-2 group"
+                  >
+                    <svg className="w-4 h-4 fill-none stroke-current stroke-[2]" viewBox="0 0 24 24">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                      <line x1="16" y1="2" x2="16" y2="6" />
+                      <line x1="8" y1="2" x2="8" y2="6" />
+                      <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span>{t.success.bookCall}</span>
+                    <span className="group-hover:translate-x-0.5 transition-transform">↗</span>
+                  </a>
 
-                {/* Direct WhatsApp Option */}
-                <a
-                  href={`https://wa.me/5213332504359?text=${encodeURIComponent(
-                    lang === "es"
-                      ? `Hola, completé el formulario de soluciones B2B para ${formData.company} (${formData.name}) y me gustaría agendar una llamada sobre ${formData.solution}.`
-                      : `Hello, I submitted the B2B solutions form for ${formData.company} (${formData.name}) and would like to schedule a call regarding ${formData.solution}.`
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-3.5 px-6 rounded-xl bg-[#2F403E] hover:bg-[#25D366] text-white font-navigation text-[13px] font-semibold tracking-wide transition-all flex items-center justify-center gap-2"
-                >
-                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.805-9.805.001-2.621-1.013-5.086-2.86-6.936C16.37 1.947 13.907 1.01 11.996 1.01c-5.41 0-9.813 4.402-9.815 9.813-.001 1.638.455 3.236 1.32 4.654L2.46 19.95l4.187-1.096L6.647 19.16zM17.15 14.5c-.282-.141-1.664-.822-1.921-.916-.257-.094-.445-.141-.631.141-.188.281-.727.916-.891 1.101-.164.186-.328.21-.61.07-2.8-.14-4.88-1.22-6.52-3.08-.282-.482.282-.447.805-1.492.083-.164.041-.309-.021-.45-.062-.141-.563-1.36-.77-1.859-.203-.489-.407-.423-.563-.431-.145-.007-.312-.009-.48-.009-.168 0-.441.063-.672.312-.23.25-1.012.988-1.012 2.41 0 1.42 1.031 2.793 1.17 2.98.14.188 2.03 3.102 4.921 4.35.688.297 1.224.474 1.644.607.69.219 1.319.188 1.816.114.553-.082 1.664-.68 1.898-1.336.234-.656.234-1.219.164-1.336-.07-.117-.258-.188-.54-.328z"/>
-                  </svg>
-                  <span>{t.success.whatsappCta}</span>
-                </a>
-              </div>
+                  {/* Direct WhatsApp Option */}
+                  <a
+                    href={`https://wa.me/5213332504359?text=${encodeURIComponent(
+                      lang === "es"
+                        ? `Hola, completé el formulario de soluciones B2B para ${formData.company} (${formData.name}) y me gustaría agendar una llamada sobre ${formData.solution}.`
+                        : `Hello, I submitted the B2B solutions form for ${formData.company} (${formData.name}) and would like to schedule a call regarding ${formData.solution}.`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-3.5 px-6 rounded-xl bg-[#2F403E] hover:bg-[#25D366] text-white font-navigation text-[13px] font-semibold tracking-wide transition-all flex items-center justify-center gap-2"
+                  >
+                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.805-9.805.001-2.621-1.013-5.086-2.86-6.936C16.37 1.947 13.907 1.01 11.996 1.01c-5.41 0-9.813 4.402-9.815 9.813-.001 1.638.455 3.236 1.32 4.654L2.46 19.95l4.187-1.096L6.647 19.16zM17.15 14.5c-.282-.141-1.664-.822-1.921-.916-.257-.094-.445-.141-.631.141-.188.281-.727.916-.891 1.101-.164.186-.328.21-.61.07-2.8-.14-4.88-1.22-6.52-3.08-.282-.482.282-.447.805-1.492.083-.164.041-.309-.021-.45-.062-.141-.563-1.36-.77-1.859-.203-.489-.407-.423-.563-.431-.145-.007-.312-.009-.48-.009-.168 0-.441.063-.672.312-.23.25-1.012.988-1.012 2.41 0 1.42 1.031 2.793 1.17 2.98.14.188 2.03 3.102 4.921 4.35.688.297 1.224.474 1.644.607.69.219 1.319.188 1.816.114.553-.082 1.664-.68 1.898-1.336.234-.656.234-1.219.164-1.336-.07-.117-.258-.188-.54-.328z"/>
+                    </svg>
+                    <span>{t.success.whatsappCta}</span>
+                  </a>
+                </div>
+              )}
 
               {/* Navigation Back */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2 border-t border-[#1c1c18]/10 text-[12.5px] font-navigation font-medium">

@@ -191,6 +191,13 @@ export default function AdminPanel({
   // Manual Capture forms toggles
   const [showManualForm, setShowManualForm] = useState(false);
   const [showRestManualForm, setShowRestManualForm] = useState(false);
+  
+  // Solutions CMS states
+  const [showSolutionsCms, setShowSolutionsCms] = useState(false);
+  const [solutionsCmsLang, setSolutionsCmsLang] = useState("en");
+  const [solutionsCmsData, setSolutionsCmsData] = useState(null);
+  const [isSavingSolutionsCms, setIsSavingSolutionsCms] = useState(false);
+  const [solutionsCmsMessage, setSolutionsCmsMessage] = useState("");
 
   // Manual Tour Reservation fields
   const [manualName, setManualName] = useState("");
@@ -571,6 +578,65 @@ export default function AdminPanel({
       totalPax
     };
   };
+
+  const loadSolutionsCmsData = async (langToLoad = solutionsCmsLang) => {
+    setSolutionsCmsMessage("");
+    try {
+      const res = await fetch(`/api/solutions-content?lang=${langToLoad}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data) {
+          setSolutionsCmsData(data);
+        } else {
+          // Defaults if empty
+          setSolutionsCmsData({
+            brandHeader: "",
+            heroTitle: "",
+            heroDesc: "",
+            trustLine: "",
+            talkToUs: "",
+            orGetInformed: "",
+            form: { title: "", desc: "" },
+            success: { title: "", subtitle: "" }
+          });
+        }
+      }
+    } catch (e) {
+      console.error("Error loading CMS data", e);
+    }
+  };
+
+  const handleSaveSolutionsCms = async (e) => {
+    e.preventDefault();
+    setIsSavingSolutionsCms(true);
+    setSolutionsCmsMessage("");
+    try {
+      const res = await fetch("/api/solutions-content", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` 
+        },
+        body: JSON.stringify({ lang: solutionsCmsLang, content: solutionsCmsData })
+      });
+      if (res.ok) {
+        setSolutionsCmsMessage("Guardado correctamente.");
+      } else {
+        setSolutionsCmsMessage("Error al guardar.");
+      }
+    } catch (err) {
+      console.error(err);
+      setSolutionsCmsMessage("Error de conexión.");
+    } finally {
+      setIsSavingSolutionsCms(false);
+    }
+  };
+
+  useEffect(() => {
+    if (showSolutionsCms) {
+      loadSolutionsCmsData(solutionsCmsLang);
+    }
+  }, [showSolutionsCms, solutionsCmsLang]);
 
   async function verifySession() {
     if (token === "dev_admin_token") return;
@@ -6466,13 +6532,28 @@ export default function AdminPanel({
                 </div>
                 
                 {!userHasRole("viewer") && (
-                  <button
-                    onClick={() => setShowMaquilaManualForm(!showMaquilaManualForm)}
-                    className="text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white font-semibold uppercase tracking-wider px-4 py-2.5 flex items-center gap-1.5 cursor-pointer transition-colors"
-                  >
-                    <span className="material-symbols-outlined text-xs">add</span>
-                    {showMaquilaManualForm ? "Cancelar Registro" : "Registrar Lead Manual"}
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        setShowSolutionsCms(!showSolutionsCms);
+                        setShowMaquilaManualForm(false);
+                      }}
+                      className="text-xs bg-stone-200 hover:bg-stone-300 text-stone-800 font-semibold uppercase tracking-wider px-4 py-2.5 flex items-center gap-1.5 cursor-pointer transition-colors"
+                    >
+                      <span className="material-symbols-outlined text-xs">edit</span>
+                      {showSolutionsCms ? "Cerrar Editor" : "Editar Contenido"}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowMaquilaManualForm(!showMaquilaManualForm);
+                        setShowSolutionsCms(false);
+                      }}
+                      className="text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white font-semibold uppercase tracking-wider px-4 py-2.5 flex items-center gap-1.5 cursor-pointer transition-colors"
+                    >
+                      <span className="material-symbols-outlined text-xs">add</span>
+                      {showMaquilaManualForm ? "Cancelar Registro" : "Registrar Lead Manual"}
+                    </button>
+                  </div>
                 )}
               </div>
 
@@ -6577,6 +6658,154 @@ export default function AdminPanel({
                     className="w-full bg-[#8C4723] hover:bg-[#70381b] text-white py-3 text-xs font-semibold uppercase tracking-widest cursor-pointer shadow-md transition-colors disabled:opacity-50"
                   >
                     {isSubmittingMaquilaManual ? "Guardando..." : "Registrar Lead y Programar Correo"}
+                  </button>
+                </form>
+              )}
+
+              {/* Formulario CMS Soluciones */}
+              {showSolutionsCms && solutionsCmsData && (
+                <form onSubmit={handleSaveSolutionsCms} className="bg-stone-50 border border-stone-200/60 p-6 space-y-4 max-w-4xl mx-auto text-left font-sans mb-6">
+                  <div className="flex justify-between items-center border-b border-stone-200 pb-2">
+                    <h6 className="font-serif text-sm font-bold text-stone-850 uppercase tracking-wide">
+                      Editar Textos: Hub de Soluciones
+                    </h6>
+                    <div className="flex items-center gap-2">
+                      <label className="text-xs font-bold text-stone-500 uppercase">Idioma:</label>
+                      <select 
+                        value={solutionsCmsLang} 
+                        onChange={(e) => setSolutionsCmsLang(e.target.value)}
+                        className="bg-white border border-stone-200 p-1 text-xs focus:outline-none"
+                      >
+                        <option value="en">Inglés (EN)</option>
+                        <option value="es">Español (ES)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {solutionsCmsMessage && (
+                    <div className={`p-2 text-xs font-bold ${solutionsCmsMessage.includes("Error") ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}>
+                      {solutionsCmsMessage}
+                    </div>
+                  )}
+
+                  <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+                    {/* Header Texts */}
+                    <div className="bg-white p-4 border border-stone-200 space-y-3">
+                      <h6 className="text-xs font-bold text-[#8C4723] uppercase">Sección Principal (Hero)</h6>
+                      <div>
+                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Brand Header</label>
+                        <input
+                          type="text"
+                          value={solutionsCmsData.brandHeader}
+                          onChange={(e) => setSolutionsCmsData({...solutionsCmsData, brandHeader: e.target.value})}
+                          className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Título Principal</label>
+                        <input
+                          type="text"
+                          value={solutionsCmsData.heroTitle}
+                          onChange={(e) => setSolutionsCmsData({...solutionsCmsData, heroTitle: e.target.value})}
+                          className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Subtítulo (Descripción)</label>
+                        <textarea
+                          rows="2"
+                          value={solutionsCmsData.heroDesc}
+                          onChange={(e) => setSolutionsCmsData({...solutionsCmsData, heroDesc: e.target.value})}
+                          className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Cards */}
+                    <div className="bg-white p-4 border border-stone-200 space-y-3">
+                      <h6 className="text-xs font-bold text-[#8C4723] uppercase">Tarjetas de Soluciones</h6>
+                      {solutionsCmsData.cards && solutionsCmsData.cards.map((card, idx) => (
+                        <div key={card.id || idx} className="border-l-2 border-[#8C4723] pl-3 py-1 space-y-2 mb-3">
+                          <label className="block text-[10px] font-bold text-stone-850 uppercase">{card.id}</label>
+                          <input
+                            type="text"
+                            value={card.title}
+                            onChange={(e) => {
+                              const newCards = [...solutionsCmsData.cards];
+                              newCards[idx].title = e.target.value;
+                              setSolutionsCmsData({...solutionsCmsData, cards: newCards});
+                            }}
+                            className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                            placeholder="Título de la tarjeta"
+                          />
+                          <textarea
+                            rows="2"
+                            value={card.desc}
+                            onChange={(e) => {
+                              const newCards = [...solutionsCmsData.cards];
+                              newCards[idx].desc = e.target.value;
+                              setSolutionsCmsData({...solutionsCmsData, cards: newCards});
+                            }}
+                            className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                            placeholder="Descripción de la tarjeta"
+                          />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Form Texts */}
+                    <div className="bg-white p-4 border border-stone-200 space-y-3">
+                      <h6 className="text-xs font-bold text-[#8C4723] uppercase">Textos del Formulario</h6>
+                      <div>
+                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Título del Formulario</label>
+                        <input
+                          type="text"
+                          value={solutionsCmsData.form?.title || ""}
+                          onChange={(e) => setSolutionsCmsData({...solutionsCmsData, form: {...solutionsCmsData.form, title: e.target.value}})}
+                          className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Descripción del Formulario</label>
+                        <textarea
+                          rows="2"
+                          value={solutionsCmsData.form?.desc || ""}
+                          onChange={(e) => setSolutionsCmsData({...solutionsCmsData, form: {...solutionsCmsData.form, desc: e.target.value}})}
+                          className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Success Texts */}
+                    <div className="bg-white p-4 border border-stone-200 space-y-3">
+                      <h6 className="text-xs font-bold text-[#8C4723] uppercase">Pantalla de Éxito</h6>
+                      <div>
+                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Título</label>
+                        <input
+                          type="text"
+                          value={solutionsCmsData.success?.title || ""}
+                          onChange={(e) => setSolutionsCmsData({...solutionsCmsData, success: {...solutionsCmsData.success, title: e.target.value}})}
+                          className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-stone-500 uppercase mb-1">Mensaje principal (Subtítulo)</label>
+                        <textarea
+                          rows="2"
+                          value={solutionsCmsData.success?.subtitle || ""}
+                          onChange={(e) => setSolutionsCmsData({...solutionsCmsData, success: {...solutionsCmsData.success, subtitle: e.target.value}})}
+                          className="w-full border border-stone-200 p-2 text-xs focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSavingSolutionsCms}
+                    className="w-full bg-[#8C4723] hover:bg-[#70381b] text-white py-3 text-xs font-semibold uppercase tracking-widest cursor-pointer shadow-md transition-colors disabled:opacity-50 mt-4"
+                  >
+                    {isSavingSolutionsCms ? "Guardando..." : "Guardar Cambios"}
                   </button>
                 </form>
               )}
