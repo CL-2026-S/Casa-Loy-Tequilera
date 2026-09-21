@@ -32,6 +32,7 @@ import TeaserPage from "./pages/TeaserPage";
 import ValidateTicket from "./pages/ValidateTicket";
 import AdminPanel from "./pages/AdminPanel";
 import Test2MBB from "./pages/Test2MBB";
+import SolutionsHub from "./pages/SolutionsHub";
 
 // Bilingual routing map
 const routesMap = {
@@ -58,6 +59,7 @@ const routesMap = {
   "/politica-de-privacidad": { page: "privacy", lang: "es" },
   "/politica-de-cookies": { page: "cookies", lang: "es" },
   "/terminos-y-condiciones": { page: "terms", lang: "es" },
+  "/soluciones": { page: "solutions", lang: "es" },
   "/validar-ticket": { page: "validate-ticket", lang: null }, // Shared
   "/panel": { page: "panel", lang: null }, // Shared
   "/editorial-preview": { page: "editorial-preview", lang: null }, // Shared
@@ -85,7 +87,8 @@ const routesMap = {
   "/careers": { page: "careers", lang: "en" },
   "/privacy-policy": { page: "privacy", lang: "en" },
   "/cookie-policy": { page: "cookies", lang: "en" },
-  "/terms-and-conditions": { page: "terms", lang: "en" }
+  "/terms-and-conditions": { page: "terms", lang: "en" },
+  "/solutions": { page: "solutions", lang: "en" }
 };
 
 const getPageInfoFromPath = (pathname) => {
@@ -228,7 +231,8 @@ export default function App() {
         "careers": "/bolsa-de-trabajo",
         "privacy": "/politica-de-privacidad",
         "cookies": "/politica-de-cookies",
-        "terms": "/terminos-y-condiciones"
+        "terms": "/terminos-y-condiciones",
+        "solutions": "/soluciones"
       },
       en: {
         "home": "/",
@@ -249,7 +253,8 @@ export default function App() {
         "careers": "/careers",
         "privacy": "/privacy-policy",
         "cookies": "/cookie-policy",
-        "terms": "/terms-and-conditions"
+        "terms": "/terms-and-conditions",
+        "solutions": "/solutions"
       }
     };
 
@@ -285,6 +290,7 @@ export default function App() {
         privacy: "/politica-de-privacidad",
         cookies: "/politica-de-cookies",
         terms: "/terminos-y-condiciones",
+        solutions: "/soluciones",
         "validate-ticket": "/validar-ticket",
         panel: "/panel",
         "editorial-preview": "/editorial-preview"
@@ -310,6 +316,7 @@ export default function App() {
         privacy: "/privacy-policy",
         cookies: "/cookie-policy",
         terms: "/terms-and-conditions",
+        solutions: "/solutions",
         "validate-ticket": "/validar-ticket",
         panel: "/panel",
         "editorial-preview": "/editorial-preview"
@@ -612,6 +619,9 @@ export default function App() {
             
             <Route path="/terminos-y-condiciones" element={<TermsConditions t={t} lang={lang} />} />
             <Route path="/terms-and-conditions" element={<TermsConditions t={t} lang={lang} />} />
+
+            <Route path="/soluciones" element={<SolutionsHub lang="es" setPage={setPage} />} />
+            <Route path="/solutions" element={<SolutionsHub lang="en" setPage={setPage} />} />
             
             <Route path="/validar-ticket" element={<ValidateTicket lang={lang} setPage={setPage} />} />
             <Route path="/panel" element={
@@ -652,7 +662,7 @@ export default function App() {
               <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.805-9.805.001-2.621-1.013-5.086-2.86-6.936C16.37 1.947 13.907 1.01 11.996 1.01c-5.41 0-9.813 4.402-9.815 9.813-.001 1.638.455 3.236 1.32 4.654L2.46 19.95l4.187-1.096L6.647 19.16zM17.15 14.5c-.282-.141-1.664-.822-1.921-.916-.257-.094-.445-.141-.631.141-.188.281-.727.916-.891 1.101-.164.186-.328.21-.61.07-2.8-.14-4.88-1.22-6.52-3.08-.282-.482.282-.447.805-1.492.083-.164.041-.309-.021-.45-.062-.141-.563-1.36-.77-1.859-.203-.489-.407-.423-.563-.431-.145-.007-.312-.009-.48-.009-.168 0-.441.063-.672.312-.23.25-1.012.988-1.012 2.41 0 1.42 1.031 2.793 1.17 2.98.14.188 2.03 3.102 4.921 4.35.688.297 1.224.474 1.644.607.69.219 1.319.188 1.816.114.553-.082 1.664-.68 1.898-1.336.234-.656.234-1.219.164-1.336-.07-.117-.258-.188-.54-.328z"/>
             </svg>
           </a>
-        )}"
+        )}
       </div>
     </PayPalScriptProvider>
   );

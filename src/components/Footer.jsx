@@ -71,6 +71,7 @@ export default function Footer({ lang = "es", setPage }) {
         { name: "TADDEL Tequila", url: "https://TADDELtequila.com/", external: true },
         { name: "Tierra Zafiro Tequila", url: "https://TierraZafirotequila.com/", external: true },
         { name: "Marca Privada", page: "maquilas", external: false },
+        { name: "Soluciones B2B", page: "solutions", external: false },
         { name: "Experiencias Casa Loy", page: "turismo", external: false },
         { name: "Restaurante 1937 Nativo", page: "nativo", external: false },
         { name: "Blog", page: "blog", external: false },
@@ -109,6 +110,7 @@ export default function Footer({ lang = "es", setPage }) {
         { name: "TADDEL Tequila", url: "https://TADDELtequila.com/", external: true },
         { name: "Tierra Zafiro Tequila", url: "https://TierraZafirotequila.com/", external: true },
         { name: "Private Label", page: "maquilas", external: false },
+        { name: "B2B Solutions", page: "solutions", external: false },
         { name: "Casa Loy Experiences", page: "turismo", external: false },
         { name: "Restaurante 1937 Nativo", page: "nativo", external: false },
         { name: "Blog", page: "blog", external: false },
@@ -187,6 +189,7 @@ export default function Footer({ lang = "es", setPage }) {
                   const paths = {
                     es: {
                       maquilas: "/marca-privada",
+                      solutions: "/soluciones",
                       turismo: "/turismo",
                       nativo: "/nativo",
                       blog: "/blog",
@@ -194,6 +197,7 @@ export default function Footer({ lang = "es", setPage }) {
                     },
                     en: {
                       maquilas: "/private-label",
+                      solutions: "/solutions",
                       turismo: "/tourism",
                       nativo: "/restaurant-nativo",
                       blog: "/blog",

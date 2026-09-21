@@ -113,7 +113,7 @@ export default async function handler(req, res) {
     creation_mode 
   } = req.body || {};
 
-  const isManual = creation_mode === 'manual';
+  const isSolutions = origin === 'solutions' || origin === 'solutions_hub';
 
   // If manual creation, verify authentication and minimum fields
   if (isManual) {
@@ -129,6 +129,11 @@ export default async function handler(req, res) {
 
     if (!name || !email || !phone) {
       return res.status(400).json({ error: 'Faltan campos obligatorios: Nombre, Email y Teléfono son requeridos.' });
+    }
+  } else if (isSolutions) {
+    // Solutions hub validation (streamlined Linktree-style form)
+    if (!name || !company || !email || !solution) {
+      return res.status(400).json({ error: 'Faltan campos obligatorios: Nombre, Empresa, Email y Solución son requeridos.' });
     }
   } else {
     // Public quiz validation
@@ -171,14 +176,14 @@ export default async function handler(req, res) {
       name,
       company,
       email,
-      lada,
-      phone,
+      lada: lada || '',
+      phone: phone || '',
       solution,
-      objective,
-      stage,
-      comments: '',
-      lead_type: '',
-      origin: 'quiz',
+      objective: objective || '',
+      stage: stage || '',
+      comments: comments || '',
+      lead_type: lead_type || '',
+      origin: origin || 'quiz',
       follow_up_sent: false
     };
 

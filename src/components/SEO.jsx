@@ -347,6 +347,13 @@ const seoData = {
       description: "Términos y condiciones legales de uso de la plataforma web y la reserva de experiencias en Casa Loy.",
       ogTitle: "Términos y Condiciones - Casa Loy",
       ogDesc: "Acuerdo de uso legal del sitio web y reservaciones de tours."
+    },
+    solutions: {
+      title: "Soluciones B2B Tequila | Marca Privada, Granel & Co-Packing | Casa Loy",
+      description: "Soluciones de tequila B2B hechas a la medida: maquila de marca privada, suministro a granel y co-packing desde Ayotlán, Jalisco. NOM 1633.",
+      ogTitle: "Soluciones B2B de Tequila - Casa Loy Tequilera",
+      ogDesc: "Marca privada, tequila a granel y envasado en México con campos propios de agave y certificación CRT.",
+      ogImage: "/Casa Loy Tequilera.webp"
     }
   },
   en: {
@@ -514,6 +521,13 @@ const seoData = {
       ogTitle: "1937 Nativo Restaurant - Casa Loy",
       ogDesc: "Authentic flavors from the agave land in a luxurious Mexican hacienda setting.",
       ogImage: "/Restaurante 1937 Nativo.webp"
+    },
+    solutions: {
+      title: "B2B Tequila Solutions | Private Label, Bulk & Co-Packing | Casa Loy",
+      description: "Made-to-order B2B tequila solutions: private label contract distilling, bulk supply, and Mexico co-packing bottling from Jalisco. NOM 1633.",
+      ogTitle: "B2B Tequila Solutions - Casa Loy Tequilera",
+      ogDesc: "Private label, bulk tequila and co-packing from our own agave estates in the highlands of Jalisco.",
+      ogImage: "/Casa Loy Tequilera.webp"
     }
   }
 };
@@ -534,7 +548,8 @@ const pathMap = {
   careers: { es: "/bolsa-de-trabajo", en: "/careers" },
   privacy: { es: "/politica-de-privacidad", en: "/privacy-policy" },
   cookies: { es: "/politica-de-cookies", en: "/cookie-policy" },
-  terms: { es: "/terminos-y-condiciones", en: "/terms-and-conditions" }
+  terms: { es: "/terminos-y-condiciones", en: "/terms-and-conditions" },
+  solutions: { es: "/soluciones", en: "/solutions" }
 };
 
 export default function SEO({ page, lang = "es" }) {
