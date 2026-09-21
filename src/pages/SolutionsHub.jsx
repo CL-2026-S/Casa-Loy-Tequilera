@@ -300,7 +300,7 @@ export default function SolutionsHub({ lang = "en", setPage }) {
       {/* Subtle atmospheric ambient glow */}
       <div className="absolute top-16 left-1/2 -translate-x-1/2 w-full max-w-lg h-60 bg-gradient-to-b from-[#8C4723]/6 to-transparent blur-2xl pointer-events-none -z-0"></div>
 
-      <div className="w-full max-w-md sm:max-w-lg mx-auto relative z-10">
+      <div className="w-full max-w-xl sm:max-w-2xl lg:max-w-3xl mx-auto relative z-10">
         <AnimatePresence mode="wait">
           {/* ============================================================
               VIEW 1: LINKTREE-STYLE SOLUTIONS HUB (COMPACT & ON-BRAND)
@@ -312,29 +312,26 @@ export default function SolutionsHub({ lang = "en", setPage }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.25 }}
-              className="flex flex-col items-center text-center"
+              className="flex flex-col items-center text-center w-full"
             >
-              {/* Brand Header */}
-              <span className="font-navigation text-[10.5px] sm:text-[11px] uppercase tracking-[0.25em] font-semibold text-[#8C4723] mb-1.5">
-                {t.brandHeader}
-              </span>
-
-              {/* Main Headline */}
-              <h1 className="font-serif text-[26px] sm:text-[32px] md:text-[36px] leading-[1.12] font-semibold text-[#1c1c18] tracking-tight max-w-md">
+              {/* Main Headline (single line) */}
+              <h1 className="font-serif text-[21px] sm:text-[27px] md:text-[31px] leading-tight font-semibold text-[#1c1c18] tracking-tight whitespace-normal sm:whitespace-nowrap mb-1.5">
                 {t.heroTitle}
               </h1>
 
-              {/* Subtitle */}
-              <p className="font-navigation text-[12px] sm:text-[13px] leading-relaxed text-[#53443a] font-normal mt-2 max-w-md">
+              {/* Subtitle (single line) */}
+              <p className="font-navigation text-[11px] sm:text-[12.5px] md:text-[13px] text-[#53443a] font-normal whitespace-normal sm:whitespace-nowrap mb-2">
                 {t.heroDesc}
               </p>
 
               {/* CRT & NOM Credential */}
-              <div className="font-navigation text-[10px] sm:text-[10.5px] text-[#867369] font-medium tracking-wide mt-2 mb-4">
+              <div className="font-navigation text-[10px] sm:text-[10.5px] text-[#867369] font-medium tracking-wide mb-4">
                 {t.trustLine}
               </div>
 
-              {/* Cards List */}
+              {/* Cards & Actions Container */}
+              <div className="w-full max-w-md sm:max-w-lg mx-auto flex flex-col items-center">
+                {/* Cards List */}
               <div className="w-full space-y-2.5 mb-3.5">
                 {t.cards.map((card) => (
                   <button
@@ -489,21 +486,22 @@ export default function SolutionsHub({ lang = "en", setPage }) {
                   </svg>
                 </a>
               </div>
-            </motion.div>
-          )}
+            </div>
+          </motion.div>
+        )}
 
-          {/* ============================================================
-              VIEW 2: PROJECT INTAKE FORM ("Tell us about your project")
-              ============================================================ */}
-          {view === "form" && (
-            <motion.div
-              key="form-view"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.3 }}
-              className="w-full text-left"
-            >
+        {/* ============================================================
+            VIEW 2: PROJECT INTAKE FORM ("Tell us about your project")
+            ============================================================ */}
+        {view === "form" && (
+          <motion.div
+            key="form-view"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.3 }}
+            className="w-full max-w-md sm:max-w-lg mx-auto text-left"
+          >
               {/* Back Button */}
               <button
                 type="button"
@@ -721,7 +719,7 @@ export default function SolutionsHub({ lang = "en", setPage }) {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ duration: 0.3 }}
-              className="text-center bg-white border border-[#1c1c18]/10 rounded-2xl p-6 sm:p-8 shadow-[0_4px_24px_rgba(0,0,0,0.06)]"
+              className="w-full max-w-md sm:max-w-lg mx-auto text-center bg-white border border-[#1c1c18]/10 rounded-2xl p-6 sm:p-8 shadow-[0_4px_24px_rgba(0,0,0,0.06)]"
             >
               {/* Checkmark Icon */}
               <div className="w-16 h-16 rounded-full bg-[#8C4723]/10 text-[#8C4723] flex items-center justify-center mx-auto mb-4">
