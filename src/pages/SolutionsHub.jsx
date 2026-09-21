@@ -64,9 +64,15 @@ export default function SolutionsHub({ lang = "en", setPage }) {
       ],
       talkToUs: "Talk to us",
       aboutUs: "About us ↗",
+      callCard: {
+        badge: "Direct Calendar",
+        duration: "30 min",
+        title: "Schedule your technical call",
+        subtitle: "1-on-1 consultation directly with distillery • Cal.com",
+        cta: "Book slot"
+      },
       orGetInformed: "OR GET INFORMED",
       blogB2B: "Blog B2B",
-      canonicalUrl: "casaloy.com/solutions",
       form: {
         back: "Back",
         title: "Tell us about your project.",
@@ -98,12 +104,12 @@ export default function SolutionsHub({ lang = "en", setPage }) {
         sendBtn: "Send",
         sendingBtn: "Submitting...",
         notice: "If your answers match one of our active profiles, the confirmation screen opens our calendar so you can book directly — no back-and-forth email. Otherwise, someone from our team reaches out first.",
-        directCalLink: "Prefer to book directly? Schedule with María Fernanda on Cal.com ↗"
+        directCalLink: "Prefer to book directly? Schedule your technical call here ↗"
       },
       success: {
         title: "Thank you for reaching out!",
         subtitle: "We have received your project details. If your answers match our production schedule, you can book a 30-minute consultation directly below:",
-        bookCall: "Schedule 30-min Call with María Fernanda (Cal.com)",
+        bookCall: "Schedule 30-min Technical Call (Cal.com)",
         whatsappCta: "Prefer WhatsApp? Chat with our team",
         backToHub: "Return to Solutions Hub",
         exploreBrands: "Explore Casa Loy Brands"
@@ -136,9 +142,15 @@ export default function SolutionsHub({ lang = "en", setPage }) {
       ],
       talkToUs: "Hablemos",
       aboutUs: "Quiénes somos ↗",
+      callCard: {
+        badge: "Agenda Directa",
+        duration: "30 min",
+        title: "Agenda tu llamada técnica",
+        subtitle: "Videollamada 1 a 1 con destilería • Sin esperas",
+        cta: "Agendar"
+      },
       orGetInformed: "O INFÓRMATE",
       blogB2B: "Blog B2B",
-      canonicalUrl: "casaloy.com/soluciones",
       form: {
         back: "Volver",
         title: "Cuéntanos sobre tu proyecto.",
@@ -170,12 +182,12 @@ export default function SolutionsHub({ lang = "en", setPage }) {
         sendBtn: "Enviar",
         sendingBtn: "Enviando...",
         notice: "Si tus respuestas coinciden con uno de nuestros perfiles activos, la pantalla de confirmación abrirá nuestra agenda para que reserves directamente — sin correos de ida y vuelta. De lo contrario, alguien de nuestro equipo se pondrá en contacto primero.",
-        directCalLink: "¿Prefieres agendar directamente? Abre la agenda de María Fernanda en Cal.com ↗"
+        directCalLink: "¿Prefieres agendar de inmediato? Reserva tu llamada técnica aquí ↗"
       },
       success: {
         title: "¡Gracias por contactarnos!",
         subtitle: "Hemos recibido los detalles de tu proyecto. Si tus respuestas coinciden con nuestra capacidad de producción, puedes agendar una videollamada técnica de 30 minutos a continuación:",
-        bookCall: "Agendar llamada de 30 min con María Fernanda (Cal.com)",
+        bookCall: "Agendar videollamada técnica de 30 min (Cal.com)",
         whatsappCta: "¿Prefieres WhatsApp? Escríbenos directamente",
         backToHub: "Volver al Hub de Soluciones",
         exploreBrands: "Conoce las Marcas de Casa Loy"
@@ -366,24 +378,60 @@ export default function SolutionsHub({ lang = "en", setPage }) {
                 </svg>
               </button>
 
-              {/* Secondary Links: About us & Direct Cal.com */}
-              <div className="flex flex-wrap items-center justify-center gap-3">
-                <Link
-                  to={lang === "es" ? "/quienes-somos" : "/about"}
-                  className="font-navigation text-[12px] text-[#53443a] hover:text-[#8C4723] transition-colors py-1 font-medium flex items-center gap-1 group"
-                >
-                  <span>{t.aboutUs}</span>
-                </Link>
-                <span className="text-[#867369]/40 hidden sm:inline">•</span>
-                <a
-                  href="https://cal.com/internationalcasaloy/30min"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-navigation text-[12px] text-[#8C4723] hover:text-[#723606] transition-colors py-1 font-medium flex items-center gap-1 group hover:underline"
-                >
-                  <span>{lang === "es" ? "Agenda con María Fernanda ↗" : "Schedule with María Fernanda ↗"}</span>
-                </a>
-              </div>
+              {/* Visual Secondary Action: Agenda tu llamada (Cal.com Direct Booking Card) */}
+              <a
+                href="https://cal.com/internationalcasaloy/30min"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full relative overflow-hidden rounded-2xl bg-gradient-to-br from-white via-[#FAF7F2] to-white border border-[#8C4723]/30 hover:border-[#8C4723] p-3.5 sm:p-4 text-left shadow-[0_2px_12px_rgba(140,71,35,0.06)] hover:shadow-[0_8px_24px_rgba(140,71,35,0.14)] transition-all duration-200 transform hover:-translate-y-0.5 active:scale-[0.99] cursor-pointer mb-2.5 group block"
+              >
+                {/* Top micro badges */}
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-[10px] sm:text-[10.5px] font-navigation font-semibold tracking-wide">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>{t.callCard.badge}</span>
+                  </div>
+                  <span className="font-navigation text-[10.5px] text-[#867369] font-medium tracking-wide">
+                    {t.callCard.duration}
+                  </span>
+                </div>
+
+                {/* Main visual row */}
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-xl bg-[#8C4723]/10 text-[#8C4723] flex items-center justify-center group-hover:bg-[#8C4723] group-hover:text-white transition-colors duration-200 flex-shrink-0">
+                      <svg className="w-5 h-5 fill-none stroke-current stroke-[1.8]" viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                      </svg>
+                    </div>
+                    <div className="min-w-0 text-left">
+                      <h3 className="font-serif text-[15px] sm:text-[16px] font-semibold text-[#1c1c18] group-hover:text-[#8C4723] transition-colors leading-snug">
+                        {t.callCard.title}
+                      </h3>
+                      <p className="font-navigation text-[11px] sm:text-[11.5px] text-[#53443a] leading-tight mt-0.5">
+                        {t.callCard.subtitle}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Right CTA action */}
+                  <div className="flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#8C4723] group-hover:bg-[#723606] text-white font-navigation text-[11.5px] sm:text-[12px] font-semibold shadow-sm transition-colors">
+                    <span>{t.callCard.cta}</span>
+                    <span className="group-hover:translate-x-0.5 transition-transform text-[11px]">↗</span>
+                  </div>
+                </div>
+              </a>
+
+              {/* Secondary Link: About us */}
+              <Link
+                to={lang === "es" ? "/quienes-somos" : "/about"}
+                className="font-navigation text-[12px] text-[#53443a] hover:text-[#8C4723] transition-colors py-1 font-medium flex items-center gap-1 group"
+              >
+                <span>{t.aboutUs}</span>
+              </Link>
 
               {/* Section Divider */}
               <div className="w-full flex items-center gap-3 my-3.5">
@@ -441,11 +489,6 @@ export default function SolutionsHub({ lang = "en", setPage }) {
                   </svg>
                 </a>
               </div>
-
-              {/* Bottom URL Watermark */}
-              <p className="font-navigation text-[11px] text-[#867369]/70 tracking-wider">
-                {t.canonicalUrl}
-              </p>
             </motion.div>
           )}
 
@@ -665,11 +708,6 @@ export default function SolutionsHub({ lang = "en", setPage }) {
                   <span>{t.form.directCalLink}</span>
                 </a>
               </div>
-
-              {/* Bottom URL Watermark */}
-              <p className="font-navigation text-[11px] text-[#867369]/70 tracking-wider text-center mt-4">
-                {t.canonicalUrl}
-              </p>
             </motion.div>
           )}
 
