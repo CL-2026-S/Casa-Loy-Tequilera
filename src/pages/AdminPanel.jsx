@@ -633,10 +633,10 @@ export default function AdminPanel({
   };
 
   useEffect(() => {
-    if (showSolutionsCms) {
+    if (activeTab === "cms" && cmsTab === "solutions") {
       loadSolutionsCmsData(solutionsCmsLang);
     }
-  }, [showSolutionsCms, solutionsCmsLang]);
+  }, [activeTab, cmsTab, solutionsCmsLang]);
 
   async function verifySession() {
     if (token === "dev_admin_token") return;
