@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { jobsData } from "../data/jobs";
+import ExecutiveAnalyticsDashboard from "../components/admin/ExecutiveAnalyticsDashboard";
 
 const REGIMENES_FISCALES = [
   { code: "601", label: "601 - General de Ley Personas Morales" },
@@ -416,6 +417,7 @@ export default function AdminPanel({
 
   // Maquila Leads States
   const [maquilaLeadsList, setMaquilaLeadsList] = useState([]);
+  const [subscribersList, setSubscribersList] = useState([]); // Newsletter Subscribers
   const [maquilaDownloadStartDate, setMaquilaDownloadStartDate] = useState("");
   const [maquilaDownloadEndDate, setMaquilaDownloadEndDate] = useState("");
   const [maquilaSearchQuery, setMaquilaSearchQuery] = useState("");
@@ -867,6 +869,22 @@ export default function AdminPanel({
         }
       } catch (e) {
         console.error("Error fetching maquila leads:", e);
+      }
+    }
+
+    if (activeTab === "dashboard") {
+      try {
+        const res = await fetch("/api/newsletter", {
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setSubscribersList(Array.isArray(data) ? data : []);
+        }
+      } catch (e) {
+        console.error("Error fetching newsletter subscribers:", e);
       }
     }
   };
@@ -3155,504 +3173,23 @@ export default function AdminPanel({
             <div className="bg-white border border-stone-200/80 rounded-xl shadow-xs p-6 sm:p-8">
           
           {/* TAB: Dashboard Analítico (Exclusivo para rol admin) */}
-          {activeTab === "dashboard" && userHasRole("admin") && (() => {
-            // Analytics Calculations (strictly confirmed or completed tours)
-            const activeTourBookings = bookingsLog.filter(b => b.status === "Confirmada" || b.status === "Completada");
-            const totalTours = activeTourBookings.length;
-            const totalTourPax = activeTourBookings.reduce((sum, b) => sum + (parseInt(b.guests) || 1), 0);
-            const totalRevenue = activeTourBookings.reduce((sum, b) => {
-              if (b.amount) return sum + Number(b.amount);
-              if (b.total) return sum + Number(b.total);
-              const priceMap = { oro: 550, platino: 750, diamante: 1500 };
-              const p = priceMap[b.tour_type || b.tour_id || b.experience_id] || 550;
-              return sum + ((parseInt(b.guests) || 1) * p);
-            }, 0);
-
-            // Experiences breakdown
-            const expBreakdown = {
-              oro: { name: "Recorrido Oro", count: 0, pax: 0, revenue: 0, color: "#C29B38", price: 550 },
-              platino: { name: "Recorrido Platino", count: 0, pax: 0, revenue: 0, color: "#7A8288", price: 750 },
-              diamante: { name: "Recorrido Diamante", count: 0, pax: 0, revenue: 0, color: "#1A2624", price: 1500 },
-            };
-
-            activeTourBookings.forEach(b => {
-              const type = (b.tour_type || b.tour_id || b.experience_id || "oro").toLowerCase();
-              const guests = parseInt(b.guests) || 1;
-              if (type.includes("diamante")) {
-                expBreakdown.diamante.count += 1;
-                expBreakdown.diamante.pax += guests;
-                expBreakdown.diamante.revenue += b.amount ? Number(b.amount) : guests * 1500;
-              } else if (type.includes("platino")) {
-                expBreakdown.platino.count += 1;
-                expBreakdown.platino.pax += guests;
-                expBreakdown.platino.revenue += b.amount ? Number(b.amount) : guests * 750;
-              } else {
-                expBreakdown.oro.count += 1;
-                expBreakdown.oro.pax += guests;
-                expBreakdown.oro.revenue += b.amount ? Number(b.amount) : guests * 550;
-              }
-            });
-
-            // Restaurant metrics
-            const totalRestBookings = restaurantBookings.length;
-            const totalRestPax = restaurantBookings.reduce((sum, r) => sum + (parseInt(r.guests) || 0), 0);
-
-            // Maquila Leads metrics
-            const totalLeads = maquilaLeadsList.length;
-
-            // Invoicing SAT CFDI 4.0
-            const requestedInvoices = activeTourBookings.filter(b => b.cfdi_requested || b.requires_invoice || b.invoice_status === "issued" || b.rfc).length;
-            const issuedInvoices = activeTourBookings.filter(b => b.invoice_status === "issued" || b.factura_emitida).length;
-
-            // Recent 5 tour bookings (only confirmed/completed)
-            const recentBookings = [...activeTourBookings].slice(0, 5);
-
-            // Current date nicely formatted in Spanish
-            const todayFormatted = new Intl.DateTimeFormat('es-MX', {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            }).format(new Date());
-
-            return (
-              <div className="space-y-8 text-left">
-                
-                {/* 1. WELCOME BANNER (POLARIS / CASA LOY LUXAYA) */}
-                <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-[#1A2624] via-[#243533] to-[#1A2624] p-6 sm:p-7 text-white shadow-md border border-amber-900/30">
-                  <div className="absolute right-0 top-0 bottom-0 opacity-10 pointer-events-none hidden md:flex items-center pr-8">
-                    <span className="material-symbols-outlined text-9xl text-[#C29B38]">local_bar</span>
-                  </div>
-
-                  <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                    <div className="flex items-start sm:items-center gap-4">
-                      <div 
-                        className="w-14 h-14 rounded-2xl flex items-center justify-center font-serif text-2xl font-bold text-white shadow-lg shrink-0 border-2 border-white/20"
-                        style={{ backgroundColor: profileAvatarColor }}
-                      >
-                        {user?.name?.charAt(0)?.toUpperCase() || "A"}
-                      </div>
-                      <div>
-                        <div className="flex flex-wrap items-center gap-2 mb-1">
-                          <span className="text-[10px] uppercase font-bold tracking-widest px-2.5 py-0.5 rounded-full bg-[#C29B38]/20 text-[#E0C068] border border-[#C29B38]/40">
-                            {user?.role?.split(',')[0]}
-                          </span>
-                          <span className="text-xs text-stone-300 capitalize">
-                            • {todayFormatted}
-                          </span>
-                        </div>
-                        <h2 className="text-xl sm:text-2xl font-serif font-bold text-white tracking-tight">
-                          Bienvenido de vuelta, {user?.name || "Administrador"}
-                        </h2>
-                        <p className="text-xs text-stone-300 mt-1 max-w-xl">
-                          Resumen analítico en tiempo real de operaciones, reservas de experiencias, restaurante y solicitudes de marca privada en Destilería Casa Loy.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-                      <button
-                        onClick={() => {
-                          setProfileSubTab("profile");
-                          setProfileStatusMsg({ text: "", type: "" });
-                          setShowProfileModal(true);
-                        }}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-xs transition-colors border border-white/15 cursor-pointer shadow-xs"
-                      >
-                        <span className="material-symbols-outlined text-sm text-[#C29B38]">badge</span>
-                        <span>Editar Perfil</span>
-                      </button>
-                      <button
-                        onClick={() => {
-                          setProfileSubTab("security");
-                          setProfileStatusMsg({ text: "", type: "" });
-                          setShowProfileModal(true);
-                        }}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#8C4723] hover:bg-[#a35329] text-white text-xs font-semibold transition-colors cursor-pointer shadow-xs"
-                      >
-                        <span className="material-symbols-outlined text-sm">lock_reset</span>
-                        <span>Cambiar Contraseña</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 2. FOUR PRIMARY KPI METRIC CARDS */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-                  
-                  {/* KPI 1: Ingresos de Tours */}
-                  <div className="bg-stone-50/80 border border-stone-200/90 rounded-xl p-5 hover:shadow-sm transition-shadow">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs uppercase tracking-wider font-bold text-stone-500">
-                        Ingresos Experiencias
-                      </span>
-                      <div className="w-8 h-8 rounded-lg bg-emerald-100/70 text-emerald-700 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-lg">payments</span>
-                      </div>
-                    </div>
-                    <div className="mt-3">
-                      <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
-                        ${totalRevenue.toLocaleString("es-MX")} <span className="text-xs font-sans font-semibold text-stone-500">MXN</span>
-                      </div>
-                      <div className="flex items-center gap-1.5 text-xs text-stone-500 mt-1">
-                        <span className="text-emerald-700 font-bold font-sans">
-                          {totalTours} reservas
-                        </span>
-                        <span>registradas en sistema</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* KPI 2: Boletos Tours */}
-                  <div className="bg-stone-50/80 border border-stone-200/90 rounded-xl p-5 hover:shadow-sm transition-shadow">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs uppercase tracking-wider font-bold text-stone-500">
-                        Visitantes Tours
-                      </span>
-                      <div className="w-8 h-8 rounded-lg bg-[#8C4723]/10 text-[#8C4723] flex items-center justify-center">
-                        <span className="material-symbols-outlined text-lg">confirmation_number</span>
-                      </div>
-                    </div>
-                    <div className="mt-3">
-                      <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
-                        {totalTourPax} <span className="text-xs font-sans font-semibold text-stone-500">asistentes</span>
-                      </div>
-                      <div className="flex items-center gap-1.5 text-xs text-stone-500 mt-1">
-                        <span className="text-[#8C4723] font-bold">
-                          {requestedInvoices} con CFDI
-                        </span>
-                        <span>solicitado ante SAT</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* KPI 3: Restaurante 1937 Nativo */}
-                  <div className="bg-stone-50/80 border border-stone-200/90 rounded-xl p-5 hover:shadow-sm transition-shadow">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs uppercase tracking-wider font-bold text-stone-500">
-                        1937 Nativo (Mesas)
-                      </span>
-                      <div className="w-8 h-8 rounded-lg bg-amber-100/70 text-amber-800 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-lg">restaurant</span>
-                      </div>
-                    </div>
-                    <div className="mt-3">
-                      <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
-                        {totalRestPax} <span className="text-xs font-sans font-semibold text-stone-500">comensales</span>
-                      </div>
-                      <div className="flex items-center gap-1.5 text-xs text-stone-500 mt-1">
-                        <span className="text-amber-800 font-bold">
-                          {totalRestBookings} reservaciones
-                        </span>
-                        <span>de mesa activas</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* KPI 4: Leads Maquila */}
-                  <div className="bg-stone-50/80 border border-stone-200/90 rounded-xl p-5 hover:shadow-sm transition-shadow">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs uppercase tracking-wider font-bold text-stone-500">
-                        Leads Maquila
-                      </span>
-                      <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center">
-                        <span className="material-symbols-outlined text-lg">business_center</span>
-                      </div>
-                    </div>
-                    <div className="mt-3">
-                      <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
-                        {totalLeads} <span className="text-xs font-sans font-semibold text-stone-500">solicitudes</span>
-                      </div>
-                      <div className="flex items-center gap-1.5 text-xs text-stone-500 mt-1">
-                        <span className="text-slate-800 font-bold">
-                          {maquilaLeadsList.filter(l => l.status === "new" || !l.status).length} nuevos
-                        </span>
-                        <span>por calificar</span>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-
-                {/* 3. VISUAL ANALYTICS: EXPERIENCES BREAKDOWN & SAT CFDI 4.0 */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                  
-                  {/* Left Col (7 cols): Breakdown of Experiences */}
-                  <div className="lg:col-span-7 bg-stone-50/60 border border-stone-200/80 rounded-xl p-5 sm:p-6 space-y-5">
-                    <div className="flex items-center justify-between border-b border-stone-200/80 pb-3">
-                      <div>
-                        <h4 className="text-sm font-bold text-stone-900">
-                          Distribución de Experiencias Tequileras
-                        </h4>
-                        <p className="text-xs text-stone-500">
-                          Participación de visitantes e ingresos generados por tipo de recorrido
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => setActiveTab("log")}
-                        className="text-xs font-bold text-[#8C4723] hover:underline flex items-center gap-1 cursor-pointer"
-                      >
-                        <span>Ver bitácora</span>
-                        <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                      </button>
-                    </div>
-
-                    <div className="space-y-4">
-                      {/* Recorrido Oro */}
-                      <div>
-                        <div className="flex items-center justify-between text-xs mb-1">
-                          <div className="flex items-center gap-2">
-                            <span className="w-2.5 h-2.5 rounded-full bg-[#C29B38]"></span>
-                            <span className="font-bold text-stone-800">Recorrido Oro ($550 MXN)</span>
-                          </div>
-                          <div className="text-stone-600 font-semibold">
-                            {expBreakdown.oro.pax} personas • ${expBreakdown.oro.revenue.toLocaleString("es-MX")} MXN
-                          </div>
-                        </div>
-                        <div className="w-full bg-stone-200 h-2 rounded-full overflow-hidden">
-                          <div
-                            className="bg-[#C29B38] h-full rounded-full transition-all duration-500"
-                            style={{ width: `${totalTourPax > 0 ? (expBreakdown.oro.pax / totalTourPax) * 100 : 33}%` }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Recorrido Platino */}
-                      <div>
-                        <div className="flex items-center justify-between text-xs mb-1">
-                          <div className="flex items-center gap-2">
-                            <span className="w-2.5 h-2.5 rounded-full bg-[#7A8288]"></span>
-                            <span className="font-bold text-stone-800">Recorrido Platino ($750 MXN)</span>
-                          </div>
-                          <div className="text-stone-600 font-semibold">
-                            {expBreakdown.platino.pax} personas • ${expBreakdown.platino.revenue.toLocaleString("es-MX")} MXN
-                          </div>
-                        </div>
-                        <div className="w-full bg-stone-200 h-2 rounded-full overflow-hidden">
-                          <div
-                            className="bg-[#7A8288] h-full rounded-full transition-all duration-500"
-                            style={{ width: `${totalTourPax > 0 ? (expBreakdown.platino.pax / totalTourPax) * 100 : 33}%` }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Recorrido Diamante */}
-                      <div>
-                        <div className="flex items-center justify-between text-xs mb-1">
-                          <div className="flex items-center gap-2">
-                            <span className="w-2.5 h-2.5 rounded-full bg-[#1A2624]"></span>
-                            <span className="font-bold text-stone-800">Recorrido Diamante ($1,500 MXN)</span>
-                          </div>
-                          <div className="text-stone-600 font-semibold">
-                            {expBreakdown.diamante.pax} personas • ${expBreakdown.diamante.revenue.toLocaleString("es-MX")} MXN
-                          </div>
-                        </div>
-                        <div className="w-full bg-stone-200 h-2 rounded-full overflow-hidden">
-                          <div
-                            className="bg-[#1A2624] h-full rounded-full transition-all duration-500"
-                            style={{ width: `${totalTourPax > 0 ? (expBreakdown.diamante.pax / totalTourPax) * 100 : 34}%` }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Summary pills */}
-                    <div className="pt-2 grid grid-cols-3 gap-2 border-t border-stone-200/70 text-center">
-                      <div className="bg-white p-2.5 rounded-lg border border-stone-200/70">
-                        <div className="text-[10px] uppercase font-bold text-stone-400">Total Boletos</div>
-                        <div className="text-sm font-bold text-stone-800">{totalTourPax}</div>
-                      </div>
-                      <div className="bg-white p-2.5 rounded-lg border border-stone-200/70">
-                        <div className="text-[10px] uppercase font-bold text-stone-400">Ticket Promedio</div>
-                        <div className="text-sm font-bold text-stone-800">
-                          ${totalTours > 0 ? Math.round(totalRevenue / totalTours).toLocaleString("es-MX") : "0"} MXN
-                        </div>
-                      </div>
-                      <div className="bg-white p-2.5 rounded-lg border border-stone-200/70">
-                        <div className="text-[10px] uppercase font-bold text-stone-400">Cupones Usados</div>
-                        <div className="text-sm font-bold text-stone-800">
-                          {bookingsLog.filter(b => b.discount_code || b.coupon_code).length}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right Col (5 cols): Operational & Fiscal Status SAT */}
-                  <div className="lg:col-span-5 bg-stone-50/60 border border-stone-200/80 rounded-xl p-5 sm:p-6 flex flex-col justify-between space-y-4">
-                    <div>
-                      <div className="border-b border-stone-200/80 pb-3">
-                        <h4 className="text-sm font-bold text-stone-900 flex items-center gap-2">
-                          <span className="material-symbols-outlined text-lg text-[#8C4723]">receipt_long</span>
-                          <span>Cumplimiento Fiscal SAT CFDI 4.0</span>
-                        </h4>
-                        <p className="text-xs text-stone-500">
-                          Estatus de emisión de comprobantes fiscales digitales por internet
-                        </p>
-                      </div>
-
-                      <div className="mt-4 space-y-3">
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-white border border-stone-200/80">
-                          <div className="flex items-center gap-2.5">
-                            <span className="material-symbols-outlined text-emerald-600 text-base">check_circle</span>
-                            <span className="text-xs font-semibold text-stone-700">Facturas Timbradas (SAT)</span>
-                          </div>
-                          <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                            {issuedInvoices} emitidas
-                          </span>
-                        </div>
-
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-white border border-stone-200/80">
-                          <div className="flex items-center gap-2.5">
-                            <span className="material-symbols-outlined text-amber-600 text-base">pending_actions</span>
-                            <span className="text-xs font-semibold text-stone-700">Pendientes de Facturación</span>
-                          </div>
-                          <span className="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                            {Math.max(0, requestedInvoices - issuedInvoices)} pendientes
-                          </span>
-                        </div>
-
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-white border border-stone-200/80">
-                          <div className="flex items-center gap-2.5">
-                            <span className="material-symbols-outlined text-blue-600 text-base">qr_code_scanner</span>
-                            <span className="text-xs font-semibold text-stone-700">Control de Accesos QR</span>
-                          </div>
-                          <span className="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
-                            Operativo
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="pt-2 border-t border-stone-200/80 flex items-center gap-2">
-                      <button
-                        onClick={() => setActiveTab("validate")}
-                        className="flex-1 inline-flex items-center justify-center gap-1.5 bg-[#2F403E] hover:bg-[#8C4723] text-white py-2 px-3 rounded-lg text-xs font-semibold cursor-pointer transition-colors"
-                      >
-                        <span className="material-symbols-outlined text-sm">qr_code_scanner</span>
-                        <span>Abrir Validador QR</span>
-                      </button>
-                      <button
-                        onClick={() => setActiveTab("calendar")}
-                        className="inline-flex items-center justify-center gap-1.5 bg-stone-200 hover:bg-stone-300 text-stone-800 py-2 px-3 rounded-lg text-xs font-semibold cursor-pointer transition-colors"
-                      >
-                        <span className="material-symbols-outlined text-sm">calendar_month</span>
-                        <span>Cupos</span>
-                      </button>
-                    </div>
-                  </div>
-
-                </div>
-
-                {/* 4. RECENT 5 TOUR RESERVATIONS TABLE */}
-                <div className="bg-white border border-stone-200/90 rounded-xl overflow-hidden shadow-2xs">
-                  <div className="p-4 sm:p-5 border-b border-stone-200/80 flex items-center justify-between">
-                    <div>
-                      <h4 className="text-sm font-bold text-stone-900 flex items-center gap-2">
-                        <span className="material-symbols-outlined text-[#8C4723] text-lg">history</span>
-                        <span>Últimas Reservaciones Registradas</span>
-                      </h4>
-                      <p className="text-xs text-stone-500">
-                        Últimos registros de compras de experiencias y tours en la plataforma
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => setActiveTab("log")}
-                      className="text-xs font-bold text-[#8C4723] hover:underline flex items-center gap-1 cursor-pointer"
-                    >
-                      <span>Ver todas ({bookingsLog.length})</span>
-                      <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                    </button>
-                  </div>
-
-                  {recentBookings.length === 0 ? (
-                    <div className="py-12 text-center text-stone-500 space-y-3">
-                      <span className="material-symbols-outlined text-4xl text-stone-300">receipt_long</span>
-                      <p className="text-xs">No hay reservaciones de tours registradas todavía.</p>
-                      <button
-                        onClick={() => { setActiveTab("log"); setShowManualForm(true); }}
-                        className="inline-flex items-center gap-1.5 bg-[#2F403E] hover:bg-[#8C4723] text-white px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors"
-                      >
-                        <span className="material-symbols-outlined text-sm">add</span>
-                        <span>Registrar Primera Reserva</span>
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left border-collapse text-xs">
-                        <thead>
-                          <tr className="bg-stone-50/80 border-b border-stone-200/80 text-stone-500 font-bold uppercase tracking-wider text-[10px]">
-                            <th className="py-3 px-4">Código / Reserva</th>
-                            <th className="py-3 px-4">Titular</th>
-                            <th className="py-3 px-4">Experiencia / Tour</th>
-                            <th className="py-3 px-4 text-center">Pax</th>
-                            <th className="py-3 px-4">Fecha & Horario</th>
-                            <th className="py-3 px-4 text-right">Monto</th>
-                            <th className="py-3 px-4 text-center">Estatus Pago</th>
-                            <th className="py-3 px-4 text-center">Factura SAT</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-stone-200/70">
-                          {recentBookings.map((b, idx) => {
-                            const isConfirmed = b.status === "Confirmada" || b.status === "Completada" || b.paid || b.status === "confirmed" || b.status === "paid";
-                            const isAbandoned = b.status && (b.status.includes("Carrito Abandonado") || b.status.includes("Intento"));
-                            const hasSat = b.cfdi_requested || b.requires_invoice || b.invoice_status === "issued";
-                            const expName = b.packageName || b.experience_name || (b.tour_id === 'diamante' ? 'Experiencia Diamante' : b.tour_id === 'platino' ? 'Experiencia Platino' : b.tour_id === 'oro' ? 'Experiencia Oro' : null) || b.tour_type || "Experiencia Casa Loy";
-                            return (
-                              <tr key={b.id || idx} className="hover:bg-stone-50/80 transition-colors">
-                                <td className="py-3 px-4 font-mono font-bold text-[#8C4723]">
-                                  {b.code || b.ticket_code || `#${idx + 1}`}
-                                </td>
-                                <td className="py-3 px-4 font-semibold text-stone-900">
-                                  {b.name || b.customer_name || "Cliente General"}
-                                  {b.email && <div className="text-[10px] font-normal text-stone-400">{b.email}</div>}
-                                </td>
-                                <td className="py-3 px-4 font-medium text-stone-700">
-                                  {expName}
-                                </td>
-                                <td className="py-3 px-4 text-center font-bold text-stone-800">
-                                  {b.guests || 1}
-                                </td>
-                                <td className="py-3 px-4 text-stone-600">
-                                  <div>{b.date || "Fecha no esp."}</div>
-                                  <div className="text-[10px] text-stone-400">{b.time || "11:00 AM"}</div>
-                                </td>
-                                <td className="py-3 px-4 text-right font-bold text-stone-900">
-                                  ${(b.amount || b.total || 550).toLocaleString("es-MX")} MXN
-                                </td>
-                                <td className="py-3 px-4 text-center">
-                                  <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                                    isConfirmed 
-                                      ? "bg-emerald-50 text-emerald-700 border border-emerald-200" 
-                                      : isAbandoned
-                                        ? "bg-amber-50 text-amber-700 border border-amber-200"
-                                        : b.status === "Cancelada"
-                                          ? "bg-stone-100 text-stone-500 border border-stone-200"
-                                          : "bg-amber-50 text-amber-700 border border-amber-200"
-                                  }`}>
-                                    {isConfirmed ? "Pagado" : isAbandoned ? "Carrito Abandonado" : (b.status || "Pendiente")}
-                                  </span>
-                                </td>
-                                <td className="py-3 px-4 text-center">
-                                  {hasSat ? (
-                                    <span className="text-[10px] font-bold text-[#8C4723] bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                                      CFDI 4.0
-                                    </span>
-                                  ) : (
-                                    <span className="text-stone-300 text-[11px]">—</span>
-                                  )}
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-                </div>
-
-              </div>
-            );
-          })()}
+          {activeTab === "dashboard" && userHasRole("admin") && (
+            <ExecutiveAnalyticsDashboard
+              bookingsLog={bookingsLog}
+              restaurantBookings={restaurantBookings}
+              maquilaLeadsList={maquilaLeadsList}
+              subscribersList={subscribersList}
+              user={user}
+              setActiveTab={setActiveTab}
+              setShowManualForm={setShowManualForm}
+              setProfileSubTab={setProfileSubTab}
+              setProfileStatusMsg={setProfileStatusMsg}
+              setShowProfileModal={setShowProfileModal}
+              profileAvatarColor={profileAvatarColor}
+              maxCapacityLimit={maxCapacityLimit}
+              onRefreshData={loadTabData}
+            />
+          )}
 
           {/* TAB: Calendar & Capacity (Tours) */}
           {(userHasRole("admin") || userHasRole("experience_manager")) && activeTab === "calendar" && (
