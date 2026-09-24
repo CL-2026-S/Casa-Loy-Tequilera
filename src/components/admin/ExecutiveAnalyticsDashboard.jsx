@@ -16,6 +16,8 @@ const BRAND = {
   amber: "#D97706",
   amberBg: "#FFFBEB",
   blue: "#2563EB",
+  purple: "#7C3AED",
+  purpleBg: "#F5F3FF",
   rose: "#E11D48",
   sand: "#FBF9F5",
   cardBg: "#FFFFFF",
@@ -134,7 +136,7 @@ export default function ExecutiveAnalyticsDashboard({
   const [donutMetric, setDonutMetric] = useState("revenue"); // revenue | pax
 
   // Lower Table Tab Selector
-  const [activeTableTab, setActiveTableTab] = useState("tours"); // tours | restaurant | maquila | newsletter
+  const [activeTableTab, setActiveTableTab] = useState("tours"); // tours | newsletter | restaurant | maquila
   const [tableSearch, setTableSearch] = useState("");
   const [tableExpFilter, setTableExpFilter] = useState("all");
   const [tableStatusFilter, setTableStatusFilter] = useState("all");
@@ -420,6 +422,31 @@ export default function ExecutiveAnalyticsDashboard({
     return data;
   }, [confirmedTours, totalTourPax, totalRevenue]);
 
+  // --- TOUR MÁS VENDIDO (TOP SELLING TOUR) ---
+  const topTour = useMemo(() => {
+    const list = [
+      { key: "diamante", ...expBreakdown.diamante },
+      { key: "platino", ...expBreakdown.platino },
+      { key: "oro", ...expBreakdown.oro },
+    ];
+    // Sort by revenue primarily, then by pax
+    list.sort((a, b) => (b.revenue !== a.revenue ? b.revenue - a.revenue : b.pax - a.pax));
+    const winner = list[0];
+    const hasSales = (winner?.revenue || 0) > 0 || (winner?.pax || 0) > 0;
+    return {
+      name: hasSales ? winner.name : "Recorrido Diamante",
+      key: hasSales ? winner.key : "diamante",
+      price: hasSales ? winner.price : 1500,
+      revenue: hasSales ? winner.revenue : 0,
+      pax: hasSales ? winner.pax : 0,
+      count: hasSales ? winner.count : 0,
+      revPct: hasSales ? winner.revPct : 0,
+      paxPct: hasSales ? winner.paxPct : 0,
+      color: hasSales ? winner.color : BRAND.agaveDark,
+      hasSales,
+    };
+  }, [expBreakdown]);
+
   // --- TIMELINE TREND DATA (DAILY / AGGREGATED BUCKETS) ---
   const timelineData = useMemo(() => {
     const buckets = {};
@@ -501,7 +528,7 @@ export default function ExecutiveAnalyticsDashboard({
     const maxDayPax = Math.max(1, ...days.map((d) => d.pax));
     const peakDay = days.reduce((best, cur) => (cur.pax > best.pax ? cur : best), days[0]);
 
-    return { days, maxDayPax, peakDayName: peakDay.fullName };
+    return { days, maxDayPax, peakDayName: peakDay.fullName, peakDayPax: peakDay.pax };
   }, [confirmedTours]);
 
   // Popular Tour Slots
@@ -515,7 +542,9 @@ export default function ExecutiveAnalyticsDashboard({
     const list = Object.entries(slotMap).map(([time, pax]) => ({ time, pax }));
     list.sort((a, b) => b.pax - a.pax);
     const maxPax = Math.max(1, ...list.map((s) => s.pax));
-    return { slots: list.slice(0, 5), maxPax };
+    const peakSlot = list.length > 0 ? list[0].time : "11:00 AM";
+    const peakSlotPax = list.length > 0 ? list[0].pax : 0;
+    return { slots: list, maxPax, peakSlot, peakSlotPax };
   }, [confirmedTours]);
 
   // --- EXPORT TO EXCEL (.XLSX) MULTI-SHEET ---
@@ -534,22 +563,21 @@ export default function ExecutiveAnalyticsDashboard({
         [],
         ["--- INDICADORES CLAVE DE DESEMPEÑO (KPIS) ---"],
         ["Métrica", "Valor", "Unidad / Detalle"],
-        ["Ingresos Totales Experiencias", totalRevenue, "MXN (Reservas Confirmadas)"],
-        ["Total Asistentes Tours (Pax)", totalTourPax, "Personas en recorridos"],
-        ["Total Comensales Restaurante 1937 Nativo", totalRestPax, "Personas con reserva de mesa"],
-        ["Impacto Total de Visitantes (Global)", totalCombinedPax, "Tours + Gastronomía"],
-        ["Total Reservaciones Confirmadas", totalConfirmedCount, "Transacciones concluidas"],
+        ["Inscritos al Newsletter", totalNewSubscribers, "Registrados en el período"],
+        ["Suscriptores Newsletter Activos", activeSubscribersCount, `${retentionRate}% de retención`],
+        ["Leads Maquilas B2B", filteredMaquilaLeads.length, "Prospectos de marca privada"],
+        ["Mesas Reservas en Nativo", filteredRestBookings.length, "Reservas gastronómicas"],
+        ["Comensales 1937 Nativo", totalRestPax, "Personas atendidas"],
+        ["Ingresos en Tours", totalRevenue, "MXN (Reservas Confirmadas)"],
+        ["Visitantes a Tours (#)", totalTourPax, "Asistentes a recorridos"],
+        ["Tour Más Vendido", topTour.name, `${topTour.pax} pax - $${topTour.revenue.toLocaleString("es-MX")} MXN (${topTour.revPct}%)`],
+        ["Horario de Mayor Afluencia", timeSlotStats.peakSlot, `${timeSlotStats.peakSlotPax} asistentes`],
+        ["Día de Mayor Afluencia", dayOfWeekStats.peakDayName, `${dayOfWeekStats.peakDayPax} asistentes`],
         ["Ticket Promedio por Reserva (AOV)", avgTicket, "MXN por compra"],
-        ["Ingreso Medio por Asistente (RevPAX)", avgRevPerPax, "MXN por visitante de tour"],
+        ["Ingreso Medio por Asistente (RevPAX)", avgRevPerPax, "MXN por visitante"],
         ["Tasa de Concreción de Reservas", `${conversionRate}%`, "Confirmadas vs Intentos"],
-        ["Carritos Abandonados / No Pagados", abandonedCount, "Oportunidad de recuperación"],
-        ["Facturas SAT CFDI 4.0 Solicitadas", requestedInvoices, "Requerimientos fiscales"],
-        ["Facturas SAT Timbradas", issuedInvoices, "Comprobantes emitidos"],
-        ["Tasa de Eficiencia Fiscal SAT", `${satEfficiency}%`, "Cumplimiento"],
-        ["Prospectos de Maquila B2B Recibidos", filteredMaquilaLeads.length, "Marcas privadas en período"],
-        ["Nuevos Suscriptores Newsletter", totalNewSubscribers, "Registrados en el período"],
-        ["Suscriptores Newsletter Activos", activeSubscribersCount, "Audiencia activa"],
-        ["Tasa de Retención Newsletter", `${retentionRate}%`, "Salud de lista"],
+        ["Carritos Abandonados", abandonedCount, "Oportunidad de recuperación"],
+        ["Facturas SAT CFDI 4.0 Emitidas", issuedInvoices, `De ${requestedInvoices} solicitadas (${satEfficiency}%)`],
         [],
         ["--- DESGLOSE POR EXPERIENCIA TEQUILERA ---"],
         ["Experiencia", "Precio Unitario", "Reservaciones", "Visitantes (Pax)", "Ingresos Totales ($ MXN)", "% Participación Pax", "% Participación Ingresos"],
@@ -586,7 +614,20 @@ export default function ExecutiveAnalyticsDashboard({
       const wsTours = XLSX.utils.json_to_sheet(toursRows);
       XLSX.utils.book_append_sheet(wb, wsTours, "Reservas_Tours");
 
-      // 3. RESTAURANT 1937 NATIVO SHEET
+      // 3. NEWSLETTER SUBSCRIBERS SHEET
+      const subsRows = filteredSubscribers.map((s, idx) => ({
+        "Folio": s.id || `#${idx + 1}`,
+        "Correo Electrónico": s.email || "",
+        "Origen / Página": s.source_page || "General",
+        "Estatus": s.status === "active" || !s.status ? "Activo" : "Desuscrito",
+        "Boletín Mensual": s.monthly_newsletter ? "SÍ" : "NO",
+        "Email Bienvenida": s.welcome_email_sent ? "Entregado" : "Pendiente",
+        "Fecha Registro": s.created_at || "",
+      }));
+      const wsSubs = XLSX.utils.json_to_sheet(subsRows);
+      XLSX.utils.book_append_sheet(wb, wsSubs, "Inscritos_Newsletter");
+
+      // 4. RESTAURANT 1937 NATIVO SHEET
       const restRows = filteredRestBookings.map((r) => ({
         "Código Mesa": r.code || "",
         "Fecha": r.date_str || r.date || "",
@@ -600,9 +641,9 @@ export default function ExecutiveAnalyticsDashboard({
         "Fecha Registro": r.created_at || "",
       }));
       const wsRest = XLSX.utils.json_to_sheet(restRows);
-      XLSX.utils.book_append_sheet(wb, wsRest, "Restaurante_1937_Nativo");
+      XLSX.utils.book_append_sheet(wb, wsRest, "Mesas_Nativo_1937");
 
-      // 4. MAQUILA LEADS SHEET
+      // 5. MAQUILA LEADS SHEET
       const maquilaRows = filteredMaquilaLeads.map((m) => ({
         "Folio": m.id || "",
         "Nombre Contacto": m.name || "",
@@ -617,19 +658,6 @@ export default function ExecutiveAnalyticsDashboard({
       }));
       const wsMaquila = XLSX.utils.json_to_sheet(maquilaRows);
       XLSX.utils.book_append_sheet(wb, wsMaquila, "Leads_Maquila_B2B");
-
-      // 5. NEWSLETTER SUBSCRIBERS SHEET
-      const subsRows = filteredSubscribers.map((s, idx) => ({
-        "Folio": s.id || `#${idx + 1}`,
-        "Correo Electrónico": s.email || "",
-        "Origen / Página": s.source_page || "General",
-        "Estatus": s.status === "active" || !s.status ? "Activo" : "Desuscrito",
-        "Boletín Mensual": s.monthly_newsletter ? "SÍ" : "NO",
-        "Email Bienvenida": s.welcome_email_sent ? "Entregado" : "Pendiente",
-        "Fecha Registro": s.created_at || "",
-      }));
-      const wsSubs = XLSX.utils.json_to_sheet(subsRows);
-      XLSX.utils.book_append_sheet(wb, wsSubs, "Suscriptores_Newsletter");
 
       const filename = `Casa_Loy_Dashboard_Reporte_${dateTag}.xlsx`;
       XLSX.writeFile(wb, filename);
@@ -667,7 +695,35 @@ export default function ExecutiveAnalyticsDashboard({
           `"${s.created_at || ""}"`,
         ]);
         csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\r\n");
-        filename = `Casa_Loy_Suscriptores_Newsletter_${dateTag}.csv`;
+        filename = `Casa_Loy_Inscritos_Newsletter_${dateTag}.csv`;
+      } else if (type === "restaurant") {
+        const headers = ["Codigo_Mesa", "Titular", "Telefono", "Comensales", "Fecha", "Hora", "Motivo", "Estatus"];
+        const rows = filteredRestBookings.map((r, idx) => [
+          `"${r.code || idx + 1}"`,
+          `"${(r.customer_name || r.name || "").replace(/"/g, '""')}"`,
+          `"${r.customer_phone || r.phone || ""}"`,
+          r.guests || 1,
+          `"${r.date_str || r.date || ""}"`,
+          `"${r.time_str || r.time || ""}"`,
+          `"${(r.reason || "").replace(/"/g, '""')}"`,
+          `"${r.status || "Confirmada"}"`,
+        ]);
+        csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\r\n");
+        filename = `Casa_Loy_Mesas_Nativo_${dateTag}.csv`;
+      } else if (type === "maquila") {
+        const headers = ["Folio", "Contacto", "Empresa", "Email", "Telefono", "Solucion", "Estatus", "Fecha_Registro"];
+        const rows = filteredMaquilaLeads.map((m, idx) => [
+          `"${m.id || idx + 1}"`,
+          `"${(m.name || "").replace(/"/g, '""')}"`,
+          `"${(m.company || "").replace(/"/g, '""')}"`,
+          `"${m.email || ""}"`,
+          `"${m.phone || ""}"`,
+          `"${m.solution || ""}"`,
+          `"${m.stage || m.status || "Nuevo"}"`,
+          `"${m.created_at || ""}"`,
+        ]);
+        csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\r\n");
+        filename = `Casa_Loy_Leads_Maquila_${dateTag}.csv`;
       } else {
         const headers = [
           "Codigo_Reserva",
@@ -703,7 +759,7 @@ export default function ExecutiveAnalyticsDashboard({
           `"${(b.razon_social || "").replace(/"/g, '""')}"`,
         ]);
         csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\r\n");
-        filename = `Casa_Loy_Reservaciones_${dateTag}.csv`;
+        filename = `Casa_Loy_Reservas_Tours_${dateTag}.csv`;
       }
 
       const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
@@ -910,8 +966,8 @@ export default function ExecutiveAnalyticsDashboard({
                 Tablero de Control Analítico
               </h2>
               <p className="text-xs sm:text-sm text-stone-300 mt-1 max-w-xl">
-                Métricas ejecutivas de alta precisión: ingresos, afluencia de visitantes, rendimiento de experiencias,
-                restaurante, leads B2B y suscriptores de newsletter en Destilería Casa Loy.
+                Métricas ejecutivas de alta precisión: inscritos al newsletter, leads de maquila, reservas en Nativo, ingresos,
+                visitantes a tours, horarios pico y afluencia diaria en Destilería Casa Loy.
               </p>
             </div>
           </div>
@@ -921,28 +977,19 @@ export default function ExecutiveAnalyticsDashboard({
             <button
               onClick={handleExportExcel}
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-700 to-emerald-800 hover:from-emerald-600 hover:to-emerald-700 text-white text-xs font-bold transition-all shadow-md hover:shadow-lg cursor-pointer border border-emerald-500/40"
-              title="Descargar libro Excel multi-hoja con desglose completo incluyendo Newsletter"
+              title="Descargar libro Excel multi-hoja con desglose completo"
             >
               <span className="material-symbols-outlined text-sm">table_view</span>
               <span>Exportar Excel (.xlsx)</span>
             </button>
 
             <button
-              onClick={() => handleExportCSV("tours")}
+              onClick={() => handleExportCSV(activeTableTab)}
               className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-xs transition-colors border border-white/15 cursor-pointer shadow-xs"
-              title="Descargar datos en formato CSV UTF-8"
+              title="Descargar datos actuales en formato CSV UTF-8"
             >
               <span className="material-symbols-outlined text-sm">download</span>
-              <span>CSV Reservas</span>
-            </button>
-
-            <button
-              onClick={() => handleExportCSV("newsletter")}
-              className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold backdrop-blur-xs transition-colors border border-white/15 cursor-pointer shadow-xs"
-              title="Descargar base de suscriptores al newsletter en CSV"
-            >
-              <span className="material-symbols-outlined text-sm">mark_email_read</span>
-              <span>CSV Newsletter</span>
+              <span>Exportar CSV</span>
             </button>
 
             <button
@@ -1028,189 +1075,284 @@ export default function ExecutiveAnalyticsDashboard({
       </div>
 
       {/* =========================================================================
-          2. EXECUTIVE SHOW-OFF KPIS (7 HIGH-IMPACT METRIC CARDS WITH NEWSLETTER)
+          2. CORE EXECUTIVE SHOW-OFF KPIS (8 PRINCIPAL METRIC CARDS)
+             Directly organized by user priority:
+             1. Inscritos Newsletter  2. Leads Maquilas  3. Mesas Nativo  4. Ingresos Tours
+             5. Visitantes a Tours    6. Tour Más Vendido 7. Horario Pico  8. Afluencia x Día
          ========================================================================= */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-7 gap-3.5">
-        {/* KPI 1: Ingresos Experiencias */}
-        <div className="bg-white border border-stone-200/90 rounded-2xl p-4 shadow-xs hover:shadow-md transition-all hover:border-[#C29B38]/50 group">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase tracking-wider font-bold text-stone-500">
-              Ingresos Tours
-            </span>
-            <div className="w-7 h-7 rounded-lg bg-amber-500/10 text-[#C29B38] flex items-center justify-center group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-base">payments</span>
-            </div>
-          </div>
-          <div className="mt-2.5">
-            <div className="text-lg sm:text-xl font-bold font-serif text-stone-900 tracking-tight">
-              {formatMXN(totalRevenue)}
-            </div>
-            <div className="flex items-center gap-1 text-[10px] text-stone-500 mt-1">
-              <span
-                className={`font-bold inline-flex items-center px-1 rounded ${
-                  prevMetrics.revGrowth.startsWith("+")
-                    ? "bg-emerald-50 text-emerald-700"
-                    : "bg-rose-50 text-rose-700"
-                }`}
-              >
-                {prevMetrics.revGrowth}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-xs uppercase tracking-wider font-bold text-stone-500 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#C29B38]"></span>
+            <span>Indicadores Clave de Operación & Negocio</span>
+          </h3>
+          <span className="text-[11px] text-stone-400 font-medium">
+            Actualizado en tiempo real • {rangeLabel}
+          </span>
+        </div>
+
+        {/* 8-Card Grid (4 cols on lg, 2 on sm) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          {/* CARD 1: INSCRITOS A NEWSLETTER */}
+          <div className="bg-white border border-stone-200/90 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all hover:border-purple-400/60 group relative overflow-hidden">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500">
+                Inscritos a Newsletter
               </span>
-              <span className="text-stone-400">vs período ant.</span>
+              <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
+                <span className="material-symbols-outlined text-lg">mark_email_read</span>
+              </div>
+            </div>
+            <div className="mt-3">
+              <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
+                {totalNewSubscribers.toLocaleString("es-MX")}{" "}
+                <span className="text-xs font-sans font-semibold text-stone-400">nuevos</span>
+              </div>
+              <div className="flex items-center justify-between mt-2 pt-2 border-t border-stone-100 text-xs">
+                <span className="text-purple-700 font-bold bg-purple-50 px-2 py-0.5 rounded-full text-[11px]">
+                  {prevMetrics.subsGrowth}
+                </span>
+                <span className="text-stone-500 font-medium text-[11px]">
+                  {activeSubscribersCount} activos ({retentionRate}%)
+                </span>
+              </div>
             </div>
           </div>
+
+          {/* CARD 2: LEADS MAQUILAS */}
+          <div className="bg-white border border-stone-200/90 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all hover:border-stone-500/60 group relative overflow-hidden">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500">
+                Leads Maquilas B2B
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-stone-100 text-stone-700 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
+                <span className="material-symbols-outlined text-lg">business_center</span>
+              </div>
+            </div>
+            <div className="mt-3">
+              <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
+                {filteredMaquilaLeads.length}{" "}
+                <span className="text-xs font-sans font-semibold text-stone-400">prospectos</span>
+              </div>
+              <div className="flex items-center justify-between mt-2 pt-2 border-t border-stone-100 text-xs">
+                <span className="text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded-full text-[11px]">
+                  Marca Privada
+                </span>
+                <span className="text-stone-600 font-medium text-[11px]">
+                  {filteredMaquilaLeads.filter((m) => m.stage === "new" || !m.stage).length} nuevos por atender
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* CARD 3: MESAS RESERVAS EN NATIVO */}
+          <div className="bg-white border border-stone-200/90 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all hover:border-amber-500/60 group relative overflow-hidden">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500">
+                Mesas Reservas Nativo
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-amber-100/70 text-amber-800 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
+                <span className="material-symbols-outlined text-lg">restaurant</span>
+              </div>
+            </div>
+            <div className="mt-3">
+              <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
+                {filteredRestBookings.length}{" "}
+                <span className="text-xs font-sans font-semibold text-stone-400">mesas</span>
+              </div>
+              <div className="flex items-center justify-between mt-2 pt-2 border-t border-stone-100 text-xs">
+                <span className="text-amber-800 font-bold bg-amber-50 px-2 py-0.5 rounded-full text-[11px]">
+                  1937 Nativo
+                </span>
+                <span className="text-stone-600 font-medium text-[11px]">
+                  {totalRestPax} comensales atendidos
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* CARD 4: INGRESOS EN TOURS */}
+          <div className="bg-white border border-stone-200/90 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all hover:border-[#C29B38]/60 group relative overflow-hidden">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500">
+                Ingresos en Tours
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-[#C29B38] flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
+                <span className="material-symbols-outlined text-lg">payments</span>
+              </div>
+            </div>
+            <div className="mt-3">
+              <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
+                {formatMXN(totalRevenue)}
+              </div>
+              <div className="flex items-center justify-between mt-2 pt-2 border-t border-stone-100 text-xs">
+                <span
+                  className={`font-bold px-2 py-0.5 rounded-full text-[11px] ${
+                    prevMetrics.revGrowth.startsWith("+")
+                      ? "bg-emerald-50 text-emerald-700"
+                      : "bg-rose-50 text-rose-700"
+                  }`}
+                >
+                  {prevMetrics.revGrowth} vs ant.
+                </span>
+                <span className="text-stone-600 font-medium text-[11px]">
+                  {totalConfirmedCount} reservas pagadas
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* CARD 5: VISITANTES A TOURS (#) */}
+          <div className="bg-white border border-stone-200/90 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all hover:border-[#8C4723]/60 group relative overflow-hidden">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500">
+                Visitantes a Tours (#)
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-[#8C4723]/10 text-[#8C4723] flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
+                <span className="material-symbols-outlined text-lg">confirmation_number</span>
+              </div>
+            </div>
+            <div className="mt-3">
+              <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
+                {totalTourPax.toLocaleString("es-MX")}{" "}
+                <span className="text-xs font-sans font-semibold text-stone-400">asistentes</span>
+              </div>
+              <div className="flex items-center justify-between mt-2 pt-2 border-t border-stone-100 text-xs">
+                <span className="text-[#8C4723] font-bold bg-[#8C4723]/10 px-2 py-0.5 rounded-full text-[11px]">
+                  Boletos Emitidos
+                </span>
+                <span className="text-stone-600 font-medium text-[11px]">
+                  {prevMetrics.paxGrowth} vs anterior
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* CARD 6: TOUR MÁS VENDIDO (TOP WINNER) */}
+          <div className="bg-white border-2 border-[#C29B38]/40 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all group relative overflow-hidden bg-gradient-to-br from-white via-amber-50/20 to-white">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] uppercase tracking-wider font-bold text-[#8C4723]">
+                Tour Más Vendido
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-[#C29B38]/20 text-[#8C4723] flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
+                <span className="material-symbols-outlined text-lg">workspace_premium</span>
+              </div>
+            </div>
+            <div className="mt-3">
+              <div className="text-xl font-bold font-serif text-stone-900 tracking-tight truncate">
+                {topTour.name}
+              </div>
+              <div className="flex items-center justify-between mt-2 pt-2 border-t border-amber-200/50 text-xs">
+                <span className="text-[#8C4723] font-bold bg-amber-100/70 px-2 py-0.5 rounded-full text-[11px]">
+                  TOP #1 ({topTour.revPct}% ventas)
+                </span>
+                <span className="text-stone-700 font-semibold text-[11px]">
+                  {topTour.pax} pax • {formatMXN(topTour.revenue)}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* CARD 7: VISITANTES X HORARIO (TURNO PICO) */}
+          <div className="bg-white border border-stone-200/90 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all hover:border-emerald-500/60 group relative overflow-hidden">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500">
+                Horario Más Visitado
+              </span>
+              <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
+                <span className="material-symbols-outlined text-lg">schedule</span>
+              </div>
+            </div>
+            <div className="mt-3">
+              <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
+                {timeSlotStats.slots.length > 0 ? timeSlotStats.slots[0].time : "11:00 AM"}
+              </div>
+              <div className="flex items-center justify-between mt-2 pt-2 border-t border-stone-100 text-xs">
+                <span className="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full text-[11px]">
+                  Turno Pico
+                </span>
+                <span className="text-stone-600 font-medium text-[11px]">
+                  {timeSlotStats.slots.length > 0 ? timeSlotStats.slots[0].pax : 0} pax ({maxCapacityLimit} cap. máx)
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* CARD 8: AFLUENCIA X DÍA (DÍA PICO) */}
+          <div className="bg-white border border-stone-200/90 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all hover:border-blue-500/60 group relative overflow-hidden">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500">
+                Día de Mayor Afluencia
+              </span>
+              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
+                <span className="material-symbols-outlined text-lg">event_available</span>
+              </div>
+            </div>
+            <div className="mt-3">
+              <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
+                {dayOfWeekStats.peakDayName}
+              </div>
+              <div className="flex items-center justify-between mt-2 pt-2 border-t border-stone-100 text-xs">
+                <span className="text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded-full text-[11px]">
+                  Día Pico
+                </span>
+                <span className="text-stone-600 font-medium text-[11px]">
+                  {dayOfWeekStats.peakDayPax} asistentes acumulados
+                </span>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        {/* KPI 2: Total Visitantes (Pax Global) */}
-        <div className="bg-white border border-stone-200/90 rounded-2xl p-4 shadow-xs hover:shadow-md transition-all hover:border-[#8C4723]/50 group">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase tracking-wider font-bold text-stone-500">
-              Visitantes Pax
-            </span>
-            <div className="w-7 h-7 rounded-lg bg-[#8C4723]/10 text-[#8C4723] flex items-center justify-center group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-base">groups</span>
+        {/* ETC SECONDARY METRICS BAR (Ticket Promedio, Conversión Checkout, Cumplimiento SAT) */}
+        <div className="bg-stone-50/80 border border-stone-200/80 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 text-xs">
+          <div className="flex items-center gap-6 flex-wrap">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-stone-400 text-base">receipt_long</span>
+              <span className="text-stone-500">Ticket Promedio (AOV):</span>
+              <strong className="text-stone-900 font-bold">{formatMXN(avgTicket)}</strong>
+              <span className="text-stone-400">({formatMXN(avgRevPerPax)} / pax)</span>
             </div>
-          </div>
-          <div className="mt-2.5">
-            <div className="text-lg sm:text-xl font-bold font-serif text-stone-900 tracking-tight">
-              {totalCombinedPax.toLocaleString("es-MX")}{" "}
-              <span className="text-[11px] font-sans font-semibold text-stone-400">pax</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-[10px] text-stone-500 mt-1">
-              <span className="text-[#8C4723] font-bold">{totalTourPax} tours</span>
-              <span className="text-stone-300">•</span>
-              <span className="text-stone-600 font-semibold">{totalRestPax} nativo</span>
-            </div>
-          </div>
-        </div>
 
-        {/* KPI 3: Ticket Promedio (AOV) */}
-        <div className="bg-white border border-stone-200/90 rounded-2xl p-4 shadow-xs hover:shadow-md transition-all hover:border-emerald-500/50 group">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase tracking-wider font-bold text-stone-500">
-              Ticket Promedio
-            </span>
-            <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-base">receipt_long</span>
-            </div>
-          </div>
-          <div className="mt-2.5">
-            <div className="text-lg sm:text-xl font-bold font-serif text-stone-900 tracking-tight">
-              {formatMXN(avgTicket)}
-            </div>
-            <div className="flex items-center gap-1 text-[10px] text-stone-500 mt-1">
-              <span className="text-emerald-700 font-bold">{formatMXN(avgRevPerPax)}</span>
-              <span>/ pax</span>
-            </div>
-          </div>
-        </div>
+            <div className="hidden sm:block text-stone-300">|</div>
 
-        {/* KPI 4: Concreción & Conversión */}
-        <div className="bg-white border border-stone-200/90 rounded-2xl p-4 shadow-xs hover:shadow-md transition-all hover:border-blue-500/50 group">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase tracking-wider font-bold text-stone-500">
-              Conversión Web
-            </span>
-            <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-base">shopping_cart_checkout</span>
-            </div>
-          </div>
-          <div className="mt-2.5">
-            <div className="text-lg sm:text-xl font-bold font-serif text-stone-900 tracking-tight">
-              {conversionRate}%
-            </div>
-            <div className="flex items-center gap-1 text-[10px] text-stone-500 mt-1">
-              <span className="text-stone-700 font-semibold">{totalConfirmedCount} concluidas</span>
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-stone-400 text-base">shopping_cart_checkout</span>
+              <span className="text-stone-500">Conversión Web:</span>
+              <strong className="text-stone-900 font-bold">{conversionRate}%</strong>
               {abandonedCount > 0 && (
-                <span className="text-amber-700 bg-amber-50 px-1 rounded font-bold">
-                  {abandonedCount} carritos
+                <span className="text-amber-700 bg-amber-100/70 px-1.5 py-0.2 rounded font-semibold text-[10px]">
+                  {abandonedCount} carritos pendientes
                 </span>
               )}
             </div>
-          </div>
-        </div>
 
-        {/* KPI 5: Restaurante 1937 Nativo */}
-        <div className="bg-white border border-stone-200/90 rounded-2xl p-4 shadow-xs hover:shadow-md transition-all hover:border-amber-600/50 group">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase tracking-wider font-bold text-stone-500">
-              1937 Nativo
-            </span>
-            <div className="w-7 h-7 rounded-lg bg-amber-100/70 text-amber-800 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-base">restaurant</span>
-            </div>
-          </div>
-          <div className="mt-2.5">
-            <div className="text-lg sm:text-xl font-bold font-serif text-stone-900 tracking-tight">
-              {filteredRestBookings.length}{" "}
-              <span className="text-[11px] font-sans font-semibold text-stone-400">mesas</span>
-            </div>
-            <div className="flex items-center gap-1 text-[10px] text-stone-500 mt-1">
-              <span className="text-amber-800 font-bold">{totalRestPax} comensales</span>
-              <span>atendidos</span>
-            </div>
-          </div>
-        </div>
+            <div className="hidden sm:block text-stone-300">|</div>
 
-        {/* KPI 6: Leads Maquila B2B */}
-        <div className="bg-white border border-stone-200/90 rounded-2xl p-4 shadow-xs hover:shadow-md transition-all hover:border-stone-500/50 group">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase tracking-wider font-bold text-stone-500">
-              Maquila B2B
-            </span>
-            <div className="w-7 h-7 rounded-lg bg-stone-100 text-stone-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-base">business_center</span>
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-stone-400 text-base">verified</span>
+              <span className="text-stone-500">Facturación SAT CFDI 4.0:</span>
+              <strong className="text-emerald-700 font-bold">{satEfficiency}%</strong>
+              <span className="text-stone-400">({issuedInvoices} de {requestedInvoices} timbradas)</span>
             </div>
           </div>
-          <div className="mt-2.5">
-            <div className="text-lg sm:text-xl font-bold font-serif text-stone-900 tracking-tight">
-              {filteredMaquilaLeads.length}{" "}
-              <span className="text-[11px] font-sans font-semibold text-stone-400">prospectos</span>
-            </div>
-            <div className="flex items-center gap-1 text-[10px] text-stone-500 mt-1">
-              <span className="text-stone-800 font-bold">
-                {filteredMaquilaLeads.filter((m) => m.stage === "new" || !m.stage).length} nuevos
-              </span>
-              <span>por calificar</span>
-            </div>
-          </div>
-        </div>
 
-        {/* KPI 7: NEWSLETTER SUBSCRIBERS (NUEVO) */}
-        <div className="bg-white border border-stone-200/90 rounded-2xl p-4 shadow-xs hover:shadow-md transition-all hover:border-[#1A2624]/50 group">
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] uppercase tracking-wider font-bold text-stone-500">
-              Newsletter
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] text-stone-400">Impacto Global Destilería:</span>
+            <span className="bg-stone-200 text-stone-800 font-bold px-2.5 py-0.5 rounded-full text-xs">
+              {totalCombinedPax.toLocaleString("es-MX")} visitantes totales
             </span>
-            <div className="w-7 h-7 rounded-lg bg-purple-50 text-purple-700 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined text-base">mark_email_read</span>
-            </div>
-          </div>
-          <div className="mt-2.5">
-            <div className="text-lg sm:text-xl font-bold font-serif text-stone-900 tracking-tight">
-              {totalNewSubscribers}{" "}
-              <span className="text-[11px] font-sans font-semibold text-stone-400">nuevos</span>
-            </div>
-            <div className="flex items-center gap-1 text-[10px] text-stone-500 mt-1">
-              <span
-                className={`font-bold inline-flex items-center px-1 rounded ${
-                  prevMetrics.subsGrowth.startsWith("+")
-                    ? "bg-purple-50 text-purple-700"
-                    : "bg-stone-100 text-stone-700"
-                }`}
-              >
-                {prevMetrics.subsGrowth}
-              </span>
-              <span className="text-stone-600 font-semibold">{retentionRate}% activos</span>
-            </div>
           </div>
         </div>
       </div>
 
       {/* =========================================================================
-          3. SUITE DE GRÁFICOS VISUALES INTERACTIVOS (ROW 1: TIMELINE & DONUT)
+          3. SUITE DE GRÁFICOS VISUALES INTERACTIVOS (ROW 1: AFLUENCIA X DÍA & DONUT TOUR MÁS VENDIDO)
          ========================================================================= */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left Column (8 cols): Interactive Timeline Trend Chart */}
+        {/* Left Column (8 cols): Afluencia x Día & Curva de Ingresos/Visitantes */}
         <div className="lg:col-span-8 bg-white border border-stone-200/90 rounded-2xl p-6 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-stone-100 pb-4">
@@ -1218,11 +1360,11 @@ export default function ExecutiveAnalyticsDashboard({
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-lg text-[#C29B38]">trending_up</span>
                   <h3 className="text-base font-bold text-stone-900">
-                    Evolución Temporal de Operaciones
+                    Afluencia x Día & Evolución Temporal
                   </h3>
                 </div>
                 <p className="text-xs text-stone-500 mt-0.5">
-                  Tendencia histórica diaria de ingresos y volumen en el período seleccionado
+                  Tendencia histórica diaria de ingresos, visitantes y reservaciones en el período seleccionado
                 </p>
               </div>
 
@@ -1391,6 +1533,7 @@ export default function ExecutiveAnalyticsDashboard({
             </div>
           </div>
 
+          {/* Quick Stats Pills at Bottom of Timeline */}
           <div className="mt-4 pt-3 border-t border-stone-100 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
             <div className="bg-stone-50 p-2 rounded-xl">
               <span className="text-[10px] uppercase font-bold text-stone-400 block">Días Evaluados</span>
@@ -1419,15 +1562,15 @@ export default function ExecutiveAnalyticsDashboard({
           </div>
         </div>
 
-        {/* Right Column (4 cols): Interactive Donut Chart of Experiences */}
+        {/* Right Column (4 cols): Tour Más Vendido & Mix de Experiencias */}
         <div className="lg:col-span-4 bg-white border border-stone-200/90 rounded-2xl p-6 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between border-b border-stone-100 pb-3">
               <div>
                 <h3 className="text-base font-bold text-stone-900">
-                  Mix de Experiencias
+                  Mix & Tour Más Vendido
                 </h3>
-                <p className="text-xs text-stone-500">Distribución por tipo de recorrido</p>
+                <p className="text-xs text-stone-500">Distribución de demanda por experiencia</p>
               </div>
 
               <div className="flex items-center bg-stone-100 p-0.5 rounded-lg text-[10px] font-bold">
@@ -1450,6 +1593,7 @@ export default function ExecutiveAnalyticsDashboard({
               </div>
             </div>
 
+            {/* Donut Chart Visual */}
             <div className="mt-4 flex flex-col items-center justify-center relative">
               <svg width="170" height="170" viewBox="0 0 170 170" className="transform -rotate-90">
                 <circle
@@ -1486,47 +1630,65 @@ export default function ExecutiveAnalyticsDashboard({
               </div>
             </div>
 
+            {/* Breakdown Cards with Winner Highlight */}
             <div className="mt-5 space-y-2.5">
               {[
                 { ...expBreakdown.diamante, badge: "Diamante $1,500" },
                 { ...expBreakdown.platino, badge: "Platino $750" },
                 { ...expBreakdown.oro, badge: "Oro $550" },
-              ].map((item) => (
-                <div
-                  key={item.key}
-                  className="p-2.5 rounded-xl border border-stone-100 hover:border-stone-300 transition-colors flex items-center justify-between text-xs"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <span
-                      className="w-3 h-3 rounded-full shrink-0 shadow-xs"
-                      style={{ backgroundColor: item.color }}
-                    />
-                    <div>
-                      <span className="font-bold text-stone-900 block">{item.name}</span>
-                      <span className="text-[11px] text-stone-400">
-                        {item.pax} personas • {item.count} compras
+              ].map((item) => {
+                const isWinner = item.key === topTour.key;
+                return (
+                  <div
+                    key={item.key}
+                    className={`p-2.5 rounded-xl border transition-all flex items-center justify-between text-xs ${
+                      isWinner
+                        ? "bg-amber-50/40 border-[#C29B38]/60 shadow-xs"
+                        : "border-stone-100 hover:border-stone-300"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <span
+                        className="w-3 h-3 rounded-full shrink-0 shadow-xs"
+                        style={{ backgroundColor: item.color }}
+                      />
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-bold text-stone-900 block">{item.name}</span>
+                          {isWinner && (
+                            <span className="bg-[#C29B38] text-white font-bold text-[9px] uppercase px-1.5 py-0.2 rounded-full">
+                              Top #1
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-[11px] text-stone-400">
+                          {item.pax} pax • {item.count} compras
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="font-bold text-stone-900 block">
+                        {formatMXN(item.revenue)}
+                      </span>
+                      <span className="text-[10px] font-bold text-stone-500">
+                        {donutMetric === "revenue" ? `${item.revPct}%` : `${item.paxPct}%`}
                       </span>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <span className="font-bold text-stone-900 block">
-                      {formatMXN(item.revenue)}
-                    </span>
-                    <span className="text-[10px] font-bold text-stone-500">
-                      {donutMetric === "revenue" ? `${item.revPct}%` : `${item.paxPct}%`}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
           <div className="mt-4 pt-3 border-t border-stone-100 text-center">
             <button
-              onClick={() => setActiveTab("log")}
+              onClick={() => {
+                setActiveTableTab("tours");
+                setTablePage(1);
+              }}
               className="text-xs font-bold text-[#8C4723] hover:text-[#a35329] flex items-center justify-center gap-1 cursor-pointer w-full py-1.5 rounded-lg hover:bg-stone-50 transition-colors"
             >
-              <span>Ver todas las reservas en bitácora</span>
+              <span>Ver todas las reservas en la tabla inferior</span>
               <span className="material-symbols-outlined text-sm">arrow_forward</span>
             </button>
           </div>
@@ -1534,64 +1696,71 @@ export default function ExecutiveAnalyticsDashboard({
       </div>
 
       {/* =========================================================================
-          4. SUITE DE GRÁFICOS VISUALES (ROW 2: AFLUENCIA, TURNOS & NEWSLETTER/SAT)
+          4. SUITE DE GRÁFICOS VISUALES (ROW 2: AFLUENCIA X DÍA, VISITANTES X HORARIO & CAPTACIÓN)
          ========================================================================= */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
-        {/* Col 1 (4 cols): Afluencia por Día de la Semana */}
-        <div className="lg:col-span-4 bg-white border border-stone-200/90 rounded-2xl p-6 shadow-xs">
-          <div className="flex items-center justify-between border-b border-stone-100 pb-3">
-            <div>
-              <h3 className="text-sm font-bold text-stone-900 flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-base text-[#C29B38]">calendar_today</span>
-                <span>Afluencia por Día de la Semana</span>
-              </h3>
-              <p className="text-xs text-stone-500">Distribución de visitantes en días pico</p>
-            </div>
-          </div>
-
-          <div className="mt-5 space-y-3">
-            {dayOfWeekStats.days.map((d, idx) => {
-              const isPeak = d.fullName === dayOfWeekStats.peakDayName;
-              const ratio = dayOfWeekStats.maxDayPax > 0 ? (d.pax / dayOfWeekStats.maxDayPax) * 100 : 0;
-              return (
-                <div key={idx} className="space-y-1">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-stone-700 flex items-center gap-1.5">
-                      {d.fullName}
-                      {isPeak && (
-                        <span className="bg-[#C29B38]/20 text-[#8C4723] text-[9px] uppercase font-bold px-1.5 py-0.2 rounded">
-                          Pico
-                        </span>
-                      )}
-                    </span>
-                    <span className="text-stone-900 font-bold">
-                      {d.pax} pax <span className="text-stone-400 font-normal">({formatMXN(d.revenue)})</span>
-                    </span>
-                  </div>
-                  <div className="w-full bg-stone-100 h-2 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full rounded-full transition-all duration-500 ${
-                        isPeak ? "bg-[#C29B38]" : "bg-stone-400"
-                      }`}
-                      style={{ width: `${Math.max(5, ratio)}%` }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Col 2 (4 cols): Horarios y Turnos Más Populares */}
+        {/* Col 1 (4 cols): Afluencia x Día de la Semana */}
         <div className="lg:col-span-4 bg-white border border-stone-200/90 rounded-2xl p-6 shadow-xs flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between border-b border-stone-100 pb-3">
               <div>
                 <h3 className="text-sm font-bold text-stone-900 flex items-center gap-1.5">
-                  <span className="material-symbols-outlined text-base text-[#8C4723]">schedule</span>
-                  <span>Turnos Más Solicitados</span>
+                  <span className="material-symbols-outlined text-base text-blue-600">calendar_today</span>
+                  <span>Afluencia x Día de la Semana</span>
                 </h3>
-                <p className="text-xs text-stone-500">Preferencias de horario de los visitantes</p>
+                <p className="text-xs text-stone-500">Distribución de visitantes en cada día de la semana</p>
+              </div>
+            </div>
+
+            <div className="mt-5 space-y-3">
+              {dayOfWeekStats.days.map((d, idx) => {
+                const isPeak = d.fullName === dayOfWeekStats.peakDayName;
+                const ratio = dayOfWeekStats.maxDayPax > 0 ? (d.pax / dayOfWeekStats.maxDayPax) * 100 : 0;
+                return (
+                  <div key={idx} className="space-y-1">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-semibold text-stone-700 flex items-center gap-1.5">
+                        {d.fullName}
+                        {isPeak && (
+                          <span className="bg-[#C29B38]/20 text-[#8C4723] text-[9px] uppercase font-bold px-1.5 py-0.2 rounded">
+                            Día Pico
+                          </span>
+                        )}
+                      </span>
+                      <span className="text-stone-900 font-bold">
+                        {d.pax} pax <span className="text-stone-400 font-normal">({formatMXN(d.revenue)})</span>
+                      </span>
+                    </div>
+                    <div className="w-full bg-stone-100 h-2 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${
+                          isPeak ? "bg-[#C29B38]" : "bg-stone-400"
+                        }`}
+                        style={{ width: `${Math.max(5, ratio)}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="mt-4 pt-3 border-t border-stone-100 text-xs text-stone-500 flex items-center justify-between">
+            <span>Día con mayor afluencia:</span>
+            <strong className="text-stone-900 font-bold">{dayOfWeekStats.peakDayName} ({dayOfWeekStats.peakDayPax} pax)</strong>
+          </div>
+        </div>
+
+        {/* Col 2 (4 cols): Visitantes x Horario de Tours */}
+        <div className="lg:col-span-4 bg-white border border-stone-200/90 rounded-2xl p-6 shadow-xs flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between border-b border-stone-100 pb-3">
+              <div>
+                <h3 className="text-sm font-bold text-stone-900 flex items-center gap-1.5">
+                  <span className="material-symbols-outlined text-base text-emerald-600">schedule</span>
+                  <span>Visitantes x Horario de Tours</span>
+                </h3>
+                <p className="text-xs text-stone-500">Demanda por turno programado en la destilería</p>
               </div>
             </div>
 
@@ -1603,18 +1772,24 @@ export default function ExecutiveAnalyticsDashboard({
               ) : (
                 timeSlotStats.slots.map((s, idx) => {
                   const ratio = Math.round((s.pax / timeSlotStats.maxPax) * 100);
+                  const isTopSlot = s.time === timeSlotStats.peakSlot;
                   return (
                     <div key={idx} className="p-3 rounded-xl bg-stone-50 border border-stone-100 space-y-1.5">
                       <div className="flex items-center justify-between text-xs">
                         <span className="font-bold text-stone-900 flex items-center gap-1.5">
                           <span className="material-symbols-outlined text-xs text-stone-400">alarm</span>
                           {s.time}
+                          {isTopSlot && (
+                            <span className="bg-emerald-100 text-emerald-800 text-[9px] uppercase font-bold px-1.5 py-0.2 rounded">
+                              Turno Pico
+                            </span>
+                          )}
                         </span>
-                        <span className="font-bold text-[#8C4723]">{s.pax} asistentes</span>
+                        <span className="font-bold text-emerald-800">{s.pax} asistentes</span>
                       </div>
                       <div className="w-full bg-stone-200 h-2 rounded-full overflow-hidden">
                         <div
-                          className="bg-[#8C4723] h-full rounded-full transition-all duration-500"
+                          className="bg-emerald-600 h-full rounded-full transition-all duration-500"
                           style={{ width: `${Math.max(8, ratio)}%` }}
                         />
                       </div>
@@ -1627,74 +1802,58 @@ export default function ExecutiveAnalyticsDashboard({
 
           <div className="mt-4 pt-3 border-t border-stone-100 text-xs text-stone-500 flex items-center justify-between">
             <span>Aforo Máximo General:</span>
-            <strong className="text-stone-900">{maxCapacityLimit} pax / turno</strong>
+            <strong className="text-stone-900 font-bold">{maxCapacityLimit} pax / sesión</strong>
           </div>
         </div>
 
-        {/* Col 3 (4 cols): NEWSLETTER AUDIENCE & FISCAL METRICS */}
+        {/* Col 3 (4 cols): Inscritos al Newsletter & Origen de Leads */}
         <div className="lg:col-span-4 bg-white border border-stone-200/90 rounded-2xl p-6 shadow-xs flex flex-col justify-between">
           <div>
             <div className="border-b border-stone-100 pb-3">
               <h3 className="text-sm font-bold text-stone-900 flex items-center gap-1.5">
                 <span className="material-symbols-outlined text-base text-purple-600">campaign</span>
-                <span>Captación de Newsletter & Fiscal</span>
+                <span>Inscritos Newsletter & Canales</span>
               </h3>
-              <p className="text-xs text-stone-500">Comportamiento de suscriptores y cumplimiento SAT</p>
+              <p className="text-xs text-stone-500">Comportamiento de captura y retención de audiencia</p>
             </div>
 
             <div className="mt-4 space-y-3">
-              {/* Newsletter Subscribers Stat */}
+              {/* Newsletter Highlight */}
               <div className="p-3.5 rounded-xl bg-purple-50/50 border border-purple-100 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center">
                     <span className="material-symbols-outlined text-base">forward_to_inbox</span>
                   </div>
                   <div>
-                    <span className="text-xs font-bold text-stone-900 block">Nuevos Suscriptores</span>
-                    <span className="text-[10px] text-stone-400">
-                      {subscriberSources.length > 0 ? `Principal: ${subscriberSources[0].source}` : "En el período"}
+                    <span className="text-xs font-bold text-stone-900 block">Total Nuevos Inscritos</span>
+                    <span className="text-[10px] text-stone-500">
+                      {subscriberSources.length > 0 ? `Canal principal: ${subscriberSources[0].source}` : "En el período"}
                     </span>
                   </div>
                 </div>
                 <div className="text-right">
                   <span className="text-xs font-bold text-purple-800 bg-white px-2 py-0.5 rounded-full border border-purple-200">
-                    {totalNewSubscribers} leads
+                    {totalNewSubscribers} suscriptores
                   </span>
-                  <div className="text-[9px] text-stone-400 mt-0.5">{retentionRate}% activos</div>
+                  <div className="text-[10px] text-stone-400 mt-0.5">{retentionRate}% activos</div>
                 </div>
               </div>
 
-              {/* SAT Invoicing Stat */}
-              <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-100 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-base">check</span>
+              {/* Source breakdown bars */}
+              {subscriberSources.slice(0, 3).map((item, idx) => (
+                <div key={idx} className="space-y-1">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-stone-700 font-medium">{item.source}</span>
+                    <span className="text-stone-900 font-bold">{item.count} ({item.pct}%)</span>
                   </div>
-                  <div>
-                    <span className="text-xs font-bold text-stone-900 block">Facturas Timbradas (SAT)</span>
-                    <span className="text-[10px] text-stone-400">Cumplimiento CFDI 4.0</span>
-                  </div>
-                </div>
-                <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                  {issuedInvoices} emitidas
-                </span>
-              </div>
-
-              {/* Pending SAT */}
-              <div className="p-3.5 rounded-xl bg-stone-50 border border-stone-100 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-base">hourglass_top</span>
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold text-stone-900 block">Pendientes de Timbrado</span>
-                    <span className="text-[10px] text-stone-400">Solicitudes por emitir</span>
+                  <div className="w-full bg-stone-100 h-1.5 rounded-full overflow-hidden">
+                    <div
+                      className="bg-purple-600 h-full rounded-full transition-all duration-500"
+                      style={{ width: `${Math.max(8, item.pct)}%` }}
+                    />
                   </div>
                 </div>
-                <span className="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                  {Math.max(0, requestedInvoices - issuedInvoices)} pendientes
-                </span>
-              </div>
+              ))}
             </div>
           </div>
 
@@ -1704,24 +1863,27 @@ export default function ExecutiveAnalyticsDashboard({
                 setActiveTableTab("newsletter");
                 setTablePage(1);
               }}
-              className="flex-1 inline-flex items-center justify-center gap-1.5 bg-[#1A2624] hover:bg-[#8C4723] text-white py-2 px-3 rounded-xl text-xs font-semibold cursor-pointer transition-colors"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 bg-purple-700 hover:bg-purple-800 text-white py-2 px-3 rounded-xl text-xs font-semibold cursor-pointer transition-colors"
             >
               <span className="material-symbols-outlined text-sm">mark_email_read</span>
-              <span>Ver Suscriptores</span>
+              <span>Ver Lista de Newsletter</span>
             </button>
             <button
-              onClick={() => setActiveTab("validate")}
+              onClick={() => {
+                setActiveTableTab("maquila");
+                setTablePage(1);
+              }}
               className="inline-flex items-center justify-center gap-1.5 bg-stone-100 hover:bg-stone-200 text-stone-800 py-2 px-3 rounded-xl text-xs font-semibold cursor-pointer transition-colors"
             >
-              <span className="material-symbols-outlined text-sm">qr_code_scanner</span>
-              <span>QR</span>
+              <span className="material-symbols-outlined text-sm">business_center</span>
+              <span>Leads B2B</span>
             </button>
           </div>
         </div>
       </div>
 
       {/* =========================================================================
-          5. TABLA MULTI-ENTIDAD (TOURS / RESTAURANTE / MAQUILA / NEWSLETTER)
+          5. TABLA MULTI-ENTIDAD (TOURS / NEWSLETTER / RESTAURANTE / MAQUILA)
          ========================================================================= */}
       <div className="bg-white border border-stone-200/90 rounded-2xl overflow-hidden shadow-xs">
         {/* Table Tab Selector Header */}
@@ -1729,9 +1891,9 @@ export default function ExecutiveAnalyticsDashboard({
           <div className="flex flex-wrap items-center gap-2">
             {[
               { id: "tours", label: "Reservas de Tours", count: filteredTourBookings.length, icon: "confirmation_number" },
-              { id: "newsletter", label: "Suscriptores Newsletter", count: filteredSubscribers.length, icon: "mark_email_read" },
-              { id: "restaurant", label: "Mesas 1937 Nativo", count: filteredRestBookings.length, icon: "restaurant" },
-              { id: "maquila", label: "Leads Maquila B2B", count: filteredMaquilaLeads.length, icon: "business_center" },
+              { id: "newsletter", label: "Inscritos al Newsletter", count: filteredSubscribers.length, icon: "mark_email_read" },
+              { id: "restaurant", label: "Mesas Reservas Nativo", count: filteredRestBookings.length, icon: "restaurant" },
+              { id: "maquila", label: "Leads Maquilas B2B", count: filteredMaquilaLeads.length, icon: "business_center" },
             ].map((tab) => {
               const isActive = activeTableTab === tab.id;
               return (
@@ -1819,32 +1981,31 @@ export default function ExecutiveAnalyticsDashboard({
               </>
             )}
 
-            {/* Newsletter Filters & Quick CSV */}
+            {/* Newsletter Filters */}
             {activeTableTab === "newsletter" && (
-              <>
-                <select
-                  value={tableStatusFilter}
-                  onChange={(e) => {
-                    setTableStatusFilter(e.target.value);
-                    setTablePage(1);
-                  }}
-                  className="py-1.5 px-3 rounded-xl border border-stone-200 text-xs bg-stone-50 focus:bg-white focus:outline-none font-semibold text-stone-700 cursor-pointer"
-                >
-                  <option value="all">Todos los Estados</option>
-                  <option value="active">Activos</option>
-                  <option value="unsubscribed">Desuscritos</option>
-                </select>
-
-                <button
-                  onClick={() => handleExportCSV("newsletter")}
-                  className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-xl bg-purple-700 hover:bg-purple-800 text-white text-xs font-bold transition-colors cursor-pointer shadow-xs"
-                  title="Descargar suscriptores filtrados en CSV"
-                >
-                  <span className="material-symbols-outlined text-xs">download</span>
-                  <span>CSV</span>
-                </button>
-              </>
+              <select
+                value={tableStatusFilter}
+                onChange={(e) => {
+                  setTableStatusFilter(e.target.value);
+                  setTablePage(1);
+                }}
+                className="py-1.5 px-3 rounded-xl border border-stone-200 text-xs bg-stone-50 focus:bg-white focus:outline-none font-semibold text-stone-700 cursor-pointer"
+              >
+                <option value="all">Todos los Estados</option>
+                <option value="active">Activos</option>
+                <option value="unsubscribed">Desuscritos</option>
+              </select>
             )}
+
+            {/* Quick CSV Export for Active Tab */}
+            <button
+              onClick={() => handleExportCSV(activeTableTab)}
+              className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-xl bg-stone-800 hover:bg-stone-900 text-white text-xs font-bold transition-colors cursor-pointer shadow-xs"
+              title="Descargar datos filtrados de esta pestaña en CSV"
+            >
+              <span className="material-symbols-outlined text-xs">download</span>
+              <span>CSV</span>
+            </button>
           </div>
         </div>
 
