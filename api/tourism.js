@@ -170,6 +170,7 @@ export default async function handler(req, res) {
           guests: r.guests,
           amount: r.total_paid,
           method: r.payment_method,
+          created_at: r.created_at,
           timestamp: r.created_at ? new Date(r.created_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) : '',
           used_at: r.used_at ? new Date(r.used_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) : null,
           status: r.status || 'Confirmada',

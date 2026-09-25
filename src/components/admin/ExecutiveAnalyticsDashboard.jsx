@@ -51,13 +51,24 @@ const EXP_CONFIG = {
   },
 };
 
-// Helper to normalize any date into YYYY-MM-DD
+// Helper to normalize any date into YYYY-MM-DD (supports ISO, Mexican locale DD/MM/YYYY, Date objects)
 function normalizeDateStr(dateVal) {
   if (!dateVal) return null;
   if (typeof dateVal === "string") {
-    const match = dateVal.match(/^(\d{4})-(\d{2})-(\d{2})/);
-    if (match) return `${match[1]}-${match[2]}-${match[3]}`;
-    const d = new Date(dateVal);
+    const s = dateVal.trim();
+    // 1. Matches YYYY-MM-DD
+    const isoMatch = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (isoMatch) return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
+    // 2. Matches DD/MM/YYYY (e.g. from toLocaleString es-MX)
+    const dmyMatch = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    if (dmyMatch) {
+      const day = String(dmyMatch[1]).padStart(2, "0");
+      const month = String(dmyMatch[2]).padStart(2, "0");
+      const year = dmyMatch[3];
+      return `${year}-${month}-${day}`;
+    }
+    // 3. Fallback new Date
+    const d = new Date(s);
     if (!isNaN(d.getTime())) {
       const y = d.getFullYear();
       const m = String(d.getMonth() + 1).padStart(2, "0");
@@ -123,10 +134,13 @@ export default function ExecutiveAnalyticsDashboard({
   maxCapacityLimit = 50,
   onRefreshData,
 }) {
-  // Preset filter range
-  const [datePreset, setDatePreset] = useState("last30"); // today | last7 | last30 | thisMonth | lastMonth | thisYear | all | custom
+  // Preset filter range (default 'all' to show complete historical data immediately)
+  const [datePreset, setDatePreset] = useState("all"); // all | today | last7 | last30 | thisMonth | lastMonth | thisYear | custom
   const [customStartDate, setCustomStartDate] = useState("");
   const [customEndDate, setCustomEndDate] = useState("");
+
+  // Date Filter Mode: "sale" (Fecha de Compra / Transacción) vs "visit" (Fecha de Visita / Asistencia física)
+  const [dateFilterBasis, setDateFilterBasis] = useState("sale"); // "sale" | "visit"
 
   // Timeline chart metric selector
   const [timelineMetric, setTimelineMetric] = useState("revenue"); // revenue | pax | bookings
@@ -229,7 +243,23 @@ export default function ExecutiveAnalyticsDashboard({
     };
   }, [datePreset, customStartDate, customEndDate]);
 
-  // Filter helper
+  // Date extraction helpers considering dateFilterBasis
+  const getBookingEvalDate = (b, basis = dateFilterBasis) => {
+    if (basis === "visit") {
+      return normalizeDateStr(b.date || b.date_str || b.created_at || b.timestamp);
+    }
+    // Default "sale": evaluation by transaction / creation date
+    return normalizeDateStr(b.created_at || b.timestamp || b.date || b.date_str);
+  };
+
+  const getRestBookingEvalDate = (r, basis = dateFilterBasis) => {
+    if (basis === "visit") {
+      return normalizeDateStr(r.date_str || r.date || r.created_at);
+    }
+    // Default "sale": evaluation by booking creation date
+    return normalizeDateStr(r.created_at || r.date_str || r.date);
+  };
+
   const isDateInRange = (dateStr, start, end) => {
     if (!start && !end) return true;
     const normalized = normalizeDateStr(dateStr);
@@ -273,20 +303,25 @@ export default function ExecutiveAnalyticsDashboard({
     return s.includes("abandonado") || s.includes("intento") || s.includes("draft") || s.includes("pendiente");
   };
 
-  // Filter datasets by effective date range
+  // Filter datasets by effective date range based on dateFilterBasis
   const filteredTourBookings = useMemo(() => {
-    return bookingsLog.filter((b) => isDateInRange(b.date || b.timestamp, effectiveStart, effectiveEnd));
-  }, [bookingsLog, effectiveStart, effectiveEnd]);
+    return bookingsLog.filter((b) => {
+      const evalD = getBookingEvalDate(b);
+      return isDateInRange(evalD, effectiveStart, effectiveEnd);
+    });
+  }, [bookingsLog, dateFilterBasis, effectiveStart, effectiveEnd]);
 
   const filteredRestBookings = useMemo(() => {
-    return restaurantBookings.filter((r) => isDateInRange(r.date_str || r.date || r.created_at, effectiveStart, effectiveEnd));
-  }, [restaurantBookings, effectiveStart, effectiveEnd]);
+    return restaurantBookings.filter((r) => {
+      const evalD = getRestBookingEvalDate(r);
+      return isDateInRange(evalD, effectiveStart, effectiveEnd);
+    });
+  }, [restaurantBookings, dateFilterBasis, effectiveStart, effectiveEnd]);
 
   const filteredMaquilaLeads = useMemo(() => {
     return maquilaLeadsList.filter((m) => isDateInRange(m.created_at || m.date, effectiveStart, effectiveEnd));
   }, [maquilaLeadsList, effectiveStart, effectiveEnd]);
 
-  // Newsletter Subscribers in effective date range
   const filteredSubscribers = useMemo(() => {
     return subscribersList.filter((s) => isDateInRange(s.created_at, effectiveStart, effectiveEnd));
   }, [subscribersList, effectiveStart, effectiveEnd]);
@@ -294,8 +329,11 @@ export default function ExecutiveAnalyticsDashboard({
   // Previous period bookings for percentage comparison
   const prevTourBookings = useMemo(() => {
     if (!prevStart || !prevEnd) return [];
-    return bookingsLog.filter((b) => isDateInRange(b.date || b.timestamp, prevStart, prevEnd));
-  }, [bookingsLog, prevStart, prevEnd]);
+    return bookingsLog.filter((b) => {
+      const evalD = getBookingEvalDate(b);
+      return isDateInRange(evalD, prevStart, prevEnd);
+    });
+  }, [bookingsLog, dateFilterBasis, prevStart, prevEnd]);
 
   const prevSubscribers = useMemo(() => {
     if (!prevStart || !prevEnd) return [];
@@ -303,18 +341,22 @@ export default function ExecutiveAnalyticsDashboard({
   }, [subscribersList, prevStart, prevEnd]);
 
   // --- ANALYTICAL CALCULATIONS (CURRENT PERIOD) ---
+  // Confirmed tours in current period
   const confirmedTours = useMemo(() => {
     return filteredTourBookings.filter(isBookingConfirmed);
   }, [filteredTourBookings]);
 
+  // Ingresos en Tours: Strictly calculated on confirmed tour sales
   const totalRevenue = useMemo(() => {
     return confirmedTours.reduce((sum, b) => sum + getBookingRevenue(b), 0);
   }, [confirmedTours]);
 
+  // Visitantes a Tours (#): Strictly calculated on guests/tickets of tour bookings
   const totalTourPax = useMemo(() => {
     return confirmedTours.reduce((sum, b) => sum + (parseInt(b.guests) || 1), 0);
   }, [confirmedTours]);
 
+  // Mesas y Comensales en Nativo: Strictly from restaurant bookings
   const totalRestPax = useMemo(() => {
     return filteredRestBookings.reduce((sum, r) => sum + (parseInt(r.guests) || 0), 0);
   }, [filteredRestBookings]);
@@ -452,8 +494,8 @@ export default function ExecutiveAnalyticsDashboard({
     const buckets = {};
 
     const sorted = [...confirmedTours].sort((a, b) => {
-      const da = normalizeDateStr(a.date || a.timestamp) || "";
-      const db = normalizeDateStr(b.date || b.timestamp) || "";
+      const da = getBookingEvalDate(a) || "";
+      const db = getBookingEvalDate(b) || "";
       return da.localeCompare(db);
     });
 
@@ -466,7 +508,7 @@ export default function ExecutiveAnalyticsDashboard({
         cur.setDate(cur.getDate() + 1);
       }
     } else {
-      const uniq = Array.from(new Set(sorted.map((b) => normalizeDateStr(b.date || b.timestamp)).filter(Boolean)));
+      const uniq = Array.from(new Set(sorted.map((b) => getBookingEvalDate(b)).filter(Boolean)));
       datesList = uniq.slice(-30);
     }
 
@@ -481,7 +523,7 @@ export default function ExecutiveAnalyticsDashboard({
     });
 
     sorted.forEach((b) => {
-      const d = normalizeDateStr(b.date || b.timestamp);
+      const d = getBookingEvalDate(b);
       if (d && buckets[d]) {
         buckets[d].revenue += getBookingRevenue(b);
         buckets[d].pax += parseInt(b.guests) || 1;
@@ -491,7 +533,7 @@ export default function ExecutiveAnalyticsDashboard({
     });
 
     return Object.values(buckets);
-  }, [confirmedTours, effectiveStart, effectiveEnd]);
+  }, [confirmedTours, dateFilterBasis, effectiveStart, effectiveEnd]);
 
   // Max value for timeline scaling
   const timelineMax = useMemo(() => {
@@ -513,7 +555,8 @@ export default function ExecutiveAnalyticsDashboard({
     ];
 
     confirmedTours.forEach((b) => {
-      const dStr = normalizeDateStr(b.date || b.timestamp);
+      // For Day of Week distribution, visit date or evaluation date
+      const dStr = normalizeDateStr(b.date || b.date_str) || getBookingEvalDate(b);
       if (dStr) {
         const dObj = new Date(`${dStr}T12:00:00`);
         const dayIdx = dObj.getDay();
@@ -529,13 +572,13 @@ export default function ExecutiveAnalyticsDashboard({
     const peakDay = days.reduce((best, cur) => (cur.pax > best.pax ? cur : best), days[0]);
 
     return { days, maxDayPax, peakDayName: peakDay.fullName, peakDayPax: peakDay.pax };
-  }, [confirmedTours]);
+  }, [confirmedTours, dateFilterBasis]);
 
-  // Popular Tour Slots
+  // Popular Tour Slots (Visitantes x Horario de Tours)
   const timeSlotStats = useMemo(() => {
     const slotMap = {};
     confirmedTours.forEach((b) => {
-      const rawTime = (b.time || "11:00 AM").trim();
+      const rawTime = (b.time || b.time_str || "11:00 AM").trim();
       slotMap[rawTime] = (slotMap[rawTime] || 0) + (parseInt(b.guests) || 1);
     });
 
@@ -558,6 +601,7 @@ export default function ExecutiveAnalyticsDashboard({
         ["CASA LOY TEQUILERA - REPORTE EJECUTIVO DE RENDIMIENTO"],
         ["Destilería y Operaciones Turísticas | Altos de Jalisco, México"],
         ["Período de Análisis:", rangeLabel],
+        ["Base de Fechas:", dateFilterBasis === "sale" ? "Por Fecha de Venta / Transacción" : "Por Fecha de Visita Programada"],
         ["Fecha de Emisión:", new Date().toLocaleString("es-MX")],
         ["Usuario Generador:", user?.name || "Administrador"],
         [],
@@ -568,8 +612,8 @@ export default function ExecutiveAnalyticsDashboard({
         ["Leads Maquilas B2B", filteredMaquilaLeads.length, "Prospectos de marca privada"],
         ["Mesas Reservas en Nativo", filteredRestBookings.length, "Reservas gastronómicas"],
         ["Comensales 1937 Nativo", totalRestPax, "Personas atendidas"],
-        ["Ingresos en Tours", totalRevenue, "MXN (Reservas Confirmadas)"],
-        ["Visitantes a Tours (#)", totalTourPax, "Asistentes a recorridos"],
+        ["Ingresos en Tours", totalRevenue, "MXN (En base a reservas vendidas)"],
+        ["Visitantes a Tours (#)", totalTourPax, "Asistentes en reservas de tours vendidas"],
         ["Tour Más Vendido", topTour.name, `${topTour.pax} pax - $${topTour.revenue.toLocaleString("es-MX")} MXN (${topTour.revPct}%)`],
         ["Horario de Mayor Afluencia", timeSlotStats.peakSlot, `${timeSlotStats.peakSlotPax} asistentes`],
         ["Día de Mayor Afluencia", dayOfWeekStats.peakDayName, `${dayOfWeekStats.peakDayPax} asistentes`],
@@ -593,8 +637,8 @@ export default function ExecutiveAnalyticsDashboard({
       // 2. TOURS DETAILED SHEET
       const toursRows = filteredTourBookings.map((b) => ({
         "Código Reserva": b.code || b.ticket_code || "",
-        "Fecha Visita": b.date || "",
-        "Horario": b.time || "",
+        "Fecha Visita": b.date || b.date_str || "",
+        "Horario": b.time || b.time_str || "",
         "Titular": b.name || b.customer_name || "",
         "Email": b.email || "",
         "Teléfono": b.phone || "",
@@ -609,7 +653,7 @@ export default function ExecutiveAnalyticsDashboard({
         "Régimen Fiscal": b.regimen_fiscal || "",
         "C.P. Fiscal": b.postal_code || "",
         "Uso CFDI": b.cfdi_use || "",
-        "Fecha Registro": b.timestamp || "",
+        "Fecha Compra/Registro": b.created_at || b.timestamp || "",
       }));
       const wsTours = XLSX.utils.json_to_sheet(toursRows);
       XLSX.utils.book_append_sheet(wb, wsTours, "Reservas_Tours");
@@ -630,7 +674,7 @@ export default function ExecutiveAnalyticsDashboard({
       // 4. RESTAURANT 1937 NATIVO SHEET
       const restRows = filteredRestBookings.map((r) => ({
         "Código Mesa": r.code || "",
-        "Fecha": r.date_str || r.date || "",
+        "Fecha Visita": r.date_str || r.date || "",
         "Hora": r.time_str || r.time || "",
         "Titular": r.customer_name || r.name || "",
         "Teléfono": r.customer_phone || r.phone || "",
@@ -744,8 +788,8 @@ export default function ExecutiveAnalyticsDashboard({
 
         const rows = filteredTourBookings.map((b) => [
           `"${b.code || b.ticket_code || ""}"`,
-          `"${b.date || ""}"`,
-          `"${b.time || ""}"`,
+          `"${b.date || b.date_str || ""}"`,
+          `"${b.time || b.time_str || ""}"`,
           `"${(b.name || b.customer_name || "").replace(/"/g, '""')}"`,
           `"${b.email || ""}"`,
           `"${b.phone || ""}"`,
@@ -937,7 +981,7 @@ export default function ExecutiveAnalyticsDashboard({
       )}
 
       {/* =========================================================================
-          1. HEADER BAR: GREETING & DATE CONTROLLER (POLARIS / EXECUTIVE PALETTE)
+          1. HEADER BAR: GREETING, DATE CONTROLLER & BASIS TOGGLE (VENTA vs VISITA)
          ========================================================================= */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#1A2624] via-[#243533] to-[#1A2624] p-6 sm:p-8 text-white shadow-xl border border-amber-900/40">
         <div className="absolute right-0 top-0 bottom-0 opacity-10 pointer-events-none hidden lg:flex items-center pr-10">
@@ -961,13 +1005,16 @@ export default function ExecutiveAnalyticsDashboard({
                 <span className="text-xs text-stone-300">
                   • Período evaluado: <strong className="text-white font-semibold">{rangeLabel}</strong>
                 </span>
+                <span className="text-xs text-stone-400">
+                  ({dateFilterBasis === "sale" ? "Base: Ventas de Reservas" : "Base: Fecha de Visita Programada"})
+                </span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
                 Tablero de Control Analítico
               </h2>
-              <p className="text-xs sm:text-sm text-stone-300 mt-1 max-w-xl">
-                Métricas ejecutivas de alta precisión: inscritos al newsletter, leads de maquila, reservas en Nativo, ingresos,
-                visitantes a tours, horarios pico y afluencia diaria en Destilería Casa Loy.
+              <p className="text-xs sm:text-sm text-stone-300 mt-1 max-w-2xl">
+                Métricas de negocio en base a reservas vendidas de tours, mesas de restaurante Nativo, leads de maquila B2B,
+                inscritos a newsletter, afluencia diaria y horarios pico.
               </p>
             </div>
           </div>
@@ -1013,8 +1060,9 @@ export default function ExecutiveAnalyticsDashboard({
           </div>
         </div>
 
-        {/* Date Filter Toolbar embedded in Header Banner */}
-        <div className="mt-6 pt-5 border-t border-white/10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        {/* Date Filter & Basis Selector Toolbar */}
+        <div className="mt-6 pt-5 border-t border-white/10 flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
+          {/* Preset Buttons */}
           <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             <span className="text-[11px] uppercase tracking-wider font-bold text-stone-400 mr-1 flex items-center gap-1">
               <span className="material-symbols-outlined text-sm">calendar_month</span>
@@ -1022,13 +1070,13 @@ export default function ExecutiveAnalyticsDashboard({
             </span>
 
             {[
+              { id: "all", label: "Todo" },
               { id: "today", label: "Hoy" },
               { id: "last7", label: "7 días" },
               { id: "last30", label: "30 días" },
               { id: "thisMonth", label: "Este mes" },
               { id: "lastMonth", label: "Mes anterior" },
               { id: "thisYear", label: "Año 2026" },
-              { id: "all", label: "Todo" },
               { id: "custom", label: "Personalizado" },
             ].map((p) => {
               const isActive = datePreset === p.id;
@@ -1046,6 +1094,35 @@ export default function ExecutiveAnalyticsDashboard({
                 </button>
               );
             })}
+          </div>
+
+          {/* Basis Toggle: "Fecha de Venta" vs "Fecha de Visita" */}
+          <div className="flex items-center gap-2 bg-stone-900/70 p-1 rounded-xl border border-white/15 self-start xl:self-auto">
+            <span className="text-[10px] uppercase font-bold text-stone-400 px-2">Cálculo:</span>
+            <button
+              onClick={() => setDateFilterBasis("sale")}
+              className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                dateFilterBasis === "sale"
+                  ? "bg-[#C29B38] text-stone-950 shadow-xs"
+                  : "text-stone-300 hover:text-white"
+              }`}
+              title="Evaluar ingresos y visitantes en base a las fechas en que se realizaron las compras/reservas"
+            >
+              <span className="material-symbols-outlined text-xs">payments</span>
+              <span>Por Fecha de Venta (Reservas)</span>
+            </button>
+            <button
+              onClick={() => setDateFilterBasis("visit")}
+              className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                dateFilterBasis === "visit"
+                  ? "bg-[#C29B38] text-stone-950 shadow-xs"
+                  : "text-stone-300 hover:text-white"
+              }`}
+              title="Evaluar asistencia en base a las fechas programadas de la visita física"
+            >
+              <span className="material-symbols-outlined text-xs">event</span>
+              <span>Por Fecha de Visita (Afluencia)</span>
+            </button>
           </div>
 
           {/* Custom Date Pickers */}
@@ -1076,18 +1153,17 @@ export default function ExecutiveAnalyticsDashboard({
 
       {/* =========================================================================
           2. CORE EXECUTIVE SHOW-OFF KPIS (8 PRINCIPAL METRIC CARDS)
-             Directly organized by user priority:
-             1. Inscritos Newsletter  2. Leads Maquilas  3. Mesas Nativo  4. Ingresos Tours
-             5. Visitantes a Tours    6. Tour Más Vendido 7. Horario Pico  8. Afluencia x Día
+             1. Inscritos Newsletter   2. Leads Maquilas       3. Mesas Nativo       4. Ingresos Tours
+             5. Visitantes Tours (#)   6. Tour Más Vendido     7. Horario de Tours   8. Afluencia x Día
          ========================================================================= */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-xs uppercase tracking-wider font-bold text-stone-500 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#C29B38]"></span>
-            <span>Indicadores Clave de Operación & Negocio</span>
+          <h3 className="text-xs uppercase tracking-wider font-bold text-stone-600 flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#C29B38]"></span>
+            <span>Métricas Principales de Negocio & Operación</span>
           </h3>
-          <span className="text-[11px] text-stone-400 font-medium">
-            Actualizado en tiempo real • {rangeLabel}
+          <span className="text-[11px] text-stone-500 font-medium">
+            {dateFilterBasis === "sale" ? "Calculado en base a ventas de reservas" : "Calculado en base a fecha de visitas"} • {rangeLabel}
           </span>
         </div>
 
@@ -1107,13 +1183,13 @@ export default function ExecutiveAnalyticsDashboard({
             <div className="mt-3">
               <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
                 {totalNewSubscribers.toLocaleString("es-MX")}{" "}
-                <span className="text-xs font-sans font-semibold text-stone-400">nuevos</span>
+                <span className="text-xs font-sans font-semibold text-stone-400">registrados</span>
               </div>
               <div className="flex items-center justify-between mt-2 pt-2 border-t border-stone-100 text-xs">
                 <span className="text-purple-700 font-bold bg-purple-50 px-2 py-0.5 rounded-full text-[11px]">
-                  {prevMetrics.subsGrowth}
+                  {prevMetrics.subsGrowth} vs ant.
                 </span>
-                <span className="text-stone-500 font-medium text-[11px]">
+                <span className="text-stone-600 font-medium text-[11px]">
                   {activeSubscribersCount} activos ({retentionRate}%)
                 </span>
               </div>
@@ -1149,14 +1225,19 @@ export default function ExecutiveAnalyticsDashboard({
           {/* CARD 3: MESAS RESERVAS EN NATIVO */}
           <div className="bg-white border border-stone-200/90 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all hover:border-amber-500/60 group relative overflow-hidden">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500">
-                Mesas Reservas Nativo
-              </span>
+              <div>
+                <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500 block">
+                  Mesas Reservas en Nativo
+                </span>
+                <span className="text-[10px] text-amber-800/80 font-medium">
+                  En base a reservas restaurante
+                </span>
+              </div>
               <div className="w-8 h-8 rounded-xl bg-amber-100/70 text-amber-800 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
                 <span className="material-symbols-outlined text-lg">restaurant</span>
               </div>
             </div>
-            <div className="mt-3">
+            <div className="mt-2.5">
               <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
                 {filteredRestBookings.length}{" "}
                 <span className="text-xs font-sans font-semibold text-stone-400">mesas</span>
@@ -1166,23 +1247,28 @@ export default function ExecutiveAnalyticsDashboard({
                   1937 Nativo
                 </span>
                 <span className="text-stone-600 font-medium text-[11px]">
-                  {totalRestPax} comensales atendidos
+                  {totalRestPax} comensales registrados
                 </span>
               </div>
             </div>
           </div>
 
-          {/* CARD 4: INGRESOS EN TOURS */}
+          {/* CARD 4: INGRESOS EN TOURS (EN BASE A RESERVAS DE TOURS) */}
           <div className="bg-white border border-stone-200/90 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all hover:border-[#C29B38]/60 group relative overflow-hidden">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500">
-                Ingresos en Tours
-              </span>
+              <div>
+                <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500 block">
+                  Ingresos en Tours
+                </span>
+                <span className="text-[10px] text-[#C29B38] font-medium">
+                  En base a las reservas de tours
+                </span>
+              </div>
               <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-[#C29B38] flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
                 <span className="material-symbols-outlined text-lg">payments</span>
               </div>
             </div>
-            <div className="mt-3">
+            <div className="mt-2.5">
               <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
                 {formatMXN(totalRevenue)}
               </div>
@@ -1197,39 +1283,44 @@ export default function ExecutiveAnalyticsDashboard({
                   {prevMetrics.revGrowth} vs ant.
                 </span>
                 <span className="text-stone-600 font-medium text-[11px]">
-                  {totalConfirmedCount} reservas pagadas
+                  En {totalConfirmedCount} reservas vendidas
                 </span>
               </div>
             </div>
           </div>
 
-          {/* CARD 5: VISITANTES A TOURS (#) */}
+          {/* CARD 5: VISITANTES A TOURS (#) (EN BASE A VENTAS DE RESERVAS) */}
           <div className="bg-white border border-stone-200/90 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all hover:border-[#8C4723]/60 group relative overflow-hidden">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500">
-                Visitantes a Tours (#)
-              </span>
+              <div>
+                <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500 block">
+                  Visitantes a Tours (#)
+                </span>
+                <span className="text-[10px] text-[#8C4723] font-medium">
+                  En base a ventas reservas tours
+                </span>
+              </div>
               <div className="w-8 h-8 rounded-xl bg-[#8C4723]/10 text-[#8C4723] flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
                 <span className="material-symbols-outlined text-lg">confirmation_number</span>
               </div>
             </div>
-            <div className="mt-3">
+            <div className="mt-2.5">
               <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
                 {totalTourPax.toLocaleString("es-MX")}{" "}
                 <span className="text-xs font-sans font-semibold text-stone-400">asistentes</span>
               </div>
               <div className="flex items-center justify-between mt-2 pt-2 border-t border-stone-100 text-xs">
                 <span className="text-[#8C4723] font-bold bg-[#8C4723]/10 px-2 py-0.5 rounded-full text-[11px]">
-                  Boletos Emitidos
+                  Boletos Tours
                 </span>
                 <span className="text-stone-600 font-medium text-[11px]">
-                  {prevMetrics.paxGrowth} vs anterior
+                  {prevMetrics.paxGrowth} vs período ant.
                 </span>
               </div>
             </div>
           </div>
 
-          {/* CARD 6: TOUR MÁS VENDIDO (TOP WINNER) */}
+          {/* CARD 6: TOUR MÁS VENDIDO */}
           <div className="bg-white border-2 border-[#C29B38]/40 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all group relative overflow-hidden bg-gradient-to-br from-white via-amber-50/20 to-white">
             <div className="flex items-center justify-between">
               <span className="text-[11px] uppercase tracking-wider font-bold text-[#8C4723]">
@@ -1254,23 +1345,28 @@ export default function ExecutiveAnalyticsDashboard({
             </div>
           </div>
 
-          {/* CARD 7: VISITANTES X HORARIO (TURNO PICO) */}
+          {/* CARD 7: VISITANTES X HORARIO DE TOURS (TURNO PICO) */}
           <div className="bg-white border border-stone-200/90 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all hover:border-emerald-500/60 group relative overflow-hidden">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500">
-                Horario Más Visitado
-              </span>
+              <div>
+                <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500 block">
+                  Visitantes x Horario
+                </span>
+                <span className="text-[10px] text-emerald-700 font-medium">
+                  Afluencia por turno
+                </span>
+              </div>
               <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
                 <span className="material-symbols-outlined text-lg">schedule</span>
               </div>
             </div>
-            <div className="mt-3">
+            <div className="mt-2.5">
               <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
                 {timeSlotStats.slots.length > 0 ? timeSlotStats.slots[0].time : "11:00 AM"}
               </div>
               <div className="flex items-center justify-between mt-2 pt-2 border-t border-stone-100 text-xs">
                 <span className="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full text-[11px]">
-                  Turno Pico
+                  Horario Pico
                 </span>
                 <span className="text-stone-600 font-medium text-[11px]">
                   {timeSlotStats.slots.length > 0 ? timeSlotStats.slots[0].pax : 0} pax ({maxCapacityLimit} cap. máx)
@@ -1282,14 +1378,19 @@ export default function ExecutiveAnalyticsDashboard({
           {/* CARD 8: AFLUENCIA X DÍA (DÍA PICO) */}
           <div className="bg-white border border-stone-200/90 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all hover:border-blue-500/60 group relative overflow-hidden">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500">
-                Día de Mayor Afluencia
-              </span>
+              <div>
+                <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500 block">
+                  Afluencia x Día
+                </span>
+                <span className="text-[10px] text-blue-700 font-medium">
+                  Afluencia por día de semana
+                </span>
+              </div>
               <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
                 <span className="material-symbols-outlined text-lg">event_available</span>
               </div>
             </div>
-            <div className="mt-3">
+            <div className="mt-2.5">
               <div className="text-2xl font-bold font-serif text-stone-900 tracking-tight">
                 {dayOfWeekStats.peakDayName}
               </div>
@@ -1340,16 +1441,16 @@ export default function ExecutiveAnalyticsDashboard({
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-[11px] text-stone-400">Impacto Global Destilería:</span>
+            <span className="text-[11px] text-stone-400">Impacto Total Destilería:</span>
             <span className="bg-stone-200 text-stone-800 font-bold px-2.5 py-0.5 rounded-full text-xs">
-              {totalCombinedPax.toLocaleString("es-MX")} visitantes totales
+              {totalCombinedPax.toLocaleString("es-MX")} visitantes globales (Tours + Nativo)
             </span>
           </div>
         </div>
       </div>
 
       {/* =========================================================================
-          3. SUITE DE GRÁFICOS VISUALES INTERACTIVOS (ROW 1: AFLUENCIA X DÍA & DONUT TOUR MÁS VENDIDO)
+          3. SUITE DE GRÁFICOS VISUALES (ROW 1: AFLUENCIA X DÍA & DONUT TOUR MÁS VENDIDO)
          ========================================================================= */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column (8 cols): Afluencia x Día & Curva de Ingresos/Visitantes */}
@@ -1360,11 +1461,11 @@ export default function ExecutiveAnalyticsDashboard({
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-lg text-[#C29B38]">trending_up</span>
                   <h3 className="text-base font-bold text-stone-900">
-                    Afluencia x Día & Evolución Temporal
+                    Afluencia x Día & Evolución de Ingresos
                   </h3>
                 </div>
                 <p className="text-xs text-stone-500 mt-0.5">
-                  Tendencia histórica diaria de ingresos, visitantes y reservaciones en el período seleccionado
+                  Tendencia diaria de recaudación y visitantes en base a {dateFilterBasis === "sale" ? "ventas de reservas" : "visitas programadas"}
                 </p>
               </div>
 
@@ -1394,7 +1495,7 @@ export default function ExecutiveAnalyticsDashboard({
               {timelineData.length === 0 ? (
                 <div className="h-52 flex flex-col items-center justify-center text-stone-400 text-xs">
                   <span className="material-symbols-outlined text-4xl mb-2 text-stone-300">timeline</span>
-                  <p>No se encontraron datos de reservas en este rango de fechas.</p>
+                  <p>No se encontraron datos en este rango de fechas.</p>
                 </div>
               ) : (
                 <div className="relative">
@@ -1522,7 +1623,7 @@ export default function ExecutiveAnalyticsDashboard({
                               : `${d.bookings} Reservas`}
                           </div>
                           <div className="text-[10px] text-stone-300">
-                            Total generado: {formatMXN(d.revenue)} • {d.pax} pax
+                            Total: {formatMXN(d.revenue)} • {d.pax} pax
                           </div>
                         </div>
                       </div>
@@ -2133,8 +2234,8 @@ export default function ExecutiveAnalyticsDashboard({
                           {b.guests || 1}
                         </td>
                         <td className="py-3 px-4 text-stone-600">
-                          <div className="font-semibold">{b.date || "Fecha no esp."}</div>
-                          <div className="text-[10px] text-stone-400">{b.time || "11:00 AM"}</div>
+                          <div className="font-semibold">{b.date || b.date_str || "Fecha no esp."}</div>
+                          <div className="text-[10px] text-stone-400">{b.time || b.time_str || "11:00 AM"}</div>
                         </td>
                         <td className="py-3 px-4 text-right font-bold text-stone-900">
                           {formatMXN(getBookingRevenue(b))}
@@ -2177,7 +2278,8 @@ export default function ExecutiveAnalyticsDashboard({
                     <th className="py-3 px-4">Titular</th>
                     <th className="py-3 px-4">Teléfono</th>
                     <th className="py-3 px-4 text-center">Comensales</th>
-                    <th className="py-3 px-4">Fecha & Hora</th>
+                    <th className="py-3 px-4">Fecha Visita</th>
+                    <th className="py-3 px-4">Hora</th>
                     <th className="py-3 px-4">Motivo / Celebración</th>
                     <th className="py-3 px-4 text-center">Estatus</th>
                   </tr>
@@ -2195,8 +2297,11 @@ export default function ExecutiveAnalyticsDashboard({
                       <td className="py-3 px-4 text-center font-bold text-stone-800">{r.guests || 1}</td>
                       <td className="py-3 px-4 text-stone-600">
                         <div className="font-semibold">{r.date_str || r.date || "Fecha no esp."}</div>
-                        <div className="text-[10px] text-stone-400">{r.time_str || r.time || "—"}</div>
+                        {r.created_at && (
+                          <div className="text-[10px] text-stone-400">Reserva: {normalizeDateStr(r.created_at)}</div>
+                        )}
                       </td>
+                      <td className="py-3 px-4 text-stone-600">{r.time_str || r.time || "—"}</td>
                       <td className="py-3 px-4 text-stone-600">{r.reason || r.celebration || "Comida general"}</td>
                       <td className="py-3 px-4 text-center">
                         <span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full text-[10px] font-bold border border-emerald-200">
