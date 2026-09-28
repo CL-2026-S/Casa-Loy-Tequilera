@@ -212,11 +212,15 @@ export default async function handler(req, res) {
     }
 
     try {
-      const { data, error } = await supabase
-        .from('points_of_sale')
-        .select('*')
-        .eq('is_active', true)
-        .order('creado_en', { ascending: true });
+      const currentUser = getAuthUser(req);
+      const includeAll = req.query?.all === 'true' || Boolean(currentUser);
+
+      let query = supabase.from('points_of_sale').select('*');
+      if (!includeAll) {
+        query = query.eq('is_active', true);
+      }
+
+      const { data, error } = await query.order('name', { ascending: true });
 
       if (error) {
         throw error;
@@ -300,8 +304,8 @@ export default async function handler(req, res) {
         tierra_zafiro_cristalino
       } = req.body || {};
 
-      if (!retailer || !name || !address || !region) {
-        return res.status(400).json({ error: 'Faltan campos obligatorios: distribuidor, nombre, dirección y región.' });
+      if (!retailer || !name || !region) {
+        return res.status(400).json({ error: 'Faltan campos obligatorios: distribuidor/cadena, nombre y región.' });
       }
 
       // Determine brand flags: if CL/TD/TZ are provided directly (e.g. for USA), use them.
@@ -332,10 +336,10 @@ export default async function handler(req, res) {
       const storeData = {
         retailer,
         name,
-        address,
-        phone: phone || '',
+        address: address ? String(address).trim() : null,
+        phone: phone ? String(phone).trim() : null,
         region,
-        postal_code: postal_code || '',
+        postal_code: postal_code ? String(postal_code).trim() : null,
         latitude: latitude ? parseFloat(latitude) : null,
         longitude: longitude ? parseFloat(longitude) : null,
         maps_url: maps_url || '',

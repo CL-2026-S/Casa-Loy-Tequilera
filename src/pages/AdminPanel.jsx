@@ -172,6 +172,12 @@ export default function AdminPanel({
   const [editingAuthor, setEditingAuthor] = useState(null);
   const [selectedAuthorId, setSelectedAuthorId] = useState("");
   const [editingPos, setEditingPos] = useState(null);
+  const [posFilterRegion, setPosFilterRegion] = useState("all"); // "all" | "mx" | "usa"
+  const [posFilterSeller, setPosFilterSeller] = useState("all"); // "all" | seller name
+  const [posFilterType, setPosFilterType] = useState("all"); // "all" | "pdv" | "cdc"
+  const [posSearchQuery, setPosSearchQuery] = useState("");
+  const [posCurrentPage, setPosCurrentPage] = useState(1);
+  const [posPageSize, setPosPageSize] = useState(25);
   const [editingUser, setEditingUser] = useState(null);
 
   // IA Assistant States
@@ -799,36 +805,136 @@ export default function AdminPanel({
 
     if (activeTab === "cms") {
       try {
-        const res = await fetch(`/api/cms?type=${cmsTab}`, { headers });
-        if (res.ok) {
-          const data = await res.json();
-          if (cmsTab === "banners") setBannersList(data);
-          if (cmsTab === "dishes") setDishesList(data);
-          if (cmsTab === "jobs") setJobsList(data);
-          if (cmsTab === "blog") {
-            setBlogList(data);
-            try {
-              const aRes = await fetch("/api/cms?type=blog_authors", { headers });
-              if (aRes.ok) {
-                const aData = await aRes.json();
-                setAuthorsList(aData);
+        if (cmsTab === "pos") {
+          const pRes = await fetch("/api/points-of-sale?all=true", { headers });
+          if (pRes.ok) {
+            const pData = await pRes.json();
+            setPosList(pData);
+          }
+        } else {
+          const res = await fetch(`/api/cms?type=${cmsTab}`, { headers });
+          if (res.ok) {
+            const data = await res.json();
+            if (cmsTab === "banners") setBannersList(data);
+            if (cmsTab === "dishes") setDishesList(data);
+            if (cmsTab === "jobs") setJobsList(data);
+            if (cmsTab === "blog") {
+              setBlogList(data);
+              try {
+                const aRes = await fetch("/api/cms?type=blog_authors", { headers });
+                if (aRes.ok) {
+                  const aData = await aRes.json();
+                  setAuthorsList(aData);
+                }
+              } catch (aErr) {
+                console.error("Error loading authors in CMS:", aErr);
               }
-            } catch (aErr) {
-              console.error("Error loading authors in CMS:", aErr);
+            }
+            if (cmsTab === "applications") {
+              setJobApplicationsList(data);
+              try {
+                const jobsRes = await fetch("/api/cms?type=jobs", { headers });
+                if (jobsRes.ok) {
+                  const jobsData = await jobsRes.json();
+                  setJobsList(jobsData);
+                }
+              } catch (jobsErr) {
+                console.error("Error loading jobs fallback for applications:", jobsErr);
+              }
             }
           }
-          if (cmsTab === "pos") setPosList(data);
-          if (cmsTab === "applications") {
-            setJobApplicationsList(data);
-            // Also fetch jobs to map job_id to title in applications list
-            try {
-              const jobsRes = await fetch("/api/cms?type=jobs", { headers });
-              if (jobsRes.ok) {
-                const jobsData = await jobsRes.json();
-                setJobsList(jobsData);
+        }
+      } catch (e) {
+        console.error(`Error fetching CMS ${cmsTab}:`, e);
+      }
+    }
+
+    if (activeTab === "coupons" && (userHasRole("admin") || userHasRole("experience_manager"))) {
+      try {
+        const res = await fetch("/api/tourism", { headers });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.bookingsLog) setBookingsLog(data.bookingsLog);
+        }
+      } catch (e) {
+        console.error("Error fetching tours log:", e);
+      }
+    }
+
+    if (activeTab === "dashboard" || activeTab === "restaurant") {
+      try {
+        const res = await fetch("/api/nativo-booking", { headers });
+        if (res.ok) {
+          const data = await res.json();
+          setRestaurantBookings(data);
+        }
+      } catch (e) {
+        console.error("Error fetching restaurant bookings:", e);
+      }
+    }
+
+    if (activeTab === "audit" && userHasRole("admin")) {
+      try {
+        const res = await fetch("/api/auth?action=audit_logs", { headers });
+        if (res.ok) {
+          const data = await res.json();
+          setAuditLogs(data.logs || []);
+        }
+      } catch (e) {
+        console.error("Error fetching audit logs:", e);
+      }
+    }
+
+    if (activeTab === "users" && userHasRole("admin")) {
+      try {
+        const res = await fetch("/api/auth?action=list_users", { headers });
+        if (res.ok) {
+          const data = await res.json();
+          setUsersList(data.users || []);
+        }
+      } catch (e) {
+        console.error("Error fetching staff users:", e);
+      }
+    }
+
+    if (activeTab === "cms") {
+      try {
+        if (cmsTab === "pos") {
+          const pRes = await fetch("/api/points-of-sale?all=true", { headers });
+          if (pRes.ok) {
+            const pData = await pRes.json();
+            setPosList(pData);
+          }
+        } else {
+          const res = await fetch(`/api/cms?type=${cmsTab}`, { headers });
+          if (res.ok) {
+            const data = await res.json();
+            if (cmsTab === "banners") setBannersList(data);
+            if (cmsTab === "dishes") setDishesList(data);
+            if (cmsTab === "jobs") setJobsList(data);
+            if (cmsTab === "blog") {
+              setBlogList(data);
+              try {
+                const aRes = await fetch("/api/cms?type=blog_authors", { headers });
+                if (aRes.ok) {
+                  const aData = await aRes.json();
+                  setAuthorsList(aData);
+                }
+              } catch (aErr) {
+                console.error("Error loading authors in CMS:", aErr);
               }
-            } catch (jobsErr) {
-              console.error("Error loading jobs fallback for applications:", jobsErr);
+            }
+            if (cmsTab === "applications") {
+              setJobApplicationsList(data);
+              try {
+                const jobsRes = await fetch("/api/cms?type=jobs", { headers });
+                if (jobsRes.ok) {
+                  const jobsData = await jobsRes.json();
+                  setJobsList(jobsData);
+                }
+              } catch (jobsErr) {
+                console.error("Error loading jobs fallback for applications:", jobsErr);
+              }
             }
           }
         }
@@ -2140,6 +2246,14 @@ export default function AdminPanel({
     booleanFields.forEach(field => {
       payload[field] = data[field] === "true";
     });
+    // Sanitize optional and numeric fields to prevent database errors
+    payload.latitude = data.latitude && !isNaN(Number(data.latitude)) ? parseFloat(data.latitude) : null;
+    payload.longitude = data.longitude && !isNaN(Number(data.longitude)) ? parseFloat(data.longitude) : null;
+    payload.address = data.address ? data.address.trim() : null;
+    payload.postal_code = data.postal_code ? data.postal_code.trim() : null;
+    payload.phone = data.phone ? data.phone.trim() : null;
+    payload.maps_url = data.maps_url ? data.maps_url.trim() : null;
+    payload.fase = data.fase ? data.fase.trim() : null;
 
     try {
       const res = await fetch(`/api/points-of-sale`, {
@@ -5434,278 +5548,708 @@ export default function AdminPanel({
               )}
 
               {/* CMS E: Points of Sale (KAMs CRUD) */}
-              {cmsTab === "pos" && (
-                <div className="space-y-6">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h6 className="text-xs uppercase tracking-widest text-[#8C4723] font-bold">Puntos de Venta, Centros de Consumo & Distribuidores</h6>
-                      <p className="text-xs text-stone-400 mt-1">Permite a los Key Account Managers (KAMs) dar de alta y editar su catálogo de distribución de forma interactiva.</p>
-                    </div>
-                    <button
-                      onClick={() => setEditingPos({ retailer: "", name: "", address: "", region: "mx", is_active: true, pdv: true, cdc: false, cl: false, td: false, tz: false })}
-                      className="text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white px-3.5 py-2 font-semibold"
-                    >
-                      + Registrar Punto
-                    </button>
-                  </div>
+              {cmsTab === "pos" && (() => {
+                // Calculate unique sellers and statistics
+                const sellersMap = {};
+                posList.forEach(s => {
+                  const seller = (s.fase && s.fase.trim()) ? s.fase.trim() : "Sin Asignar";
+                  sellersMap[seller] = (sellersMap[seller] || 0) + 1;
+                });
+                const sortedSellers = Object.keys(sellersMap).sort((a, b) => a.localeCompare(b));
 
-                  {editingPos && (
-                    <form onSubmit={handleSavePos} className="bg-stone-50 border border-stone-200 p-6 space-y-4 max-w-xl mx-auto">
-                      <h6 className="font-serif text-sm font-bold text-stone-800 border-b border-stone-200 pb-1.5 uppercase">
-                        {editingPos.id ? "Editar Distribuidor" : "Registrar Distribuidor / Pdv"}
-                      </h6>
-                      
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Cadena / Retailer *</label>
-                          <input type="text" name="retailer" required defaultValue={editingPos.retailer} placeholder="Ej. El Palacio de Hierro" className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Nombre Sucursal / Establecimiento *</label>
-                          <input type="text" name="name" required defaultValue={editingPos.name} placeholder="Ej. Sucursal Providencia" className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" />
-                        </div>
-                      </div>
+                const totalMx = posList.filter(s => s.region === 'mx').length;
+                const totalUsa = posList.filter(s => s.region === 'usa').length;
+                const totalPdv = posList.filter(s => s.pdv).length;
+                const totalCdc = posList.filter(s => s.cdc).length;
 
+                // Filter points of sale
+                const filteredPosList = posList.filter(store => {
+                  if (posFilterRegion !== "all" && store.region !== posFilterRegion) return false;
+                  if (posFilterSeller !== "all") {
+                    const storeSeller = (store.fase && store.fase.trim()) ? store.fase.trim() : "Sin Asignar";
+                    if (storeSeller !== posFilterSeller) return false;
+                  }
+                  if (posFilterType === "pdv" && !store.pdv) return false;
+                  if (posFilterType === "cdc" && !store.cdc) return false;
+                  if (posSearchQuery.trim()) {
+                    const q = posSearchQuery.toLowerCase().trim();
+                    const matchName = store.name?.toLowerCase().includes(q);
+                    const matchRetailer = store.retailer?.toLowerCase().includes(q);
+                    const matchAddress = store.address?.toLowerCase().includes(q);
+                    const matchPostal = store.postal_code?.toLowerCase().includes(q);
+                    const matchSeller = store.fase?.toLowerCase().includes(q);
+                    if (!matchName && !matchRetailer && !matchAddress && !matchPostal && !matchSeller) return false;
+                  }
+                  return true;
+                });
+
+                // Pagination calculations
+                const totalPages = Math.max(1, Math.ceil(filteredPosList.length / posPageSize));
+                const currentPageClamped = Math.min(Math.max(1, posCurrentPage), totalPages);
+                const startIndex = (currentPageClamped - 1) * posPageSize;
+                const paginatedList = filteredPosList.slice(startIndex, startIndex + posPageSize);
+
+                const hasActiveFilters = posFilterRegion !== "all" || posFilterSeller !== "all" || posFilterType !== "all" || posSearchQuery.trim() !== "";
+
+                return (
+                  <div className="space-y-6">
+                    {/* Header with Title and Add Button */}
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 border border-stone-200/80 shadow-sm">
                       <div>
-                        <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Dirección Completa *</label>
-                        <input type="text" name="address" required defaultValue={editingPos.address} placeholder="Calle, Número, Colonia, Ciudad, Estado, País" className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" />
+                        <div className="flex items-center gap-2">
+                          <span className="material-symbols-outlined text-[#8C4723]">storefront</span>
+                          <h6 className="text-sm uppercase tracking-wider text-[#8C4723] font-bold">
+                            Puntos de Venta, Centros de Consumo & Distribuidores
+                          </h6>
+                        </div>
+                        <p className="text-xs text-stone-500 mt-1">
+                          Gestión interactiva de distribución global: consulta, filtra por país o vendedor y edita cualquier punto de venta.
+                        </p>
                       </div>
+                      <button
+                        onClick={() => {
+                          setEditingPos({
+                            retailer: "",
+                            name: "",
+                            address: "",
+                            region: posFilterRegion === "usa" ? "usa" : "mx",
+                            is_active: true,
+                            pdv: true,
+                            cdc: false,
+                            cl: false,
+                            td: false,
+                            tz: false,
+                            fase: user?.name || ""
+                          });
+                          window.scrollTo({ top: 300, behavior: 'smooth' });
+                        }}
+                        className="flex items-center gap-1.5 text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white px-4 py-2.5 font-semibold tracking-wider transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
+                      >
+                        <span className="material-symbols-outlined text-sm">add_circle</span>
+                        <span>Registrar Nuevo Punto</span>
+                      </button>
+                    </div>
 
-                      <div className="grid grid-cols-3 gap-3">
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Región *</label>
-                          <select 
-                            name="region" 
-                            value={editingPos.region || "mx"} 
-                            onChange={(e) => setEditingPos({ ...editingPos, region: e.target.value })}
-                            className="w-full bg-white border border-stone-200 p-2.5 text-xs"
+                    {/* Quick Metric Badges */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                      <div className="bg-white border border-stone-200 p-3 text-center">
+                        <span className="text-[10px] uppercase font-bold text-stone-400 block tracking-wider">Total en BD</span>
+                        <span className="text-xl font-bold text-stone-800 font-serif">{posList.length}</span>
+                      </div>
+                      <div 
+                        onClick={() => { setPosFilterRegion("mx"); setPosCurrentPage(1); }}
+                        className={`bg-white border p-3 text-center cursor-pointer transition-all hover:border-[#8C4723] ${posFilterRegion === "mx" ? "border-[#8C4723] ring-1 ring-[#8C4723]/30 bg-[#8C4723]/5" : "border-stone-200"}`}
+                      >
+                        <span className="text-[10px] uppercase font-bold text-stone-500 block tracking-wider">🇲🇽 México</span>
+                        <span className="text-xl font-bold text-[#8C4723] font-serif">{totalMx}</span>
+                      </div>
+                      <div 
+                        onClick={() => { setPosFilterRegion("usa"); setPosCurrentPage(1); }}
+                        className={`bg-white border p-3 text-center cursor-pointer transition-all hover:border-blue-600 ${posFilterRegion === "usa" ? "border-blue-600 ring-1 ring-blue-600/30 bg-blue-50/40" : "border-stone-200"}`}
+                      >
+                        <span className="text-[10px] uppercase font-bold text-stone-500 block tracking-wider">🇺🇸 USA</span>
+                        <span className="text-xl font-bold text-blue-700 font-serif">{totalUsa}</span>
+                      </div>
+                      <div 
+                        onClick={() => { setPosFilterType("pdv"); setPosCurrentPage(1); }}
+                        className={`bg-white border p-3 text-center cursor-pointer transition-all hover:border-[#2F403E] ${posFilterType === "pdv" ? "border-[#2F403E] ring-1 ring-[#2F403E]/30 bg-[#2F403E]/5" : "border-stone-200"}`}
+                      >
+                        <span className="text-[10px] uppercase font-bold text-stone-500 block tracking-wider">Ptos Venta (PDV)</span>
+                        <span className="text-xl font-bold text-[#2F403E] font-serif">{totalPdv}</span>
+                      </div>
+                      <div 
+                        onClick={() => { setPosFilterType("cdc"); setPosCurrentPage(1); }}
+                        className={`bg-white border p-3 text-center cursor-pointer transition-all hover:border-amber-700 ${posFilterType === "cdc" ? "border-amber-700 ring-1 ring-amber-700/30 bg-amber-50/40" : "border-stone-200"}`}
+                      >
+                        <span className="text-[10px] uppercase font-bold text-stone-500 block tracking-wider">Consumo (CDC)</span>
+                        <span className="text-xl font-bold text-amber-800 font-serif">{totalCdc}</span>
+                      </div>
+                      <div className="bg-white border border-stone-200 p-3 text-center">
+                        <span className="text-[10px] uppercase font-bold text-stone-400 block tracking-wider">Vendedores/KAMs</span>
+                        <span className="text-xl font-bold text-stone-700 font-serif">{sortedSellers.length}</span>
+                      </div>
+                    </div>
+
+                    {/* Filter & Search Bar */}
+                    <div className="bg-stone-50/80 border border-stone-200 p-4 space-y-3">
+                      <div className="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between">
+                        
+                        {/* Country / Region Filter */}
+                        <div className="flex items-center gap-2">
+                          <label className="text-[10px] uppercase font-bold text-stone-500 tracking-wider whitespace-nowrap">País:</label>
+                          <div className="inline-flex rounded border border-stone-200 bg-white p-0.5 shadow-xs">
+                            <button
+                              type="button"
+                              onClick={() => { setPosFilterRegion("all"); setPosCurrentPage(1); }}
+                              className={`px-2.5 py-1 text-xs font-semibold rounded-xs transition-colors cursor-pointer ${posFilterRegion === "all" ? "bg-[#2F403E] text-white" : "text-stone-600 hover:text-stone-900"}`}
+                            >
+                              Todos ({posList.length})
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => { setPosFilterRegion("mx"); setPosCurrentPage(1); }}
+                              className={`px-2.5 py-1 text-xs font-semibold rounded-xs transition-colors cursor-pointer ${posFilterRegion === "mx" ? "bg-[#8C4723] text-white" : "text-stone-600 hover:text-stone-900"}`}
+                            >
+                              🇲🇽 México ({totalMx})
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => { setPosFilterRegion("usa"); setPosCurrentPage(1); }}
+                              className={`px-2.5 py-1 text-xs font-semibold rounded-xs transition-colors cursor-pointer ${posFilterRegion === "usa" ? "bg-blue-700 text-white" : "text-stone-600 hover:text-stone-900"}`}
+                            >
+                              🇺🇸 USA ({totalUsa})
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Seller / KAM Filter */}
+                        <div className="flex items-center gap-2">
+                          <label className="text-[10px] uppercase font-bold text-stone-500 tracking-wider whitespace-nowrap">Vendedor / KAM:</label>
+                          <select
+                            value={posFilterSeller}
+                            onChange={(e) => { setPosFilterSeller(e.target.value); setPosCurrentPage(1); }}
+                            className="bg-white border border-stone-200 px-3 py-1.5 text-xs text-stone-800 rounded focus:outline-none focus:border-[#8C4723] cursor-pointer min-w-[200px]"
                           >
-                            <option value="mx">México (MX)</option>
-                            <option value="usa">Estados Unidos (USA)</option>
+                            <option value="all">👤 Todos los Vendedores ({posList.length})</option>
+                            {sortedSellers.map(seller => (
+                              <option key={seller} value={seller}>
+                                {seller} ({sellersMap[seller]})
+                              </option>
+                            ))}
                           </select>
                         </div>
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Código Postal</label>
-                          <input type="text" name="postal_code" defaultValue={editingPos.postal_code} placeholder="44630" className="w-full bg-white border border-stone-200 p-2 text-xs" />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Teléfono</label>
-                          <input type="text" name="phone" defaultValue={editingPos.phone} placeholder="+52 33..." className="w-full bg-white border border-stone-200 p-2 text-xs" />
-                        </div>
-                      </div>
 
-                      <div className="grid grid-cols-3 gap-3">
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Latitud (Coordenada)</label>
-                          <input type="number" step="0.000001" name="latitude" defaultValue={editingPos.latitude} placeholder="20.6908" className="w-full bg-white border border-stone-200 p-2 text-xs" />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Longitud (Coordenada)</label>
-                          <input type="number" step="0.000001" name="longitude" defaultValue={editingPos.longitude} placeholder="-103.3815" className="w-full bg-white border border-stone-200 p-2 text-xs" />
-                        </div>
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Google Maps URL</label>
-                          <input type="text" name="maps_url" defaultValue={editingPos.maps_url} placeholder="https://maps.google.com/?q=..." className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" />
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-3 gap-3 bg-stone-100/50 p-3">
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">KAM Asignado</label>
-                          <input type="text" name="fase" defaultValue={editingPos.fase || user?.name} className="w-full bg-white border border-stone-200 p-2 text-xs" />
-                        </div>
-                        <div className="flex flex-col justify-center">
-                          <span className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Tipo Punto</span>
-                          <div className="flex gap-3">
-                            <label className="flex items-center gap-1.5 text-xs text-stone-700">
-                              <input type="checkbox" name="pdv" value="true" defaultChecked={editingPos.pdv} /> PDV (Pto Venta)
-                            </label>
-                            <label className="flex items-center gap-1.5 text-xs text-stone-700">
-                              <input type="checkbox" name="cdc" value="true" defaultChecked={editingPos.cdc} /> CDC (Consumo)
-                            </label>
-                          </div>
-                        </div>
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Estatus del punto</label>
-                          <select name="is_active" defaultValue={editingPos.is_active ? "true" : "false"} className="w-full bg-white border border-stone-200 p-2 text-xs">
-                            <option value="true">Activo / Visible</option>
-                            <option value="false">Inactivo / Oculto</option>
+                        {/* Type Filter */}
+                        <div className="flex items-center gap-2">
+                          <label className="text-[10px] uppercase font-bold text-stone-500 tracking-wider whitespace-nowrap">Tipo:</label>
+                          <select
+                            value={posFilterType}
+                            onChange={(e) => { setPosFilterType(e.target.value); setPosCurrentPage(1); }}
+                            className="bg-white border border-stone-200 px-3 py-1.5 text-xs text-stone-800 rounded focus:outline-none focus:border-[#8C4723] cursor-pointer"
+                          >
+                            <option value="all">Todos los Tipos</option>
+                            <option value="pdv">Solo PDV (Pto Venta)</option>
+                            <option value="cdc">Solo CDC (Consumo)</option>
                           </select>
                         </div>
+
+                        {/* Search Input */}
+                        <div className="relative flex-1 min-w-[220px]">
+                          <span className="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400 text-base">search</span>
+                          <input
+                            type="text"
+                            value={posSearchQuery}
+                            onChange={(e) => { setPosSearchQuery(e.target.value); setPosCurrentPage(1); }}
+                            placeholder="Buscar por nombre, cadena, dirección..."
+                            className="w-full bg-white border border-stone-200 pl-8 pr-3 py-1.5 text-xs text-stone-800 rounded focus:outline-none focus:border-[#8C4723]"
+                          />
+                          {posSearchQuery && (
+                            <button
+                              onClick={() => { setPosSearchQuery(""); setPosCurrentPage(1); }}
+                              className="absolute right-2 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 text-xs cursor-pointer"
+                            >
+                              ✕
+                            </button>
+                          )}
+                        </div>
+
                       </div>
 
-                      {/* Region-aware Product/Brand existence */}
-                      {editingPos.region === "usa" ? (
-                        <div className="border-t border-stone-200 pt-3 space-y-2">
-                          <div className="flex justify-between items-center">
-                            <span className="text-[10px] font-bold text-stone-500 uppercase block">Existencia por Marca (USA):</span>
-                            <span className="text-[9px] bg-blue-50 text-blue-700 font-semibold px-2 py-0.5 rounded border border-blue-200/50">
-                              Búsqueda por Marca activa (sin categorías en USA)
-                            </span>
-                          </div>
-                          
-                          <div className="grid grid-cols-3 gap-3 text-xs bg-white p-3 border border-stone-200/40">
-                            <label className="flex items-center gap-2 p-2 border border-stone-200 rounded cursor-pointer hover:bg-stone-50 transition-colors">
-                              <input 
-                                type="checkbox" 
-                                name="cl" 
-                                value="true" 
-                                defaultChecked={editingPos.cl || editingPos.casa_loy_blanco || editingPos.casa_loy_reposado || (editingPos.brands && editingPos.brands.includes('casa-loy'))} 
-                                className="accent-[#8C4723] w-4 h-4 cursor-pointer"
-                              />
-                              <div>
-                                <span className="font-bold text-[#8C4723] block text-xs">CL</span>
-                                <span className="text-[10px] text-stone-500">Casa Loy</span>
-                              </div>
-                            </label>
-
-                            <label className="flex items-center gap-2 p-2 border border-stone-200 rounded cursor-pointer hover:bg-stone-50 transition-colors">
-                              <input 
-                                type="checkbox" 
-                                name="td" 
-                                value="true" 
-                                defaultChecked={editingPos.td || editingPos.taddel_plata || editingPos.taddel_reposado || (editingPos.brands && editingPos.brands.includes('taddel'))} 
-                                className="accent-[#2F403E] w-4 h-4 cursor-pointer"
-                              />
-                              <div>
-                                <span className="font-bold text-[#2F403E] block text-xs">TD</span>
-                                <span className="text-[10px] text-stone-500">TADDEL</span>
-                              </div>
-                            </label>
-
-                            <label className="flex items-center gap-2 p-2 border border-stone-200 rounded cursor-pointer hover:bg-stone-50 transition-colors">
-                              <input 
-                                type="checkbox" 
-                                name="tz" 
-                                value="true" 
-                                defaultChecked={editingPos.tz || editingPos.tierra_zafiro_blanco || editingPos.tierra_zafiro_reposado || (editingPos.brands && editingPos.brands.includes('tierra-zafiro'))} 
-                                className="accent-stone-700 w-4 h-4 cursor-pointer"
-                              />
-                              <div>
-                                <span className="font-bold text-stone-700 block text-xs">TZ</span>
-                                <span className="text-[10px] text-stone-500">Tierra Zafiro</span>
-                              </div>
-                            </label>
-                          </div>
+                      {/* Active Filter Badges & Reset Button */}
+                      <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-stone-200/50 text-xs">
+                        <div className="text-stone-500 flex items-center gap-2">
+                          <span>
+                            Mostrando <strong className="text-stone-900">{filteredPosList.length === 0 ? 0 : startIndex + 1}</strong> a <strong className="text-stone-900">{Math.min(startIndex + posPageSize, filteredPosList.length)}</strong> de <strong className="text-stone-900">{filteredPosList.length}</strong> puntos filtrados
+                            {filteredPosList.length !== posList.length && (
+                              <span className="text-stone-400 ml-1">(de un total de {posList.length})</span>
+                            )}
+                          </span>
                         </div>
-                      ) : (
-                        <div className="border-t border-stone-200 pt-3 space-y-2">
-                          <div className="flex justify-between items-center">
-                            <span className="text-[10px] font-bold text-stone-500 uppercase block">Existencia de Producto por Categoría (México):</span>
-                            <span className="text-[9px] bg-amber-50 text-[#8C4723] font-semibold px-2 py-0.5 rounded border border-amber-200/50">
-                              Categorías activas para MX
-                            </span>
-                          </div>
-                          
-                          <div className="grid grid-cols-3 gap-3 text-xs bg-white p-3 border border-stone-200/40">
-                            {/* Casa Loy products */}
-                            <div className="space-y-1">
-                              <span className="font-bold text-[#8C4723] block text-[10px] uppercase">CASA LOY (CL)</span>
-                              <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_blanco" value="true" defaultChecked={editingPos.casa_loy_blanco}/> Blanco</label>
-                              <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_reposado" value="true" defaultChecked={editingPos.casa_loy_reposado}/> Reposado</label>
-                              <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_cristalino" value="true" defaultChecked={editingPos.casa_loy_cristalino}/> Cristalino</label>
-                              <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_anejo" value="true" defaultChecked={editingPos.casa_loy_anejo}/> Añejo</label>
-                              <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_piedra_y_agave_blanco" value="true" defaultChecked={editingPos.casa_loy_piedra_y_agave_blanco}/> Piedra/Agave B.</label>
-                              <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_piedra_y_agave_reposado" value="true" defaultChecked={editingPos.casa_loy_piedra_y_agave_reposado}/> Piedra/Agave R.</label>
-                            </div>
 
-                            {/* Taddel products */}
-                            <div className="space-y-1">
-                              <span className="font-bold text-[#2F403E] block text-[10px] uppercase">TADDEL (TD)</span>
-                              <label className="flex items-center gap-1.5"><input type="checkbox" name="taddel_plata" value="true" defaultChecked={editingPos.taddel_plata}/> Plata</label>
-                              <label className="flex items-center gap-1.5"><input type="checkbox" name="taddel_reposado" value="true" defaultChecked={editingPos.taddel_reposado}/> Reposado</label>
-                              <label className="flex items-center gap-1.5"><input type="checkbox" name="taddel_cristalino" value="true" defaultChecked={editingPos.taddel_cristalino}/> Cristalino</label>
-                            </div>
-
-                            {/* Tierra Zafiro products */}
-                            <div className="space-y-1">
-                              <span className="font-bold text-stone-700 block text-[10px] uppercase">TIERRA ZAFIRO (TZ)</span>
-                              <label className="flex items-center gap-1.5"><input type="checkbox" name="tierra_zafiro_blanco" value="true" defaultChecked={editingPos.tierra_zafiro_blanco}/> Blanco</label>
-                              <label className="flex items-center gap-1.5"><input type="checkbox" name="tierra_zafiro_blanco_100_pure" value="true" defaultChecked={editingPos.tierra_zafiro_blanco_100_pure}/> Blanco 100% P.</label>
-                              <label className="flex items-center gap-1.5"><input type="checkbox" name="tierra_zafiro_reposado" value="true" defaultChecked={editingPos.tierra_zafiro_reposado}/> Reposado</label>
-                              <label className="flex items-center gap-1.5"><input type="checkbox" name="tierra_zafiro_cristalino" value="true" defaultChecked={editingPos.tierra_zafiro_cristalino}/> Cristalino</label>
-                            </div>
+                        <div className="flex items-center gap-3">
+                          {/* Page Size Selector */}
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px] uppercase font-bold text-stone-400">Por página:</span>
+                            <select
+                              value={posPageSize}
+                              onChange={(e) => { setPosPageSize(Number(e.target.value)); setPosCurrentPage(1); }}
+                              className="bg-white border border-stone-200 px-2 py-0.5 text-xs text-stone-700 rounded"
+                            >
+                              <option value={25}>25</option>
+                              <option value={50}>50</option>
+                              <option value={100}>100</option>
+                            </select>
                           </div>
+
+                          {hasActiveFilters && (
+                            <button
+                              onClick={() => {
+                                setPosFilterRegion("all");
+                                setPosFilterSeller("all");
+                                setPosFilterType("all");
+                                setPosSearchQuery("");
+                                setPosCurrentPage(1);
+                              }}
+                              className="text-[11px] text-[#8C4723] hover:text-[#6a351a] font-semibold underline flex items-center gap-1 cursor-pointer"
+                            >
+                              <span className="material-symbols-outlined text-xs">filter_alt_off</span>
+                              Limpiar Filtros
+                            </button>
+                          )}
                         </div>
-                      )}
-
-                      <div className="flex gap-2 justify-end pt-3">
-                        <button type="button" onClick={() => setEditingPos(null)} className="px-3.5 py-1.5 text-xs border border-stone-200 cursor-pointer">Cancelar</button>
-                        <button type="submit" className="px-3.5 py-1.5 text-xs bg-[#8C4723] text-white font-semibold cursor-pointer font-sans">Guardar Registro</button>
                       </div>
-                    </form>
-                  )}
+                    </div>
 
-                  {/* List of POS */}
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs border-collapse font-sans">
-                      <thead>
-                        <tr className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[9px] border-b border-stone-200 font-semibold">
-                          <th className="p-3">Establecimiento</th>
-                          <th className="p-3">Cadena</th>
-                          <th className="p-3">Dirección</th>
-                          <th className="p-3">Región</th>
-                          <th className="p-3 text-center">Marcas</th>
-                          <th className="p-3">KAM / Asesor</th>
-                          <th className="p-3 text-center">Tipo</th>
-                          <th className="p-3 text-center">Acciones</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-stone-100">
-                        {posList.length === 0 ? (
-                          <tr>
-                            <td colSpan="8" className="p-8 text-center text-stone-400 italic">No hay distribuidores registrados en Supabase (mostrando fallbacks locales).</td>
-                          </tr>
-                        ) : (
-                          posList.map(store => {
-                            const hasCl = Boolean(store.cl || store.casa_loy_blanco || store.casa_loy_reposado || store.casa_loy_cristalino || store.casa_loy_anejo || store.casa_loy_piedra_y_agave_blanco || store.casa_loy_piedra_y_agave_reposado || (store.brands && store.brands.includes('casa-loy')));
-                            const hasTd = Boolean(store.td || store.taddel_plata || store.taddel_reposado || store.taddel_cristalino || (store.brands && store.brands.includes('taddel')));
-                            const hasTz = Boolean(store.tz || store.tierra_zafiro_blanco || store.tierra_zafiro_blanco_100_pure || store.tierra_zafiro_reposado || store.tierra_zafiro_cristalino || (store.brands && store.brands.includes('tierra-zafiro')));
+                    {/* Edit / Create Form Modal */}
+                    {editingPos && (
+                      <div id="pos-edit-form" className="bg-stone-50 border-2 border-[#8C4723]/30 p-6 space-y-4 max-w-2xl mx-auto shadow-lg animate-fade-in">
+                        <div className="flex justify-between items-center border-b border-stone-200 pb-2">
+                          <h6 className="font-serif text-base font-bold text-stone-800 uppercase flex items-center gap-2">
+                            <span className="material-symbols-outlined text-[#8C4723]">{editingPos.id ? "edit" : "add_business"}</span>
+                            {editingPos.id ? `Editar Distribuidor: ${editingPos.name || ""}` : "Registrar Nuevo Punto de Venta"}
+                          </h6>
+                          <button
+                            type="button"
+                            onClick={() => setEditingPos(null)}
+                            className="text-stone-400 hover:text-stone-600 text-lg cursor-pointer leading-none p-1"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                        
+                        <form onSubmit={handleSavePos} className="space-y-4">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Cadena / Retailer *</label>
+                              <input 
+                                type="text" 
+                                name="retailer" 
+                                required 
+                                defaultValue={editingPos.retailer || ""} 
+                                placeholder="Ej. El Palacio de Hierro / 107 Liquor" 
+                                className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none focus:border-[#8C4723]" 
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Nombre Establecimiento / Sucursal *</label>
+                              <input 
+                                type="text" 
+                                name="name" 
+                                required 
+                                defaultValue={editingPos.name || ""} 
+                                placeholder="Ej. Sucursal Providencia" 
+                                className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none focus:border-[#8C4723]" 
+                              />
+                            </div>
+                          </div>
 
-                            return (
-                              <tr key={store.id} className="hover:bg-stone-50/40 text-stone-700">
-                                <td className="p-3 font-semibold text-stone-900">{store.name}</td>
-                                <td className="p-3 font-medium">{store.retailer}</td>
-                                <td className="p-3 text-stone-500 max-w-xs truncate" title={store.address}>{store.address}</td>
-                                <td className="p-3 uppercase font-bold text-stone-500">{store.region}</td>
-                                <td className="p-3 text-center whitespace-nowrap">
-                                  <div className="inline-flex gap-1 items-center justify-center">
-                                    {hasCl && (
-                                      <span className="bg-[#8C4723]/15 text-[#8C4723] font-bold text-[9px] px-1.5 py-0.5 rounded" title="Casa Loy">CL</span>
-                                    )}
-                                    {hasTd && (
-                                      <span className="bg-[#2F403E]/15 text-[#2F403E] font-bold text-[9px] px-1.5 py-0.5 rounded" title="TADDEL">TD</span>
-                                    )}
-                                    {hasTz && (
-                                      <span className="bg-stone-600/15 text-stone-700 font-bold text-[9px] px-1.5 py-0.5 rounded" title="Tierra Zafiro">TZ</span>
-                                    )}
-                                    {!hasCl && !hasTd && !hasTz && (
-                                      <span className="text-stone-300 text-[9px] italic">-</span>
-                                    )}
+                          <div>
+                            <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Dirección Completa (Opcional)</label>
+                            <input 
+                              type="text" 
+                              name="address" 
+                              defaultValue={editingPos.address || ""} 
+                              placeholder="Calle, Número, Colonia, Ciudad, Estado, País" 
+                              className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none focus:border-[#8C4723]" 
+                            />
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div>
+                              <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">País / Región *</label>
+                              <select 
+                                name="region" 
+                                value={editingPos.region || "mx"} 
+                                onChange={(e) => setEditingPos({ ...editingPos, region: e.target.value })}
+                                className="w-full bg-white border border-stone-200 p-2 text-xs font-semibold focus:outline-none focus:border-[#8C4723]"
+                              >
+                                <option value="mx">🇲🇽 México (MX)</option>
+                                <option value="usa">🇺🇸 Estados Unidos (USA)</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Código Postal</label>
+                              <input 
+                                type="text" 
+                                name="postal_code" 
+                                defaultValue={editingPos.postal_code || ""} 
+                                placeholder="44630 / 72120" 
+                                className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" 
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Teléfono</label>
+                              <input 
+                                type="text" 
+                                name="phone" 
+                                defaultValue={editingPos.phone || ""} 
+                                placeholder="+52 33... / +1 555..." 
+                                className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" 
+                              />
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div>
+                              <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Latitud (Coordenada)</label>
+                              <input 
+                                type="number" 
+                                step="any" 
+                                name="latitude" 
+                                defaultValue={editingPos.latitude ?? ""} 
+                                placeholder="34.8328178" 
+                                className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" 
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Longitud (Coordenada)</label>
+                              <input 
+                                type="number" 
+                                step="any" 
+                                name="longitude" 
+                                defaultValue={editingPos.longitude ?? ""} 
+                                placeholder="-92.2326974" 
+                                className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" 
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Google Maps URL</label>
+                              <input 
+                                type="text" 
+                                name="maps_url" 
+                                defaultValue={editingPos.maps_url || ""} 
+                                placeholder="https://maps.app.goo.gl/..." 
+                                className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" 
+                              />
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-stone-100/70 p-3 rounded">
+                            <div>
+                              <label className="block text-[10px] text-stone-600 uppercase font-bold mb-1">Vendedor / KAM Asignado</label>
+                              <input 
+                                type="text" 
+                                name="fase" 
+                                defaultValue={editingPos.fase || user?.name || ""} 
+                                placeholder="Ej. Sofia Mejia" 
+                                className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" 
+                              />
+                            </div>
+                            <div>
+                              <span className="block text-[10px] text-stone-600 uppercase font-bold mb-1">Tipo de Establecimiento</span>
+                              <div className="flex gap-4 pt-1">
+                                <label className="flex items-center gap-1.5 text-xs text-stone-700 cursor-pointer font-medium">
+                                  <input type="checkbox" name="pdv" value="true" defaultChecked={Boolean(editingPos.pdv)} className="accent-[#8C4723]" /> PDV (Venta)
+                                </label>
+                                <label className="flex items-center gap-1.5 text-xs text-stone-700 cursor-pointer font-medium">
+                                  <input type="checkbox" name="cdc" value="true" defaultChecked={Boolean(editingPos.cdc)} className="accent-[#2F403E]" /> CDC (Consumo)
+                                </label>
+                              </div>
+                            </div>
+                            <div>
+                              <label className="block text-[10px] text-stone-600 uppercase font-bold mb-1">Estatus del Punto</label>
+                              <select 
+                                name="is_active" 
+                                defaultValue={editingPos.is_active ? "true" : "false"} 
+                                className="w-full bg-white border border-stone-200 p-2 text-xs font-semibold focus:outline-none"
+                              >
+                                <option value="true">🟢 Activo / Visible</option>
+                                <option value="false">🔴 Inactivo / Oculto</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          {/* Brand / Product existence */}
+                          {editingPos.region === "usa" ? (
+                            <div className="border border-blue-200/70 bg-blue-50/20 p-3 rounded space-y-2">
+                              <div className="flex justify-between items-center">
+                                <span className="text-[10px] font-bold text-blue-900 uppercase tracking-wider block">Existencia por Marca (USA):</span>
+                                <span className="text-[9px] bg-blue-100 text-blue-800 font-semibold px-2 py-0.5 rounded border border-blue-200">
+                                  Búsqueda por Marca activa para USA
+                                </span>
+                              </div>
+                              
+                              <div className="grid grid-cols-3 gap-3 text-xs bg-white p-3 border border-stone-200 rounded">
+                                <label className="flex items-center gap-2 p-2 border border-stone-200 rounded cursor-pointer hover:bg-stone-50 transition-colors">
+                                  <input 
+                                    type="checkbox" 
+                                    name="cl" 
+                                    value="true" 
+                                    defaultChecked={Boolean(editingPos.cl || editingPos.casa_loy_blanco || editingPos.casa_loy_reposado || (editingPos.brands && editingPos.brands.includes('casa-loy')))} 
+                                    className="accent-[#8C4723] w-4 h-4 cursor-pointer"
+                                  />
+                                  <div>
+                                    <span className="font-bold text-[#8C4723] block text-xs">CL</span>
+                                    <span className="text-[10px] text-stone-500">Casa Loy</span>
                                   </div>
-                                </td>
-                                <td className="p-3 text-stone-600 font-medium">{store.fase}</td>
-                                <td className="p-3 text-center">
-                                  <span className="bg-[#8C4723]/10 text-[#8C4723] px-2 py-0.5 text-[10px] font-bold rounded-sm mr-1">
-                                    {store.pdv ? 'PDV' : ''}
-                                  </span>
-                                  <span className="bg-[#2F403E]/10 text-[#2F403E] px-2 py-0.5 text-[10px] font-bold rounded-sm">
-                                    {store.cdc ? 'CDC' : ''}
-                                  </span>
-                                </td>
-                                <td className="p-3 text-center space-x-2 whitespace-nowrap">
-                                  <button onClick={() => setEditingPos(store)} className="text-blue-700 hover:underline font-bold uppercase cursor-pointer">Editar</button>
-                                  <button onClick={() => handleDeletePos(store.id)} className="text-red-700 hover:underline font-bold uppercase cursor-pointer">Eliminar</button>
+                                </label>
+
+                                <label className="flex items-center gap-2 p-2 border border-stone-200 rounded cursor-pointer hover:bg-stone-50 transition-colors">
+                                  <input 
+                                    type="checkbox" 
+                                    name="td" 
+                                    value="true" 
+                                    defaultChecked={Boolean(editingPos.td || editingPos.taddel_plata || editingPos.taddel_reposado || (editingPos.brands && editingPos.brands.includes('taddel')))} 
+                                    className="accent-[#2F403E] w-4 h-4 cursor-pointer"
+                                  />
+                                  <div>
+                                    <span className="font-bold text-[#2F403E] block text-xs">TD</span>
+                                    <span className="text-[10px] text-stone-500">TADDEL</span>
+                                  </div>
+                                </label>
+
+                                <label className="flex items-center gap-2 p-2 border border-stone-200 rounded cursor-pointer hover:bg-stone-50 transition-colors">
+                                  <input 
+                                    type="checkbox" 
+                                    name="tz" 
+                                    value="true" 
+                                    defaultChecked={Boolean(editingPos.tz || editingPos.tierra_zafiro_blanco || editingPos.tierra_zafiro_reposado || (editingPos.brands && editingPos.brands.includes('tierra-zafiro')))} 
+                                    className="accent-stone-700 w-4 h-4 cursor-pointer"
+                                  />
+                                  <div>
+                                    <span className="font-bold text-stone-700 block text-xs">TZ</span>
+                                    <span className="text-[10px] text-stone-500">Tierra Zafiro</span>
+                                  </div>
+                                </label>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="border border-stone-200 bg-white p-3 rounded space-y-2">
+                              <div className="flex justify-between items-center">
+                                <span className="text-[10px] font-bold text-[#8C4723] uppercase tracking-wider block">Existencia de Producto por Categoría (México):</span>
+                                <span className="text-[9px] bg-amber-50 text-[#8C4723] font-semibold px-2 py-0.5 rounded border border-amber-200">
+                                  Categorías activas para México
+                                </span>
+                              </div>
+                              
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs bg-stone-50/50 p-3 border border-stone-200/70 rounded">
+                                <div className="space-y-1">
+                                  <span className="font-bold text-[#8C4723] block text-[10px] uppercase">CASA LOY (CL)</span>
+                                  <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_blanco" value="true" defaultChecked={Boolean(editingPos.casa_loy_blanco)}/> Blanco</label>
+                                  <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_reposado" value="true" defaultChecked={Boolean(editingPos.casa_loy_reposado)}/> Reposado</label>
+                                  <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_cristalino" value="true" defaultChecked={Boolean(editingPos.casa_loy_cristalino)}/> Cristalino</label>
+                                  <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_anejo" value="true" defaultChecked={Boolean(editingPos.casa_loy_anejo)}/> Añejo</label>
+                                  <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_piedra_y_agave_blanco" value="true" defaultChecked={Boolean(editingPos.casa_loy_piedra_y_agave_blanco)}/> Piedra/Agave B.</label>
+                                  <label className="flex items-center gap-1.5"><input type="checkbox" name="casa_loy_piedra_y_agave_reposado" value="true" defaultChecked={Boolean(editingPos.casa_loy_piedra_y_agave_reposado)}/> Piedra/Agave R.</label>
+                                </div>
+
+                                <div className="space-y-1">
+                                  <span className="font-bold text-[#2F403E] block text-[10px] uppercase">TADDEL (TD)</span>
+                                  <label className="flex items-center gap-1.5"><input type="checkbox" name="taddel_plata" value="true" defaultChecked={Boolean(editingPos.taddel_plata)}/> Plata</label>
+                                  <label className="flex items-center gap-1.5"><input type="checkbox" name="taddel_reposado" value="true" defaultChecked={Boolean(editingPos.taddel_reposado)}/> Reposado</label>
+                                  <label className="flex items-center gap-1.5"><input type="checkbox" name="taddel_cristalino" value="true" defaultChecked={Boolean(editingPos.taddel_cristalino)}/> Cristalino</label>
+                                </div>
+
+                                <div className="space-y-1">
+                                  <span className="font-bold text-stone-700 block text-[10px] uppercase">TIERRA ZAFIRO (TZ)</span>
+                                  <label className="flex items-center gap-1.5"><input type="checkbox" name="tierra_zafiro_blanco" value="true" defaultChecked={Boolean(editingPos.tierra_zafiro_blanco)}/> Blanco</label>
+                                  <label className="flex items-center gap-1.5"><input type="checkbox" name="tierra_zafiro_blanco_100_pure" value="true" defaultChecked={Boolean(editingPos.tierra_zafiro_blanco_100_pure)}/> Blanco 100% P.</label>
+                                  <label className="flex items-center gap-1.5"><input type="checkbox" name="tierra_zafiro_reposado" value="true" defaultChecked={Boolean(editingPos.tierra_zafiro_reposado)}/> Reposado</label>
+                                  <label className="flex items-center gap-1.5"><input type="checkbox" name="tierra_zafiro_cristalino" value="true" defaultChecked={Boolean(editingPos.tierra_zafiro_cristalino)}/> Cristalino</label>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
+                          <div className="flex gap-2 justify-end pt-3 border-t border-stone-200">
+                            <button 
+                              type="button" 
+                              onClick={() => setEditingPos(null)} 
+                              className="px-4 py-2 text-xs border border-stone-300 text-stone-700 hover:bg-stone-100 font-semibold cursor-pointer transition-colors"
+                            >
+                              Cancelar
+                            </button>
+                            <button 
+                              type="submit" 
+                              className="px-5 py-2 text-xs bg-[#8C4723] hover:bg-[#6e3518] text-white font-semibold cursor-pointer shadow-sm transition-colors"
+                            >
+                              {editingPos.id ? "Guardar Modificaciones" : "Guardar Nuevo Registro"}
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    )}
+
+                    {/* Table View of Points of Sale */}
+                    <div className="bg-white border border-stone-200 shadow-sm overflow-hidden">
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left text-xs border-collapse font-sans">
+                          <thead>
+                            <tr className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[9px] border-b border-stone-200 font-semibold">
+                              <th className="p-3">Establecimiento & Cadena</th>
+                              <th className="p-3">Dirección & C.P.</th>
+                              <th className="p-3 text-center">País</th>
+                              <th className="p-3 text-center">Marcas</th>
+                              <th className="p-3">Vendedor / KAM</th>
+                              <th className="p-3 text-center">Tipo</th>
+                              <th className="p-3 text-center">Estatus</th>
+                              <th className="p-3 text-center">Acciones</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-stone-100">
+                            {paginatedList.length === 0 ? (
+                              <tr>
+                                <td colSpan="8" className="p-10 text-center text-stone-400 italic">
+                                  {posList.length === 0 ? (
+                                    <div className="flex flex-col items-center gap-2">
+                                      <span className="material-symbols-outlined text-3xl text-stone-300">hourglass_empty</span>
+                                      <span>Cargando puntos de venta desde la base de datos...</span>
+                                    </div>
+                                  ) : (
+                                    <div className="flex flex-col items-center gap-2">
+                                      <span className="material-symbols-outlined text-3xl text-stone-300">search_off</span>
+                                      <span>No se encontraron puntos de venta con los filtros seleccionados.</span>
+                                      <button
+                                        onClick={() => {
+                                          setPosFilterRegion("all");
+                                          setPosFilterSeller("all");
+                                          setPosFilterType("all");
+                                          setPosSearchQuery("");
+                                          setPosCurrentPage(1);
+                                        }}
+                                        className="text-xs text-[#8C4723] underline font-semibold mt-1 cursor-pointer"
+                                      >
+                                        Restablecer todos los filtros
+                                      </button>
+                                    </div>
+                                  )}
                                 </td>
                               </tr>
-                            );
-                          })
-                        )}
-                      </tbody>
-                    </table>
+                            ) : (
+                              paginatedList.map(store => {
+                                const hasCl = Boolean(store.cl || store.casa_loy_blanco || store.casa_loy_reposado || store.casa_loy_cristalino || store.casa_loy_anejo || store.casa_loy_piedra_y_agave_blanco || store.casa_loy_piedra_y_agave_reposado || (store.brands && store.brands.includes('casa-loy')));
+                                const hasTd = Boolean(store.td || store.taddel_plata || store.taddel_reposado || store.taddel_cristalino || (store.brands && store.brands.includes('taddel')));
+                                const hasTz = Boolean(store.tz || store.tierra_zafiro_blanco || store.tierra_zafiro_blanco_100_pure || store.tierra_zafiro_reposado || store.tierra_zafiro_cristalino || (store.brands && store.brands.includes('tierra-zafiro')));
+
+                                return (
+                                  <tr key={store.id} className="hover:bg-stone-50/70 text-stone-700 transition-colors">
+                                    <td className="p-3">
+                                      <div className="font-bold text-stone-900 text-xs">{store.name}</div>
+                                      <div className="text-[10px] text-stone-400 font-medium">{store.retailer}</div>
+                                    </td>
+                                    <td className="p-3 max-w-xs">
+                                      <div className="truncate text-stone-600 text-xs" title={store.address || "Sin dirección fija"}>
+                                        {store.address || <span className="text-stone-300 italic">Sin dirección física</span>}
+                                      </div>
+                                      {store.postal_code && (
+                                        <div className="text-[10px] text-stone-400">C.P. {store.postal_code}</div>
+                                      )}
+                                    </td>
+                                    <td className="p-3 text-center whitespace-nowrap">
+                                      {store.region === 'usa' ? (
+                                        <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-800 border border-blue-200 px-2 py-0.5 rounded text-[10px] font-bold">
+                                          🇺🇸 USA
+                                        </span>
+                                      ) : (
+                                        <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded text-[10px] font-bold">
+                                          🇲🇽 MX
+                                        </span>
+                                      )}
+                                    </td>
+                                    <td className="p-3 text-center whitespace-nowrap">
+                                      <div className="inline-flex gap-1 items-center justify-center">
+                                        {hasCl && (
+                                          <span className="bg-[#8C4723]/15 text-[#8C4723] font-bold text-[9px] px-1.5 py-0.5 rounded" title="Casa Loy">CL</span>
+                                        )}
+                                        {hasTd && (
+                                          <span className="bg-[#2F403E]/15 text-[#2F403E] font-bold text-[9px] px-1.5 py-0.5 rounded" title="TADDEL">TD</span>
+                                        )}
+                                        {hasTz && (
+                                          <span className="bg-stone-600/15 text-stone-700 font-bold text-[9px] px-1.5 py-0.5 rounded" title="Tierra Zafiro">TZ</span>
+                                        )}
+                                        {!hasCl && !hasTd && !hasTz && (
+                                          <span className="text-stone-300 text-[9px] italic">-</span>
+                                        )}
+                                      </div>
+                                    </td>
+                                    <td className="p-3 font-medium whitespace-nowrap">
+                                      <span className="text-stone-800">{store.fase || <span className="text-stone-400 italic">Sin asignar</span>}</span>
+                                    </td>
+                                    <td className="p-3 text-center whitespace-nowrap">
+                                      {store.pdv && (
+                                        <span className="bg-[#8C4723]/10 text-[#8C4723] border border-[#8C4723]/20 px-1.5 py-0.5 text-[9px] font-bold rounded mr-1">
+                                          PDV
+                                        </span>
+                                      )}
+                                      {store.cdc && (
+                                        <span className="bg-[#2F403E]/10 text-[#2F403E] border border-[#2F403E]/20 px-1.5 py-0.5 text-[9px] font-bold rounded">
+                                          CDC
+                                        </span>
+                                      )}
+                                    </td>
+                                    <td className="p-3 text-center whitespace-nowrap">
+                                      {store.is_active ? (
+                                        <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[9px] font-bold px-1.5 py-0.5 rounded">
+                                          Activo
+                                        </span>
+                                      ) : (
+                                        <span className="bg-stone-100 text-stone-400 border border-stone-200 text-[9px] font-bold px-1.5 py-0.5 rounded">
+                                          Inactivo
+                                        </span>
+                                      )}
+                                    </td>
+                                    <td className="p-3 text-center space-x-2 whitespace-nowrap">
+                                      <button 
+                                        onClick={() => {
+                                          setEditingPos(store);
+                                          const el = document.getElementById("pos-edit-form");
+                                          if (el) el.scrollIntoView({ behavior: 'smooth' });
+                                          else window.scrollTo({ top: 300, behavior: 'smooth' });
+                                        }} 
+                                        className="inline-flex items-center gap-0.5 text-blue-700 hover:text-blue-900 font-bold uppercase text-[10px] cursor-pointer"
+                                      >
+                                        <span className="material-symbols-outlined text-xs">edit</span>
+                                        <span>Editar</span>
+                                      </button>
+                                      <button 
+                                        onClick={() => handleDeletePos(store.id)} 
+                                        className="inline-flex items-center gap-0.5 text-red-600 hover:text-red-800 font-bold uppercase text-[10px] cursor-pointer"
+                                      >
+                                        <span className="material-symbols-outlined text-xs">delete</span>
+                                        <span>Eliminar</span>
+                                      </button>
+                                    </td>
+                                  </tr>
+                                );
+                              })
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+
+                      {/* Pagination Controls */}
+                      {totalPages > 1 && (
+                        <div className="flex items-center justify-between px-4 py-3 bg-stone-50 border-t border-stone-200 text-xs">
+                          <button
+                            onClick={() => setPosCurrentPage(prev => Math.max(prev - 1, 1))}
+                            disabled={currentPageClamped <= 1}
+                            className="flex items-center gap-1 px-3 py-1.5 border border-stone-300 rounded bg-white text-stone-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 transition-colors cursor-pointer"
+                          >
+                            <span className="material-symbols-outlined text-sm">chevron_left</span>
+                            <span>Anterior</span>
+                          </button>
+
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-stone-500">Página</span>
+                            <span className="font-bold text-stone-900">{currentPageClamped}</span>
+                            <span className="text-stone-500">de</span>
+                            <span className="font-bold text-stone-900">{totalPages}</span>
+                          </div>
+
+                          <button
+                            onClick={() => setPosCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                            disabled={currentPageClamped >= totalPages}
+                            className="flex items-center gap-1 px-3 py-1.5 border border-stone-300 rounded bg-white text-stone-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 transition-colors cursor-pointer"
+                          >
+                            <span>Siguiente</span>
+                            <span className="material-symbols-outlined text-sm">chevron_right</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                );
+              })()}
             </div>
           )}
 

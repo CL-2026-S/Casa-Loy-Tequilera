@@ -146,6 +146,17 @@ export default async function handler(req, res) {
         return res.status(200).json(data);
       }
 
+      // Fetch Points of Sale (CMS pos)
+      if (type === 'pos') {
+        const { data, error } = await supabase
+          .from('points_of_sale')
+          .select('*')
+          .order('name', { ascending: true });
+
+        if (error) throw error;
+        return res.status(200).json(data);
+      }
+
       return res.status(400).json({ error: 'Falta o es incorrecto el parámetro type.' });
     }
 
