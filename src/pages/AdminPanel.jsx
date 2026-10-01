@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { jobsData } from "../data/jobs";
 import ExecutiveAnalyticsDashboard from "../components/admin/ExecutiveAnalyticsDashboard";
+import BannerManager from "../components/admin/BannerManager";
 
 const REGIMENES_FISCALES = [
   { code: "601", label: "601 - General de Ley Personas Morales" },
@@ -2782,16 +2783,8 @@ export default function AdminPanel({
       );
     }
     if (activeTab === "cms") {
-      if (cmsTab === "banners" && (userHasRole("admin") || userHasRole("editor"))) {
-        return (
-          <button
-            onClick={() => setEditingBanner({ page: "home", type: "main", image_url: "", order_index: 0 })}
-            className="inline-flex items-center gap-2 bg-[#2F403E] hover:bg-[#8C4723] text-white px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors shadow-2xs"
-          >
-            <span className="material-symbols-outlined text-base">add_photo_alternate</span>
-            <span>Nuevo Banner</span>
-          </button>
-        );
+      if (cmsTab === "banners") {
+        return null;
       }
       if (cmsTab === "blog" && (userHasRole("admin") || userHasRole("editor"))) {
         return (
@@ -4853,111 +4846,12 @@ export default function AdminPanel({
 
               {/* CMS A: Banners */}
               {cmsTab === "banners" && (
-                <div className="space-y-6">
-                  <div className="flex justify-between items-center">
-                    <h6 className="text-xs uppercase tracking-widest text-[#8C4723] font-bold">Gestión de Banners de Páginas</h6>
-                    <button
-                      onClick={() => setEditingBanner({ page: "home", type: "main", image_url: "", order_index: 0 })}
-                      className="text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white px-3.5 py-2 font-semibold"
-                    >
-                      + Nuevo Banner
-                    </button>
-                  </div>
-
-                  {editingBanner && (
-                    <form onSubmit={handleSaveBanner} className="bg-stone-50 border border-stone-200 p-5 space-y-4 max-w-lg">
-                      <h6 className="font-serif text-sm font-bold text-stone-800 border-b border-stone-200 pb-1.5 uppercase">
-                        {editingBanner.id ? "Editar Banner" : "Registrar Nuevo Banner"}
-                      </h6>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Página</label>
-                          <select name="page" defaultValue={editingBanner.page} className="w-full bg-white border border-stone-200 p-2 text-xs">
-                            <option value="home">Home / Portada</option>
-                            <option value="tours">Tours & Experiencias</option>
-                            <option value="about">Nosotros (Quienes somos)</option>
-                            <option value="maquilas">Maquilas</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Tipo</label>
-                          <select name="type" defaultValue={editingBanner.type} className="w-full bg-white border border-stone-200 p-2 text-xs">
-                            <option value="main">Principal (Hero)</option>
-                            <option value="secondary">Secundario</option>
-                            <option value="gallery">Galería</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Imagen URL *</label>
-                        <input type="text" name="image_url" required defaultValue={editingBanner.image_url} placeholder="/Banner-ejemplo.webp" className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none"/>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Título (ES)</label>
-                          <input type="text" name="title_es" defaultValue={editingBanner.title_es} className="w-full bg-white border border-stone-200 p-2 text-xs"/>
-                        </div>
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Título (EN)</label>
-                          <input type="text" name="title_en" defaultValue={editingBanner.title_en} className="w-full bg-white border border-stone-200 p-2 text-xs"/>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Subtítulo (ES)</label>
-                          <input type="text" name="subtitle_es" defaultValue={editingBanner.subtitle_es} className="w-full bg-white border border-stone-200 p-2 text-xs"/>
-                        </div>
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Subtítulo (EN)</label>
-                          <input type="text" name="subtitle_en" defaultValue={editingBanner.subtitle_en} className="w-full bg-white border border-stone-200 p-2 text-xs"/>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Link de Destino</label>
-                          <input type="text" name="link_url" defaultValue={editingBanner.link_url} placeholder="tours" className="w-full bg-white border border-stone-200 p-2 text-xs"/>
-                        </div>
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Orden (Index)</label>
-                          <input type="number" name="order_index" defaultValue={editingBanner.order_index} className="w-full bg-white border border-stone-200 p-2 text-xs text-center"/>
-                        </div>
-                      </div>
-
-                      <div className="flex gap-2 justify-end">
-                        <button type="button" onClick={() => setEditingBanner(null)} className="px-3.5 py-1.5 text-xs border border-stone-200 cursor-pointer">Cancelar</button>
-                        <button type="submit" className="px-3.5 py-1.5 text-xs bg-[#8C4723] text-white font-semibold cursor-pointer">Guardar</button>
-                      </div>
-                    </form>
-                  )}
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {bannersList.length === 0 ? (
-                      <p className="text-xs text-stone-400 italic">No hay banners personalizados en la base de datos (se utilizan fallbacks locales).</p>
-                    ) : (
-                      bannersList.map(b => (
-                        <div key={b.id} className="border border-stone-200 p-3 space-y-3 bg-white">
-                          <img src={b.image_url} alt="Banner Preview" className="w-full aspect-[16/9] object-cover border border-stone-100 bg-stone-50"/>
-                          <div className="text-xs space-y-1">
-                            <div className="flex justify-between font-bold text-stone-800">
-                              <span className="uppercase">{b.page} ({b.type})</span>
-                              <span>Orden: {b.order_index}</span>
-                            </div>
-                            <p className="text-stone-500 truncate">ES: {b.title_es || 'Sin título'}</p>
-                            <p className="text-stone-400 truncate">EN: {b.title_en || 'No title'}</p>
-                          </div>
-                          <div className="flex justify-end gap-2 pt-2 border-t border-stone-100">
-                            <button onClick={() => setEditingBanner(b)} className="text-[10px] text-blue-700 hover:underline font-bold uppercase cursor-pointer">Editar</button>
-                            <button onClick={() => handleDeleteBanner(b.id)} className="text-[10px] text-red-700 hover:underline font-bold uppercase cursor-pointer">Eliminar</button>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
+                <BannerManager
+                  bannersList={bannersList}
+                  token={token}
+                  onRefresh={loadTabData}
+                  userRole={user?.role}
+                />
               )}
 
               {/* CMS B: Featured Dishes (Top 3) */}

@@ -1,7 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Turismo({ lang, setPage }) {
   const [openFaqIdx, setOpenFaqIdx] = useState(null);
+  const [dynamicTourBanner, setDynamicTourBanner] = useState(null);
+
+  useEffect(() => {
+    const fetchTourBanner = async () => {
+      try {
+        const res = await fetch("/api/cms?type=banners");
+        if (res.ok) {
+          const data = await res.json();
+          const tBanner = data.find(b => b.page === 'tours' && b.is_active !== false);
+          if (tBanner) setDynamicTourBanner(tBanner);
+        }
+      } catch (e) {
+        console.error("Error loading tour banner:", e);
+      }
+    };
+    fetchTourBanner();
+  }, []);
 
   const faqList = {
     es: [
@@ -214,15 +231,30 @@ export default function Turismo({ lang, setPage }) {
       <section className="relative h-screen w-full bg-zinc-950 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <picture>
-            <source media="(max-width: 768px)" srcSet="/Banner Experiencias-movil.webp" />
+            <source 
+              media="(max-width: 768px)" 
+              srcSet={
+                dynamicTourBanner 
+                  ? (lang === 'es' ? (dynamicTourBanner.image_mobile_es || dynamicTourBanner.image_desktop_es) : (dynamicTourBanner.image_mobile_en || dynamicTourBanner.image_desktop_en || dynamicTourBanner.image_mobile_es || dynamicTourBanner.image_desktop_es)) 
+                  : "/Banner Experiencias-movil.webp"
+              } 
+            />
             <source 
               media="(min-width: 1024px) and (-webkit-min-device-pixel-ratio: 2), (min-width: 1024px) and (min-resolution: 192dpi)" 
-              srcSet="/Banner Experiencias-retina.webp" 
+              srcSet={
+                dynamicTourBanner 
+                  ? (lang === 'es' ? (dynamicTourBanner.image_desktop_es || dynamicTourBanner.image_url) : (dynamicTourBanner.image_desktop_en || dynamicTourBanner.image_desktop_es || dynamicTourBanner.image_url)) 
+                  : "/Banner Experiencias-retina.webp"
+              } 
             />
             <img
               alt="Agave fields experience background"
               className="w-full h-full object-cover brightness-[0.82]"
-              src="/Columpio Experiencias.webp"
+              src={
+                dynamicTourBanner 
+                  ? (lang === 'es' ? (dynamicTourBanner.image_desktop_es || dynamicTourBanner.image_url) : (dynamicTourBanner.image_desktop_en || dynamicTourBanner.image_desktop_es || dynamicTourBanner.image_url)) 
+                  : "/Columpio Experiencias.webp"
+              }
             />
           </picture>
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/45"></div>

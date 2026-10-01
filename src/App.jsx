@@ -92,16 +92,17 @@ const routesMap = {
 };
 
 const getPageInfoFromPath = (pathname) => {
-  if (routesMap[pathname]) {
-    return routesMap[pathname];
+  const cleanPath = pathname.replace(/\/+$/, "") || "/";
+  if (routesMap[cleanPath]) {
+    return routesMap[cleanPath];
   }
-  if (pathname.startsWith("/blog/")) {
+  if (cleanPath.startsWith("/blog/")) {
     return { page: "blog-post", lang: null }; // Shared
   }
-  if (pathname.startsWith("/bolsa-de-trabajo/")) {
+  if (cleanPath.startsWith("/bolsa-de-trabajo/")) {
     return { page: "career-detail", lang: "es" };
   }
-  if (pathname.startsWith("/careers/")) {
+  if (cleanPath.startsWith("/careers/")) {
     return { page: "career-detail", lang: "en" };
   }
   return { page: "home", lang: null }; // Shared fallback
@@ -440,7 +441,7 @@ export default function App() {
   }, [page, hasBypass]);
 
 
-  const shouldShowAgeGate = !ageVerified && page !== "privacy";
+  const shouldShowAgeGate = !ageVerified && page !== "privacy" && page !== "solutions";
 
   return (
     <PayPalScriptProvider options={{ "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID || "BAAvK-L9UVFBEa4dRiPs_e-lLR28owxHR7ogtbjBnC40ulxWbvVqVh5POA09f5FUVFrFPlt4n0Nzf4Sdb0", currency: "MXN" }}>

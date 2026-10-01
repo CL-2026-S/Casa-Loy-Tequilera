@@ -35,6 +35,61 @@ const defaultBlogAuthors = [
 
 let memoryAuthorsStore = [...defaultBlogAuthors];
 
+async function uploadMediaFile(base64Data, filename, prefix = 'banner') {
+  if (!base64Data) return null;
+  try {
+    const cleanBase64 = base64Data.replace(/^data:image\/[a-zA-Z0-9+.-]+;base64,/, '');
+    const fileBuffer = Buffer.from(cleanBase64, 'base64');
+    const extMatch = (filename || '').match(/\.([a-zA-Z0-9]+)$/);
+    const fileExtension = extMatch ? extMatch[1].toLowerCase() : 'webp';
+    const uniqueFileName = `${prefix}_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExtension}`;
+
+    const mimeMap = {
+      jpg: 'image/jpeg',
+      jpeg: 'image/jpeg',
+      png: 'image/png',
+      webp: 'image/webp',
+      svg: 'image/svg+xml',
+      gif: 'image/gif'
+    };
+    const contentType = mimeMap[fileExtension] || `image/${fileExtension}`;
+
+    let bucket = 'banners';
+    let { data, error } = await supabase
+      .storage
+      .from(bucket)
+      .upload(uniqueFileName, fileBuffer, {
+        contentType,
+        upsert: true
+      });
+
+    if (error) {
+      console.warn(`Upload to '${bucket}' failed, trying 'cvs' bucket:`, error.message);
+      bucket = 'cvs';
+      const fallbackUpload = await supabase
+        .storage
+        .from(bucket)
+        .upload(uniqueFileName, fileBuffer, {
+          contentType,
+          upsert: true
+        });
+      if (fallbackUpload.error) {
+        throw fallbackUpload.error;
+      }
+    }
+
+    const { data: publicUrlData } = supabase
+      .storage
+      .from(bucket)
+      .getPublicUrl(uniqueFileName);
+
+    return publicUrlData?.publicUrl || null;
+  } catch (err) {
+    console.error("Error in uploadMediaFile:", err);
+    throw err;
+  }
+}
+
 export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -76,7 +131,24 @@ export default async function handler(req, res) {
           .select('*')
           .order('order_index', { ascending: true });
         if (error) throw error;
-        return res.status(200).json(data);
+
+        // Ensure intelligent responsive and multilingual fallbacks
+        const normalized = (data || []).map(b => {
+          const dEs = b.image_desktop_es || b.image_url || '';
+          const mEs = b.image_mobile_es || dEs;
+          const dEn = b.image_desktop_en || dEs;
+          const mEn = b.image_mobile_en || dEn || mEs;
+          return {
+            ...b,
+            image_desktop_es: dEs,
+            image_mobile_es: mEs,
+            image_desktop_en: dEn,
+            image_mobile_en: mEn,
+            image_url: dEs || b.image_url
+          };
+        });
+
+        return res.status(200).json(normalized);
       }
 
       // Fetch Featured Dishes (Top 3)
@@ -176,23 +248,105 @@ export default async function handler(req, res) {
         return res.status(403).json({ error: 'FORBIDDEN', message: 'No tienes los permisos requeridos para realizar esta acción.' });
       }
 
+      // Action: Upload Banner Image
+      if (action === 'upload_banner_image') {
+        const { image_base64, filename } = req.body || {};
+        if (!image_base64) {
+          return res.status(400).json({ error: 'Falta la imagen en base64.' });
+        }
+        try {
+          const publicUrl = await uploadMediaFile(image_base64, filename || 'banner.webp', 'banner');
+          return res.status(200).json({ success: true, url: publicUrl });
+        } catch (uploadErr) {
+          return res.status(500).json({ error: 'Error al subir la imagen a almacenamiento: ' + uploadErr.message });
+        }
+      }
+
       // Action: Update Banner
       if (action === 'update_banner') {
-        const { id, page, type: bType, image_url, title_es, title_en, subtitle_es, subtitle_en, link_url, order_index } = req.body || {};
-        if (!page || !bType || !image_url) {
-          return res.status(400).json({ error: 'Página, tipo y url de imagen son obligatorios.' });
-        }
-
-        const bannerData = {
+        const {
+          id,
           page,
           type: bType,
-          image_url,
           title_es,
           title_en,
           subtitle_es,
           subtitle_en,
+          button_text_es,
+          button_text_en,
           link_url,
-          order_index: parseInt(order_index || '0', 10)
+          order_index,
+          is_active,
+          // Image URLs
+          image_desktop_es,
+          image_mobile_es,
+          image_desktop_en,
+          image_mobile_en,
+          image_url,
+          // Base64 direct file uploads
+          image_desktop_es_base64, image_desktop_es_name,
+          image_mobile_es_base64, image_mobile_es_name,
+          image_desktop_en_base64, image_desktop_en_name,
+          image_mobile_en_base64, image_mobile_en_name
+        } = req.body || {};
+
+        if (!page) {
+          return res.status(400).json({ error: 'La página del banner es obligatoria.' });
+        }
+
+        // Process any direct base64 image uploads
+        let finalDesktopEs = image_desktop_es;
+        if (image_desktop_es_base64) {
+          finalDesktopEs = await uploadMediaFile(image_desktop_es_base64, image_desktop_es_name, 'banner_desk_es');
+        }
+
+        let finalMobileEs = image_mobile_es;
+        if (image_mobile_es_base64) {
+          finalMobileEs = await uploadMediaFile(image_mobile_es_base64, image_mobile_es_name, 'banner_mob_es');
+        }
+
+        let finalDesktopEn = image_desktop_en;
+        if (image_desktop_en_base64) {
+          finalDesktopEn = await uploadMediaFile(image_desktop_en_base64, image_desktop_en_name, 'banner_desk_en');
+        }
+
+        let finalMobileEn = image_mobile_en;
+        if (image_mobile_en_base64) {
+          finalMobileEn = await uploadMediaFile(image_mobile_en_base64, image_mobile_en_name, 'banner_mob_en');
+        }
+
+        // Fallback hierarchy:
+        // 1. Primary image is Spanish desktop or legacy image_url or any available image
+        const primaryImg = finalDesktopEs || finalMobileEs || image_url || finalDesktopEn || finalMobileEn;
+        if (!primaryImg) {
+          return res.status(400).json({ error: 'Debes proporcionar al menos una imagen (escritorio o celular).' });
+        }
+
+        // Responsive fallback: if mobile is omitted, use desktop
+        const resolvedDesktopEs = finalDesktopEs || primaryImg;
+        const resolvedMobileEs = finalMobileEs || resolvedDesktopEs;
+
+        // Language fallback: if English is omitted, use Spanish
+        const resolvedDesktopEn = finalDesktopEn || resolvedDesktopEs;
+        const resolvedMobileEn = finalMobileEn || finalDesktopEn || resolvedMobileEs;
+
+        const bannerData = {
+          page,
+          type: bType || 'main',
+          title_es: title_es !== undefined ? title_es : '',
+          title_en: title_en !== undefined ? title_en : (title_es || ''),
+          subtitle_es: subtitle_es !== undefined ? subtitle_es : '',
+          subtitle_en: subtitle_en !== undefined ? subtitle_en : (subtitle_es || ''),
+          button_text_es: button_text_es !== undefined ? button_text_es : '',
+          button_text_en: button_text_en !== undefined ? button_text_en : (button_text_es || ''),
+          link_url: link_url !== undefined ? link_url : '',
+          order_index: parseInt(order_index || '0', 10),
+          is_active: is_active === undefined ? true : Boolean(is_active),
+          image_desktop_es: resolvedDesktopEs,
+          image_mobile_es: resolvedMobileEs,
+          image_desktop_en: resolvedDesktopEn,
+          image_mobile_en: resolvedMobileEn,
+          image_url: resolvedDesktopEs // For backwards compatibility
         };
 
         let dbRes;
@@ -209,10 +363,10 @@ export default async function handler(req, res) {
           currentUser.email,
           currentUser.role,
           id ? 'update_banner' : 'create_banner',
-          `Banner ${id ? 'actualizado' : 'creado'} para página: ${page}`
+          `Banner ${id ? 'actualizado' : 'creado'} para página: ${page} (${bannerData.title_es || 'Sin título'})`
         );
 
-        return res.status(200).json({ success: true });
+        return res.status(200).json({ success: true, banner: bannerData });
       }
 
       // Action: Delete Banner

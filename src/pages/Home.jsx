@@ -227,28 +227,37 @@ export default function Home({ lang = "es", setPage, setLang }) {
         const res = await fetch("/api/cms?type=banners");
         if (res.ok) {
           const data = await res.json();
-          const homeBanners = data.filter(b => b.page === 'home');
+          const homeBanners = data.filter(b => b.page === 'home' && b.is_active !== false);
           if (homeBanners.length > 0) {
-            const mapped = homeBanners.map(b => ({
-              id: String(b.id),
-              overtitle: currentLang === 'es' ? (b.subtitle_es || "CASA LOY") : (b.subtitle_en || b.subtitle_es || "CASA LOY"),
-              titleEs: b.title_es,
-              titleEn: b.title_en || b.title_es,
-              descEs: b.subtitle_es || "",
-              descEn: b.subtitle_en || b.subtitle_es || "",
-              btn1Es: currentLang === 'es' ? "DESCUBRIR MÁS" : "DISCOVER MORE",
-              btn1En: "DISCOVER MORE",
-              btn1Route: b.link_url || "turismo",
-              btn2Es: "",
-              btn2En: "",
-              microcopyEs: b.subtitle_es || "",
-              microcopyEn: b.subtitle_en || b.subtitle_es || "",
-              bg: b.image_url,
-              bgMobile: b.image_url,
-              bgRetina: b.image_url,
-              brightness: "brightness-[0.82]",
-              overlay: "from-black/30 via-transparent to-black/45",
-            }));
+            const mapped = homeBanners.map(b => {
+              const deskImg = currentLang === 'es'
+                ? (b.image_desktop_es || b.image_url)
+                : (b.image_desktop_en || b.image_desktop_es || b.image_url);
+              const mobImg = currentLang === 'es'
+                ? (b.image_mobile_es || b.image_desktop_es || b.image_url)
+                : (b.image_mobile_en || b.image_desktop_en || b.image_mobile_es || b.image_desktop_es || b.image_url);
+
+              return {
+                id: String(b.id),
+                overtitle: currentLang === 'es' ? (b.subtitle_es || "CASA LOY") : (b.subtitle_en || b.subtitle_es || "CASA LOY"),
+                titleEs: b.title_es,
+                titleEn: b.title_en || b.title_es,
+                descEs: b.subtitle_es || "",
+                descEn: b.subtitle_en || b.subtitle_es || "",
+                btn1Es: b.button_text_es || (currentLang === 'es' ? "DESCUBRIR MÁS" : "DISCOVER MORE"),
+                btn1En: b.button_text_en || b.button_text_es || "DISCOVER MORE",
+                btn1Route: b.link_url || "turismo",
+                btn2Es: "",
+                btn2En: "",
+                microcopyEs: b.subtitle_es || "",
+                microcopyEn: b.subtitle_en || b.subtitle_es || "",
+                bg: deskImg,
+                bgMobile: mobImg,
+                bgRetina: deskImg,
+                brightness: "brightness-[0.82]",
+                overlay: "from-black/30 via-transparent to-black/45",
+              };
+            });
             setDynamicSlides(mapped);
           }
         }
