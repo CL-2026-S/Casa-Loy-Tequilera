@@ -110,7 +110,7 @@ export default function VCardLELB({ lang: initialLang = "es", setLang: parentSet
       "N;CHARSET=UTF-8:Loy Bermudez;Luis Emmanuel;;;",
       "ORG;CHARSET=UTF-8:Casa Loy Tequilera",
       "TITLE;CHARSET=UTF-8:Head of Private Labels & Bulk Tequila",
-      "TEL;TYPE=CELL,VOICE;VALUE=uri:tel:+14698798739",
+      "TEL;TYPE=CELL,VOICE:+14698798739",
       "EMAIL;TYPE=WORK,INTERNET:luisloyb@casaloy.com",
       "URL:https://casaloy.com",
       "ADR;TYPE=WORK;CHARSET=UTF-8:;;Carretera Ayotlán-Atotonilco km 6.5 Las Villas;Ayotlán;Jalisco;47930;Mexico",

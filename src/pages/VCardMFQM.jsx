@@ -108,7 +108,7 @@ export default function VCardMFQM({ lang: initialLang = "es", setLang: parentSet
       "N;CHARSET=UTF-8:Quintana;Fernanda;;;",
       "ORG;CHARSET=UTF-8:Casa Loy Tequilera",
       "TITLE;CHARSET=UTF-8:KAE of Private Labels, Bulk, & Emerging Markets",
-      "TEL;TYPE=CELL,VOICE;VALUE=uri:tel:+523325088372",
+      "TEL;TYPE=CELL,VOICE:+523325088372",
       "EMAIL;TYPE=WORK,INTERNET:fquintana@casaloy.com",
       "URL:https://casaloy.com",
       "ADR;TYPE=WORK;CHARSET=UTF-8:;;Carretera Ayotlán-Atotonilco km 6.5 Las Villas;Ayotlán;Jalisco;47930;Mexico",
