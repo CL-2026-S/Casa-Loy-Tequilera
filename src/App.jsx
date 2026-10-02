@@ -33,6 +33,7 @@ import ValidateTicket from "./pages/ValidateTicket";
 import AdminPanel from "./pages/AdminPanel";
 import Test2MBB from "./pages/Test2MBB";
 import SolutionsHub from "./pages/SolutionsHub";
+import VCardLELB from "./pages/VCardLELB";
 
 // Bilingual routing map
 const routesMap = {
@@ -63,6 +64,9 @@ const routesMap = {
   "/validar-ticket": { page: "validate-ticket", lang: null }, // Shared
   "/panel": { page: "panel", lang: null }, // Shared
   "/editorial-preview": { page: "editorial-preview", lang: null }, // Shared
+  "/contact/lelb": { page: "vcard-lelb", lang: null }, // vCard Luis Loy
+  "/contacto/lelb": { page: "vcard-lelb", lang: "es" },
+  "/lelb": { page: "vcard-lelb", lang: null },
 
   // English Paths
   "/about": { page: "about", lang: "en" },
@@ -95,6 +99,9 @@ const getPageInfoFromPath = (pathname) => {
   const cleanPath = pathname.replace(/\/+$/, "") || "/";
   if (routesMap[cleanPath]) {
     return routesMap[cleanPath];
+  }
+  if (cleanPath.startsWith("/contact/lelb") || cleanPath.startsWith("/contacto/lelb") || cleanPath === "/lelb") {
+    return { page: "vcard-lelb", lang: null };
   }
   if (cleanPath.startsWith("/blog/")) {
     return { page: "blog-post", lang: null }; // Shared
@@ -233,7 +240,8 @@ export default function App() {
         "privacy": "/politica-de-privacidad",
         "cookies": "/politica-de-cookies",
         "terms": "/terminos-y-condiciones",
-        "solutions": "/soluciones"
+        "solutions": "/soluciones",
+        "vcard-lelb": "/contact/lelb"
       },
       en: {
         "home": "/",
@@ -255,7 +263,8 @@ export default function App() {
         "privacy": "/privacy-policy",
         "cookies": "/cookie-policy",
         "terms": "/terms-and-conditions",
-        "solutions": "/solutions"
+        "solutions": "/solutions",
+        "vcard-lelb": "/contact/lelb"
       }
     };
 
@@ -292,6 +301,7 @@ export default function App() {
         cookies: "/politica-de-cookies",
         terms: "/terminos-y-condiciones",
         solutions: "/soluciones",
+        "vcard-lelb": "/contact/lelb",
         "validate-ticket": "/validar-ticket",
         panel: "/panel",
         "editorial-preview": "/editorial-preview"
@@ -318,6 +328,7 @@ export default function App() {
         cookies: "/cookie-policy",
         terms: "/terms-and-conditions",
         solutions: "/solutions",
+        "vcard-lelb": "/contact/lelb",
         "validate-ticket": "/validar-ticket",
         panel: "/panel",
         "editorial-preview": "/editorial-preview"
@@ -441,7 +452,18 @@ export default function App() {
   }, [page, hasBypass]);
 
 
-  const shouldShowAgeGate = !ageVerified && page !== "privacy" && page !== "solutions";
+  const cleanCurrentPath = location.pathname.toLowerCase().replace(/\/+$/, "") || "/";
+  const isVCardRoute =
+    page === "vcard-lelb" ||
+    cleanCurrentPath.startsWith("/contact/lelb") ||
+    cleanCurrentPath.startsWith("/contacto/lelb") ||
+    cleanCurrentPath === "/lelb";
+
+  const shouldShowAgeGate =
+    !ageVerified &&
+    page !== "privacy" &&
+    page !== "solutions" &&
+    !isVCardRoute;
 
   return (
     <PayPalScriptProvider options={{ "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID || "BAAvK-L9UVFBEa4dRiPs_e-lLR28owxHR7ogtbjBnC40ulxWbvVqVh5POA09f5FUVFrFPlt4n0Nzf4Sdb0", currency: "MXN" }}>
@@ -460,7 +482,7 @@ export default function App() {
         </AnimatePresence>
 
         {/* Dynamic Header / Navigation */}
-        {page !== "panel" && (
+        {page !== "panel" && !isVCardRoute && (
           <Header lang={lang} setLang={setLang} t={t} page={page} setPage={setPage} />
         )}
         
@@ -623,6 +645,11 @@ export default function App() {
 
             <Route path="/soluciones" element={<SolutionsHub lang="es" setPage={setPage} />} />
             <Route path="/solutions" element={<SolutionsHub lang="en" setPage={setPage} />} />
+
+            {/* Digital Business Card (vCard Luis Emmanuel Loy Bermudez) */}
+            <Route path="/contact/lelb" element={<VCardLELB lang={lang} setLang={setLang} />} />
+            <Route path="/contacto/lelb" element={<VCardLELB lang={lang} setLang={setLang} />} />
+            <Route path="/lelb" element={<VCardLELB lang={lang} setLang={setLang} />} />
             
             <Route path="/validar-ticket" element={<ValidateTicket lang={lang} setPage={setPage} />} />
             <Route path="/panel" element={
@@ -645,13 +672,13 @@ export default function App() {
         </main>
 
         {/* Modern Watermarked Footer */}
-        {page !== "panel" && <Footer lang={lang} t={t} setPage={setPage} />}
+        {page !== "panel" && !isVCardRoute && <Footer lang={lang} t={t} setPage={setPage} />}
 
         {/* Global Newsletter Popup */}
-        {page !== "panel" && <NewsletterPopup lang={lang} />}
+        {page !== "panel" && !isVCardRoute && <NewsletterPopup lang={lang} />}
 
         {/* Floating WhatsApp Button */}
-        {page !== "panel" && (
+        {page !== "panel" && !isVCardRoute && (
           <a
             href="https://wa.me/5213332504359?text=Hola%2C%20me%20gustar%C3%ADa%20recibir%20informaci%C3%B3n%20de%20Casa%20Loy%20Tequilera."
             target="_blank"

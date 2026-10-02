@@ -354,6 +354,27 @@ const seoData = {
       ogTitle: "Soluciones B2B de Tequila - Casa Loy Tequilera",
       ogDesc: "Marca privada, tequila a granel y envasado en México con campos propios de agave y certificación CRT.",
       ogImage: "/Casa Loy Tequilera.webp"
+    },
+    "vcard-lelb": {
+      title: "Luis Emmanuel Loy Bermudez | Head of Private Labels & Bulk Tequila | Casa Loy",
+      description: "Tarjeta de contacto digital de Luis Emmanuel Loy Bermudez. Head of Private Labels & Bulk Tequila en Casa Loy Tequilera. Ayotlán, Jalisco.",
+      ogTitle: "Luis Emmanuel Loy Bermudez — Casa Loy Tequilera",
+      ogDesc: "Head of Private Labels & Bulk Tequila. Contacto directo, teléfono, correo y ubicación.",
+      ogImage: "/Casa Loy Tequilera.webp",
+      schema: {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Luis Emmanuel Loy Bermudez",
+        "jobTitle": "Head of Private Labels & Bulk Tequila",
+        "worksFor": {
+          "@type": "Organization",
+          "name": "Casa Loy Tequilera",
+          "url": "https://casaloy.com"
+        },
+        "telephone": "+14698798739",
+        "email": "luisloyb@casaloy.com",
+        "url": "https://casaloy.com/contact/lelb"
+      }
     }
   },
   en: {
@@ -528,6 +549,27 @@ const seoData = {
       ogTitle: "B2B Tequila Solutions - Casa Loy Tequilera",
       ogDesc: "Private label, bulk tequila and co-packing from our own agave estates in the highlands of Jalisco.",
       ogImage: "/Casa Loy Tequilera.webp"
+    },
+    "vcard-lelb": {
+      title: "Luis Emmanuel Loy Bermudez | Head of Private Labels & Bulk Tequila | Casa Loy",
+      description: "Digital business card of Luis Emmanuel Loy Bermudez. Head of Private Labels & Bulk Tequila at Casa Loy Tequilera. Ayotlán, Jalisco.",
+      ogTitle: "Luis Emmanuel Loy Bermudez — Casa Loy Tequilera",
+      ogDesc: "Head of Private Labels & Bulk Tequila. Direct phone, email, and distillery location.",
+      ogImage: "/Casa Loy Tequilera.webp",
+      schema: {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Luis Emmanuel Loy Bermudez",
+        "jobTitle": "Head of Private Labels & Bulk Tequila",
+        "worksFor": {
+          "@type": "Organization",
+          "name": "Casa Loy Tequilera",
+          "url": "https://casaloy.com"
+        },
+        "telephone": "+14698798739",
+        "email": "luisloyb@casaloy.com",
+        "url": "https://casaloy.com/contact/lelb"
+      }
     }
   }
 };
@@ -549,7 +591,8 @@ const pathMap = {
   privacy: { es: "/politica-de-privacidad", en: "/privacy-policy" },
   cookies: { es: "/politica-de-cookies", en: "/cookie-policy" },
   terms: { es: "/terminos-y-condiciones", en: "/terms-and-conditions" },
-  solutions: { es: "/soluciones", en: "/solutions" }
+  solutions: { es: "/soluciones", en: "/solutions" },
+  "vcard-lelb": { es: "/contact/lelb", en: "/contact/lelb" }
 };
 
 export default function SEO({ page, lang = "es" }) {
