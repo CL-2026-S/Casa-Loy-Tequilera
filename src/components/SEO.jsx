@@ -375,6 +375,27 @@ const seoData = {
         "email": "luisloyb@casaloy.com",
         "url": "https://casaloy.com/contact/lelb"
       }
+    },
+    "vcard-mfqm": {
+      title: "Fernanda Quintana | KAE of Private Labels, Bulk, & Emerging Markets | Casa Loy",
+      description: "Tarjeta de contacto digital de Fernanda Quintana. KAE of Private Labels, Bulk, & Emerging Markets en Casa Loy Tequilera. Ayotlán, Jalisco.",
+      ogTitle: "Fernanda Quintana — Casa Loy Tequilera",
+      ogDesc: "KAE of Private Labels, Bulk, & Emerging Markets. Contacto directo, teléfono, correo y ubicación.",
+      ogImage: "/Casa Loy Tequilera.webp",
+      schema: {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Fernanda Quintana",
+        "jobTitle": "KAE of Private Labels, Bulk, & Emerging Markets",
+        "worksFor": {
+          "@type": "Organization",
+          "name": "Casa Loy Tequilera",
+          "url": "https://casaloy.com"
+        },
+        "telephone": "+523325088372",
+        "email": "fquintana@casaloy.com",
+        "url": "https://casaloy.com/contact/mfqm"
+      }
     }
   },
   en: {
@@ -570,6 +591,27 @@ const seoData = {
         "email": "luisloyb@casaloy.com",
         "url": "https://casaloy.com/contact/lelb"
       }
+    },
+    "vcard-mfqm": {
+      title: "Fernanda Quintana | KAE of Private Labels, Bulk, & Emerging Markets | Casa Loy",
+      description: "Digital business card of Fernanda Quintana. KAE of Private Labels, Bulk, & Emerging Markets at Casa Loy Tequilera. Ayotlán, Jalisco.",
+      ogTitle: "Fernanda Quintana — Casa Loy Tequilera",
+      ogDesc: "KAE of Private Labels, Bulk, & Emerging Markets. Direct phone, email, and distillery location.",
+      ogImage: "/Casa Loy Tequilera.webp",
+      schema: {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Fernanda Quintana",
+        "jobTitle": "KAE of Private Labels, Bulk, & Emerging Markets",
+        "worksFor": {
+          "@type": "Organization",
+          "name": "Casa Loy Tequilera",
+          "url": "https://casaloy.com"
+        },
+        "telephone": "+523325088372",
+        "email": "fquintana@casaloy.com",
+        "url": "https://casaloy.com/contact/mfqm"
+      }
     }
   }
 };
@@ -592,7 +634,8 @@ const pathMap = {
   cookies: { es: "/politica-de-cookies", en: "/cookie-policy" },
   terms: { es: "/terminos-y-condiciones", en: "/terms-and-conditions" },
   solutions: { es: "/soluciones", en: "/solutions" },
-  "vcard-lelb": { es: "/contact/lelb", en: "/contact/lelb" }
+  "vcard-lelb": { es: "/contact/lelb", en: "/contact/lelb" },
+  "vcard-mfqm": { es: "/contact/mfqm", en: "/contact/mfqm" }
 };
 
 export default function SEO({ page, lang = "es" }) {

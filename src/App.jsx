@@ -34,6 +34,7 @@ import AdminPanel from "./pages/AdminPanel";
 import Test2MBB from "./pages/Test2MBB";
 import SolutionsHub from "./pages/SolutionsHub";
 import VCardLELB from "./pages/VCardLELB";
+import VCardMFQM from "./pages/VCardMFQM";
 
 // Bilingual routing map
 const routesMap = {
@@ -67,6 +68,9 @@ const routesMap = {
   "/contact/lelb": { page: "vcard-lelb", lang: null }, // vCard Luis Loy
   "/contacto/lelb": { page: "vcard-lelb", lang: "es" },
   "/lelb": { page: "vcard-lelb", lang: null },
+  "/contact/mfqm": { page: "vcard-mfqm", lang: null }, // vCard Fernanda Quintana
+  "/contacto/mfqm": { page: "vcard-mfqm", lang: "es" },
+  "/mfqm": { page: "vcard-mfqm", lang: null },
 
   // English Paths
   "/about": { page: "about", lang: "en" },
@@ -102,6 +106,9 @@ const getPageInfoFromPath = (pathname) => {
   }
   if (cleanPath.startsWith("/contact/lelb") || cleanPath.startsWith("/contacto/lelb") || cleanPath === "/lelb") {
     return { page: "vcard-lelb", lang: null };
+  }
+  if (cleanPath.startsWith("/contact/mfqm") || cleanPath.startsWith("/contacto/mfqm") || cleanPath === "/mfqm") {
+    return { page: "vcard-mfqm", lang: null };
   }
   if (cleanPath.startsWith("/blog/")) {
     return { page: "blog-post", lang: null }; // Shared
@@ -241,7 +248,8 @@ export default function App() {
         "cookies": "/politica-de-cookies",
         "terms": "/terminos-y-condiciones",
         "solutions": "/soluciones",
-        "vcard-lelb": "/contact/lelb"
+        "vcard-lelb": "/contact/lelb",
+        "vcard-mfqm": "/contact/mfqm"
       },
       en: {
         "home": "/",
@@ -264,7 +272,8 @@ export default function App() {
         "cookies": "/cookie-policy",
         "terms": "/terms-and-conditions",
         "solutions": "/solutions",
-        "vcard-lelb": "/contact/lelb"
+        "vcard-lelb": "/contact/lelb",
+        "vcard-mfqm": "/contact/mfqm"
       }
     };
 
@@ -302,6 +311,7 @@ export default function App() {
         terms: "/terminos-y-condiciones",
         solutions: "/soluciones",
         "vcard-lelb": "/contact/lelb",
+        "vcard-mfqm": "/contact/mfqm",
         "validate-ticket": "/validar-ticket",
         panel: "/panel",
         "editorial-preview": "/editorial-preview"
@@ -329,6 +339,7 @@ export default function App() {
         terms: "/terms-and-conditions",
         solutions: "/solutions",
         "vcard-lelb": "/contact/lelb",
+        "vcard-mfqm": "/contact/mfqm",
         "validate-ticket": "/validar-ticket",
         panel: "/panel",
         "editorial-preview": "/editorial-preview"
@@ -455,9 +466,13 @@ export default function App() {
   const cleanCurrentPath = location.pathname.toLowerCase().replace(/\/+$/, "") || "/";
   const isVCardRoute =
     page === "vcard-lelb" ||
+    page === "vcard-mfqm" ||
     cleanCurrentPath.startsWith("/contact/lelb") ||
     cleanCurrentPath.startsWith("/contacto/lelb") ||
-    cleanCurrentPath === "/lelb";
+    cleanCurrentPath === "/lelb" ||
+    cleanCurrentPath.startsWith("/contact/mfqm") ||
+    cleanCurrentPath.startsWith("/contacto/mfqm") ||
+    cleanCurrentPath === "/mfqm";
 
   const shouldShowAgeGate =
     !ageVerified &&
@@ -650,6 +665,11 @@ export default function App() {
             <Route path="/contact/lelb" element={<VCardLELB lang={lang} setLang={setLang} />} />
             <Route path="/contacto/lelb" element={<VCardLELB lang={lang} setLang={setLang} />} />
             <Route path="/lelb" element={<VCardLELB lang={lang} setLang={setLang} />} />
+
+            {/* Digital Business Card (vCard Fernanda Quintana) */}
+            <Route path="/contact/mfqm" element={<VCardMFQM lang={lang} setLang={setLang} />} />
+            <Route path="/contacto/mfqm" element={<VCardMFQM lang={lang} setLang={setLang} />} />
+            <Route path="/mfqm" element={<VCardMFQM lang={lang} setLang={setLang} />} />
             
             <Route path="/validar-ticket" element={<ValidateTicket lang={lang} setPage={setPage} />} />
             <Route path="/panel" element={
