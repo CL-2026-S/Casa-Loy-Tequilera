@@ -100,32 +100,14 @@ export default function VCardMFQM({ lang: initialLang = "es", setLang: parentSet
   };
 
   const handleDownloadVCard = () => {
-    const vcardContent = [
-      "BEGIN:VCARD",
-      "VERSION:3.0",
-      "PRODID:-//Casa Loy Tequilera//Digital Business Card//EN",
-      "FN;CHARSET=UTF-8:Fernanda Quintana",
-      "N;CHARSET=UTF-8:Quintana;Fernanda;;;",
-      "ORG;CHARSET=UTF-8:Casa Loy Tequilera",
-      "TITLE;CHARSET=UTF-8:KAE of Private Labels, Bulk, & Emerging Markets",
-      "TEL;TYPE=CELL,VOICE:+523325088372",
-      "EMAIL;TYPE=WORK,INTERNET:fquintana@casaloy.com",
-      "URL:https://casaloy.com",
-      "ADR;TYPE=WORK;CHARSET=UTF-8:;;Carretera Ayotlán-Atotonilco km 6.5 Las Villas;Ayotlán;Jalisco;47930;Mexico",
-      "NOTE;CHARSET=UTF-8:Casa Loy Tequilera - KAE of Private Labels, Bulk, & Emerging Markets. NOM 1633.",
-      "REV:" + new Date().toISOString(),
-      "END:VCARD"
-    ].join("\r\n");
-
-    const blob = new Blob([vcardContent], { type: "text/vcard;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
+    // Direct static link with cache buster so mobile browser never serves cached .vcf
+    const staticUrl = `/Fernanda_Quintana.vcf?t=${Date.now()}`;
     const link = document.createElement("a");
-    link.href = url;
+    link.href = staticUrl;
     link.setAttribute("download", "Fernanda_Quintana.vcf");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    URL.revokeObjectURL(url);
 
     setDownloadSuccess(true);
     setTimeout(() => setDownloadSuccess(false), 3000);

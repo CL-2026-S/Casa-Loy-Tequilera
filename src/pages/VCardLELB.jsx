@@ -102,32 +102,14 @@ export default function VCardLELB({ lang: initialLang = "es", setLang: parentSet
   };
 
   const handleDownloadVCard = () => {
-    const vcardContent = [
-      "BEGIN:VCARD",
-      "VERSION:3.0",
-      "PRODID:-//Casa Loy Tequilera//Digital Business Card//EN",
-      "FN;CHARSET=UTF-8:Luis Emmanuel Loy Bermudez",
-      "N;CHARSET=UTF-8:Loy Bermudez;Luis Emmanuel;;;",
-      "ORG;CHARSET=UTF-8:Casa Loy Tequilera",
-      "TITLE;CHARSET=UTF-8:Head of Private Labels & Bulk Tequila",
-      "TEL;TYPE=CELL,VOICE:+14698798739",
-      "EMAIL;TYPE=WORK,INTERNET:luisloyb@casaloy.com",
-      "URL:https://casaloy.com",
-      "ADR;TYPE=WORK;CHARSET=UTF-8:;;Carretera Ayotlán-Atotonilco km 6.5 Las Villas;Ayotlán;Jalisco;47930;Mexico",
-      "NOTE;CHARSET=UTF-8:Casa Loy Tequilera - Head of Private Labels & Bulk Tequila. NOM 1633.",
-      "REV:" + new Date().toISOString(),
-      "END:VCARD"
-    ].join("\r\n");
-
-    const blob = new Blob([vcardContent], { type: "text/vcard;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
+    // Direct static link with cache buster so mobile browser never serves cached .vcf
+    const staticUrl = `/Luis_Emmanuel_Loy_Bermudez.vcf?t=${Date.now()}`;
     const link = document.createElement("a");
-    link.href = url;
+    link.href = staticUrl;
     link.setAttribute("download", "Luis_Emmanuel_Loy_Bermudez.vcf");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    URL.revokeObjectURL(url);
 
     setDownloadSuccess(true);
     setTimeout(() => setDownloadSuccess(false), 3000);

@@ -1,0 +1,14 @@
+BEGIN:VCARD
+VERSION:3.0
+PRODID:-//Casa Loy Tequilera//Digital Business Card//EN
+FN;CHARSET=UTF-8:Luis Emmanuel Loy Bermudez
+N;CHARSET=UTF-8:Loy Bermudez;Luis Emmanuel;;;
+ORG;CHARSET=UTF-8:Casa Loy Tequilera
+TITLE;CHARSET=UTF-8:Head of Private Labels & Bulk Tequila
+TEL;TYPE=CELL;TYPE=PREF:+14698798739
+TEL;TYPE=WORK:+14698798739
+EMAIL;TYPE=WORK,INTERNET:luisloyb@casaloy.com
+URL;TYPE=WORK:https://casaloy.com
+ADR;TYPE=WORK;CHARSET=UTF-8:;;Carretera Ayotlán-Atotonilco km 6.5 Las Villas;Ayotlán;Jalisco;47930;Mexico
+NOTE;CHARSET=UTF-8:Casa Loy Tequilera - Head of Private Labels & Bulk Tequila. NOM 1633. https://casaloy.com/contact/lelb
+END:VCARD

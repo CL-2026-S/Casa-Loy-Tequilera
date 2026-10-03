@@ -1,0 +1,14 @@
+BEGIN:VCARD
+VERSION:3.0
+PRODID:-//Casa Loy Tequilera//Digital Business Card//EN
+FN;CHARSET=UTF-8:Fernanda Quintana
+N;CHARSET=UTF-8:Quintana;Fernanda;;;
+ORG;CHARSET=UTF-8:Casa Loy Tequilera
+TITLE;CHARSET=UTF-8:KAE of Private Labels, Bulk, & Emerging Markets
+TEL;TYPE=CELL;TYPE=PREF:+523325088372
+TEL;TYPE=WORK:+523325088372
+EMAIL;TYPE=WORK,INTERNET:fquintana@casaloy.com
+URL;TYPE=WORK:https://casaloy.com
+ADR;TYPE=WORK;CHARSET=UTF-8:;;Carretera Ayotlán-Atotonilco km 6.5 Las Villas;Ayotlán;Jalisco;47930;Mexico
+NOTE;CHARSET=UTF-8:Casa Loy Tequilera - KAE of Private Labels, Bulk, & Emerging Markets. NOM 1633. https://casaloy.com/contact/mfqm
+END:VCARD
