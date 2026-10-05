@@ -15,5 +15,18 @@
   - [x] Actualizar guardado de usuario para concatenar los roles seleccionados con comas.
   - [x] Mostrar badges de múltiples roles simultáneos en la tabla de personal y en el header.
   - [x] Actualizar lógica de redirección de pestaña predeterminada tras el login según prioridades de rol.
-- [x] Verificar compilación y funcionalidad (Vite build exitoso).
-- [x] Subir y guardar cambios en Git.
+- [x] **Tema 1: Gestión de Vendedores / KAMs en Puntos de Venta**:
+  - [x] Crear tabla `sales_kams` en Supabase con RLS y migración de vendedores existentes (`supabase_sales_kams.sql`).
+  - [x] Crear endpoint serverless `api/kams.js` con soporte para listado (GET), alta (POST), edición/renombramiento con sincronización en cascada a `points_of_sale.fase` (PUT), reasignación de cartera (PUT con acción `reassign_stores`), y eliminación (DELETE).
+  - [x] Convertir el campo "Vendedor / KAM Asignado" en el formulario de Puntos de Venta de `<input text>` a un `<select>` desplegable que muestra todos los KAMs registrados.
+  - [x] Añadir acceso directo `+ Registrar KAM` junto al selector para alta rápida sin salir del formulario.
+  - [x] Crear modal interactivo "Directorio de Vendedores y KAMs" con búsqueda, alta, edición/renombramiento (con aviso de actualización en cascada), transferencia de cartera y eliminación.
+  - [x] Añadir botón en toolbar y convertir tarjeta métrica "Vendedores/KAMs" en acceso directo al directorio.
+- [x] **Tema 2: Visualización de Personal Registrado y Permisos (RBAC)**:
+  - [x] Definir catálogo maestro `ROLES_CATALOG` con los 8 roles del sistema y matriz de módulos (`getUserPermissionsMatrix`).
+  - [x] Añadir barra de búsqueda por nombre/correo y filtro por rol en la tabla de personal.
+  - [x] Implementar botón interactivo `🛡️ Ver Permisos (N módulos)` en cada colaborador.
+  - [x] Crear modal interactivo "Detalle de Permisos por Colaborador" con desglose visual de los 13 módulos del sistema y estatus de acceso (🟢 Permitido vs ⚪ Sin Acceso).
+  - [x] Crear modal "Matriz y Glosario de Roles del Sistema (RBAC)" accesible desde el header con explicación detallada de facultades por rol.
+  - [x] Mejorar formulario de alta/edición de personal con descripciones explicativas de permisos en cada casilla de rol.
+- [x] Verificar compilación y funcionalidad (Vite build exitoso sin errores).

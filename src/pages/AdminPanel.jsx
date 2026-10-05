@@ -30,6 +30,257 @@ const REGIMENES_FISCALES = [
   { code: "630", label: "630 - Enajenación de acciones en bolsa de valores" }
 ];
 
+// Catálogo maestro de roles del sistema y especificación de permisos
+export const ROLES_CATALOG = {
+  admin: {
+    id: "admin",
+    name: "Administrador General",
+    shortLabel: "Admin",
+    color: "bg-red-100 text-red-800 border-red-200",
+    badgeColor: "bg-red-700 text-white",
+    icon: "shield_person",
+    description: "Acceso total y control maestro de todos los módulos del sistema.",
+    modules: [
+      { name: "Panel de Control & Finanzas", access: "Total", desc: "Métricas globales de venta, ocupación y proyecciones" },
+      { name: "Cuentas de Personal & RBAC", access: "Total", desc: "Crear, editar, eliminar personal y definir permisos" },
+      { name: "Auditoría del Sistema", access: "Total", desc: "Consulta detallada de bitácora y logs de auditoría" },
+      { name: "CMS & Contenido Web", access: "Total", desc: "Blog, Banners, Platillos Destacados y Redacción IA" },
+      { name: "Puntos de Venta & KAMs", access: "Total", desc: "Directorio de tiendas PDV/CDC y equipo comercial" },
+      { name: "Experiencias & Turismo", access: "Total", desc: "Calendario, cupos, bloqueos de fechas y bitácora" },
+      { name: "Validación QR en Hacienda", access: "Total", desc: "Escaneo y autorización de boletos en tiempo real" },
+      { name: "Restaurante Nativo", access: "Total", desc: "Reservaciones de mesas y asignación de aforo" },
+      { name: "Bolsa de Trabajo & RH", access: "Total", desc: "Publicación de vacantes y descarga de CVs" },
+      { name: "Leads de Maquila", access: "Total", desc: "Gestión de prospectos industriales y automatización" },
+      { name: "Cuentas por Cobrar & CFDI", access: "Total", desc: "Timbrado y cancelación de facturas 4.0 ante el SAT" },
+      { name: "Cupones de Descuento", access: "Total", desc: "Creación y administración de campañas y promociones" }
+    ]
+  },
+  editor: {
+    id: "editor",
+    name: "Editor de Contenidos & CMS",
+    shortLabel: "Editor",
+    color: "bg-blue-100 text-blue-800 border-blue-200",
+    badgeColor: "bg-blue-700 text-white",
+    icon: "edit_note",
+    description: "Administración de páginas públicas, blog, banners y red comercial.",
+    modules: [
+      { name: "CMS & Contenido Web", access: "Total", desc: "Creación y edición de Artículos, Banners y Platillos" },
+      { name: "Asistente IA para Blog", access: "Total", desc: "Generación de contenido y meta tags SEO con IA" },
+      { name: "Puntos de Venta & KAMs", access: "Total", desc: "Edición de tiendas y asignación de Vendedores/KAMs" },
+      { name: "Bolsa de Trabajo (Vacantes)", access: "Edición", desc: "Crear y publicar ofertas de trabajo en la web" },
+      { name: "Leads de Maquila", access: "Consulta / Edición", desc: "Seguimiento de prospectos industriales recibidos" }
+    ]
+  },
+  experience_manager: {
+    id: "experience_manager",
+    name: "Gestor de Experiencias y Turismo",
+    shortLabel: "Experiencias",
+    color: "bg-amber-100 text-amber-800 border-amber-200",
+    badgeColor: "bg-amber-700 text-white",
+    icon: "tour",
+    description: "Operación de recorridos turísticos, control de aforo y acceso a Hacienda.",
+    modules: [
+      { name: "Calendario de Experiencias", access: "Total", desc: "Apertura de fechas, cupos máximos y bloqueos preventivos" },
+      { name: "Validación QR en Hacienda", access: "Total", desc: "Escaneo y validación de boletos QR en accesos" },
+      { name: "Bitácora Turística", access: "Total", desc: "Listado de reservaciones, check-in y asistencia de visitantes" },
+      { name: "Cupones de Descuento", access: "Total", desc: "Creación y control de códigos promocionales de tours" }
+    ]
+  },
+  restaurant_manager: {
+    id: "restaurant_manager",
+    name: "Gestor de Restaurante Nativo",
+    shortLabel: "Restaurante",
+    color: "bg-purple-100 text-purple-800 border-purple-200",
+    badgeColor: "bg-purple-700 text-white",
+    icon: "restaurant",
+    description: "Control de reservaciones gastronómicas y atención a comensales.",
+    modules: [
+      { name: "Restaurante Nativo", access: "Total", desc: "Gestión de mesas, horarios, estados y notas especiales" },
+      { name: "Control de Comensales", access: "Total", desc: "Confirmación, cancelación y recepción de comensales" }
+    ]
+  },
+  cuentas_por_cobrar: {
+    id: "cuentas_por_cobrar",
+    name: "Cuentas por Cobrar & Facturación",
+    shortLabel: "Facturación",
+    color: "bg-emerald-100 text-emerald-800 border-emerald-200",
+    badgeColor: "bg-emerald-700 text-white",
+    icon: "receipt_long",
+    description: "Supervisión contable, bitácora de pagos y timbrado fiscal ante el SAT.",
+    modules: [
+      { name: "Bitácora Financiera", access: "Consulta", desc: "Consulta de pagos e ingresos de reservaciones turísticas" },
+      { name: "Facturación Fiscal CFDI 4.0", access: "Total", desc: "Emisión, timbrado y cancelación de CFDI con el SAT" },
+      { name: "Archivos Fiscales (XML / PDF)", access: "Descarga", desc: "Descarga directa de comprobantes fiscales emitidos" }
+    ]
+  },
+  rh: {
+    id: "rh",
+    name: "Recursos Humanos (RH)",
+    shortLabel: "RH",
+    color: "bg-teal-100 text-teal-800 border-teal-200",
+    badgeColor: "bg-teal-700 text-white",
+    icon: "badge",
+    description: "Atracción de talento, vacantes laborales y revisión de candidatos.",
+    modules: [
+      { name: "Bolsa de Trabajo (Vacantes)", access: "Total", desc: "Publicación y cierre de convocatorias laborales" },
+      { name: "Postulaciones Recibidas", access: "Total", desc: "Listado de aspirantes y revisión de estatus de contratación" },
+      { name: "Descarga de Curriculums (CV)", access: "Descarga", desc: "Descarga y lectura de CVs adjuntos en PDF" }
+    ]
+  },
+  lead_maquila: {
+    id: "lead_maquila",
+    name: "Gestor de Leads de Maquila",
+    shortLabel: "Maquila",
+    color: "bg-orange-100 text-orange-850 border-orange-200",
+    badgeColor: "bg-orange-700 text-white",
+    icon: "factory",
+    description: "Prospección comercial, cotizaciones de destilación y seguimiento de clientes.",
+    modules: [
+      { name: "CRM de Prospectos de Maquila", access: "Total", desc: "Control de clientes industriales, etapas y negociación" },
+      { name: "Registro Manual de Leads", access: "Total", desc: "Alta de prospectos comerciales contactados directamente" },
+      { name: "Correos Informativos Automáticos", access: "Total", desc: "Envío manual y seguimiento de correos automatizados" },
+      { name: "Exportación a CSV", access: "Descarga", desc: "Exportación de base de prospectos para hojas de cálculo" }
+    ]
+  },
+  viewer: {
+    id: "viewer",
+    name: "Visor General (Solo Lectura)",
+    shortLabel: "Visor",
+    color: "bg-stone-100 text-stone-700 border-stone-200",
+    badgeColor: "bg-stone-600 text-white",
+    icon: "visibility",
+    description: "Supervisión y consulta de datos sin permisos de modificación ni borrado.",
+    modules: [
+      { name: "Bitácora Turística", access: "Solo Lectura", desc: "Visualización de reservaciones sin opción de alterar datos" },
+      { name: "Restaurante Nativo", access: "Solo Lectura", desc: "Consulta de mesas y comensales sin opción de edición" },
+      { name: "Leads de Maquila", access: "Solo Lectura", desc: "Visualización de prospectos de maquila" }
+    ]
+  }
+};
+
+// Evaluador de permisos por combinación de roles
+export const getUserPermissionsMatrix = (roleString) => {
+  const roles = String(roleString || "").split(",").map(r => r.trim()).filter(Boolean);
+  const isAdmin = roles.includes("admin");
+  const isViewerOnly = roles.length === 1 && roles[0] === "viewer";
+
+  const modules = [
+    {
+      id: "dashboard",
+      name: "Panel de Control & Finanzas",
+      icon: "monitoring",
+      allowed: isAdmin,
+      rolesAllowed: ["admin"],
+      desc: "Visualización de ingresos, tendencias y balance general."
+    },
+    {
+      id: "users_rbac",
+      name: "Gestión de Personal & Roles (RBAC)",
+      icon: "admin_panel_settings",
+      allowed: isAdmin,
+      rolesAllowed: ["admin"],
+      desc: "Creación y administración de cuentas de empleados y privilegios."
+    },
+    {
+      id: "audit",
+      name: "Auditoría & Bitácora de Sistema",
+      icon: "history",
+      allowed: isAdmin,
+      rolesAllowed: ["admin"],
+      desc: "Monitoreo de accesos, altas, bajas y modificaciones críticas."
+    },
+    {
+      id: "cms_content",
+      name: "CMS Web (Blog, Banners, Platillos)",
+      icon: "web",
+      allowed: isAdmin || roles.includes("editor"),
+      rolesAllowed: ["admin", "editor"],
+      desc: "Publicación de notas en el blog, banners de inicio y gastronomía."
+    },
+    {
+      id: "pos_kams",
+      name: "Puntos de Venta & Vendedores / KAMs",
+      icon: "store",
+      allowed: isAdmin || roles.includes("editor"),
+      rolesAllowed: ["admin", "editor"],
+      desc: "Administración de red comercial, tiendas y asignación de KAMs."
+    },
+    {
+      id: "calendar_tours",
+      name: "Calendario de Tours & Cupos",
+      icon: "calendar_month",
+      allowed: isAdmin || roles.includes("experience_manager"),
+      rolesAllowed: ["admin", "experience_manager"],
+      desc: "Configuración de aforo de visitantes y fechas disponibles."
+    },
+    {
+      id: "qr_validation",
+      name: "Validación QR en Portería",
+      icon: "qr_code_scanner",
+      allowed: isAdmin || roles.includes("experience_manager"),
+      rolesAllowed: ["admin", "experience_manager"],
+      desc: "Revisión y validación de boletos de acceso en Hacienda."
+    },
+    {
+      id: "tourism_log",
+      name: "Bitácora Turística & Reservaciones",
+      icon: "menu_book",
+      allowed: isAdmin || roles.includes("experience_manager") || roles.includes("cuentas_por_cobrar") || roles.includes("viewer"),
+      rolesAllowed: ["admin", "experience_manager", "cuentas_por_cobrar", "viewer"],
+      desc: "Listado de visitantes, asistencia y detalles de reservación."
+    },
+    {
+      id: "cfdi_billing",
+      name: "Facturación Fiscal CFDI 4.0",
+      icon: "receipt",
+      allowed: isAdmin || roles.includes("cuentas_por_cobrar"),
+      rolesAllowed: ["admin", "cuentas_por_cobrar"],
+      desc: "Timbrado y cancelación de comprobantes fiscales ante el SAT."
+    },
+    {
+      id: "restaurant",
+      name: "Restaurante Nativo",
+      icon: "restaurant",
+      allowed: isAdmin || roles.includes("restaurant_manager") || roles.includes("viewer"),
+      rolesAllowed: ["admin", "restaurant_manager", "viewer"],
+      desc: "Asignación de mesas y atención a comensales en el restaurante."
+    },
+    {
+      id: "rh_jobs",
+      name: "Bolsa de Trabajo & RH",
+      icon: "work",
+      allowed: isAdmin || roles.includes("rh") || roles.includes("editor"),
+      rolesAllowed: ["admin", "rh", "editor"],
+      desc: "Publicación de vacantes y descarga de CVs de postulantes."
+    },
+    {
+      id: "maquila_leads",
+      name: "Leads y Prospectos de Maquila",
+      icon: "precision_manufacturing",
+      allowed: isAdmin || roles.includes("lead_maquila") || roles.includes("editor") || roles.includes("viewer"),
+      rolesAllowed: ["admin", "lead_maquila", "editor", "viewer"],
+      desc: "Seguimiento comercial a empresas interesadas en maquila de tequila."
+    },
+    {
+      id: "coupons",
+      name: "Cupones de Descuento",
+      icon: "confirmation_number",
+      allowed: isAdmin || roles.includes("experience_manager"),
+      rolesAllowed: ["admin", "experience_manager"],
+      desc: "Generación de promociones y descuentos para experiencias."
+    }
+  ];
+
+  return {
+    roles,
+    isAdmin,
+    isViewerOnly,
+    modules,
+    allowedCount: modules.filter(m => m.allowed).length,
+    totalModules: modules.length
+  };
+};
+
 export default function AdminPanel({
   lang,
   setPage,
@@ -180,6 +431,20 @@ export default function AdminPanel({
   const [posCurrentPage, setPosCurrentPage] = useState(1);
   const [posPageSize, setPosPageSize] = useState(25);
   const [editingUser, setEditingUser] = useState(null);
+
+  // Vendedores / KAMs States
+  const [kamsList, setKamsList] = useState([]);
+  const [showKamModal, setShowKamModal] = useState(false);
+  const [editingKam, setEditingKam] = useState(null);
+  const [reassigningKam, setReassigningKam] = useState(null);
+  const [kamSearchQuery, setKamSearchQuery] = useState("");
+  const [isSavingKam, setIsSavingKam] = useState(false);
+
+  // Personal / RBAC States
+  const [viewingUserPermissions, setViewingUserPermissions] = useState(null);
+  const [showRolesMatrixModal, setShowRolesMatrixModal] = useState(false);
+  const [usersSearchQuery, setUsersSearchQuery] = useState("");
+  const [usersRoleFilter, setUsersRoleFilter] = useState("all");
 
   // IA Assistant States
   const [aiPrompt, setAiPrompt] = useState("");
@@ -812,6 +1077,15 @@ export default function AdminPanel({
             const pData = await pRes.json();
             setPosList(pData);
           }
+          try {
+            const kRes = await fetch("/api/kams", { headers });
+            if (kRes.ok) {
+              const kData = await kRes.json();
+              setKamsList(kData.kams || []);
+            }
+          } catch (kErr) {
+            console.error("Error loading KAMs:", kErr);
+          }
         } else {
           const res = await fetch(`/api/cms?type=${cmsTab}`, { headers });
           if (res.ok) {
@@ -905,6 +1179,15 @@ export default function AdminPanel({
           if (pRes.ok) {
             const pData = await pRes.json();
             setPosList(pData);
+          }
+          try {
+            const kRes = await fetch("/api/kams", { headers });
+            if (kRes.ok) {
+              const kData = await kRes.json();
+              setKamsList(kData.kams || []);
+            }
+          } catch (kErr) {
+            console.error("Error loading KAMs on refresh:", kErr);
           }
         } else {
           const res = await fetch(`/api/cms?type=${cmsTab}`, { headers });
@@ -2363,6 +2646,169 @@ export default function AdminPanel({
       }
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  // --- VENDEDORES / KAMS HANDLERS ---
+  const handleSaveKam = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    const name = formData.get("name")?.trim();
+    const email = formData.get("email")?.trim() || "";
+    const phone = formData.get("phone")?.trim() || "";
+    const notes = formData.get("notes")?.trim() || "";
+    const is_active = formData.get("is_active") === "true";
+
+    if (!name) {
+      alert("El nombre del vendedor / KAM es obligatorio.");
+      return;
+    }
+
+    setIsSavingKam(true);
+    try {
+      const isEditing = Boolean(editingKam && editingKam.id);
+      const payload = {
+        name,
+        email,
+        phone,
+        notes,
+        is_active
+      };
+
+      if (isEditing) {
+        payload.id = editingKam.id;
+        payload.old_name = editingKam.name;
+      }
+
+      const res = await fetch("/api/kams", {
+        method: isEditing ? "PUT" : "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      if (res.ok && (data.success || data.kam)) {
+        alert(data.message || (isEditing ? "Vendedor actualizado exitosamente." : "Nuevo vendedor / KAM registrado con éxito."));
+        setEditingKam(null);
+        // Refresh KAMs list
+        const kRes = await fetch("/api/kams", { headers: { "Authorization": `Bearer ${token}` } });
+        if (kRes.ok) {
+          const kData = await kRes.json();
+          setKamsList(kData.kams || []);
+        }
+        // If editing/renaming, reload POS list as well so that all cards/tables reflect the new name!
+        if (isEditing && editingKam.name !== name) {
+          const pRes = await fetch("/api/points-of-sale?all=true", { headers: { "Authorization": `Bearer ${token}` } });
+          if (pRes.ok) {
+            const pData = await pRes.json();
+            setPosList(pData);
+          }
+        }
+      } else {
+        alert(`Error: ${data.error || data.message || "No se pudo guardar el vendedor"}`);
+      }
+    } catch (err) {
+      console.error("Error saving KAM:", err);
+      alert("Error de conexión al guardar el vendedor / KAM.");
+    } finally {
+      setIsSavingKam(false);
+    }
+  };
+
+  const handleDeleteKam = async (kam) => {
+    if (!kam || !kam.id) return;
+    const storeCount = kam.stores_count || 0;
+    let confirmMsg = `¿Estás seguro de que deseas eliminar al vendedor "${kam.name}"?`;
+    if (storeCount > 0) {
+      confirmMsg += `\n\n⚠️ ATENCIÓN: Este vendedor tiene ${storeCount} puntos de venta asignados.\nSi deseas conservar sus tiendas bajo otro vendedor, puedes usar la opción 'Transferir Cartera' antes de eliminarlo.`;
+    }
+
+    if (!confirm(confirmMsg)) return;
+
+    try {
+      const res = await fetch("/api/kams", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ id: kam.id, name: kam.name })
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        alert("Vendedor / KAM eliminado con éxito.");
+        // Refresh KAMs list
+        const kRes = await fetch("/api/kams", { headers: { "Authorization": `Bearer ${token}` } });
+        if (kRes.ok) {
+          const kData = await kRes.json();
+          setKamsList(kData.kams || []);
+        }
+      } else {
+        alert(`Error: ${data.error || data.message || "No se pudo eliminar el vendedor"}`);
+      }
+    } catch (err) {
+      console.error("Error deleting KAM:", err);
+      alert("Error al intentar eliminar el vendedor / KAM.");
+    }
+  };
+
+  const handleReassignKamStores = async (e) => {
+    e.preventDefault();
+    if (!reassigningKam) return;
+    const formData = new FormData(e.target);
+    const targetName = formData.get("target_name")?.trim();
+
+    if (!targetName) {
+      alert("Por favor selecciona el vendedor destino.");
+      return;
+    }
+    if (targetName === reassigningKam.name) {
+      alert("El vendedor destino debe ser diferente al actual.");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/kams", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          action: "reassign_stores",
+          source_name: reassigningKam.name,
+          target_name: targetName
+        })
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        alert(data.message || `Puntos de venta reasignados a ${targetName} con éxito.`);
+        setReassigningKam(null);
+        // Refresh KAMs list and POS list
+        const [kRes, pRes] = await Promise.all([
+          fetch("/api/kams", { headers: { "Authorization": `Bearer ${token}` } }),
+          fetch("/api/points-of-sale?all=true", { headers: { "Authorization": `Bearer ${token}` } })
+        ]);
+        if (kRes.ok) {
+          const kData = await kRes.json();
+          setKamsList(kData.kams || []);
+        }
+        if (pRes.ok) {
+          const pData = await pRes.json();
+          setPosList(pData);
+        }
+      } else {
+        alert(`Error: ${data.error || "No se pudieron reasignar los puntos de venta."}`);
+      }
+    } catch (err) {
+      console.error("Error reassigning stores:", err);
+      alert("Error al reasignar los puntos de venta.");
     }
   };
 
@@ -5522,6 +5968,15 @@ export default function AdminPanel({
                         <span className="material-symbols-outlined text-sm">add_circle</span>
                         <span>Registrar Nuevo Punto</span>
                       </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowKamModal(true)}
+                        className="flex items-center gap-1.5 text-xs bg-[#8C4723] hover:bg-[#723617] text-white px-3.5 py-2.5 font-semibold tracking-wider transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
+                        title="Gestionar el directorio de Vendedores / KAMs, registrar nuevos o renombrarlos"
+                      >
+                        <span className="material-symbols-outlined text-sm">badge</span>
+                        <span>Directorio Vendedores/KAMs ({kamsList.length})</span>
+                      </button>
                     </div>
 
                     {/* Quick Metric Badges */}
@@ -5558,9 +6013,16 @@ export default function AdminPanel({
                         <span className="text-[10px] uppercase font-bold text-stone-500 block tracking-wider">Consumo (CDC)</span>
                         <span className="text-xl font-bold text-amber-800 font-serif">{totalCdc}</span>
                       </div>
-                      <div className="bg-white border border-stone-200 p-3 text-center">
-                        <span className="text-[10px] uppercase font-bold text-stone-400 block tracking-wider">Vendedores/KAMs</span>
-                        <span className="text-xl font-bold text-stone-700 font-serif">{sortedSellers.length}</span>
+                      <div 
+                        onClick={() => setShowKamModal(true)}
+                        className="bg-white border border-stone-200 p-3 text-center cursor-pointer transition-all hover:border-[#8C4723] hover:shadow-xs group"
+                        title="Haz clic para ver y gestionar el equipo de Vendedores / KAMs"
+                      >
+                        <div className="flex items-center justify-center gap-1">
+                          <span className="text-[10px] uppercase font-bold text-stone-400 block tracking-wider group-hover:text-[#8C4723]">Vendedores/KAMs</span>
+                          <span className="material-symbols-outlined text-xs text-stone-300 group-hover:text-[#8C4723]">open_in_new</span>
+                        </div>
+                        <span className="text-xl font-bold text-stone-700 font-serif group-hover:text-[#8C4723]">{kamsList.length || sortedSellers.length}</span>
                       </div>
                     </div>
 
@@ -5820,14 +6282,38 @@ export default function AdminPanel({
 
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-stone-100/70 p-3 rounded">
                             <div>
-                              <label className="block text-[10px] text-stone-600 uppercase font-bold mb-1">Vendedor / KAM Asignado</label>
-                              <input 
-                                type="text" 
+                              <div className="flex justify-between items-center mb-1">
+                                <label className="block text-[10px] text-stone-600 uppercase font-bold">Vendedor / KAM Asignado *</label>
+                                <button
+                                  type="button"
+                                  onClick={() => setShowKamModal(true)}
+                                  className="text-[10px] text-[#8C4723] hover:underline font-bold flex items-center gap-0.5 cursor-pointer"
+                                  title="Gestionar el directorio de Vendedores / KAMs o registrar uno nuevo"
+                                >
+                                  <span className="material-symbols-outlined text-[13px]">person_add</span>
+                                  <span>+ Registrar KAM</span>
+                                </button>
+                              </div>
+                              <select 
                                 name="fase" 
-                                defaultValue={editingPos.fase || user?.name || ""} 
-                                placeholder="Ej. Sofia Mejia" 
-                                className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" 
-                              />
+                                defaultValue={editingPos.fase || (kamsList.length > 0 ? kamsList[0].name : "")} 
+                                className="w-full bg-white border border-stone-200 p-2 text-xs font-semibold text-stone-800 focus:outline-none focus:border-[#8C4723] cursor-pointer"
+                              >
+                                {editingPos.fase && !kamsList.some(k => k.name.toLowerCase().trim() === editingPos.fase.toLowerCase().trim()) && (
+                                  <option value={editingPos.fase}>
+                                    ⚠️ {editingPos.fase} (Actual no registrado)
+                                  </option>
+                                )}
+                                <option value="">-- Seleccionar Vendedor / KAM --</option>
+                                {kamsList.map(kam => (
+                                  <option key={kam.id || kam.name} value={kam.name}>
+                                    👤 {kam.name} {!kam.is_active ? "(Inactivo)" : ""} {kam.stores_count !== undefined ? `(${kam.stores_count} tiendas)` : ""}
+                                  </option>
+                                ))}
+                              </select>
+                              <p className="text-[9px] text-stone-400 mt-1">
+                                Selecciona un KAM registrado. Si no existe, puedes registrarlo arriba.
+                              </p>
                             </div>
                             <div>
                               <span className="block text-[10px] text-stone-600 uppercase font-bold mb-1">Tipo de Establecimiento</span>
@@ -6440,128 +6926,274 @@ export default function AdminPanel({
           {/* TAB: Personal & RBAC (Admin only) */}
           {activeTab === "users" && userHasRole("admin") && (
             <div className="space-y-6 text-left">
-              <div className="flex justify-between items-center border-b border-stone-100 pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-stone-100 pb-4">
                 <div>
-                  <h5 className="text-sm uppercase tracking-wider text-[#8C4723] font-bold font-sans">
+                  <h5 className="text-sm uppercase tracking-wider text-[#8C4723] font-bold font-sans flex items-center gap-2">
+                    <span className="material-symbols-outlined text-base">admin_panel_settings</span>
                     Cuentas de Personal y Asignación de Roles (RBAC)
                   </h5>
-                  <p className="text-xs text-stone-400 font-sans">Administra los accesos y privilegios del personal de Hacienda Casa Loy.</p>
+                  <p className="text-xs text-stone-400 font-sans mt-0.5">
+                    Consulta el equipo registrado, sus roles asignados y el desglose exacto de permisos que tiene cada colaborador.
+                  </p>
                 </div>
-                <button
-                  onClick={() => setEditingUser({ name: "", email: "", role: "viewer", password: "" })}
-                  className="text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white px-4 py-2.5 font-semibold uppercase tracking-wider cursor-pointer font-sans"
-                >
-                  + Agregar Personal
-                </button>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowRolesMatrixModal(true)}
+                    className="text-xs bg-stone-100 hover:bg-stone-200 text-stone-700 px-3.5 py-2 font-semibold tracking-wider rounded border border-stone-200 flex items-center gap-1.5 cursor-pointer font-sans transition-colors"
+                    title="Consultar la matriz explicativa de los 8 roles y sus permisos en el sistema"
+                  >
+                    <span className="material-symbols-outlined text-sm">checklist</span>
+                    <span>Matriz de Permisos</span>
+                  </button>
+                  <button
+                    onClick={() => setEditingUser({ name: "", email: "", role: "viewer", password: "" })}
+                    className="text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white px-4 py-2 font-semibold uppercase tracking-wider cursor-pointer font-sans flex items-center gap-1.5 transition-colors shadow-xs"
+                  >
+                    <span className="material-symbols-outlined text-sm">person_add</span>
+                    <span>+ Agregar Personal</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Filtros y Buscador de Personal */}
+              <div className="bg-stone-50/80 border border-stone-200 p-3.5 rounded flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+                <div className="flex-1 relative">
+                  <span className="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400 text-sm">search</span>
+                  <input
+                    type="text"
+                    value={usersSearchQuery}
+                    onChange={(e) => setUsersSearchQuery(e.target.value)}
+                    placeholder="Buscar colaborador por nombre o correo..."
+                    className="w-full bg-white border border-stone-200 pl-8 pr-3 py-1.5 text-xs text-stone-800 rounded focus:outline-none focus:border-[#8C4723]"
+                  />
+                  {usersSearchQuery && (
+                    <button
+                      onClick={() => setUsersSearchQuery("")}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 text-xs cursor-pointer"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <label className="text-[10px] uppercase font-bold text-stone-500 whitespace-nowrap">Filtrar por Rol:</label>
+                  <select
+                    value={usersRoleFilter}
+                    onChange={(e) => setUsersRoleFilter(e.target.value)}
+                    className="bg-white border border-stone-200 px-2.5 py-1.5 text-xs text-stone-800 rounded focus:outline-none focus:border-[#8C4723] cursor-pointer"
+                  >
+                    <option value="all">👥 Todos los Roles ({usersList.length})</option>
+                    {Object.values(ROLES_CATALOG).map(r => (
+                      <option key={r.id} value={r.id}>
+                        {r.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               {editingUser && (
-                <form onSubmit={handleSaveUser} className="bg-stone-50 border border-stone-200 p-6 space-y-4 max-w-lg mx-auto font-sans">
-                  <h6 className="font-serif text-sm font-bold text-stone-800 border-b border-stone-200 pb-1.5 uppercase">
-                    {editingUser.id ? "Modificar Cuenta de Personal" : "Crear Nueva Cuenta de Personal"}
-                  </h6>
+                <form onSubmit={handleSaveUser} className="bg-stone-50 border-2 border-[#8C4723]/30 p-6 space-y-4 max-w-xl mx-auto font-sans shadow-md animate-fade-in rounded">
+                  <div className="flex justify-between items-center border-b border-stone-200 pb-2">
+                    <h6 className="font-serif text-sm font-bold text-stone-800 uppercase flex items-center gap-2">
+                      <span className="material-symbols-outlined text-[#8C4723]">{editingUser.id ? "manage_accounts" : "person_add"}</span>
+                      {editingUser.id ? "Modificar Cuenta de Personal" : "Crear Nueva Cuenta de Personal"}
+                    </h6>
+                    <button
+                      type="button"
+                      onClick={() => setEditingUser(null)}
+                      className="text-stone-400 hover:text-stone-700 text-base cursor-pointer"
+                    >
+                      ✕
+                    </button>
+                  </div>
                   
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Nombre del Trabajador *</label>
-                      <input type="text" name="name" required defaultValue={editingUser.name} placeholder="Ej. Juan Pérez" className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" />
+                      <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Nombre Completo *</label>
+                      <input type="text" name="name" required defaultValue={editingUser.name} placeholder="Ej. Juan Pérez" className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none focus:border-[#8C4723]" />
                     </div>
                     <div>
                       <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Correo (Usuario) *</label>
-                      <input type="email" name="email" required defaultValue={editingUser.email} placeholder="ejemplo@casaloy.com" className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" />
+                      <input type="email" name="email" required defaultValue={editingUser.email} placeholder="ejemplo@casaloy.com" className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none focus:border-[#8C4723]" />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Roles Asignados (Selecciona uno o varios) *</label>
-                      <div className="bg-white border border-stone-200 p-3 space-y-2 rounded max-h-[160px] overflow-y-auto">
-                        {[
-                          { id: 'admin', label: 'Administrador (Acceso Completo)' },
-                          { id: 'editor', label: 'Editor (CMS, Blog, Banners)' },
-                          { id: 'experience_manager', label: 'Gestor de Experiencias (Tours, QR)' },
-                          { id: 'restaurant_manager', label: 'Gestor de Restaurante (Mesas)' },
-                          { id: 'rh', label: 'Recursos Humanos (Bolsa de Trabajo)' },
-                          { id: 'cuentas_por_cobrar', label: 'Cuentas por Cobrar (Facturas)' },
-                          { id: 'viewer', label: 'Visor General (Solo Lectura)' },
-                          { id: 'lead_maquila', label: 'Gestor de Leads de Maquila' }
-                        ].map(roleOpt => {
-                          const isChecked = String(editingUser?.role || '').split(',').map(r => r.trim()).includes(roleOpt.id);
-                          return (
-                            <label key={roleOpt.id} className="flex items-center gap-2 cursor-pointer text-stone-700 hover:text-stone-900 select-none">
-                              <input 
-                                type="checkbox" 
-                                name="roles_checkbox" 
-                                value={roleOpt.id} 
-                                defaultChecked={isChecked}
-                                className="rounded text-[#8C4723] focus:ring-[#8C4723] cursor-pointer" 
-                              />
-                              <span className="text-xs">{roleOpt.label}</span>
-                            </label>
-                          );
-                        })}
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">
-                        {editingUser.id ? "Nueva Contraseña (Opcional)" : "Contraseña de Acceso *"}
-                      </label>
-                      <input type="password" name="password" required={!editingUser.id} placeholder={editingUser.id ? "Dejar en blanco para no cambiar" : "••••••••"} className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" />
+                  <div>
+                    <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">
+                      Roles Asignados (Selecciona uno o varios para combinar permisos) *
+                    </label>
+                    <div className="bg-white border border-stone-200 p-3 space-y-2 rounded max-h-[220px] overflow-y-auto divide-y divide-stone-100">
+                      {[
+                        { id: 'admin', label: 'Administrador General', desc: 'Acceso total sin restricciones a todos los módulos y auditoría' },
+                        { id: 'editor', label: 'Editor de Contenidos & CMS', desc: 'Blog, Asistente IA, Banners, Platillos y Puntos de Venta' },
+                        { id: 'experience_manager', label: 'Gestor de Experiencias y Turismo', desc: 'Calendario, cupos de tours, validación QR y cupones de descuento' },
+                        { id: 'restaurant_manager', label: 'Gestor de Restaurante Nativo', desc: 'Control de reservaciones de mesas y comensales' },
+                        { id: 'rh', label: 'Recursos Humanos (RH)', desc: 'Bolsa de trabajo, vacantes laborales y descarga de CVs' },
+                        { id: 'cuentas_por_cobrar', label: 'Cuentas por Cobrar & Facturación', desc: 'Bitácora financiera y timbrado fiscal de facturas CFDI 4.0' },
+                        { id: 'lead_maquila', label: 'Gestor de Leads de Maquila', desc: 'Seguimiento comercial, prospección y correos automáticos' },
+                        { id: 'viewer', label: 'Visor General (Solo Lectura)', desc: 'Consulta y supervisión visual sin permisos de alteración ni borrado' }
+                      ].map(roleOpt => {
+                        const isChecked = String(editingUser?.role || '').split(',').map(r => r.trim()).includes(roleOpt.id);
+                        return (
+                          <label key={roleOpt.id} className="flex items-start gap-2.5 pt-2 first:pt-0 cursor-pointer text-stone-700 hover:text-stone-900 select-none group">
+                            <input 
+                              type="checkbox" 
+                              name="roles_checkbox" 
+                              value={roleOpt.id} 
+                              defaultChecked={isChecked}
+                              className="mt-0.5 rounded text-[#8C4723] focus:ring-[#8C4723] cursor-pointer" 
+                            />
+                            <div className="flex-1">
+                              <span className="text-xs font-bold text-stone-900 block group-hover:text-[#8C4723]">{roleOpt.label}</span>
+                              <span className="text-[10px] text-stone-400 block leading-tight">{roleOpt.desc}</span>
+                            </div>
+                          </label>
+                        );
+                      })}
                     </div>
                   </div>
 
-                  <div className="flex gap-2 justify-end pt-2">
-                    <button type="button" onClick={() => setEditingUser(null)} className="px-3.5 py-1.5 text-xs border border-stone-200 cursor-pointer">Cancelar</button>
-                    <button type="submit" className="px-3.5 py-1.5 text-xs bg-[#8C4723] text-white font-semibold cursor-pointer">Guardar Cuenta</button>
+                  <div>
+                    <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">
+                      {editingUser.id ? "Nueva Contraseña (Opcional - dejar en blanco para no cambiar)" : "Contraseña de Acceso *"}
+                    </label>
+                    <input 
+                      type="password" 
+                      name="password" 
+                      required={!editingUser.id} 
+                      placeholder={editingUser.id ? "•••••••• (Sin cambios)" : "Mínimo 6 caracteres"} 
+                      className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none focus:border-[#8C4723]" 
+                    />
+                  </div>
+
+                  <div className="flex gap-2 justify-end pt-2 border-t border-stone-200">
+                    <button type="button" onClick={() => setEditingUser(null)} className="px-3.5 py-1.5 text-xs border border-stone-200 text-stone-600 hover:bg-stone-100 cursor-pointer rounded">Cancelar</button>
+                    <button type="submit" className="px-4 py-1.5 text-xs bg-[#8C4723] hover:bg-[#723617] text-white font-semibold cursor-pointer rounded shadow-xs">Guardar Cuenta</button>
                   </div>
                 </form>
               )}
 
               {/* Users list */}
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[9px] border-b border-stone-200 font-semibold">
-                      <th className="p-3">Nombre</th>
-                      <th className="p-3">Correo / Usuario</th>
-                      <th className="p-3">Rol del Personal</th>
-                      <th className="p-3">Fecha de Alta</th>
-                      <th className="p-3 text-center">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-stone-100">
-                    {usersList.map((staff) => (
-                      <tr key={staff.id} className="hover:bg-stone-50/40 text-stone-700">
-                        <td className="p-3 font-semibold text-stone-900">{staff.name}</td>
-                        <td className="p-3 font-mono text-[11px] text-stone-500">{staff.email}</td>
-                        <td className="p-3">
-                          <div className="flex flex-wrap gap-1.5">
-                            {String(staff.role || '').split(',').map(r => r.trim()).map(roleName => (
-                              <span key={roleName} className={`inline-block px-2.5 py-0.5 text-[10px] font-sans font-bold uppercase rounded-sm ${
-                                roleName === 'admin' ? 'bg-red-100 text-red-800' :
-                                roleName === 'editor' ? 'bg-blue-100 text-blue-800' :
-                                roleName === 'experience_manager' ? 'bg-amber-100 text-amber-800' :
-                                roleName === 'restaurant_manager' ? 'bg-purple-100 text-purple-800' :
-                                roleName === 'cuentas_por_cobrar' ? 'bg-emerald-100 text-emerald-800' :
-                                roleName === 'rh' ? 'bg-teal-100 text-teal-800' :
-                                roleName === 'lead_maquila' ? 'bg-orange-100 text-orange-850 border border-orange-200' :
-                                'bg-stone-100 text-stone-600'
-                              }`}>
-                                {roleName}
-                              </span>
-                            ))}
-                          </div>
-                        </td>
-                        <td className="p-3 text-stone-400">{new Date(staff.created_at).toLocaleDateString()}</td>
-                        <td className="p-3 text-center space-x-3">
-                          <button onClick={() => setEditingUser(staff)} className="text-blue-700 hover:underline font-bold uppercase cursor-pointer">Editar</button>
-                          <button onClick={() => handleDeleteUser(staff.id, staff.email)} className="text-red-700 hover:underline font-bold uppercase cursor-pointer">Eliminar</button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              {(() => {
+                const filteredUsers = usersList.filter(staff => {
+                  if (usersSearchQuery.trim()) {
+                    const q = usersSearchQuery.toLowerCase().trim();
+                    const matchName = staff.name?.toLowerCase().includes(q);
+                    const matchEmail = staff.email?.toLowerCase().includes(q);
+                    if (!matchName && !matchEmail) return false;
+                  }
+                  if (usersRoleFilter !== "all") {
+                    const userRoles = String(staff.role || "").split(",").map(r => r.trim());
+                    if (!userRoles.includes(usersRoleFilter)) return false;
+                  }
+                  return true;
+                });
+
+                return (
+                  <div className="overflow-x-auto bg-white border border-stone-200 rounded">
+                    <table className="w-full text-left text-xs border-collapse">
+                      <thead>
+                        <tr className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[9px] border-b border-stone-200 font-semibold">
+                          <th className="p-3">Colaborador</th>
+                          <th className="p-3">Roles Asignados</th>
+                          <th className="p-3 text-center">Permisos del Sistema</th>
+                          <th className="p-3">Fecha de Alta</th>
+                          <th className="p-3 text-center">Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-stone-100">
+                        {filteredUsers.length === 0 ? (
+                          <tr>
+                            <td colSpan="5" className="p-8 text-center text-stone-400 italic">
+                              No se encontraron colaboradores con los filtros seleccionados.
+                            </td>
+                          </tr>
+                        ) : (
+                          filteredUsers.map((staff) => {
+                            const permMatrix = getUserPermissionsMatrix(staff.role);
+                            const roleList = String(staff.role || '').split(',').map(r => r.trim()).filter(Boolean);
+
+                            return (
+                              <tr key={staff.id} className="hover:bg-stone-50/60 text-stone-700 transition-colors">
+                                <td className="p-3">
+                                  <div className="flex items-center gap-2.5">
+                                    <div className="w-8 h-8 rounded-full bg-[#2F403E] text-amber-200 font-serif font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
+                                      {(staff.name || staff.email || "U").charAt(0).toUpperCase()}
+                                    </div>
+                                    <div>
+                                      <div className="font-semibold text-stone-900 text-xs">{staff.name || "Sin Nombre"}</div>
+                                      <div className="font-mono text-[11px] text-stone-400">{staff.email}</div>
+                                    </div>
+                                  </div>
+                                </td>
+
+                                <td className="p-3">
+                                  <div className="flex flex-wrap gap-1.5 max-w-xs">
+                                    {roleList.map(roleId => {
+                                      const roleDef = ROLES_CATALOG[roleId] || {
+                                        name: roleId,
+                                        badgeColor: 'bg-stone-100 text-stone-700',
+                                        icon: 'badge'
+                                      };
+                                      return (
+                                        <span 
+                                          key={roleId} 
+                                          className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-sans font-bold rounded-sm border ${
+                                            roleId === 'admin' ? 'bg-red-50 text-red-800 border-red-200' :
+                                            roleId === 'editor' ? 'bg-blue-50 text-blue-800 border-blue-200' :
+                                            roleId === 'experience_manager' ? 'bg-amber-50 text-amber-800 border-amber-200' :
+                                            roleId === 'restaurant_manager' ? 'bg-purple-50 text-purple-800 border-purple-200' :
+                                            roleId === 'cuentas_por_cobrar' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' :
+                                            roleId === 'rh' ? 'bg-teal-50 text-teal-800 border-teal-200' :
+                                            roleId === 'lead_maquila' ? 'bg-orange-50 text-orange-850 border-orange-200' :
+                                            'bg-stone-50 text-stone-600 border-stone-200'
+                                          }`}
+                                          title={roleDef.description || roleDef.name}
+                                        >
+                                          <span className="material-symbols-outlined text-[11px]">{roleDef.icon || 'shield'}</span>
+                                          <span>{roleDef.name}</span>
+                                        </span>
+                                      );
+                                    })}
+                                  </div>
+                                </td>
+
+                                <td className="p-3 text-center whitespace-nowrap">
+                                  <button
+                                    type="button"
+                                    onClick={() => setViewingUserPermissions(staff)}
+                                    className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded bg-stone-100 hover:bg-[#8C4723] text-stone-700 hover:text-white transition-colors cursor-pointer border border-stone-200/80 shadow-xs"
+                                    title="Haz clic para ver la lista completa de permisos y accesos de este colaborador"
+                                  >
+                                    <span className="material-symbols-outlined text-sm text-[#8C4723] group-hover:text-white">verified_user</span>
+                                    <span>Ver Permisos ({permMatrix.allowedCount}/{permMatrix.totalModules})</span>
+                                  </button>
+                                </td>
+
+                                <td className="p-3 text-stone-400 whitespace-nowrap text-[11px]">
+                                  {new Date(staff.created_at).toLocaleDateString()}
+                                </td>
+
+                                <td className="p-3 text-center space-x-2 whitespace-nowrap">
+                                  <button onClick={() => setEditingUser(staff)} className="text-blue-700 hover:underline font-bold uppercase text-[11px] cursor-pointer">
+                                    Editar
+                                  </button>
+                                  <button onClick={() => handleDeleteUser(staff.id, staff.email)} className="text-red-700 hover:underline font-bold uppercase text-[11px] cursor-pointer">
+                                    Eliminar
+                                  </button>
+                                </td>
+                              </tr>
+                            );
+                          })
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                );
+              })()}
             </div>
           )}
 
@@ -8007,6 +8639,551 @@ export default function AdminPanel({
 
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* 1. MODAL: DIRECTORIO Y GESTIÓN DE VENDEDORES / KAMS       */}
+      {/* ========================================================= */}
+      {showKamModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white max-w-3xl w-full max-h-[92vh] overflow-y-auto p-6 shadow-2xl relative border border-stone-200 text-stone-800 space-y-5 text-left rounded-lg font-sans">
+            <button
+              onClick={() => {
+                setShowKamModal(false);
+                setEditingKam(null);
+                setReassigningKam(null);
+              }}
+              className="absolute top-4 right-4 text-stone-400 hover:text-stone-700 cursor-pointer p-1"
+            >
+              <span className="material-symbols-outlined text-xl">close</span>
+            </button>
+
+            {/* Modal Header */}
+            <div className="border-b border-stone-200 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h5 className="font-serif text-lg font-bold text-[#8C4723] flex items-center gap-2">
+                  <span className="material-symbols-outlined text-xl">badge</span>
+                  Directorio de Vendedores y KAMs
+                </h5>
+                <p className="text-xs text-stone-500 mt-0.5">
+                  Gestiona el equipo comercial asignado a los puntos de venta. Puedes renombrar a un KAM para actualizar en bloque todas sus tiendas asignadas, o transferir su cartera si deja la empresa.
+                </p>
+              </div>
+              {!editingKam && !reassigningKam && (
+                <button
+                  type="button"
+                  onClick={() => setEditingKam({ name: "", email: "", phone: "", notes: "", is_active: true })}
+                  className="bg-[#8C4723] hover:bg-[#70381b] text-white text-xs px-3.5 py-2 uppercase font-bold rounded flex items-center gap-1.5 cursor-pointer shrink-0 transition-colors shadow-xs"
+                >
+                  <span className="material-symbols-outlined text-base">person_add</span>
+                  <span>+ Registrar KAM</span>
+                </button>
+              )}
+            </div>
+
+            {/* Formulario de Alta / Renombramiento de KAM */}
+            {editingKam && (
+              <form onSubmit={handleSaveKam} className="bg-stone-50 border-2 border-[#8C4723]/30 p-5 rounded-lg space-y-4 shadow-sm animate-fade-in">
+                <div className="flex items-center justify-between border-b border-stone-200 pb-2">
+                  <h6 className="font-serif text-sm font-bold text-stone-900 uppercase flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-[#8C4723] text-base">{editingKam.id ? "edit" : "person_add"}</span>
+                    {editingKam.id ? `Renombrar / Modificar: ${editingKam.name}` : "Registrar Nuevo Vendedor / KAM"}
+                  </h6>
+                  <button
+                    type="button"
+                    onClick={() => setEditingKam(null)}
+                    className="text-stone-400 hover:text-stone-700 text-xs font-bold uppercase cursor-pointer"
+                  >
+                    ✕ Cancelar
+                  </button>
+                </div>
+
+                {editingKam.id && (
+                  <div className="bg-amber-50 border border-amber-200 p-3 rounded text-xs text-amber-900 space-y-1">
+                    <div className="font-bold flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-base text-amber-700">sync</span>
+                      <span>Sincronización Automática con Puntos de Venta</span>
+                    </div>
+                    <p className="text-[11px] text-amber-800 leading-relaxed">
+                      Si cambias el nombre de este vendedor (ejemplo: si entra un nuevo KAM en su lugar), el sistema actualizará en automático los <strong className="underline">{editingKam.stores_count || 0} puntos de venta</strong> que actualmente tiene asignados en la base de datos.
+                    </p>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[10px] text-stone-600 uppercase font-bold mb-1">Nombre Completo del KAM *</label>
+                    <input
+                      type="text"
+                      name="name"
+                      required
+                      defaultValue={editingKam.name || ""}
+                      placeholder="Ej. Mariana Torres"
+                      className="w-full bg-white border border-stone-200 p-2 text-xs text-stone-800 font-semibold focus:outline-none focus:border-[#8C4723] rounded"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-stone-600 uppercase font-bold mb-1">Correo Electrónico (Opcional)</label>
+                    <input
+                      type="email"
+                      name="email"
+                      defaultValue={editingKam.email || ""}
+                      placeholder="mariana@casaloy.com"
+                      className="w-full bg-white border border-stone-200 p-2 text-xs text-stone-800 focus:outline-none focus:border-[#8C4723] rounded"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[10px] text-stone-600 uppercase font-bold mb-1">Teléfono / Celular (Opcional)</label>
+                    <input
+                      type="text"
+                      name="phone"
+                      defaultValue={editingKam.phone || ""}
+                      placeholder="Ej. +52 33 1234 5678"
+                      className="w-full bg-white border border-stone-200 p-2 text-xs text-stone-800 focus:outline-none focus:border-[#8C4723] rounded"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-stone-600 uppercase font-bold mb-1">Estatus</label>
+                    <select
+                      name="is_active"
+                      defaultValue={editingKam.is_active ? "true" : "false"}
+                      className="w-full bg-white border border-stone-200 p-2 text-xs font-semibold text-stone-800 focus:outline-none focus:border-[#8C4723] rounded"
+                    >
+                      <option value="true">🟢 Activo (Visible para asignación)</option>
+                      <option value="false">⚪ Inactivo (Vendedor dado de baja)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] text-stone-600 uppercase font-bold mb-1">Zona / Notas Internas</label>
+                  <input
+                    type="text"
+                    name="notes"
+                    defaultValue={editingKam.notes || ""}
+                    placeholder="Ej. Región Bajío / Cuentas clave retail y mayoristas"
+                    className="w-full bg-white border border-stone-200 p-2 text-xs text-stone-800 focus:outline-none focus:border-[#8C4723] rounded"
+                  />
+                </div>
+
+                <div className="flex justify-end gap-2 pt-2 border-t border-stone-200">
+                  <button
+                    type="button"
+                    onClick={() => setEditingKam(null)}
+                    className="px-3.5 py-1.5 text-xs border border-stone-200 text-stone-600 hover:bg-stone-100 rounded cursor-pointer"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSavingKam}
+                    className="px-4 py-1.5 text-xs bg-[#8C4723] hover:bg-[#723617] disabled:bg-stone-300 text-white font-semibold rounded cursor-pointer flex items-center gap-1.5 shadow-xs"
+                  >
+                    {isSavingKam ? "Guardando..." : editingKam.id ? "Guardar y Sincronizar" : "Guardar Vendedor"}
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* Formulario de Reasignación en Bloque */}
+            {reassigningKam && (
+              <form onSubmit={handleReassignKamStores} className="bg-blue-50/70 border-2 border-blue-300 p-5 rounded-lg space-y-4 shadow-sm animate-fade-in">
+                <div className="flex items-center justify-between border-b border-blue-200 pb-2">
+                  <h6 className="font-serif text-sm font-bold text-blue-900 uppercase flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-blue-700 text-base">move_up</span>
+                    Transferir Cartera de: {reassigningKam.name}
+                  </h6>
+                  <button
+                    type="button"
+                    onClick={() => setReassigningKam(null)}
+                    className="text-stone-400 hover:text-stone-700 text-xs font-bold uppercase cursor-pointer"
+                  >
+                    ✕ Cancelar
+                  </button>
+                </div>
+
+                <p className="text-xs text-blue-950">
+                  Actualmente este vendedor tiene <strong className="text-blue-900 font-bold">{reassigningKam.stores_count || 0} puntos de venta</strong> asignados. Selecciona al nuevo vendedor o KAM que recibirá toda esta cartera de clientes:
+                </p>
+
+                <div>
+                  <label className="block text-[10px] text-blue-900 uppercase font-bold mb-1">Vendedor / KAM Destino *</label>
+                  <select
+                    name="target_name"
+                    required
+                    className="w-full bg-white border border-blue-300 p-2 text-xs font-semibold text-stone-800 focus:outline-none focus:border-blue-600 rounded cursor-pointer"
+                  >
+                    <option value="">-- Selecciona el nuevo responsable --</option>
+                    {kamsList.filter(k => k.name !== reassigningKam.name).map(k => (
+                      <option key={k.id || k.name} value={k.name}>
+                        👤 {k.name} {!k.is_active ? "(Inactivo)" : ""} ({k.stores_count || 0} tiendas actuales)
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex justify-end gap-2 pt-2 border-t border-blue-200">
+                  <button
+                    type="button"
+                    onClick={() => setReassigningKam(null)}
+                    className="px-3.5 py-1.5 text-xs border border-stone-200 text-stone-600 hover:bg-white rounded cursor-pointer"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-1.5 text-xs bg-blue-700 hover:bg-blue-800 text-white font-semibold rounded cursor-pointer shadow-xs"
+                  >
+                    Transferir Puntos de Venta Ahora
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* Buscador dentro del Directorio de KAMs */}
+            <div className="flex items-center justify-between gap-3 pt-1">
+              <div className="flex-1 relative">
+                <span className="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400 text-sm">search</span>
+                <input
+                  type="text"
+                  value={kamSearchQuery}
+                  onChange={(e) => setKamSearchQuery(e.target.value)}
+                  placeholder="Buscar vendedor por nombre o notas..."
+                  className="w-full bg-stone-50 border border-stone-200 pl-8 pr-3 py-1.5 text-xs text-stone-800 rounded focus:outline-none focus:border-[#8C4723]"
+                />
+                {kamSearchQuery && (
+                  <button
+                    onClick={() => setKamSearchQuery("")}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 text-xs cursor-pointer"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+              <span className="text-[11px] text-stone-400 whitespace-nowrap">
+                {kamsList.length} registrados
+              </span>
+            </div>
+
+            {/* Tabla de Vendedores / KAMs */}
+            {(() => {
+              const filteredKams = kamsList.filter(k => {
+                if (!kamSearchQuery.trim()) return true;
+                const q = kamSearchQuery.toLowerCase().trim();
+                return k.name?.toLowerCase().includes(q) || k.notes?.toLowerCase().includes(q) || k.email?.toLowerCase().includes(q);
+              });
+
+              return (
+                <div className="overflow-x-auto border border-stone-200 rounded">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[9px] border-b border-stone-200 font-semibold">
+                        <th className="p-3">Vendedor / KAM</th>
+                        <th className="p-3 text-center">Puntos Asignados</th>
+                        <th className="p-3">Contacto</th>
+                        <th className="p-3 text-center">Estatus</th>
+                        <th className="p-3 text-center">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-stone-100">
+                      {filteredKams.length === 0 ? (
+                        <tr>
+                          <td colSpan="5" className="p-8 text-center text-stone-400 italic">
+                            No se encontraron vendedores registrados.
+                          </td>
+                        </tr>
+                      ) : (
+                        filteredKams.map((kam) => (
+                          <tr key={kam.id || kam.name} className="hover:bg-stone-50/70 transition-colors">
+                            <td className="p-3">
+                              <div className="font-bold text-stone-900 text-xs flex items-center gap-2">
+                                <div className="w-6 h-6 rounded-full bg-[#8C4723]/15 text-[#8C4723] font-bold text-[10px] flex items-center justify-center">
+                                  {kam.name.charAt(0).toUpperCase()}
+                                </div>
+                                <span>{kam.name}</span>
+                              </div>
+                              {kam.notes && (
+                                <div className="text-[10px] text-stone-400 mt-0.5 ml-8">{kam.notes}</div>
+                              )}
+                            </td>
+                            <td className="p-3 text-center">
+                              <span className="inline-block bg-[#2F403E]/10 text-[#2F403E] font-bold px-2.5 py-0.5 rounded text-[11px]">
+                                {kam.stores_count || 0} tiendas
+                              </span>
+                            </td>
+                            <td className="p-3 text-stone-500 text-[11px]">
+                              {kam.email ? (
+                                <div className="font-mono text-[10px]">{kam.email}</div>
+                              ) : (
+                                <span className="text-stone-300 italic">Sin correo</span>
+                              )}
+                              {kam.phone && (
+                                <div className="text-[10px] text-stone-400">{kam.phone}</div>
+                              )}
+                            </td>
+                            <td className="p-3 text-center">
+                              {kam.is_active ? (
+                                <span className="bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 text-[9px] font-bold rounded">
+                                  🟢 Activo
+                                </span>
+                              ) : (
+                                <span className="bg-stone-100 text-stone-500 border border-stone-200 px-2 py-0.5 text-[9px] font-bold rounded">
+                                  ⚪ Inactivo
+                                </span>
+                              )}
+                            </td>
+                            <td className="p-3 text-center whitespace-nowrap space-x-2">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setEditingKam(kam);
+                                  setReassigningKam(null);
+                                }}
+                                className="text-blue-700 hover:underline font-bold text-xs cursor-pointer"
+                                title="Renombrar o editar datos de este KAM"
+                              >
+                                Renombrar
+                              </button>
+                              {(kam.stores_count || 0) > 0 && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setReassigningKam(kam);
+                                    setEditingKam(null);
+                                  }}
+                                  className="text-amber-700 hover:underline font-bold text-xs cursor-pointer"
+                                  title="Transferir todas sus tiendas a otro vendedor"
+                                >
+                                  Transferir Cartera
+                                </button>
+                              )}
+                              {userHasRole("admin") && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteKam(kam)}
+                                  className="text-red-700 hover:underline font-bold text-xs cursor-pointer"
+                                  title="Eliminar registro de KAM"
+                                >
+                                  Eliminar
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              );
+            })()}
+
+            <div className="border-t border-stone-200 pt-3 flex justify-between items-center text-xs text-stone-500">
+              <span>Consejo: Al editar un punto de venta en el panel, este directorio alimenta automáticamente el desplegable.</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowKamModal(false);
+                  setEditingKam(null);
+                  setReassigningKam(null);
+                }}
+                className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold rounded cursor-pointer"
+              >
+                Cerrar Directorio
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* 2. MODAL: DETALLE DE PERMISOS POR USUARIO                   */}
+      {/* ========================================================= */}
+      {viewingUserPermissions && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white max-w-2xl w-full max-h-[92vh] overflow-y-auto p-6 shadow-2xl relative border border-stone-200 text-stone-800 space-y-5 text-left rounded-lg font-sans">
+            <button
+              onClick={() => setViewingUserPermissions(null)}
+              className="absolute top-4 right-4 text-stone-400 hover:text-stone-700 cursor-pointer p-1"
+            >
+              <span className="material-symbols-outlined text-xl">close</span>
+            </button>
+
+            {/* Header del Usuario */}
+            <div className="border-b border-stone-200 pb-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-[#2F403E] text-amber-200 font-serif font-bold text-sm flex items-center justify-center shadow-xs">
+                  {(viewingUserPermissions.name || viewingUserPermissions.email || "U").charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <h5 className="font-serif text-lg font-bold text-[#8C4723] flex items-center gap-2">
+                    <span>Permisos de: {viewingUserPermissions.name || "Colaborador"}</span>
+                  </h5>
+                  <p className="font-mono text-xs text-stone-400">{viewingUserPermissions.email}</p>
+                </div>
+              </div>
+
+              {/* Roles asignados */}
+              <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                <span className="text-[10px] uppercase font-bold text-stone-400 mr-1">Roles Asignados:</span>
+                {String(viewingUserPermissions.role || "").split(",").map(r => r.trim()).filter(Boolean).map(roleId => {
+                  const roleDef = ROLES_CATALOG[roleId] || { name: roleId };
+                  return (
+                    <span key={roleId} className="px-2 py-0.5 text-[10px] font-bold uppercase rounded bg-stone-100 text-stone-700 border border-stone-200">
+                      {roleDef.name}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Matriz interactiva de Módulos */}
+            {(() => {
+              const perm = getUserPermissionsMatrix(viewingUserPermissions.role);
+
+              return (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between text-xs bg-stone-50 p-2.5 rounded border border-stone-200">
+                    <span className="font-semibold text-stone-700">Cobertura de Acceso al Sistema:</span>
+                    <span className="font-bold text-[#8C4723]">
+                      {perm.allowedCount} de {perm.totalModules} módulos habilitados
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[50vh] overflow-y-auto pr-1">
+                    {perm.modules.map(mod => (
+                      <div
+                        key={mod.id}
+                        className={`p-3 rounded border text-xs transition-all ${
+                          mod.allowed
+                            ? "bg-emerald-50/40 border-emerald-200 text-emerald-950"
+                            : "bg-stone-50 border-stone-200/60 text-stone-400 opacity-60"
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-2 mb-1">
+                          <div className="flex items-center gap-1.5 font-bold">
+                            <span className={`material-symbols-outlined text-base ${mod.allowed ? "text-emerald-700" : "text-stone-400"}`}>
+                              {mod.icon}
+                            </span>
+                            <span className={mod.allowed ? "text-stone-900" : "text-stone-500"}>{mod.name}</span>
+                          </div>
+                          {mod.allowed ? (
+                            <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200 shrink-0">
+                              ✓ Permitido
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-stone-200/80 text-stone-500 shrink-0">
+                              ✕ Sin Acceso
+                            </span>
+                          )}
+                        </div>
+                        <p className={`text-[10px] leading-tight ${mod.allowed ? "text-stone-600" : "text-stone-400"}`}>
+                          {mod.desc}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+
+            <div className="border-t border-stone-200 pt-3 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setViewingUserPermissions(null)}
+                className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold rounded text-xs cursor-pointer"
+              >
+                Cerrar Detalle
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* 3. MODAL: MATRIZ GLOBAL DE ROLES Y PERMISOS               */}
+      {/* ========================================================= */}
+      {showRolesMatrixModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white max-w-4xl w-full max-h-[92vh] overflow-y-auto p-6 shadow-2xl relative border border-stone-200 text-stone-800 space-y-5 text-left rounded-lg font-sans">
+            <button
+              onClick={() => setShowRolesMatrixModal(false)}
+              className="absolute top-4 right-4 text-stone-400 hover:text-stone-700 cursor-pointer p-1"
+            >
+              <span className="material-symbols-outlined text-xl">close</span>
+            </button>
+
+            {/* Modal Header */}
+            <div className="border-b border-stone-200 pb-3">
+              <h5 className="font-serif text-lg font-bold text-[#8C4723] flex items-center gap-2">
+                <span className="material-symbols-outlined text-xl">checklist</span>
+                Matriz y Glosario de Roles del Sistema (RBAC)
+              </h5>
+              <p className="text-xs text-stone-500 mt-0.5">
+                Guía completa de los 8 roles disponibles en Hacienda Casa Loy y los permisos específicos que confiere cada uno.
+              </p>
+            </div>
+
+            {/* Grid of 8 roles */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[60vh] overflow-y-auto pr-1">
+              {Object.values(ROLES_CATALOG).map(role => {
+                const usersWithThisRole = usersList.filter(u =>
+                  String(u.role || "").split(",").map(r => r.trim()).includes(role.id)
+                ).length;
+
+                return (
+                  <div key={role.id} className="border border-stone-200 rounded-lg p-4 space-y-3 bg-stone-50/50 hover:bg-stone-50 transition-colors">
+                    <div className="flex items-start justify-between gap-2 border-b border-stone-200/70 pb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-[#8C4723] text-xl">{role.icon}</span>
+                        <div>
+                          <h6 className="font-bold text-stone-900 text-xs">{role.name}</h6>
+                          <span className="text-[10px] text-stone-400 font-mono">ID: {role.id}</span>
+                        </div>
+                      </div>
+                      <span className="bg-stone-100 text-stone-600 text-[10px] font-bold px-2 py-0.5 rounded border border-stone-200 whitespace-nowrap">
+                        {usersWithThisRole} {usersWithThisRole === 1 ? "usuario" : "usuarios"}
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-stone-600 italic">
+                      {role.description}
+                    </p>
+
+                    <div className="space-y-1.5 pt-1">
+                      <span className="text-[10px] uppercase font-bold text-stone-500 block tracking-wider">
+                        Módulos y Facultades:
+                      </span>
+                      <ul className="space-y-1 text-xs">
+                        {role.modules.map((m, idx) => (
+                          <li key={idx} className="flex items-start gap-1.5 text-stone-700 text-[11px]">
+                            <span className="material-symbols-outlined text-[13px] text-emerald-600 mt-0.5">check_circle</span>
+                            <div>
+                              <strong className="text-stone-900">{m.name}:</strong>{" "}
+                              <span className="text-stone-500">{m.desc}</span>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="border-t border-stone-200 pt-3 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setShowRolesMatrixModal(false)}
+                className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold rounded text-xs cursor-pointer"
+              >
+                Entendido
+              </button>
+            </div>
           </div>
         </div>
       )}

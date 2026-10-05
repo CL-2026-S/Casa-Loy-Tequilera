@@ -1,41 +1,77 @@
-# Walkthrough de Implementación: Tabla de Leads de Maquila, Automatización & Roles Múltiples
+# Walkthrough de Implementación: Vendedores / KAMs & Permisos de Personal (RBAC)
 
-Hemos completado el desarrollo para incorporar el listado de Leads de Maquila, habilitar la captura manual responsiva (alta manual) optimizada para celular, programar la automatización de correos de seguimiento al día siguiente del registro, y permitir la **asignación de múltiples roles simultáneos** para las cuentas de personal de la plataforma.
+Hemos completado el desarrollo para resolver integralmente los dos temas solicitados:
+
+1. **Despliegue y Gestión de Vendedores / KAMs en Puntos de Venta:**
+   - Desplegable interactivo de KAMs registrados en el formulario de Puntos de Venta.
+   - Directorio y módulo de administración para registrar nuevos KAMs.
+   - Capacidad de **renombrar a un vendedor/KAM** con **sincronización automática en cascada** de todos sus puntos de venta asociados en la base de datos.
+   - Opción para **transferir la cartera completa** de puntos de venta de un KAM a otro en un solo clic.
+
+2. **Visualización Detallada de Personal Registrado y Permisos (RBAC):**
+   - Buscador y filtro por roles en el listado de personal.
+   - Botón interactivo `🛡️ Ver Permisos (N módulos)` en cada colaborador que abre un modal con el desglose exacto de los 13 módulos del sistema (🟢 Permitido vs ⚪ Sin Acceso).
+   - Modal interactivo de **Matriz Global de Roles y Permisos (RBAC)** con explicación clara de facultades por cada rol.
+   - Formulario de alta/edición de personal enriquecido con explicaciones directas en cada casilla de rol.
 
 ---
 
-## Resumen de Cambios Recientes (Roles Múltiples)
+## 1. Vendedores / KAMs en Puntos de Venta
 
-### 1. Base de Datos
-* Se eliminó el constraint estricto `admin_users_role_check` en la tabla `admin_users` de Supabase para poder almacenar strings de roles múltiples separados por comas (ej. `'editor,lead_maquila,rh'`).
-* [NEW] [`supabase_alter_admin_users_drop_role_check.sql`](file:///c:/Users/Jessy/Downloads/Casa%20Loy%20Tequilera/supabase_alter_admin_users_drop_role_check.sql): Script SQL para remover permanentemente el constraint restrictivo.
+### Base de Datos & Migración
+* Se creó la tabla `sales_kams` en Supabase con RLS habilitado y políticas de acceso.
+* Se migraron automáticamente los 7 vendedores/KAMs existentes registrados en los 604 puntos de venta actuales: *Sofia Mejia*, *Julio Sanchez*, *Alejandro Carranza*, *Isaac Gomez*, *Julio Delgado*, *Victor Curiel*, *Jose Zarate*.
+* [NEW] [`supabase_sales_kams.sql`](file:///c:/Users/Jessy/Downloads/Casa%20Loy%20Tequilera/supabase_sales_kams.sql): Script SQL para reproducir la migración en cualquier ambiente.
 
-### 2. Utilidades de Autenticación (Backend)
-* [MODIFY] [`api/_utils/auth.js`](file:///c:/Users/Jessy/Downloads/Casa%20Loy%20Tequilera/api/_utils/auth.js):
-  * Se implementó y exportó la función helper `userHasRole(user, ...roles)` que divide la columna de roles del usuario autenticado por comas y verifica si posee alguno de los roles requeridos.
-  * Si el usuario cuenta con el rol de `admin`, automáticamente se le conceden todos los permisos sin necesidad de asignar explícitamente todos los roles en la base de datos.
+### API Serverless
+* [NEW] [`api/kams.js`](file:///c:/Users/Jessy/Downloads/Casa%20Loy%20Tequilera/api/kams.js):
+  * `GET`: Devuelve la lista de KAMs registrados y el conteo de tiendas asignadas a cada uno desde `points_of_sale`.
+  * `POST`: Registro de un nuevo KAM (nombre único, correo, teléfono, notas, estatus activo/inactivo).
+  * `PUT`: Modificación o renombramiento. **Si el nombre cambia, actualiza automáticamente todos los registros en `points_of_sale` donde `fase = old_name` a `new_name`**.
+  * `PUT (action: 'reassign_stores')`: Permite transferir todos los puntos de venta de un vendedor origen a un vendedor destino.
+  * `DELETE`: Eliminación de un KAM con opción de reasignar sus tiendas previamente.
 
-### 3. Modificación de APIs Serverless
-Se actualizaron todos los archivos de endpoints del backend para validar permisos usando el nuevo helper `userHasRole` en lugar de comparaciones rígidas sobre un solo string:
-* [MODIFY] [`api/auth.js`](file:///c:/Users/Jessy/Downloads/Casa%20Loy%20Tequilera/api/auth.js)
-* [MODIFY] [`api/cms.js`](file:///c:/Users/Jessy/Downloads/Casa%20Loy%20Tequilera/api/cms.js)
-* [MODIFY] [`api/maquila.js`](file:///c:/Users/Jessy/Downloads/Casa%20Loy%20Tequilera/api/maquila.js)
-* [MODIFY] [`api/nativo-booking.js`](file:///c:/Users/Jessy/Downloads/Casa%20Loy%20Tequilera/api/nativo-booking.js)
-* [MODIFY] [`api/points-of-sale.js`](file:///c:/Users/Jessy/Downloads/Casa%20Loy%20Tequilera/api/points-of-sale.js)
-* [MODIFY] [`api/tourism.js`](file:///c:/Users/Jessy/Downloads/Casa%20Loy%20Tequilera/api/tourism.js)
-
-### 4. Interfaz del Panel de Administración (Frontend)
+### Interfaz en Panel de Administración
 * [MODIFY] [`src/pages/AdminPanel.jsx`](file:///c:/Users/Jessy/Downloads/Casa%20Loy%20Tequilera/src/pages/AdminPanel.jsx):
-  * **Helper `userHasRole` & `isReadOnly`:** Definidos localmente en el componente React para evaluar la visualización de pestañas y permisos de escritura.
-  * **Visualización en el Formulario:** Se reemplazó el menú desplegable `<select>` de roles por una elegante **lista de checkboxes** que permite marcar múltiples roles para una sola cuenta.
-  * **Peticiones HTTP (Creación/Modificación):** El handler `handleSaveUser` concatena los checkboxes marcados en un string separado por comas para su almacenamiento seguro.
-  * **Visualización de Badges:** La tabla de personal ahora renderiza cada uno de los roles asignados al usuario como badges independientes de colores alineados con el diseño.
-  * **Header Dinámico:** Muestra todos los roles activos del usuario en forma de tags en la parte superior del panel.
-  * **Prioridad de Pestaña Inicial:** En el inicio de sesión, se redirige al usuario a la pestaña más relevante de acuerdo a sus roles (por ejemplo, priorizando calendar sobre cms o maquila leads si es admin, etc.).
+  * **Formulario de Puntos de Venta:** El campo `Vendedor / KAM Asignado` ahora es un menú desplegable `<select>` que lista a los KAMs registrados con su conteo de tiendas y estatus. Cuenta con un botón de acceso directo `+ Registrar KAM` para agregar un vendedor sin abandonar la captura.
+  * **Botón en Toolbar & Métrica Interactiva:** Se añadió el botón `Directorio Vendedores/KAMs (N)` y la tarjeta métrica de Vendedores/KAMs ahora es clicable para abrir directamente la gestión.
+  * **Modal "Directorio de Vendedores y KAMs":**
+    * Búsqueda en tiempo real por nombre, notas o correo.
+    * Formulario para crear o renombrar KAMs (con aviso explícito sobre la sincronización en cascada).
+    * Modal de transferencia rápida de cartera ("Reasignar Cartera").
+    * Eliminación protegida para administradores.
 
 ---
 
-## Verificación de Integridad y Construcción
+## 2. Personal y Roles (RBAC): Consulta de Permisos
 
-1. **Prueba de Compilación exitosa:** Se ejecutó con éxito el comando `npm run build` de Vite, comprobando la total corrección sintáctica, ausencia de fallos en el bundler y alineación de tipos.
-2. **Git Commit y Push:** Se confirmaron todos los cambios en Git y se subieron exitosamente a la rama principal `main` en Github.
+### Catálogo Maestro y Evaluador de Permisos
+* Se definió en [`src/pages/AdminPanel.jsx`](file:///c:/Users/Jessy/Downloads/Casa%20Loy%20Tequilera/src/pages/AdminPanel.jsx):
+  * `ROLES_CATALOG`: Especificación exhaustiva de los 8 roles del sistema:
+    1. **Administrador General** (`admin`): Control total de todos los módulos.
+    2. **Editor de Contenidos & CMS** (`editor`): Blog, Asistente IA, Banners, Platillos, Puntos de Venta y Vacantes.
+    3. **Gestor de Experiencias y Turismo** (`experience_manager`): Calendario, cupos, validación QR, bitácora turística y cupones.
+    4. **Gestor de Restaurante Nativo** (`restaurant_manager`): Reservaciones de mesas y comensales.
+    5. **Cuentas por Cobrar & Facturación** (`cuentas_por_cobrar`): Bitácora financiera y timbrado fiscal CFDI 4.0 ante el SAT.
+    6. **Recursos Humanos (RH)** (`rh`): Publicación de vacantes y descarga de CVs.
+    7. **Gestor de Leads de Maquila** (`lead_maquila`): Prospectos industriales, cotizaciones y correos automáticos.
+    8. **Visor General (Solo Lectura)** (`viewer`): Consulta sin permisos de alteración ni borrado.
+  * `getUserPermissionsMatrix(roleString)`: Función utilitaria que analiza combinaciones de múltiples roles y genera el estatus de acceso (permitido vs denegado) para los 13 módulos del sistema.
+
+### Interfaz de Cuentas de Personal
+* **Barra de Búsqueda y Filtros:** Permite filtrar instantáneamente al personal por nombre, correo o rol.
+* **Columna "Permisos del Sistema":** Cada fila cuenta con un botón interactivo `🛡️ Ver Permisos (N/13 módulos)` que muestra el conteo de accesos y abre el detalle del colaborador.
+* **Modal "Detalle de Permisos por Colaborador":**
+  * Presenta tarjeta del usuario con avatar, nombre, correo y roles asignados.
+  * Rejilla de tarjetas para cada uno de los 13 módulos del sistema con distintivo `✓ Permitido` o `✕ Sin Acceso` y explicación del alcance.
+* **Modal "Matriz y Glosario de Roles del Sistema":**
+  * Accesible mediante el botón `Matriz de Permisos` en la cabecera.
+  * Tarjetas informativas de cada rol, descripción, facultades y conteo de usuarios asignados.
+* **Formulario de Alta y Edición:** Cada checkbox de rol ahora incluye una descripción contextual para que el Administrador conozca con precisión los accesos que está concediendo.
+
+---
+
+## Verificación de Compilación
+
+* Se ejecutó el comando de compilación `npm run build` con Vite.
+* El empaquetado finalizó exitosamente en **9.27 segundos** sin errores de sintaxis, tipos o referencias.
