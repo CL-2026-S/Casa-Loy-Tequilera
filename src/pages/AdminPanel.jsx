@@ -460,6 +460,7 @@ export default function AdminPanel({
   // Vendedores / KAMs States
   const [kamsList, setKamsList] = useState([]);
   const [showKamModal, setShowKamModal] = useState(false);
+  const [showPosGuideModal, setShowPosGuideModal] = useState(false);
   const [editingKam, setEditingKam] = useState(null);
   const [reassigningKam, setReassigningKam] = useState(null);
   const [kamSearchQuery, setKamSearchQuery] = useState("");
@@ -6016,6 +6017,15 @@ export default function AdminPanel({
                         <span className="material-symbols-outlined text-sm">badge</span>
                         <span>Directorio Vendedores/KAMs ({kamsList.length})</span>
                       </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowPosGuideModal(true)}
+                        className="flex items-center gap-1.5 text-xs bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300/80 px-3.5 py-2.5 font-semibold tracking-wider transition-all duration-300 shadow-sm cursor-pointer whitespace-nowrap"
+                        title="Ver guía visual con imagen de Google Maps para saber de dónde copiar cada dato"
+                      >
+                        <span className="material-symbols-outlined text-sm text-[#8C4723]">info</span>
+                        <span>Guía de Llenado (Maps)</span>
+                      </button>
                     </div>
 
                     {/* Quick Metric Badges */}
@@ -6198,15 +6208,26 @@ export default function AdminPanel({
                     {/* Edit / Create Form Modal */}
                     {editingPos && (
                       <div id="pos-edit-form" className="bg-stone-50 border-2 border-[#8C4723]/30 p-6 space-y-4 max-w-2xl mx-auto shadow-lg animate-fade-in">
-                        <div className="flex justify-between items-center border-b border-stone-200 pb-2">
-                          <h6 className="font-serif text-base font-bold text-stone-800 uppercase flex items-center gap-2">
-                            <span className="material-symbols-outlined text-[#8C4723]">{editingPos.id ? "edit" : "add_business"}</span>
-                            {editingPos.id ? `Editar Distribuidor: ${editingPos.name || ""}` : "Registrar Nuevo Punto de Venta"}
-                          </h6>
+                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-stone-200 pb-2">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h6 className="font-serif text-base font-bold text-stone-800 uppercase flex items-center gap-1.5">
+                              <span className="material-symbols-outlined text-[#8C4723]">{editingPos.id ? "edit" : "add_business"}</span>
+                              <span>{editingPos.id ? `Editar Distribuidor: ${editingPos.name || ""}` : "Registrar Nuevo Punto de Venta"}</span>
+                            </h6>
+                            <button
+                              type="button"
+                              onClick={() => setShowPosGuideModal(true)}
+                              className="inline-flex items-center gap-1 text-[11px] font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 px-2 py-0.5 rounded shadow-xs cursor-pointer transition-colors"
+                              title="Haz clic para ver la imagen de Google Maps que explica qué dato va en cada campo"
+                            >
+                              <span className="material-symbols-outlined text-sm text-[#8C4723]">info</span>
+                              <span>¿Cómo llenar los campos? (Ver Guía)</span>
+                            </button>
+                          </div>
                           <button
                             type="button"
                             onClick={() => setEditingPos(null)}
-                            className="text-stone-400 hover:text-stone-600 text-lg cursor-pointer leading-none p-1"
+                            className="text-stone-400 hover:text-stone-600 text-lg cursor-pointer leading-none p-1 self-end sm:self-center"
                           >
                             ✕
                           </button>
@@ -6215,36 +6236,63 @@ export default function AdminPanel({
                         <form onSubmit={handleSavePos} className="space-y-4">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
-                              <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Cadena / Retailer *</label>
+                              <div className="flex items-center justify-between mb-1">
+                                <label className="block text-[10px] text-stone-500 uppercase font-bold flex items-center gap-1.5">
+                                  <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-red-600 text-white text-[9px] font-bold shadow-xs">1</span>
+                                  <span>Cadena / Retailer *</span>
+                                </label>
+                                <button type="button" onClick={() => setShowPosGuideModal(true)} className="text-[10px] text-[#8C4723] hover:underline font-semibold flex items-center gap-0.5 cursor-pointer" title="Ver en la guía Maps">
+                                  <span className="material-symbols-outlined text-xs">help</span>
+                                  <span>Guía</span>
+                                </button>
+                              </div>
                               <input 
                                 type="text" 
                                 name="retailer" 
                                 required 
                                 defaultValue={editingPos.retailer || ""} 
-                                placeholder="Ej. El Palacio de Hierro / 107 Liquor" 
+                                placeholder="Ej. LA PLAYA / Liverpool / 107 Liquor" 
                                 className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none focus:border-[#8C4723]" 
                               />
                             </div>
                             <div>
-                              <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Nombre Establecimiento / Sucursal *</label>
+                              <div className="flex items-center justify-between mb-1">
+                                <label className="block text-[10px] text-stone-500 uppercase font-bold flex items-center gap-1.5">
+                                  <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-red-600 text-white text-[9px] font-bold shadow-xs">2</span>
+                                  <span>Nombre Sucursal / Establecimiento *</span>
+                                </label>
+                                <button type="button" onClick={() => setShowPosGuideModal(true)} className="text-[10px] text-[#8C4723] hover:underline font-semibold flex items-center gap-0.5 cursor-pointer" title="Ver en la guía Maps">
+                                  <span className="material-symbols-outlined text-xs">help</span>
+                                  <span>Guía</span>
+                                </button>
+                              </div>
                               <input 
                                 type="text" 
                                 name="name" 
                                 required 
                                 defaultValue={editingPos.name || ""} 
-                                placeholder="Ej. Sucursal Providencia" 
+                                placeholder="Ej. Sucursal BODEGA SOL" 
                                 className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none focus:border-[#8C4723]" 
                               />
                             </div>
                           </div>
 
                           <div>
-                            <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Dirección Completa (Opcional)</label>
+                            <div className="flex items-center justify-between mb-1">
+                              <label className="block text-[10px] text-stone-500 uppercase font-bold flex items-center gap-1.5">
+                                <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-red-600 text-white text-[9px] font-bold shadow-xs">3</span>
+                                <span>Dirección Completa (Opcional)</span>
+                              </label>
+                              <button type="button" onClick={() => setShowPosGuideModal(true)} className="text-[10px] text-[#8C4723] hover:underline font-semibold flex items-center gap-0.5 cursor-pointer" title="Ver en la guía Maps">
+                                <span className="material-symbols-outlined text-xs">help</span>
+                                <span>Guía</span>
+                              </button>
+                            </div>
                             <input 
                               type="text" 
                               name="address" 
                               defaultValue={editingPos.address || ""} 
-                              placeholder="Calle, Número, Colonia, Ciudad, Estado, País" 
+                              placeholder="Ej. Ahuizotl 138, Cd del Sol, 45050 Zapopan, Jal." 
                               className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none focus:border-[#8C4723]" 
                             />
                           </div>
@@ -6263,22 +6311,40 @@ export default function AdminPanel({
                               </select>
                             </div>
                             <div>
-                              <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Código Postal</label>
+                              <div className="flex items-center justify-between mb-1">
+                                <label className="block text-[10px] text-stone-500 uppercase font-bold flex items-center gap-1.5">
+                                  <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-red-600 text-white text-[9px] font-bold shadow-xs">4</span>
+                                  <span>Código Postal</span>
+                                </label>
+                                <button type="button" onClick={() => setShowPosGuideModal(true)} className="text-[10px] text-[#8C4723] hover:underline font-semibold flex items-center gap-0.5 cursor-pointer" title="Ver en la guía Maps">
+                                  <span className="material-symbols-outlined text-xs">help</span>
+                                  <span>Guía</span>
+                                </button>
+                              </div>
                               <input 
                                 type="text" 
                                 name="postal_code" 
                                 defaultValue={editingPos.postal_code || ""} 
-                                placeholder="44630 / 72120" 
+                                placeholder="Ej. 45050 / 72120" 
                                 className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" 
                               />
                             </div>
                             <div>
-                              <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Teléfono</label>
+                              <div className="flex items-center justify-between mb-1">
+                                <label className="block text-[10px] text-stone-500 uppercase font-bold flex items-center gap-1.5">
+                                  <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-red-600 text-white text-[9px] font-bold shadow-xs">5</span>
+                                  <span>Teléfono</span>
+                                </label>
+                                <button type="button" onClick={() => setShowPosGuideModal(true)} className="text-[10px] text-[#8C4723] hover:underline font-semibold flex items-center gap-0.5 cursor-pointer" title="Ver en la guía Maps">
+                                  <span className="material-symbols-outlined text-xs">help</span>
+                                  <span>Guía</span>
+                                </button>
+                              </div>
                               <input 
                                 type="text" 
                                 name="phone" 
                                 defaultValue={editingPos.phone || ""} 
-                                placeholder="+52 33... / +1 555..." 
+                                placeholder="Ej. 33 3634 7587" 
                                 className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" 
                               />
                             </div>
@@ -6286,34 +6352,61 @@ export default function AdminPanel({
 
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <div>
-                              <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Latitud (Coordenada)</label>
+                              <div className="flex items-center justify-between mb-1">
+                                <label className="block text-[10px] text-stone-500 uppercase font-bold flex items-center gap-1.5">
+                                  <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-red-600 text-white text-[9px] font-bold shadow-xs">6</span>
+                                  <span>Latitud</span>
+                                </label>
+                                <button type="button" onClick={() => setShowPosGuideModal(true)} className="text-[10px] text-[#8C4723] hover:underline font-semibold flex items-center gap-0.5 cursor-pointer" title="Ver en la guía Maps">
+                                  <span className="material-symbols-outlined text-xs">help</span>
+                                  <span>Guía</span>
+                                </button>
+                              </div>
                               <input 
                                 type="number" 
                                 step="any" 
                                 name="latitude" 
                                 defaultValue={editingPos.latitude ?? ""} 
-                                placeholder="34.8328178" 
+                                placeholder="Ej. 20.6480197" 
                                 className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" 
                               />
                             </div>
                             <div>
-                              <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Longitud (Coordenada)</label>
+                              <div className="flex items-center justify-between mb-1">
+                                <label className="block text-[10px] text-stone-500 uppercase font-bold flex items-center gap-1.5">
+                                  <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-red-600 text-white text-[9px] font-bold shadow-xs">7</span>
+                                  <span>Longitud</span>
+                                </label>
+                                <button type="button" onClick={() => setShowPosGuideModal(true)} className="text-[10px] text-[#8C4723] hover:underline font-semibold flex items-center gap-0.5 cursor-pointer" title="Ver en la guía Maps">
+                                  <span className="material-symbols-outlined text-xs">help</span>
+                                  <span>Guía</span>
+                                </button>
+                              </div>
                               <input 
                                 type="number" 
                                 step="any" 
                                 name="longitude" 
                                 defaultValue={editingPos.longitude ?? ""} 
-                                placeholder="-92.2326974" 
+                                placeholder="Ej. -103.5582999" 
                                 className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" 
                               />
                             </div>
                             <div>
-                              <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Google Maps URL</label>
+                              <div className="flex items-center justify-between mb-1">
+                                <label className="block text-[10px] text-stone-500 uppercase font-bold flex items-center gap-1.5">
+                                  <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-red-600 text-white text-[9px] font-bold shadow-xs">8</span>
+                                  <span>Google Maps URL</span>
+                                </label>
+                                <button type="button" onClick={() => setShowPosGuideModal(true)} className="text-[10px] text-[#8C4723] hover:underline font-semibold flex items-center gap-0.5 cursor-pointer" title="Ver en la guía Maps">
+                                  <span className="material-symbols-outlined text-xs">help</span>
+                                  <span>Guía</span>
+                                </button>
+                              </div>
                               <input 
                                 type="text" 
                                 name="maps_url" 
                                 defaultValue={editingPos.maps_url || ""} 
-                                placeholder="https://maps.app.goo.gl/..." 
+                                placeholder="Ej. https://maps.app.goo.gl/..." 
                                 className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" 
                               />
                             </div>
@@ -8695,6 +8788,126 @@ export default function AdminPanel({
 
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* 0. MODAL: GUÍA VISUAL PARA LLENAR CAMPOS DE PUNTOS DE VENTA */}
+      {/* ========================================================= */}
+      {showPosGuideModal && (
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 animate-fade-in">
+          <div className="bg-white max-w-4xl w-full max-h-[94vh] overflow-y-auto p-5 sm:p-6 shadow-2xl relative border border-stone-200 text-stone-800 space-y-5 text-left rounded-xl font-sans">
+            <button
+              onClick={() => setShowPosGuideModal(false)}
+              className="absolute top-4 right-4 text-stone-400 hover:text-stone-700 cursor-pointer p-1 rounded-full hover:bg-stone-100 transition-colors"
+              title="Cerrar Guía"
+            >
+              <span className="material-symbols-outlined text-2xl">close</span>
+            </button>
+
+            {/* Header */}
+            <div className="border-b border-stone-200 pb-3 pr-10">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-[#8C4723] text-2xl">info</span>
+                <h5 className="font-serif text-lg font-bold text-[#8C4723]">
+                  Guía Visual: ¿Cómo llenar los campos desde Google Maps?
+                </h5>
+              </div>
+              <p className="text-xs text-stone-500 mt-1">
+                Abre la ficha del establecimiento en Google Maps y usa los números de referencia (del 1 al 8) para copiar exactamente la información requerida en cada campo:
+              </p>
+            </div>
+
+            {/* Image Preview Container */}
+            <div className="bg-stone-100 p-2 sm:p-3 border border-stone-200 rounded-lg flex flex-col items-center">
+              <img 
+                src="/guia-llenado-pos.png" 
+                alt="Guía visual de llenado de puntos de venta desde Google Maps" 
+                className="w-full max-h-[58vh] object-contain rounded border border-stone-300 shadow-sm bg-white"
+              />
+              <span className="text-[10px] text-stone-500 mt-1.5 font-medium">
+                📍 Esquema numerado (1 al 8) según la ficha oficial y barra de URL de Google Maps.
+              </span>
+            </div>
+
+            {/* Explanatory Legend Cards (1 through 8) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
+              <div className="p-3 bg-stone-50 border border-stone-200 rounded-lg space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-600 text-white text-[11px] font-bold shrink-0">1</span>
+                  <span className="text-xs font-bold text-stone-900">Cadena / Retailer</span>
+                </div>
+                <p className="text-[11px] text-stone-600">Nombre de la cadena o distribuidor comercial (ej. <strong>LA PLAYA</strong>, Liverpool, La Europea, Walmart).</p>
+              </div>
+
+              <div className="p-3 bg-stone-50 border border-stone-200 rounded-lg space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-600 text-white text-[11px] font-bold shrink-0">2</span>
+                  <span className="text-xs font-bold text-stone-900">Nombre Sucursal</span>
+                </div>
+                <p className="text-[11px] text-stone-600">Nombre específico de la tienda o sucursal (ej. <strong>Sucursal BODEGA SOL</strong>, Providencia, Galerías).</p>
+              </div>
+
+              <div className="p-3 bg-stone-50 border border-stone-200 rounded-lg space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-600 text-white text-[11px] font-bold shrink-0">3</span>
+                  <span className="text-xs font-bold text-stone-900">Dirección Completa</span>
+                </div>
+                <p className="text-[11px] text-stone-600">Dirección tal cual aparece en la ficha: calle, número, colonia, ciudad y estado (ej. <strong>Ahuizotl 138...</strong>).</p>
+              </div>
+
+              <div className="p-3 bg-stone-50 border border-stone-200 rounded-lg space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-600 text-white text-[11px] font-bold shrink-0">4</span>
+                  <span className="text-xs font-bold text-stone-900">Código Postal</span>
+                </div>
+                <p className="text-[11px] text-stone-600">Los 5 dígitos postales incluidos dentro de la dirección de la ficha (ej. <strong>45050</strong>).</p>
+              </div>
+
+              <div className="p-3 bg-stone-50 border border-stone-200 rounded-lg space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-600 text-white text-[11px] font-bold shrink-0">5</span>
+                  <span className="text-xs font-bold text-stone-900">Teléfono</span>
+                </div>
+                <p className="text-[11px] text-stone-600">Teléfono de contacto de la tienda que aparece junto al icono de llamada (ej. <strong>33 3634 7587</strong>).</p>
+              </div>
+
+              <div className="p-3 bg-stone-50 border border-stone-200 rounded-lg space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-600 text-white text-[11px] font-bold shrink-0">6</span>
+                  <span className="text-xs font-bold text-stone-900">Latitud (Coordenada)</span>
+                </div>
+                <p className="text-[11px] text-stone-600">En la barra de direcciones de tu navegador, el número justo después del signo <code>@</code> (ej. <strong>20.6480197</strong>).</p>
+              </div>
+
+              <div className="p-3 bg-stone-50 border border-stone-200 rounded-lg space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-600 text-white text-[11px] font-bold shrink-0">7</span>
+                  <span className="text-xs font-bold text-stone-900">Longitud (Coordenada)</span>
+                </div>
+                <p className="text-[11px] text-stone-600">El segundo número después de la coma en la URL, conservando el signo negativo si lo tiene (ej. <strong>-103.5582999</strong>).</p>
+              </div>
+
+              <div className="p-3 bg-stone-50 border border-stone-200 rounded-lg space-y-1">
+                <div className="flex items-center gap-1.5">
+                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-600 text-white text-[11px] font-bold shrink-0">8</span>
+                  <span className="text-xs font-bold text-stone-900">Google Maps URL</span>
+                </div>
+                <p className="text-[11px] text-stone-600">Haz clic en el botón <strong>Compartir</strong> de Google Maps y pulsa <strong>Copiar Enlace</strong> (ej. <code>maps.app.goo.gl/...</code>).</p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="flex justify-end pt-3 border-t border-stone-200">
+              <button
+                type="button"
+                onClick={() => setShowPosGuideModal(false)}
+                className="px-5 py-2 text-xs bg-[#8C4723] hover:bg-[#723617] text-white font-semibold rounded cursor-pointer transition-colors shadow-xs"
+              >
+                ¡Entendido, volver al formulario!
+              </button>
+            </div>
           </div>
         </div>
       )}
