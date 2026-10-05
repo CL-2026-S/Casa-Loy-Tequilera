@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import SEO from "../components/SEO";
 
 // Intersection Observer Reveal Component for clean scroll entrance animations
@@ -47,11 +48,44 @@ function Reveal({ children, className = "", delay = 0, duration = 800 }) {
 }
 
 export default function Granel({ lang = "es" }) {
-  const [currentLang, setCurrentLang] = useState(lang);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Detect language from URL pathname or prop
+  const getActiveLang = () => {
+    const path = location.pathname.toLowerCase();
+    if (path.startsWith("/bulk") || path.includes("-en") || path.endsWith("/en")) {
+      return "en";
+    }
+    if (path.startsWith("/granel") || path.startsWith("/tequila-a-granel") || path.endsWith("/es")) {
+      return "es";
+    }
+    return lang || "es";
+  };
+
+  const [currentLang, setCurrentLang] = useState(getActiveLang);
 
   useEffect(() => {
-    setCurrentLang(lang);
-  }, [lang]);
+    const path = location.pathname.toLowerCase();
+    if (path.startsWith("/bulk") || path.includes("-en") || path.endsWith("/en")) {
+      setCurrentLang("en");
+    } else if (path.startsWith("/granel") || path.startsWith("/tequila-a-granel") || path.endsWith("/es")) {
+      setCurrentLang("es");
+    } else if (lang) {
+      setCurrentLang(lang);
+    }
+  }, [location.pathname, lang]);
+
+  const handleSwitchLanguage = (targetLang) => {
+    if (targetLang === currentLang) return;
+    setCurrentLang(targetLang);
+    localStorage.setItem("casa_loy_pref_lang", targetLang);
+    if (targetLang === "en") {
+      navigate("/bulk");
+    } else {
+      navigate("/granel");
+    }
+  };
 
   // Active Photo in Showcase (The 4 core photos from One-Pager Page 1)
   const [activePhotoIdx, setActivePhotoIdx] = useState(0);
@@ -501,14 +535,39 @@ export default function Granel({ lang = "es" }) {
         {/* Content Container */}
         <div className="relative z-20 px-6 sm:px-10 lg:px-16 max-w-[1280px] mx-auto w-full pt-28 sm:pt-32 pb-16">
           <div className="max-w-2xl lg:max-w-3xl text-left space-y-3.5 sm:space-y-4 animate-slide-left-right">
-            {/* Category Tag */}
-            <div className="flex items-center gap-2">
+            {/* Category Tag & Language Switcher */}
+            <div className="flex flex-wrap items-center gap-2">
               <span className="font-navigation text-[9.5px] sm:text-[10.5px] uppercase tracking-[0.3em] text-[#FDA377] font-semibold bg-black/50 px-3 py-1 border border-[#8C4723]/60">
                 {t.heroCategory}
               </span>
               <span className="font-navigation text-[9.5px] sm:text-[10.5px] uppercase tracking-[0.25em] text-white/80 bg-white/10 px-2.5 py-1 border border-white/20">
                 NOM 1633 CRT
               </span>
+              <div className="flex items-center gap-1.5 bg-black/50 px-2.5 py-1 border border-white/20 font-navigation text-[10px] tracking-widest font-semibold ml-auto sm:ml-0">
+                <button
+                  type="button"
+                  onClick={() => handleSwitchLanguage("es")}
+                  className={`transition-colors cursor-pointer ${
+                    currentLang === "es"
+                      ? "text-[#FDA377] font-bold underline underline-offset-4"
+                      : "text-white/60 hover:text-white"
+                  }`}
+                >
+                  ES
+                </button>
+                <span className="text-white/30 text-[9px]">|</span>
+                <button
+                  type="button"
+                  onClick={() => handleSwitchLanguage("en")}
+                  className={`transition-colors cursor-pointer ${
+                    currentLang === "en"
+                      ? "text-[#FDA377] font-bold underline underline-offset-4"
+                      : "text-white/60 hover:text-white"
+                  }`}
+                >
+                  EN
+                </button>
+              </div>
             </div>
 
             {/* Title with exact 2-line structure from One-Pager */}

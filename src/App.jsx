@@ -257,6 +257,7 @@ export default function App() {
         "cookies": "/politica-de-cookies",
         "terms": "/terminos-y-condiciones",
         "solutions": "/soluciones",
+        "granel": "/granel",
         "vcard-lelb": "/contact/lelb",
         "vcard-mfqm": "/contact/mfqm"
       },
@@ -281,6 +282,7 @@ export default function App() {
         "cookies": "/cookie-policy",
         "terms": "/terms-and-conditions",
         "solutions": "/solutions",
+        "granel": "/bulk",
         "vcard-lelb": "/contact/lelb",
         "vcard-mfqm": "/contact/mfqm"
       }
@@ -319,6 +321,7 @@ export default function App() {
         cookies: "/politica-de-cookies",
         terms: "/terminos-y-condiciones",
         solutions: "/soluciones",
+        granel: "/granel",
         "vcard-lelb": "/contact/lelb",
         "vcard-mfqm": "/contact/mfqm",
         "validate-ticket": "/validar-ticket",
@@ -347,6 +350,7 @@ export default function App() {
         cookies: "/cookie-policy",
         terms: "/terms-and-conditions",
         solutions: "/solutions",
+        granel: "/bulk",
         "vcard-lelb": "/contact/lelb",
         "vcard-mfqm": "/contact/mfqm",
         "validate-ticket": "/validar-ticket",
