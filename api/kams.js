@@ -43,8 +43,13 @@ export default async function handler(req, res) {
         });
       }
 
+      // Filter out any admin entries so administrators never appear in the KAM list
+      const nonAdminKams = (kams || []).filter(k => 
+        !k.name.toLowerCase().includes('administrador') && !k.name.toLowerCase().startsWith('admin')
+      );
+
       // Merge store counts into KAM objects
-      const enhancedKams = (kams || []).map(k => ({
+      const enhancedKams = nonAdminKams.map(k => ({
         ...k,
         stores_count: countMap[k.name.trim()] || 0
       }));
@@ -61,7 +66,7 @@ export default async function handler(req, res) {
 
   // Auth check for mutation operations
   const currentUser = getAuthUser(req);
-  if (!currentUser || !userHasRole(currentUser, 'admin', 'editor')) {
+  if (!currentUser || !userHasRole(currentUser, 'admin', 'editor', 'kam')) {
     return res.status(401).json({ error: 'UNAUTHORIZED', message: 'No tienes permisos para modificar Vendedores / KAMs.' });
   }
 
@@ -74,6 +79,10 @@ export default async function handler(req, res) {
     }
 
     const trimmedName = name.trim();
+
+    if (trimmedName.toLowerCase().includes('administrador') || trimmedName.toLowerCase().startsWith('admin')) {
+      return res.status(400).json({ error: 'No se puede registrar un Vendedor / KAM con nombre de Administrador.' });
+    }
 
     try {
       // Check if already exists
@@ -159,6 +168,10 @@ export default async function handler(req, res) {
 
       const trimmedName = name.trim();
       const previousName = old_name ? old_name.trim() : null;
+
+      if (trimmedName.toLowerCase().includes('administrador') || trimmedName.toLowerCase().startsWith('admin')) {
+        return res.status(400).json({ error: 'No se puede renombrar un Vendedor / KAM a nombre de Administrador.' });
+      }
 
       // Update the KAM in sales_kams
       const { data: updatedKam, error: updateError } = await supabase

@@ -237,10 +237,10 @@ export default async function handler(req, res) {
     }
   }
 
-  // --- 2. POST / PUT / DELETE Handlers (Protected: Editor / Admin roles only) ---
+  // --- 2. POST / PUT / DELETE Handlers (Protected: Editor / Admin / KAM roles) ---
   if (req.method === 'POST' || req.method === 'PUT' || req.method === 'DELETE') {
     const currentUser = getAuthUser(req);
-    if (!currentUser || !userHasRole(currentUser, 'admin', 'editor')) {
+    if (!currentUser || !userHasRole(currentUser, 'admin', 'editor', 'kam')) {
       return res.status(401).json({ error: 'UNAUTHORIZED', message: 'No tienes autorización para realizar modificaciones en los puntos de venta.' });
     }
 
@@ -344,7 +344,9 @@ export default async function handler(req, res) {
         longitude: longitude ? parseFloat(longitude) : null,
         maps_url: maps_url || '',
         is_active: is_active === undefined ? true : is_active,
-        fase: fase || currentUser.name || 'KAM', // fase represents Key Account Manager
+        fase: (fase && String(fase).trim() && !String(fase).toLowerCase().includes('administrador') && !String(fase).toLowerCase().startsWith('admin'))
+          ? String(fase).trim()
+          : (userHasRole(currentUser, 'kam') ? currentUser.name : 'Sin Asignar'), // fase represents Key Account Manager
         pdv: pdv || false,
         cdc: cdc || false,
         cl: isCl,

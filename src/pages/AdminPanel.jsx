@@ -155,6 +155,18 @@ export const ROLES_CATALOG = {
       { name: "Restaurante Nativo", access: "Solo Lectura", desc: "Consulta de mesas y comensales sin opción de edición" },
       { name: "Leads de Maquila", access: "Solo Lectura", desc: "Visualización de prospectos de maquila" }
     ]
+  },
+  kam: {
+    id: "kam",
+    name: "Key Account Manager (KAM / Vendedor)",
+    shortLabel: "KAM",
+    color: "bg-indigo-100 text-indigo-800 border-indigo-200",
+    badgeColor: "bg-indigo-700 text-white",
+    icon: "storefront",
+    description: "Acceso exclusivo a la gestión de Puntos de Venta (PDV / CDC) y equipo comercial.",
+    modules: [
+      { name: "Puntos de Venta & KAMs", access: "Total", desc: "Gestión interactiva de puntos de venta y catálogo de tiendas" }
+    ]
   }
 };
 
@@ -201,8 +213,8 @@ export const getUserPermissionsMatrix = (roleString) => {
       id: "pos_kams",
       name: "Puntos de Venta & Vendedores / KAMs",
       icon: "store",
-      allowed: isAdmin || roles.includes("editor"),
-      rolesAllowed: ["admin", "editor"],
+      allowed: isAdmin || roles.includes("editor") || roles.includes("kam"),
+      rolesAllowed: ["admin", "editor", "kam"],
       desc: "Administración de red comercial, tiendas y asignación de KAMs."
     },
     {
@@ -337,6 +349,7 @@ export default function AdminPanel({
     if (roles.includes('lead_maquila')) return "maquila_leads";
     if (roles.includes('rh')) return "cms";
     if (roles.includes('editor')) return "cms";
+    if (roles.includes('kam')) return "cms";
     return "log";
   };
 
@@ -391,7 +404,19 @@ export default function AdminPanel({
   const [usersList, setUsersList] = useState([]); // Users management (admin only)
   
   // CMS Data States
-  const [cmsTab, setCmsTab] = useState("banners"); // banners | dishes | jobs | blog | pos
+  const [cmsTab, setCmsTab] = useState(() => {
+    const savedUser = sessionStorage.getItem("casa_loy_admin_user");
+    if (savedUser) {
+      try {
+        const u = JSON.parse(savedUser);
+        const roles = String(u.role || '').split(',').map(r => r.trim());
+        if (roles.includes('kam') && !roles.includes('admin') && !roles.includes('editor') && !roles.includes('rh') && !roles.includes('lead_maquila')) {
+          return "pos";
+        }
+      } catch (e) {}
+    }
+    return "banners";
+  }); // banners | dishes | jobs | blog | pos
   const [bannersList, setBannersList] = useState([]);
   const [dishesList, setDishesList] = useState([]);
   const [jobsList, setJobsList] = useState([]);
@@ -951,7 +976,12 @@ export default function AdminPanel({
         setToken(data.token);
         setUser(data.user);
         setIsLoggedIn(true);
-        setActiveTab(getDefaultTabForUser(data.user));
+        const defaultT = getDefaultTabForUser(data.user);
+        setActiveTab(defaultT);
+        const userRoles = String(data.user?.role || '').split(',').map(r => r.trim());
+        if (userRoles.includes('kam') && !userRoles.includes('admin') && !userRoles.includes('editor')) {
+          setCmsTab("pos");
+        }
         sessionStorage.setItem("casa_loy_admin_token", data.token);
         sessionStorage.setItem("casa_loy_admin_user", JSON.stringify(data.user));
         setEmailInput("");
@@ -3267,7 +3297,7 @@ export default function AdminPanel({
           </button>
         );
       }
-      if (cmsTab === "pos" && (userHasRole("admin") || userHasRole("editor"))) {
+      if (cmsTab === "pos" && (userHasRole("admin") || userHasRole("editor") || userHasRole("kam"))) {
         return (
           <button
             onClick={() => setEditingPos({ name: "", city: "", state: "Jalisco", address: "", type: "retail", active: true })}
@@ -3400,7 +3430,7 @@ export default function AdminPanel({
           id: "cms_pos",
           label: "Puntos de Venta (POS)",
           icon: "storefront",
-          roles: ["admin", "editor"],
+          roles: ["admin", "editor", "kam"],
           onClick: () => { setActiveTab("cms"); setCmsTab("pos"); setSidebarOpen(false); },
           isActive: activeTab === "cms" && cmsTab === "pos",
         },
@@ -5255,7 +5285,7 @@ export default function AdminPanel({
           )}
 
           {/* TAB: CMS modules (Banners, Dishes, Blog with IA, Jobs, POS CRUD) */}
-          {(userHasRole("admin") || userHasRole("editor") || userHasRole("rh") || userHasRole("lead_maquila")) && activeTab === "cms" && (
+          {(userHasRole("admin") || userHasRole("editor") || userHasRole("rh") || userHasRole("lead_maquila") || userHasRole("kam")) && activeTab === "cms" && (
             <div className="space-y-6 text-left">
               
               {/* CMS Quick Pill Switcher (Shopify Polaris Segmented Control) */}
@@ -5264,7 +5294,7 @@ export default function AdminPanel({
                   { id: "banners", label: "Banners & Portadas", icon: "image", roles: ["admin", "editor"] },
                   { id: "dishes", label: "Platillos Nativo", icon: "dinner_dining", roles: ["admin", "editor"] },
                   { id: "blog", label: "Blog & Redactor IA", icon: "auto_awesome", roles: ["admin", "editor"] },
-                  { id: "pos", label: "Puntos de Venta", icon: "storefront", roles: ["admin", "editor"] },
+                  { id: "pos", label: "Puntos de Venta", icon: "storefront", roles: ["admin", "editor", "kam"] },
                   { id: "jobs", label: "Vacantes", icon: "work", roles: ["admin", "editor", "rh"] },
                   { id: "applications", label: "Postulantes / CVs", icon: "badge", roles: ["admin", "rh"] },
                   { id: "solutions", label: "Hub de Soluciones", icon: "handshake", roles: ["admin", "editor", "lead_maquila"] }
@@ -5895,7 +5925,9 @@ export default function AdminPanel({
                   const seller = (s.fase && s.fase.trim()) ? s.fase.trim() : "Sin Asignar";
                   sellersMap[seller] = (sellersMap[seller] || 0) + 1;
                 });
-                const sortedSellers = Object.keys(sellersMap).sort((a, b) => a.localeCompare(b));
+                const sortedSellers = Object.keys(sellersMap)
+                  .filter(seller => !seller.toLowerCase().includes("administrador") && !seller.toLowerCase().startsWith("admin"))
+                  .sort((a, b) => a.localeCompare(b));
 
                 const totalMx = posList.filter(s => s.region === 'mx').length;
                 const totalUsa = posList.filter(s => s.region === 'usa').length;
@@ -5948,6 +5980,13 @@ export default function AdminPanel({
                       </div>
                       <button
                         onClick={() => {
+                          const validKamList = kamsList.filter(k => 
+                            !k.name.toLowerCase().includes("administrador") && !k.name.toLowerCase().startsWith("admin")
+                          );
+                          const defaultKamName = (userHasRole("kam") && !user?.name?.toLowerCase().includes("admin"))
+                            ? (user?.name || "")
+                            : (validKamList.length > 0 ? validKamList[0].name : "");
+
                           setEditingPos({
                             retailer: "",
                             name: "",
@@ -5959,7 +5998,7 @@ export default function AdminPanel({
                             cl: false,
                             td: false,
                             tz: false,
-                            fase: user?.name || ""
+                            fase: defaultKamName
                           });
                           window.scrollTo({ top: 300, behavior: 'smooth' });
                         }}
@@ -6294,23 +6333,38 @@ export default function AdminPanel({
                                   <span>+ Registrar KAM</span>
                                 </button>
                               </div>
-                              <select 
-                                name="fase" 
-                                defaultValue={editingPos.fase || (kamsList.length > 0 ? kamsList[0].name : "")} 
-                                className="w-full bg-white border border-stone-200 p-2 text-xs font-semibold text-stone-800 focus:outline-none focus:border-[#8C4723] cursor-pointer"
-                              >
-                                {editingPos.fase && !kamsList.some(k => k.name.toLowerCase().trim() === editingPos.fase.toLowerCase().trim()) && (
-                                  <option value={editingPos.fase}>
-                                    ⚠️ {editingPos.fase} (Actual no registrado)
-                                  </option>
-                                )}
-                                <option value="">-- Seleccionar Vendedor / KAM --</option>
-                                {kamsList.map(kam => (
-                                  <option key={kam.id || kam.name} value={kam.name}>
-                                    👤 {kam.name} {!kam.is_active ? "(Inactivo)" : ""} {kam.stores_count !== undefined ? `(${kam.stores_count} tiendas)` : ""}
-                                  </option>
-                                ))}
-                              </select>
+                              {(() => {
+                                const validKams = kamsList.filter(k => 
+                                  !k.name.toLowerCase().includes('administrador') && !k.name.toLowerCase().startsWith('admin')
+                                );
+                                const isPosFaseAdmin = editingPos.fase && (
+                                  editingPos.fase.toLowerCase().includes('administrador') || 
+                                  editingPos.fase.toLowerCase().startsWith('admin')
+                                );
+                                const defaultVal = (!isPosFaseAdmin && editingPos.fase) 
+                                  ? editingPos.fase 
+                                  : (validKams.length > 0 ? validKams[0].name : "");
+
+                                return (
+                                  <select 
+                                    name="fase" 
+                                    defaultValue={defaultVal} 
+                                    className="w-full bg-white border border-stone-200 p-2 text-xs font-semibold text-stone-800 focus:outline-none focus:border-[#8C4723] cursor-pointer"
+                                  >
+                                    {editingPos.fase && !isPosFaseAdmin && !validKams.some(k => k.name.toLowerCase().trim() === editingPos.fase.toLowerCase().trim()) && (
+                                      <option value={editingPos.fase}>
+                                        ⚠️ {editingPos.fase} (Actual no registrado)
+                                      </option>
+                                    )}
+                                    <option value="">-- Seleccionar Vendedor / KAM --</option>
+                                    {validKams.map(kam => (
+                                      <option key={kam.id || kam.name} value={kam.name}>
+                                        👤 {kam.name} {!kam.is_active ? "(Inactivo)" : ""} {kam.stores_count !== undefined ? `(${kam.stores_count} tiendas)` : ""}
+                                      </option>
+                                    ))}
+                                  </select>
+                                );
+                              })()}
                               <p className="text-[9px] text-stone-400 mt-1">
                                 Selecciona un KAM registrado. Si no existe, puedes registrarlo arriba.
                               </p>
@@ -7029,6 +7083,7 @@ export default function AdminPanel({
                       {[
                         { id: 'admin', label: 'Administrador General', desc: 'Acceso total sin restricciones a todos los módulos y auditoría' },
                         { id: 'editor', label: 'Editor de Contenidos & CMS', desc: 'Blog, Asistente IA, Banners, Platillos y Puntos de Venta' },
+                        { id: 'kam', label: 'Key Account Manager (KAM / Vendedor)', desc: 'Acceso exclusivo al módulo de Puntos de Venta (PDV / CDC) y equipo comercial' },
                         { id: 'experience_manager', label: 'Gestor de Experiencias y Turismo', desc: 'Calendario, cupos de tours, validación QR y cupones de descuento' },
                         { id: 'restaurant_manager', label: 'Gestor de Restaurante Nativo', desc: 'Control de reservaciones de mesas y comensales' },
                         { id: 'rh', label: 'Recursos Humanos (RH)', desc: 'Bolsa de trabajo, vacantes laborales y descarga de CVs' },
@@ -7144,6 +7199,7 @@ export default function AdminPanel({
                                           className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-sans font-bold rounded-sm border ${
                                             roleId === 'admin' ? 'bg-red-50 text-red-800 border-red-200' :
                                             roleId === 'editor' ? 'bg-blue-50 text-blue-800 border-blue-200' :
+                                            roleId === 'kam' ? 'bg-indigo-50 text-indigo-800 border-indigo-200' :
                                             roleId === 'experience_manager' ? 'bg-amber-50 text-amber-800 border-amber-200' :
                                             roleId === 'restaurant_manager' ? 'bg-purple-50 text-purple-800 border-purple-200' :
                                             roleId === 'cuentas_por_cobrar' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' :
@@ -8819,7 +8875,7 @@ export default function AdminPanel({
                     className="w-full bg-white border border-blue-300 p-2 text-xs font-semibold text-stone-800 focus:outline-none focus:border-blue-600 rounded cursor-pointer"
                   >
                     <option value="">-- Selecciona el nuevo responsable --</option>
-                    {kamsList.filter(k => k.name !== reassigningKam.name).map(k => (
+                    {kamsList.filter(k => k.name !== reassigningKam.name && !k.name.toLowerCase().includes("administrador") && !k.name.toLowerCase().startsWith("admin")).map(k => (
                       <option key={k.id || k.name} value={k.name}>
                         👤 {k.name} {!k.is_active ? "(Inactivo)" : ""} ({k.stores_count || 0} tiendas actuales)
                       </option>
