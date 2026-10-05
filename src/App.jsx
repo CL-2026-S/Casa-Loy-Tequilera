@@ -33,6 +33,7 @@ import ValidateTicket from "./pages/ValidateTicket";
 import AdminPanel from "./pages/AdminPanel";
 import Test2MBB from "./pages/Test2MBB";
 import SolutionsHub from "./pages/SolutionsHub";
+import Granel from "./pages/Granel";
 import VCardLELB from "./pages/VCardLELB";
 import VCardMFQM from "./pages/VCardMFQM";
 
@@ -47,6 +48,9 @@ const routesMap = {
   "/maquilas": { page: "maquilas", lang: "es" },
   "/maquilas-v2": { page: "maquilas", lang: "es" },
   "/maquilas-v3": { page: "maquilas-v3", lang: "es" },
+  "/granel": { page: "granel", lang: "es" },
+  "/graneles": { page: "granel", lang: "es" },
+  "/tequila-a-granel": { page: "granel", lang: "es" },
   "/test1mbb": { page: "maquilas-v3", lang: "es" },
   "/test2mbb": { page: "test2mbb", lang: "es" },
   "/marcas": { page: "brands", lang: "es" },
@@ -81,6 +85,11 @@ const routesMap = {
   "/bottling-v3": { page: "maquilas-v3", lang: "en" },
   "/maquilas-v3-en": { page: "maquilas-v3", lang: "en" },
   "/maquilas-v3/en": { page: "maquilas-v3", lang: "en" },
+  "/bulk": { page: "granel", lang: "en" },
+  "/bulk-tequila": { page: "granel", lang: "en" },
+  "/granel-en": { page: "granel", lang: "en" },
+  "/bulk/es": { page: "granel", lang: "es" },
+  "/bulk/en": { page: "granel", lang: "en" },
   "/test1mbb-en": { page: "maquilas-v3", lang: "en" },
   "/test1mbb/en": { page: "maquilas-v3", lang: "en" },
   "/test2mbb-en": { page: "test2mbb", lang: "en" },
@@ -528,6 +537,16 @@ export default function App() {
             <Route path="/test2mbb" element={<Test2MBB lang="es" setPage={setPage} />} />
             <Route path="/test2mbb-en" element={<Test2MBB lang="en" setPage={setPage} />} />
             <Route path="/test2mbb/en" element={<Test2MBB lang="en" setPage={setPage} />} />
+            
+            {/* Tequila a Granel / Bulk Tequila */}
+            <Route path="/granel" element={<Granel lang="es" />} />
+            <Route path="/graneles" element={<Granel lang="es" />} />
+            <Route path="/tequila-a-granel" element={<Granel lang="es" />} />
+            <Route path="/bulk" element={<Granel lang="en" />} />
+            <Route path="/bulk-tequila" element={<Granel lang="en" />} />
+            <Route path="/granel-en" element={<Granel lang="en" />} />
+            <Route path="/bulk/es" element={<Granel lang="es" />} />
+            <Route path="/bulk/en" element={<Granel lang="en" />} />
             
             <Route path="/marcas" element={<Brands t={t} lang={lang} country={country} />} />
             <Route path="/brands" element={<Brands t={t} lang={lang} country={country} />} />

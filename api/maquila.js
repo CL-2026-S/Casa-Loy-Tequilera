@@ -114,6 +114,7 @@ export default async function handler(req, res) {
   } = req.body || {};
 
   const isSolutions = origin === 'solutions' || origin === 'solutions_hub';
+  const isGranel = origin === 'granel' || origin === 'bulk';
   const isManual = creation_mode === 'manual' || origin === 'manual';
 
   // If manual creation, verify authentication and minimum fields
@@ -131,10 +132,10 @@ export default async function handler(req, res) {
     if (!name || !email || !phone) {
       return res.status(400).json({ error: 'Faltan campos obligatorios: Nombre, Email y Teléfono son requeridos.' });
     }
-  } else if (isSolutions) {
-    // Solutions hub validation (streamlined Linktree-style form)
-    if (!name || !company || !email || !solution) {
-      return res.status(400).json({ error: 'Faltan campos obligatorios: Nombre, Empresa, Email y Solución son requeridos.' });
+  } else if (isSolutions || isGranel) {
+    // Solutions hub & Granel / Bulk inquiries
+    if (!name || !company || !email) {
+      return res.status(400).json({ error: 'Faltan campos obligatorios: Nombre, Empresa y Email son requeridos.' });
     }
   } else {
     // Public quiz validation
