@@ -427,13 +427,19 @@ function BannerCard({ banner, onEdit, onDelete }) {
 
             {/* Typography Overlay */}
             <div className="absolute inset-0 p-4 flex flex-col justify-end text-white">
-              <span className="text-[9px] uppercase tracking-widest text-amber-300 font-semibold mb-1">
-                {subtitle || "CASA LOY"}
-              </span>
-              <h6
-                className="font-serif text-sm md:text-base font-light leading-snug line-clamp-2"
-                dangerouslySetInnerHTML={{ __html: title || "Sin título definido" }}
-              />
+              {subtitle && (
+                <span className="text-[9px] uppercase tracking-widest text-amber-300 font-semibold mb-1">
+                  {subtitle}
+                </span>
+              )}
+              {title ? (
+                <h6
+                  className="font-serif text-sm md:text-base font-light leading-snug line-clamp-2"
+                  dangerouslySetInnerHTML={{ __html: title }}
+                />
+              ) : !subtitle && !btnText ? (
+                <span className="text-white/60 text-[10px] italic">Banner visual (sin textos)</span>
+              ) : null}
               {btnText && (
                 <div className="mt-2">
                   <span className="inline-block bg-[#8C4723] text-white text-[9px] font-semibold tracking-wider px-2 py-0.5 uppercase">
@@ -467,13 +473,17 @@ function BannerCard({ banner, onEdit, onDelete }) {
 
             {/* Mobile Typography */}
             <div className="absolute inset-0 p-3 flex flex-col justify-end text-white text-center">
-              <span className="text-[7px] uppercase tracking-widest text-amber-300 font-semibold mb-0.5">
-                {subtitle || "CASA LOY"}
-              </span>
-              <h6
-                className="font-serif text-[11px] font-light leading-tight line-clamp-3 mb-2"
-                dangerouslySetInnerHTML={{ __html: title || "Sin título" }}
-              />
+              {subtitle && (
+                <span className="text-[7px] uppercase tracking-widest text-amber-300 font-semibold mb-0.5">
+                  {subtitle}
+                </span>
+              )}
+              {title && (
+                <h6
+                  className="font-serif text-[11px] font-light leading-tight line-clamp-3 mb-2"
+                  dangerouslySetInnerHTML={{ __html: title }}
+                />
+              )}
               {btnText && (
                 <span className="inline-block bg-[#8C4723] text-white text-[8px] font-semibold tracking-wider px-2 py-1 uppercase rounded-xs">
                   {btnText}
@@ -661,11 +671,6 @@ function BannerEditorModal({ banner, token, onClose, onSaved }) {
   const handleSave = async (e) => {
     e.preventDefault();
     setErrorMessage("");
-
-    if (!titleEs.trim()) {
-      setErrorMessage("Por favor ingresa un título para el banner en Español.");
-      return;
-    }
 
     const hasAnyImage =
       desktopEsBase64 ||
@@ -957,15 +962,19 @@ function BannerEditorModal({ banner, token, onClose, onSaved }) {
               </div>
             </div>
 
+            <p className="text-[11px] text-stone-500">
+              Opcional: Si tu imagen ya contiene texto o diseño publicitario, puedes dejar estos campos en blanco.
+            </p>
+
             {textLangTab === "es" ? (
               <div className="space-y-3">
                 <div>
                   <label className="block text-[10px] uppercase font-bold text-stone-500 mb-1">
-                    Título Principal (Español)
+                    Título Principal (Opcional - Español)
                   </label>
                   <input
                     type="text"
-                    placeholder="Ej. VIVE LA TRADICIÓN EN CADA RINCÓN"
+                    placeholder="Opcional: Ej. VIVE LA TRADICIÓN EN CADA RINCÓN"
                     value={titleEs}
                     onChange={(e) => setTitleEs(e.target.value)}
                     className="w-full bg-white border border-stone-200 rounded-lg p-2.5 text-xs font-serif"
@@ -973,11 +982,11 @@ function BannerEditorModal({ banner, token, onClose, onSaved }) {
                 </div>
                 <div>
                   <label className="block text-[10px] uppercase font-bold text-stone-500 mb-1">
-                    Subtítulo / Descripción Breve (Español)
+                    Subtítulo / Descripción Breve (Opcional - Español)
                   </label>
                   <textarea
                     rows="2"
-                    placeholder="Ej. Recorre nuestra destilería, descubre la magia del agave y sumérgete en el sabor de Los Altos."
+                    placeholder="Opcional: Ej. Recorre nuestra destilería, descubre la magia del agave y sumérgete en el sabor de Los Altos."
                     value={subtitleEs}
                     onChange={(e) => setSubtitleEs(e.target.value)}
                     className="w-full bg-white border border-stone-200 rounded-lg p-2.5 text-xs resize-none"
@@ -988,11 +997,11 @@ function BannerEditorModal({ banner, token, onClose, onSaved }) {
               <div className="space-y-3">
                 <div>
                   <label className="block text-[10px] uppercase font-bold text-stone-500 mb-1">
-                    Título Principal (Inglés)
+                    Título Principal (Opcional - Inglés)
                   </label>
                   <input
                     type="text"
-                    placeholder="Ej. LIVE THE TRADITION IN EVERY CORNER"
+                    placeholder="Opcional: Ej. LIVE THE TRADITION IN EVERY CORNER"
                     value={titleEn}
                     onChange={(e) => setTitleEn(e.target.value)}
                     className="w-full bg-white border border-stone-200 rounded-lg p-2.5 text-xs font-serif"
@@ -1000,11 +1009,11 @@ function BannerEditorModal({ banner, token, onClose, onSaved }) {
                 </div>
                 <div>
                   <label className="block text-[10px] uppercase font-bold text-stone-500 mb-1">
-                    Subtítulo / Descripción Breve (Inglés)
+                    Subtítulo / Descripción Breve (Opcional - Inglés)
                   </label>
                   <textarea
                     rows="2"
-                    placeholder="Ej. Tour our distillery, discover the magic of agave, and immerse yourself in the flavors of Jalisco."
+                    placeholder="Opcional: Ej. Tour our distillery, discover the magic of agave, and immerse yourself in the flavors of Jalisco."
                     value={subtitleEn}
                     onChange={(e) => setSubtitleEn(e.target.value)}
                     className="w-full bg-white border border-stone-200 rounded-lg p-2.5 text-xs resize-none"
