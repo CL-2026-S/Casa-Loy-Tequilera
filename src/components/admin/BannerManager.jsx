@@ -12,7 +12,7 @@ const PAGE_OPTIONS = [
 const PREDEFINED_LINKS = [
   { value: "home", label: "Inicio (Home)" },
   { value: "turismo", label: "Tours & Experiencias (General)" },
-  { value: "tours#packages", label: "Paquetes de Tours (Reserva directa)" },
+  { value: "turismo#packages", label: "Paquetes de Tours (Reserva directa)" },
   { value: "about", label: "Nosotros / Historia de la Casa" },
   { value: "maquilas", label: "Maquilas y Desarrollo de Marca" },
   { value: "maquilas#contact", label: "Asesoría de Maquilas (Contacto)" },
@@ -140,9 +140,9 @@ export default function BannerManager({ bannersList = [], token, onRefresh, user
       title_en: "",
       subtitle_es: "",
       subtitle_en: "",
-      button_text_es: "DESCUBRIR MÁS",
-      button_text_en: "DISCOVER MORE",
-      link_url: "turismo",
+      button_text_es: "",
+      button_text_en: "",
+      link_url: "",
       image_desktop_es: "",
       image_mobile_es: "",
       image_desktop_en: "",
@@ -350,6 +350,11 @@ function BannerCard({ banner, onEdit, onDelete }) {
           <span className="text-[10px] bg-stone-200 text-stone-700 px-2 py-0.5 rounded font-mono font-semibold">
             #{banner.order_index || 0}
           </span>
+          {banner.type === "below_menu" && (
+            <span className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded font-semibold">
+              📐 Debajo del Menú (Sin Cortes)
+            </span>
+          )}
           <span
             className={`text-[10px] px-2 py-0.5 rounded font-bold ${
               banner.is_active !== false ? "bg-emerald-50 text-emerald-700" : "bg-red-50 text-red-600"
@@ -817,18 +822,24 @@ function BannerEditorModal({ banner, token, onClose, onSaved }) {
 
               <div>
                 <label className="block text-[10px] uppercase font-bold text-stone-500 mb-1">
-                  Tipo de Banner *
+                  Tipo de Visualización *
                 </label>
                 <select
                   value={formType}
                   onChange={(e) => setFormType(e.target.value)}
                   className="w-full bg-white border border-stone-200 rounded-lg p-2 text-xs font-medium focus:outline-none focus:border-[#8C4723]"
                 >
-                  <option value="main">Principal (Hero / Portada completa)</option>
+                  <option value="main">🖥️ Pantalla Completa Hero (Cubre todo el fondo)</option>
+                  <option value="below_menu">📐 Debajo del Menú (Ajuste Completo / Sin Cortes)</option>
                   <option value="secondary">Secundario (Parallax o Franja)</option>
                   <option value="promo">Promocional / Especial</option>
                   <option value="gallery">Galería</option>
                 </select>
+                <p className="text-[10px] text-stone-500 mt-1">
+                  {formType === "below_menu"
+                    ? "✨ Modo sin cortes: El banner se muestra completo debajo del menú sin recortar logos ni bordes."
+                    : "✨ Modo Hero: Cubre todo el fondo de pantalla de forma inmersiva."}
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-2">
@@ -912,7 +923,7 @@ function BannerEditorModal({ banner, token, onClose, onSaved }) {
                   </label>
                   <input
                     type="text"
-                    placeholder="DESCUBRIR MÁS"
+                    placeholder="Opcional: Ej. DESCUBRIR MÁS (vacío para sin botón)"
                     value={btnTextEs}
                     onChange={(e) => setBtnTextEs(e.target.value)}
                     className="w-full bg-white border border-stone-200 rounded-lg p-2 text-xs"
@@ -924,7 +935,7 @@ function BannerEditorModal({ banner, token, onClose, onSaved }) {
                   </label>
                   <input
                     type="text"
-                    placeholder="DISCOVER MORE"
+                    placeholder="Opcional: Ej. DISCOVER MORE"
                     value={btnTextEn}
                     onChange={(e) => setBtnTextEn(e.target.value)}
                     className="w-full bg-white border border-stone-200 rounded-lg p-2 text-xs"

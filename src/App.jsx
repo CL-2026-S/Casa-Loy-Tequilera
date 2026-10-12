@@ -298,6 +298,21 @@ export default function App() {
 
   // setPage wrapper to push state changes using react-router navigation, respecting the active language
   const setPage = (targetPage) => {
+    if (!targetPage) return;
+    const clean = String(targetPage).trim();
+    if (clean.startsWith("http://") || clean.startsWith("https://")) {
+      window.open(clean, "_blank", "noopener,noreferrer");
+      return;
+    }
+    if (clean.startsWith("mailto:") || clean.startsWith("tel:")) {
+      window.location.href = clean;
+      return;
+    }
+    if (clean.startsWith("/")) {
+      navigate(clean);
+      return;
+    }
+
     const paths = {
       es: {
         home: "/",
@@ -308,6 +323,7 @@ export default function App() {
         test2mbb: "/test2mbb",
         brands: "/marcas",
         turismo: "/turismo",
+        tours: "/turismo",
         "experience-oro": "/turismo/oro",
         "experience-platino": "/turismo/platino",
         "experience-diamante": "/turismo/diamante",
@@ -337,6 +353,7 @@ export default function App() {
         test2mbb: "/test2mbb-en",
         brands: "/brands",
         turismo: "/tourism",
+        tours: "/tourism",
         "experience-oro": "/tourism/gold",
         "experience-platino": "/tourism/platinum",
         "experience-diamante": "/tourism/diamond",
@@ -360,7 +377,8 @@ export default function App() {
     };
 
     const activePaths = paths[lang] || paths.es;
-    const targetPath = activePaths[targetPage] || "/";
+    const mappedTarget = clean === "tours" ? "turismo" : clean;
+    const targetPath = activePaths[mappedTarget] || (clean.startsWith("/") ? clean : `/${clean}`);
     navigate(targetPath);
   };
 

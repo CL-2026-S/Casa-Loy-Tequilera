@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Intersection Observer Reveal Component for clean scroll entrance animations
 function Reveal({ children, className = "", delay = 0, duration = 800 }) {
@@ -216,6 +217,47 @@ const localT = {
 export default function Home({ lang = "es", setPage, setLang }) {
   const currentLang = lang === "es" ? "es" : "en";
   const t = localT[currentLang];
+  const navigate = useNavigate();
+
+  const handleCtaClick = (routeUrl) => {
+    if (!routeUrl) return;
+    const clean = String(routeUrl).trim();
+    if (clean.startsWith("http://") || clean.startsWith("https://")) {
+      window.open(clean, "_blank", "noopener,noreferrer");
+      return;
+    }
+    if (clean.startsWith("mailto:") || clean.startsWith("tel:")) {
+      window.location.href = clean;
+      return;
+    }
+
+    let pagePart = clean;
+    let hashPart = "";
+    if (clean.includes("#")) {
+      const parts = clean.split("#");
+      pagePart = parts[0];
+      hashPart = parts[1];
+    }
+
+    if (pagePart === "tours") pagePart = "turismo";
+
+    if (pagePart.startsWith("/")) {
+      navigate(pagePart);
+    } else if (pagePart && setPage) {
+      setPage(pagePart);
+    } else if (pagePart) {
+      navigate(`/${pagePart}`);
+    }
+
+    if (hashPart) {
+      setTimeout(() => {
+        const element = document.getElementById(hashPart);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 500);
+    }
+  };
 
   const [activeSlide, setActiveSlide] = useState(0);
   const autoplayTimerRef = useRef(null);
@@ -237,25 +279,35 @@ export default function Home({ lang = "es", setPage, setLang }) {
                 ? (b.image_mobile_es || b.image_desktop_es || b.image_url)
                 : (b.image_mobile_en || b.image_desktop_en || b.image_mobile_es || b.image_desktop_es || b.image_url);
 
+              const subEs = b.subtitle_es ? b.subtitle_es.trim() : "";
+              const subEn = b.subtitle_en ? b.subtitle_en.trim() : subEs;
+              const titleEs = b.title_es ? b.title_es.trim() : "";
+              const titleEn = b.title_en ? b.title_en.trim() : titleEs;
+              const btnEs = b.button_text_es !== undefined && b.button_text_es !== null ? b.button_text_es.trim() : "";
+              const btnEn = b.button_text_en !== undefined && b.button_text_en !== null ? b.button_text_en.trim() : btnEs;
+              const isBelowMenu = b.type === "below_menu";
+
               return {
                 id: String(b.id),
-                overtitle: currentLang === 'es' ? (b.subtitle_es || "CASA LOY") : (b.subtitle_en || b.subtitle_es || "CASA LOY"),
-                titleEs: b.title_es,
-                titleEn: b.title_en || b.title_es,
-                descEs: b.subtitle_es || "",
-                descEn: b.subtitle_en || b.subtitle_es || "",
-                btn1Es: b.button_text_es || (currentLang === 'es' ? "DESCUBRIR MÁS" : "DISCOVER MORE"),
-                btn1En: b.button_text_en || b.button_text_es || "DISCOVER MORE",
-                btn1Route: b.link_url || "turismo",
+                type: b.type || "main",
+                isBelowMenu,
+                overtitle: currentLang === 'es' ? subEs : subEn,
+                titleEs,
+                titleEn,
+                descEs: subEs,
+                descEn: subEn,
+                btn1Es: btnEs,
+                btn1En: btnEn,
+                btn1Route: b.link_url || "",
                 btn2Es: "",
                 btn2En: "",
-                microcopyEs: b.subtitle_es || "",
-                microcopyEn: b.subtitle_en || b.subtitle_es || "",
+                microcopyEs: subEs,
+                microcopyEn: subEn,
                 bg: deskImg,
                 bgMobile: mobImg,
                 bgRetina: deskImg,
-                brightness: "brightness-[0.82]",
-                overlay: "from-black/30 via-transparent to-black/45",
+                brightness: isBelowMenu ? "brightness-[1.0]" : "brightness-[0.82]",
+                overlay: isBelowMenu ? "from-black/10 via-transparent to-black/20" : "from-black/30 via-transparent to-black/45",
               };
             });
             setDynamicSlides(mapped);
@@ -430,7 +482,7 @@ export default function Home({ lang = "es", setPage, setLang }) {
 
 
       
-      {/* 01. HERO SLIDESHOW SECTION (Full Screen) */}
+      {/* 01. HERO SLIDESHOW SECTION */}
       <section className="relative h-screen w-full bg-zinc-950 overflow-hidden">
         {/* Render Background Images */}
         {activeSlides.map((slide, idx) => (
@@ -438,10 +490,10 @@ export default function Home({ lang = "es", setPage, setLang }) {
             key={slide.id} 
             className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
               idx === activeSlide ? "opacity-100 z-0" : "opacity-0 z-0 pointer-events-none"
-            }`}
+            } ${slide.isBelowMenu ? "pt-20 md:pt-24 pb-14 flex items-center justify-center px-3 md:px-8" : ""}`}
           >
             {slide.bgMobile || slide.bgRetina ? (
-              <picture>
+              <picture className={slide.isBelowMenu ? "w-full h-full flex items-center justify-center" : "w-full h-full"}>
                 {slide.bgMobile && <source media="(max-width: 768px)" srcSet={slide.bgMobile} />}
                 {slide.bgRetina && (
                   <source 
@@ -451,8 +503,10 @@ export default function Home({ lang = "es", setPage, setLang }) {
                 )}
                 <img
                   alt={slide.id}
-                  className={`w-full h-full object-cover ${slide.brightness || "brightness-[0.82]"} transition-transform duration-[7500ms] ease-out ${
-                    idx === activeSlide ? "scale-105" : "scale-100"
+                  className={`w-full h-full ${
+                    slide.isBelowMenu ? "object-contain max-h-full" : "object-cover"
+                  } ${slide.brightness || "brightness-[0.82]"} transition-transform duration-[7500ms] ease-out ${
+                    idx === activeSlide && !slide.isBelowMenu ? "scale-105" : "scale-100"
                   }`}
                   src={slide.bg}
                 />
@@ -460,84 +514,83 @@ export default function Home({ lang = "es", setPage, setLang }) {
             ) : (
               <img
                 alt={slide.id}
-                className={`w-full h-full object-cover ${slide.brightness || "brightness-[0.82]"} transition-transform duration-[7500ms] ease-out ${
-                  idx === activeSlide ? "scale-105" : "scale-100"
+                className={`w-full h-full ${
+                  slide.isBelowMenu ? "object-contain max-h-full" : "object-cover"
+                } ${slide.brightness || "brightness-[0.82]"} transition-transform duration-[7500ms] ease-out ${
+                  idx === activeSlide && !slide.isBelowMenu ? "scale-105" : "scale-100"
                 }`}
                 src={slide.bg}
               />
             )}
             {/* Dark gradient overlay for typography readability */}
-            <div className={`absolute inset-0 bg-gradient-to-b ${slide.overlay || "from-black/30 via-transparent to-black/45"}`}></div>
+            <div className={`absolute inset-0 ${slide.isBelowMenu ? "bg-black/10 pointer-events-none" : `bg-gradient-to-b ${slide.overlay || "from-black/30 via-transparent to-black/45"}`}`}></div>
           </div>
         ))}
 
         {/* Content Container (Crossfading slides content) */}
-        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center h-full pt-16 pb-28">
+        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center h-full pointer-events-none">
           {activeSlides.map((slide, idx) => {
             const isActive = idx === activeSlide;
+            const slideTitle = currentLang === "es" ? slide.titleEs : slide.titleEn;
+            const hasTitle = Boolean(slideTitle && slideTitle.trim());
+            const hasOvertitle = Boolean(slide.overtitle && slide.overtitle.trim());
+            const btn1Text = currentLang === "es" ? slide.btn1Es : slide.btn1En;
+            const hasBtn1 = Boolean(btn1Text && btn1Text.trim());
+            const btn2Text = currentLang === "es" ? slide.btn2Es : slide.btn2En;
+            const hasBtn2 = Boolean(btn2Text && btn2Text.trim());
 
             return (
               <div 
                 key={slide.id}
-                className={`absolute inset-x-6 flex flex-col items-center justify-center transition-all duration-500 ease-out ${
+                className={`absolute inset-x-6 flex flex-col items-center transition-all duration-500 ease-out ${
+                  slide.isBelowMenu || !hasTitle
+                    ? "bottom-24 md:bottom-28 justify-end"
+                    : "top-1/2 -translate-y-1/2 justify-center"
+                } ${
                   isActive 
                     ? "opacity-100 translate-y-0 scale-100 pointer-events-auto animate-slide-left-right" 
                     : "opacity-0 translate-y-4 scale-98 pointer-events-none"
                 }`}
               >
                 {/* Overtitle */}
-                <span className="font-navigation text-[clamp(11px,1vw,13px)] text-white uppercase tracking-[0.4em] mb-4 block font-semibold">
-                  {slide.overtitle}
-                </span>
+                {hasOvertitle && (
+                  <span className="font-navigation text-[clamp(11px,1vw,13px)] text-white uppercase tracking-[0.4em] mb-4 block font-semibold drop-shadow-md">
+                    {slide.overtitle}
+                  </span>
+                )}
 
                 {/* Main Heading */}
-                <h1 
-                  className="font-serif text-[clamp(28px,4.5vw,60px)] leading-[1.1] tracking-tight font-light text-white uppercase max-w-4xl mx-auto mb-10"
-                  dangerouslySetInnerHTML={{ __html: currentLang === "es" ? slide.titleEs : slide.titleEn }}
-                />
+                {hasTitle && (
+                  <h1 
+                    className="font-serif text-[clamp(28px,4.5vw,60px)] leading-[1.1] tracking-tight font-light text-white uppercase max-w-4xl mx-auto mb-10 drop-shadow-lg"
+                    dangerouslySetInnerHTML={{ __html: slideTitle }}
+                  />
+                )}
 
                 {/* CTA Buttons */}
-                <div className="flex flex-col sm:flex-row gap-6 items-center justify-center w-full max-w-md sm:max-w-none pt-2">
-                  {/* Primary CTA */}
-                  <button
-                    onClick={() => {
-                      if (slide.btn1Route.includes("#")) {
-                        const [route, hash] = slide.btn1Route.split("#");
-                        setPage(route);
-                        setTimeout(() => {
-                          const element = document.getElementById(hash);
-                          if (element) element.scrollIntoView({ behavior: "smooth" });
-                        }, 500);
-                      } else {
-                        setPage(slide.btn1Route);
-                      }
-                    }}
-                    className="bg-[#8C4723] border border-[#8C4723] hover:bg-[#a6562b] hover:border-[#a6562b] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-medium py-3.5 px-8 transition-all duration-500 min-w-[180px] md:min-w-[200px] text-center"
-                  >
-                    {currentLang === "es" ? slide.btn1Es : slide.btn1En}
-                  </button>
+                {(hasBtn1 || hasBtn2) && (
+                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center w-full max-w-md sm:max-w-none pt-2 pointer-events-auto">
+                    {/* Primary CTA */}
+                    {hasBtn1 && (
+                      <button
+                        onClick={() => handleCtaClick(slide.btn1Route)}
+                        className="bg-[#8C4723] border border-[#8C4723] hover:bg-[#a6562b] hover:border-[#a6562b] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-medium py-3.5 px-8 transition-all duration-500 min-w-[180px] md:min-w-[200px] text-center shadow-lg hover:shadow-xl cursor-pointer"
+                      >
+                        {btn1Text}
+                      </button>
+                    )}
 
-                  {/* Secondary CTA (If present) */}
-                  {slide.btn2Es && (
-                    <button
-                      onClick={() => {
-                        if (slide.btn2Route.includes("#")) {
-                          const [route, hash] = slide.btn2Route.split("#");
-                          setPage(route);
-                          setTimeout(() => {
-                            const element = document.getElementById(hash);
-                            if (element) element.scrollIntoView({ behavior: "smooth" });
-                          }, 500);
-                        } else {
-                          setPage(slide.btn2Route);
-                        }
-                      }}
-                      className="border border-white/60 hover:bg-[#8C4723] hover:border-[#8C4723] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-medium py-3.5 px-8 transition-all duration-500 min-w-[180px] md:min-w-[200px] text-center"
-                    >
-                      {currentLang === "es" ? slide.btn2Es : slide.btn2En}
-                    </button>
-                  )}
-                </div>
+                    {/* Secondary CTA (If present) */}
+                    {hasBtn2 && (
+                      <button
+                        onClick={() => handleCtaClick(slide.btn2Route)}
+                        className="border border-white/60 hover:bg-[#8C4723] hover:border-[#8C4723] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-medium py-3.5 px-8 transition-all duration-500 min-w-[180px] md:min-w-[200px] text-center shadow-lg cursor-pointer"
+                      >
+                        {btn2Text}
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             );
           })}
