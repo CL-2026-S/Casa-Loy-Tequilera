@@ -424,6 +424,11 @@ export default function AdminPanel({
   const [blogList, setBlogList] = useState([]);
   const [posList, setPosList] = useState([]);
 
+  // Site Settings (Marca Privada Scheduler visibility)
+  const [maquilaSchedulerEnabled, setMaquilaSchedulerEnabled] = useState(true);
+  const [isUpdatingSchedulerSetting, setIsUpdatingSchedulerSetting] = useState(false);
+  const [settingSuccessNotice, setSettingSuccessNotice] = useState("");
+
   // --- CMS FORM EDITING STATES ---
   const [editingBanner, setEditingBanner] = useState(null);
   const [editingJob, setEditingJob] = useState(null);
@@ -744,6 +749,24 @@ export default function AdminPanel({
       verifySession();
     }
   }, [token]);
+
+  // Load site settings on mount
+  useEffect(() => {
+    const fetchSiteSettings = async () => {
+      try {
+        const sRes = await fetch("/api/cms?type=site_settings");
+        if (sRes.ok) {
+          const sData = await sRes.json();
+          if (sData?.maquila_scheduler?.enabled !== undefined) {
+            setMaquilaSchedulerEnabled(Boolean(sData.maquila_scheduler.enabled));
+          }
+        }
+      } catch (e) {
+        console.error("Error loading site settings:", e);
+      }
+    };
+    fetchSiteSettings();
+  }, []);
 
   // Load active tab data
   useEffect(() => {
@@ -1290,6 +1313,20 @@ export default function AdminPanel({
         }
       } catch (e) {
         console.error("Error fetching maquila leads:", e);
+      }
+    }
+
+    if (activeTab === "cms" || activeTab === "maquila_leads" || activeTab === "dashboard") {
+      try {
+        const sRes = await fetch("/api/cms?type=site_settings", { headers });
+        if (sRes.ok) {
+          const sData = await sRes.json();
+          if (sData?.maquila_scheduler?.enabled !== undefined) {
+            setMaquilaSchedulerEnabled(Boolean(sData.maquila_scheduler.enabled));
+          }
+        }
+      } catch (sErr) {
+        console.error("Error fetching site settings in loadTabData:", sErr);
       }
     }
 
@@ -2267,6 +2304,41 @@ export default function AdminPanel({
       }
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const handleToggleMaquilaScheduler = async (newVal) => {
+    setIsUpdatingSchedulerSetting(true);
+    setSettingSuccessNotice("");
+    try {
+      const res = await fetch("/api/cms?action=update_site_setting", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          key: "maquila_scheduler",
+          value: { enabled: newVal }
+        })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setMaquilaSchedulerEnabled(newVal);
+        setSettingSuccessNotice(
+          newVal 
+            ? "Bloque de Videollamada Técnica activado: Ahora es visible en la página de Marca Privada." 
+            : "Bloque de Videollamada Técnica ocultado: Ya no se mostrará a los visitantes en Marca Privada."
+        );
+        setTimeout(() => setSettingSuccessNotice(""), 6000);
+      } else {
+        alert(data.error || "Error al actualizar la configuración.");
+      }
+    } catch (err) {
+      console.error("Error saving site setting:", err);
+      alert("Error de conexión al guardar el cambio.");
+    } finally {
+      setIsUpdatingSchedulerSetting(false);
     }
   };
 
@@ -3442,6 +3514,14 @@ export default function AdminPanel({
           roles: ["admin", "editor", "lead_maquila"],
           onClick: () => { setActiveTab("cms"); setCmsTab("solutions"); setSidebarOpen(false); },
           isActive: activeTab === "cms" && cmsTab === "solutions",
+        },
+        {
+          id: "cms_maquila",
+          label: "Marca Privada (Citas)",
+          icon: "video_call",
+          roles: ["admin", "editor", "lead_maquila"],
+          onClick: () => { setActiveTab("cms"); setCmsTab("maquila"); setSidebarOpen(false); },
+          isActive: activeTab === "cms" && cmsTab === "maquila",
         },
       ]
     },
@@ -5298,7 +5378,8 @@ export default function AdminPanel({
                   { id: "pos", label: "Puntos de Venta", icon: "storefront", roles: ["admin", "editor", "kam"] },
                   { id: "jobs", label: "Vacantes", icon: "work", roles: ["admin", "editor", "rh"] },
                   { id: "applications", label: "Postulantes / CVs", icon: "badge", roles: ["admin", "rh"] },
-                  { id: "solutions", label: "Hub de Soluciones", icon: "handshake", roles: ["admin", "editor", "lead_maquila"] }
+                  { id: "solutions", label: "Hub de Soluciones", icon: "handshake", roles: ["admin", "editor", "lead_maquila"] },
+                  { id: "maquila", label: "Marca Privada (Citas)", icon: "video_call", roles: ["admin", "editor", "lead_maquila"] }
                 ].filter(sub => sub.roles.some(roleOpt => userHasRole(roleOpt))).map(sub => (
                   <button
                     key={sub.id}
@@ -5329,6 +5410,142 @@ export default function AdminPanel({
                   onRefresh={loadTabData}
                   userRole={user?.role}
                 />
+              )}
+
+              {/* CMS: Marca Privada Scheduler Visibility */}
+              {cmsTab === "maquila" && (
+                <div className="space-y-6">
+                  {/* Notifications */}
+                  {settingSuccessNotice && (
+                    <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-lg text-xs font-semibold flex items-center gap-2.5 shadow-xs">
+                      <span className="material-symbols-outlined text-emerald-600 text-lg">check_circle</span>
+                      <span>{settingSuccessNotice}</span>
+                    </div>
+                  )}
+
+                  <div className="bg-white border border-stone-200 p-6 sm:p-8 shadow-sm space-y-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-100 pb-5">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="material-symbols-outlined text-[#8C4723] text-2xl">video_call</span>
+                          <h6 className="text-base font-bold text-stone-900 font-sans">
+                            Visibilidad del Bloque de Citas Técnicas (Marca Privada)
+                          </h6>
+                        </div>
+                        <p className="text-xs text-stone-500 font-sans mt-1">
+                          Controla si el bloque de <strong>"Reserva una Videollamada Técnica"</strong> y el calendario de Cal.com se muestran o se ocultan en las páginas públicas (<code className="text-[#8C4723] bg-stone-100 px-1 py-0.5 rounded">/marca-privada</code>, <code className="text-[#8C4723] bg-stone-100 px-1 py-0.5 rounded">/maquilas</code> y <code className="text-[#8C4723] bg-stone-100 px-1 py-0.5 rounded">/private-label</code>).
+                        </p>
+                      </div>
+
+                      <a
+                        href="/marca-privada#contact"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-stone-700 hover:text-[#8C4723] border border-stone-200 hover:border-stone-300 bg-stone-50 hover:bg-white px-3.5 py-2 font-medium flex items-center gap-1.5 transition-all w-fit shadow-2xs"
+                      >
+                        <span className="material-symbols-outlined text-sm">open_in_new</span>
+                        <span>Ver en la web en vivo</span>
+                      </a>
+                    </div>
+
+                    {/* Master Switch Status Card */}
+                    <div className={`p-6 border transition-all ${
+                      maquilaSchedulerEnabled 
+                        ? "bg-emerald-50/50 border-emerald-200" 
+                        : "bg-amber-50/50 border-amber-200"
+                    }`}>
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-3">
+                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
+                              maquilaSchedulerEnabled 
+                                ? "bg-emerald-600 text-white" 
+                                : "bg-amber-600 text-white"
+                            }`}>
+                              <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                              {maquilaSchedulerEnabled ? "Activo — Visible en la web" : "Oculto — No visible en la web"}
+                            </span>
+                            <span className="text-xs font-mono text-stone-400">
+                              setting: maquila_scheduler.enabled = {String(maquilaSchedulerEnabled)}
+                            </span>
+                          </div>
+
+                          <p className="text-xs text-stone-700 font-sans leading-relaxed">
+                            {maquilaSchedulerEnabled ? (
+                              <>
+                                El bloque completo de videollamada técnica está <strong>ACTIVO y VISIBLE</strong> para todos los visitantes del sitio web. Los clientes potenciales pueden agendar sesiones Discovery Call de 30 minutos directamente.
+                              </>
+                            ) : (
+                              <>
+                                El bloque completo está <strong>COMPLETAMENTE OCULTO</strong> en la página web. Los visitantes solo verán la tarjeta de contacto ejecutiva (teléfono y correo), sin el recuadro ni el widget interactivo de Cal.com.
+                              </>
+                            )}
+                          </p>
+                        </div>
+
+                        {/* Toggle Action Button */}
+                        <button
+                          type="button"
+                          onClick={() => handleToggleMaquilaScheduler(!maquilaSchedulerEnabled)}
+                          disabled={isUpdatingSchedulerSetting}
+                          className={`px-6 py-3 text-xs font-bold uppercase tracking-wider text-white flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all shrink-0 disabled:opacity-50 ${
+                            maquilaSchedulerEnabled
+                              ? "bg-stone-800 hover:bg-stone-900 border border-stone-700"
+                              : "bg-[#8C4723] hover:bg-[#6e3518] border border-[#8C4723]"
+                          }`}
+                        >
+                          {isUpdatingSchedulerSetting ? (
+                            <>
+                              <span className="inline-block w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                              <span>Guardando...</span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="material-symbols-outlined text-base">
+                                {maquilaSchedulerEnabled ? "visibility_off" : "visibility"}
+                              </span>
+                              <span>
+                                {maquilaSchedulerEnabled ? "Ocultar bloque en el sitio" : "Activar y mostrar bloque"}
+                              </span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Visual Preview / Details */}
+                    <div className="border border-stone-200 bg-stone-50/40 p-5 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-stone-500 uppercase tracking-wider font-sans">
+                          Vista previa de la sección afectada
+                        </span>
+                        <span className="text-[10px] text-stone-400 font-mono">
+                          Componente: &lt;Maquilas.jsx /&gt; (Líneas 958-975)
+                        </span>
+                      </div>
+
+                      <div className={`p-4 border transition-opacity ${maquilaSchedulerEnabled ? "bg-white border-stone-200 opacity-100" : "bg-stone-100 border-dashed border-stone-300 opacity-50"}`}>
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <div className="font-serif text-base font-bold text-[#1c1c18]">
+                              Reserva una Videollamada Técnica
+                            </div>
+                            <div className="font-sans text-xs text-stone-500 mt-0.5">
+                              Selecciona un horario para discutir la viabilidad operativa de tu proyecto.
+                            </div>
+                          </div>
+                          <span className={`text-[9px] font-bold px-2 py-0.5 uppercase tracking-wider ${maquilaSchedulerEnabled ? "bg-emerald-100 text-emerald-800" : "bg-stone-200 text-stone-600 line-through"}`}>
+                            {maquilaSchedulerEnabled ? "Se mostrará" : "Oculto"}
+                          </span>
+                        </div>
+                        <div className="mt-4 p-6 bg-stone-50 border border-stone-200/80 text-center text-xs text-stone-400 font-sans flex flex-col items-center justify-center gap-1.5">
+                          <span className="material-symbols-outlined text-stone-400 text-2xl">calendar_month</span>
+                          <span>Contenedor de Cal.com integrado (Fernanda Quintana - Discovery Call)</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )}
 
               {/* CMS B: Featured Dishes (Top 3) */}
@@ -7553,6 +7770,73 @@ export default function AdminPanel({
                     >
                       <span className="material-symbols-outlined text-xs">add</span>
                       {showMaquilaManualForm ? "Cancelar Registro" : "Registrar Lead Manual"}
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Quick Scheduler Visibility Control Card */}
+              {settingSuccessNotice && (
+                <div className="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded text-xs font-semibold flex items-center gap-2.5 shadow-2xs">
+                  <span className="material-symbols-outlined text-emerald-600 text-base">check_circle</span>
+                  <span>{settingSuccessNotice}</span>
+                </div>
+              )}
+
+              <div className="bg-white border border-stone-200 p-4 shadow-2xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className={`w-9 h-9 rounded flex items-center justify-center shrink-0 ${maquilaSchedulerEnabled ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>
+                    <span className="material-symbols-outlined text-lg">{maquilaSchedulerEnabled ? "videocam" : "videocam_off"}</span>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-stone-900 font-sans">Bloque de Videollamada Técnica (Cal.com) en Web</span>
+                      <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${maquilaSchedulerEnabled ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>
+                        {maquilaSchedulerEnabled ? "Visible" : "Oculto"}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-stone-500 font-sans mt-0.5">
+                      {maquilaSchedulerEnabled
+                        ? "El bloque de 'Reserva una Videollamada Técnica' con el calendario Cal.com está actualmente visible en /marca-privada."
+                        : "El bloque de agenda técnica está completamente desactivado y oculto en /marca-privada."}
+                    </p>
+                  </div>
+                </div>
+
+                {!userHasRole("viewer") && (
+                  <div className="flex items-center gap-2 shrink-0">
+                    <a
+                      href="/marca-privada#contact"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-stone-600 hover:text-stone-900 border border-stone-200 hover:bg-stone-50 px-3 py-1.5 font-sans font-medium flex items-center gap-1 transition-colors"
+                    >
+                      <span className="material-symbols-outlined text-xs">open_in_new</span>
+                      <span>Probar Página</span>
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => handleToggleMaquilaScheduler(!maquilaSchedulerEnabled)}
+                      disabled={isUpdatingSchedulerSetting}
+                      className={`text-xs px-3.5 py-1.5 font-sans font-semibold flex items-center gap-1.5 cursor-pointer transition-colors shadow-2xs disabled:opacity-50 ${
+                        maquilaSchedulerEnabled
+                          ? "bg-stone-800 hover:bg-stone-900 text-white"
+                          : "bg-[#8C4723] hover:bg-[#6e3518] text-white"
+                      }`}
+                    >
+                      {isUpdatingSchedulerSetting ? (
+                        <>
+                          <span className="inline-block w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          <span>Guardando...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="material-symbols-outlined text-xs">
+                            {maquilaSchedulerEnabled ? "visibility_off" : "visibility"}
+                          </span>
+                          <span>{maquilaSchedulerEnabled ? "Ocultar en la Web" : "Mostrar en la Web"}</span>
+                        </>
+                      )}
                     </button>
                   </div>
                 )}

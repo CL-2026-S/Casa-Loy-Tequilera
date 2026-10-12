@@ -18,9 +18,29 @@ export default function MaquilasV2({ lang = "es" }) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [showScheduler, setShowScheduler] = useState(true);
+
+  // Fetch site settings for scheduler block visibility
+  useEffect(() => {
+    const fetchSiteSettings = async () => {
+      try {
+        const res = await fetch("/api/cms?type=site_settings");
+        if (res.ok) {
+          const data = await res.json();
+          if (data?.maquila_scheduler?.enabled !== undefined) {
+            setShowScheduler(Boolean(data.maquila_scheduler.enabled));
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching site settings for maquila scheduler:", err);
+      }
+    };
+    fetchSiteSettings();
+  }, []);
 
   // Cal.com Integration
   useEffect(() => {
+    if (!showScheduler) return;
     (function (C, A, L) {
       let p = function (a, ar) { a.q.push(ar); };
       let d = C.document;
@@ -732,32 +752,34 @@ export default function MaquilasV2({ lang = "es" }) {
       {/* ============================================================
           BLOQUE 6: AGENDA TU VIDEOLLAMADA TÉCNICA (Cal.com)
           ============================================================ */}
-      <section className="py-16 md:py-24 bg-[#1E1A17] text-white" id="contact-scheduler">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12 text-center">
-          <div className="max-w-2xl mx-auto mb-10">
-            <span className="font-navigation text-[#FDA377] font-semibold tracking-[0.3em] text-[11px] uppercase block mb-2">
-              {t.callBadge}
-            </span>
-            <h2 className="font-serif text-3xl md:text-5xl text-white font-light leading-tight">
-              {t.callTitle}
-            </h2>
-            <p className="font-sans text-white/75 text-xs md:text-sm font-normal mt-3 leading-relaxed">
-              {t.callSub}
-            </p>
-          </div>
-
-          <div className="w-full max-w-4xl mx-auto bg-white border border-outline-variant/20 p-4 md:p-8 shadow-2xl relative text-left">
-            <div className="mb-4 border-b border-stone-200/50 pb-3 flex items-center justify-between">
-              <div>
-                <h4 className="font-serif text-xl text-zinc-900 font-semibold">{t.calendarHeader}</h4>
-                <p className="text-xs text-stone-500 font-normal font-sans">{t.calendarSub}</p>
-              </div>
-              <span className="font-navigation text-[10px] text-primary font-bold uppercase bg-amber-50 px-2 py-1 border border-amber-200">20 Minutos</span>
+      {showScheduler && (
+        <section className="py-16 md:py-24 bg-[#1E1A17] text-white" id="contact-scheduler">
+          <div className="max-w-[1400px] mx-auto px-6 md:px-12 text-center">
+            <div className="max-w-2xl mx-auto mb-10">
+              <span className="font-navigation text-[#FDA377] font-semibold tracking-[0.3em] text-[11px] uppercase block mb-2">
+                {t.callBadge}
+              </span>
+              <h2 className="font-serif text-3xl md:text-5xl text-white font-light leading-tight">
+                {t.callTitle}
+              </h2>
+              <p className="font-sans text-white/75 text-xs md:text-sm font-normal mt-3 leading-relaxed">
+                {t.callSub}
+              </p>
             </div>
-            <div id="cal-inline-v2" className="w-full h-[580px]"></div>
+
+            <div className="w-full max-w-4xl mx-auto bg-white border border-outline-variant/20 p-4 md:p-8 shadow-2xl relative text-left">
+              <div className="mb-4 border-b border-stone-200/50 pb-3 flex items-center justify-between">
+                <div>
+                  <h4 className="font-serif text-xl text-zinc-900 font-semibold">{t.calendarHeader}</h4>
+                  <p className="text-xs text-stone-500 font-normal font-sans">{t.calendarSub}</p>
+                </div>
+                <span className="font-navigation text-[10px] text-primary font-bold uppercase bg-amber-50 px-2 py-1 border border-amber-200">20 Minutos</span>
+              </div>
+              <div id="cal-inline-v2" className="w-full h-[580px]"></div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }

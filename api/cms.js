@@ -124,6 +124,19 @@ export default async function handler(req, res) {
   try {
     // --- 1. GET Handlers (Publicly readable) ---
     if (req.method === 'GET') {
+      // Fetch Site Settings
+      if (type === 'site_settings' || type === 'settings') {
+        const { data, error } = await supabase
+          .from('site_settings')
+          .select('*');
+        if (error) throw error;
+        const map = {};
+        (data || []).forEach(row => {
+          map[row.key] = row.value;
+        });
+        return res.status(200).json(map);
+      }
+
       // Fetch Banners
       if (type === 'banners') {
         const { data, error } = await supabase
@@ -240,12 +253,45 @@ export default async function handler(req, res) {
       }
 
       const isJobsAction = action === 'save_job' || action === 'delete_job';
+      const isSiteSettingAction = action === 'update_site_setting';
       const hasPermission = isJobsAction
         ? userHasRole(currentUser, 'admin', 'editor', 'rh')
+        : isSiteSettingAction
+        ? userHasRole(currentUser, 'admin', 'editor', 'lead_maquila')
         : userHasRole(currentUser, 'admin', 'editor');
 
       if (!hasPermission) {
         return res.status(403).json({ error: 'FORBIDDEN', message: 'No tienes los permisos requeridos para realizar esta acción.' });
+      }
+
+      // Action: Update Site Setting
+      if (action === 'update_site_setting') {
+        const { key, value } = req.body || {};
+        if (!key) {
+          return res.status(400).json({ error: 'La clave (key) del ajuste es obligatoria.' });
+        }
+        const { data, error } = await supabase
+          .from('site_settings')
+          .upsert({
+            key,
+            value,
+            updated_at: new Date().toISOString(),
+            updated_by: currentUser.email
+          }, { onConflict: 'key' })
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        await auditLog(
+          currentUser.userId,
+          currentUser.email,
+          currentUser.role,
+          'update_site_setting',
+          `Ajuste de sitio '${key}' actualizado por ${currentUser.email}`
+        );
+
+        return res.status(200).json({ success: true, setting: data });
       }
 
       // Action: Upload Banner Image

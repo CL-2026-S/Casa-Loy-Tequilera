@@ -79,7 +79,26 @@ export default function MaquilasV3({ lang = "es" }) {
   // Animated Counters State for Agave & Abastecimiento
   const [counters, setCounters] = useState({ msnm: 0, has: 0, plants: 0 });
   const [countersTriggered, setCountersTriggered] = useState(false);
+  const [showScheduler, setShowScheduler] = useState(true);
   const agaveRef = useRef(null);
+
+  // Fetch site settings to see if technical video call block is enabled
+  useEffect(() => {
+    const fetchSiteSettings = async () => {
+      try {
+        const res = await fetch("/api/cms?type=site_settings");
+        if (res.ok) {
+          const data = await res.json();
+          if (data?.maquila_scheduler?.enabled !== undefined) {
+            setShowScheduler(Boolean(data.maquila_scheduler.enabled));
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching site settings for maquila scheduler:", err);
+      }
+    };
+    fetchSiteSettings();
+  }, []);
 
   // IntersectionObserver for Animated Counters
   useEffect(() => {
@@ -123,6 +142,8 @@ export default function MaquilasV3({ lang = "es" }) {
 
   // Cal.com Embed Loader (30 minutes technical consultation)
   useEffect(() => {
+    if (!showScheduler) return;
+
     (function (C, A, L) {
       let p = function (a, ar) { a.q.push(ar); };
       let d = C.document;
@@ -2094,44 +2115,46 @@ export default function MaquilasV3({ lang = "es" }) {
       {/* ============================================================
           §9. CALENDARIO DE CITAS TÉCNICAS (Mismo ancho max-w-4xl centrado)
           ============================================================ */}
-      <section id="agenda-llamada" className="py-10 md:py-14 min-h-[88vh] flex flex-col justify-center bg-[#fcf9f3]">
-        <div className="max-w-4xl mx-auto px-6 text-left w-full">
-          <Reveal>
-            <div className="mb-6">
-              <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-2">
-                {t.calEyebrow}
-              </span>
-              <h2 className="font-serif text-[clamp(24px,3vw,44px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-2">
-                {t.calTitle}
-              </h2>
-              <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
-                {t.calSub}
-              </p>
-            </div>
-          </Reveal>
-
-          {/* Cal.com Clean Embed Card - matched width */}
-          <Reveal delay={100}>
-            <div className="w-full bg-white border border-[#1c1c18]/10 p-5 sm:p-7 shadow-sm rounded-none">
-              <div className="mb-3 border-b border-[#1c1c18]/10 pb-3 flex items-center justify-between">
-                <div>
-                  <h4 className="font-serif text-lg font-light text-[#1c1c18]">
-                    {lang === "es" ? "Calendario Oficial de Citas Técnicas" : "Technical Consultation Calendar"}
-                  </h4>
-                  <p className="font-navigation text-[11px] text-[#53443a] font-light mt-0.5">
-                    {lang === "es" ? "Selecciona el día y horario disponible para tu videollamada de 30 minutos." : "Select available date & time for your 30-minute Google Meet session."}
-                  </p>
-                </div>
-                <span className="font-navigation text-[9px] text-primary font-bold uppercase bg-[#F6F2EA] px-2.5 py-0.5 border border-[#1c1c18]/10 rounded-none tracking-wider">
-                  {lang === "es" ? "30 Minutos" : "30 Minutes"}
+      {showScheduler && (
+        <section id="agenda-llamada" className="py-10 md:py-14 min-h-[88vh] flex flex-col justify-center bg-[#fcf9f3]">
+          <div className="max-w-4xl mx-auto px-6 text-left w-full">
+            <Reveal>
+              <div className="mb-6">
+                <span className="font-navigation text-[clamp(10px,1vw,12px)] text-primary uppercase tracking-[0.35em] font-semibold block mb-2">
+                  {t.calEyebrow}
                 </span>
+                <h2 className="font-serif text-[clamp(24px,3vw,44px)] font-light text-[#1c1c18] leading-[1.12] tracking-tight mb-2">
+                  {t.calTitle}
+                </h2>
+                <p className="font-body-lg text-[#53443a] font-light leading-relaxed text-xs sm:text-sm">
+                  {t.calSub}
+                </p>
               </div>
+            </Reveal>
 
-              <div id="cal-inline-v3-scheduler" className="w-full h-[480px] sm:h-[520px]"></div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+            {/* Cal.com Clean Embed Card - matched width */}
+            <Reveal delay={100}>
+              <div className="w-full bg-white border border-[#1c1c18]/10 p-5 sm:p-7 shadow-sm rounded-none">
+                <div className="mb-3 border-b border-[#1c1c18]/10 pb-3 flex items-center justify-between">
+                  <div>
+                    <h4 className="font-serif text-lg font-light text-[#1c1c18]">
+                      {lang === "es" ? "Calendario Oficial de Citas Técnicas" : "Technical Consultation Calendar"}
+                    </h4>
+                    <p className="font-navigation text-[11px] text-[#53443a] font-light mt-0.5">
+                      {lang === "es" ? "Selecciona el día y horario disponible para tu videollamada de 30 minutos." : "Select available date & time for your 30-minute Google Meet session."}
+                    </p>
+                  </div>
+                  <span className="font-navigation text-[9px] text-primary font-bold uppercase bg-[#F6F2EA] px-2.5 py-0.5 border border-[#1c1c18]/10 rounded-none tracking-wider">
+                    {lang === "es" ? "30 Minutos" : "30 Minutes"}
+                  </span>
+                </div>
+
+                <div id="cal-inline-v3-scheduler" className="w-full h-[480px] sm:h-[520px]"></div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+      )}
 
       {/* ============================================================
           §10. PREGUNTAS FRECUENTES B2B (Mismo ancho max-w-4xl centrado)

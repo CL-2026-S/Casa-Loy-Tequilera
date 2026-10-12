@@ -49,9 +49,30 @@ export default function Maquilas({ lang = "es" }) {
   const [quizAnswers, setQuizAnswers] = useState({ solution: "", objective: "", stage: "" });
   const [contactForm, setContactForm] = useState({ name: "", company: "", lada: "", phone: "", email: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showScheduler, setShowScheduler] = useState(true);
+
+  // Fetch site settings to see if technical video call block is enabled
+  useEffect(() => {
+    const fetchSiteSettings = async () => {
+      try {
+        const res = await fetch("/api/cms?type=site_settings");
+        if (res.ok) {
+          const data = await res.json();
+          if (data?.maquila_scheduler?.enabled !== undefined) {
+            setShowScheduler(Boolean(data.maquila_scheduler.enabled));
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching site settings for maquila scheduler:", err);
+      }
+    };
+    fetchSiteSettings();
+  }, []);
   
   // Cal.com Integration
   useEffect(() => {
+    if (!showScheduler) return;
+
     // Official Cal.com Embed Loader Snippet
     (function (C, A, L) {
       let p = function (a, ar) { a.q.push(ar); };
@@ -101,7 +122,7 @@ export default function Maquilas({ lang = "es" }) {
       hideEventTypeDetails: false,
       layout: "month_view"
     });
-  }, []);
+  }, [showScheduler]);
 
   const content = {
     es: {
@@ -933,23 +954,25 @@ export default function Maquilas({ lang = "es" }) {
             </div>
           </div>
 
-          {/* Scheduler Container */}
-          <div className="w-full max-w-5xl">
-            <div className="bg-white border border-outline-variant p-4 md:p-8 shadow-2xl relative flex flex-col justify-start">
-              <div className="mb-6 border-b border-outline-variant/30 pb-4 text-center md:text-left">
-                <h4 className="font-headline-md text-2xl mb-2">{currentT.schedulerTitle}</h4>
-                <p className="font-body-md text-on-surface-variant/80 font-light">
-                  {currentT.schedulerDesc}
-                </p>
-              </div>
+          {/* Scheduler Container (Condicional desde el Panel de Control) */}
+          {showScheduler && (
+            <div className="w-full max-w-5xl">
+              <div className="bg-white border border-outline-variant p-4 md:p-8 shadow-2xl relative flex flex-col justify-start">
+                <div className="mb-6 border-b border-outline-variant/30 pb-4 text-center md:text-left">
+                  <h4 className="font-headline-md text-2xl mb-2">{currentT.schedulerTitle}</h4>
+                  <p className="font-body-md text-on-surface-variant/80 font-light">
+                    {currentT.schedulerDesc}
+                  </p>
+                </div>
 
-              {/* Cal.com Embed Container */}
-              <div 
-                id="cal-inline" 
-                className="w-full h-[780px] md:h-[660px]"
-              />
+                {/* Cal.com Embed Container */}
+                <div 
+                  id="cal-inline" 
+                  className="w-full h-[780px] md:h-[660px]"
+                />
+              </div>
             </div>
-          </div>
+          )}
 
         </div>
       </section>
