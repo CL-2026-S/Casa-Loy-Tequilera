@@ -285,29 +285,32 @@ export default function Home({ lang = "es", setPage, setLang }) {
               const titleEn = b.title_en ? b.title_en.trim() : titleEs;
               const btnEs = b.button_text_es !== undefined && b.button_text_es !== null ? b.button_text_es.trim() : "";
               const btnEn = b.button_text_en !== undefined && b.button_text_en !== null ? b.button_text_en.trim() : btnEs;
-              const isBelowMenu = b.type === "below_menu";
+
+              // Distinguish kicker tag (short <= 35 chars) from descriptive subtitle
+              const rawSub = currentLang === 'es' ? subEs : subEn;
+              const isShortKicker = rawSub && rawSub.length <= 35 && !rawSub.includes(".");
+              const kicker = isShortKicker ? rawSub : "";
+              const description = !isShortKicker ? rawSub : "";
 
               return {
                 id: String(b.id),
                 type: b.type || "main",
-                isBelowMenu,
-                overtitle: currentLang === 'es' ? subEs : subEn,
+                kicker,
+                overtitle: kicker,
                 titleEs,
                 titleEn,
-                descEs: subEs,
-                descEn: subEn,
+                descEs: currentLang === 'es' ? description : (subEs && subEs.length > 35 ? subEs : ""),
+                descEn: currentLang === 'en' ? description : (subEn && subEn.length > 35 ? subEn : ""),
                 btn1Es: btnEs,
                 btn1En: btnEn,
                 btn1Route: b.link_url || "",
                 btn2Es: "",
                 btn2En: "",
-                microcopyEs: subEs,
-                microcopyEn: subEn,
                 bg: deskImg,
                 bgMobile: mobImg,
                 bgRetina: deskImg,
-                brightness: isBelowMenu ? "brightness-[1.0]" : "brightness-[0.82]",
-                overlay: isBelowMenu ? "from-black/10 via-transparent to-black/20" : "from-black/30 via-transparent to-black/45",
+                brightness: "brightness-[0.82]",
+                overlay: "from-black/40 via-transparent to-black/50",
               };
             });
             setDynamicSlides(mapped);
@@ -488,12 +491,18 @@ export default function Home({ lang = "es", setPage, setLang }) {
         {activeSlides.map((slide, idx) => (
           <div 
             key={slide.id} 
-            className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${
+            onClick={() => {
+              const slideTitle = currentLang === "es" ? slide.titleEs : slide.titleEn;
+              if (!slideTitle?.trim() && slide.btn1Route) {
+                handleCtaClick(slide.btn1Route);
+              }
+            }}
+            className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
               idx === activeSlide ? "opacity-100 z-0" : "opacity-0 z-0 pointer-events-none"
-            } ${slide.isBelowMenu ? "pt-20 md:pt-24 pb-14 flex items-center justify-center px-3 md:px-8" : ""}`}
+            } ${(!slide.titleEs?.trim() && slide.btn1Route) ? "cursor-pointer" : ""}`}
           >
             {slide.bgMobile || slide.bgRetina ? (
-              <picture className={slide.isBelowMenu ? "w-full h-full flex items-center justify-center" : "w-full h-full"}>
+              <picture className="w-full h-full">
                 {slide.bgMobile && <source media="(max-width: 768px)" srcSet={slide.bgMobile} />}
                 {slide.bgRetina && (
                   <source 
@@ -503,10 +512,8 @@ export default function Home({ lang = "es", setPage, setLang }) {
                 )}
                 <img
                   alt={slide.id}
-                  className={`w-full h-full ${
-                    slide.isBelowMenu ? "object-contain max-h-full" : "object-cover"
-                  } ${slide.brightness || "brightness-[0.82]"} transition-transform duration-[7500ms] ease-out ${
-                    idx === activeSlide && !slide.isBelowMenu ? "scale-105" : "scale-100"
+                  className={`w-full h-full object-cover ${slide.brightness || "brightness-[0.82]"} transition-transform duration-[7500ms] ease-out ${
+                    idx === activeSlide ? "scale-105" : "scale-100"
                   }`}
                   src={slide.bg}
                 />
@@ -514,26 +521,26 @@ export default function Home({ lang = "es", setPage, setLang }) {
             ) : (
               <img
                 alt={slide.id}
-                className={`w-full h-full ${
-                  slide.isBelowMenu ? "object-contain max-h-full" : "object-cover"
-                } ${slide.brightness || "brightness-[0.82]"} transition-transform duration-[7500ms] ease-out ${
-                  idx === activeSlide && !slide.isBelowMenu ? "scale-105" : "scale-100"
+                className={`w-full h-full object-cover ${slide.brightness || "brightness-[0.82]"} transition-transform duration-[7500ms] ease-out ${
+                  idx === activeSlide ? "scale-105" : "scale-100"
                 }`}
                 src={slide.bg}
               />
             )}
             {/* Dark gradient overlay for typography readability */}
-            <div className={`absolute inset-0 ${slide.isBelowMenu ? "bg-black/10 pointer-events-none" : `bg-gradient-to-b ${slide.overlay || "from-black/30 via-transparent to-black/45"}`}`}></div>
+            <div className={`absolute inset-0 bg-gradient-to-b ${slide.overlay || "from-black/40 via-transparent to-black/55"}`}></div>
           </div>
         ))}
 
         {/* Content Container (Crossfading slides content) */}
-        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center h-full pointer-events-none">
+        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto flex flex-col items-center justify-center h-full pt-16 pb-20 pointer-events-none">
           {activeSlides.map((slide, idx) => {
             const isActive = idx === activeSlide;
             const slideTitle = currentLang === "es" ? slide.titleEs : slide.titleEn;
             const hasTitle = Boolean(slideTitle && slideTitle.trim());
-            const hasOvertitle = Boolean(slide.overtitle && slide.overtitle.trim());
+            const kickerText = slide.kicker || (slide.overtitle && slide.overtitle.length <= 35 ? slide.overtitle : "");
+            const descText = (currentLang === "es" ? slide.descEs : slide.descEn) || "";
+            const hasDesc = Boolean(descText && descText.trim());
             const btn1Text = currentLang === "es" ? slide.btn1Es : slide.btn1En;
             const hasBtn1 = Boolean(btn1Text && btn1Text.trim());
             const btn2Text = currentLang === "es" ? slide.btn2Es : slide.btn2En;
@@ -542,39 +549,42 @@ export default function Home({ lang = "es", setPage, setLang }) {
             return (
               <div 
                 key={slide.id}
-                className={`absolute inset-x-6 flex flex-col items-center transition-all duration-500 ease-out ${
-                  slide.isBelowMenu || !hasTitle
-                    ? "bottom-24 md:bottom-28 justify-end"
-                    : "top-1/2 -translate-y-1/2 justify-center"
-                } ${
+                className={`absolute inset-x-6 flex flex-col items-center justify-center transition-all duration-500 ease-out ${
                   isActive 
                     ? "opacity-100 translate-y-0 scale-100 pointer-events-auto animate-slide-left-right" 
-                    : "opacity-0 translate-y-4 scale-98 pointer-events-none"
+                    : "opacity-0 translate-y-3 scale-98 pointer-events-none"
                 }`}
               >
-                {/* Overtitle */}
-                {hasOvertitle && (
-                  <span className="font-navigation text-[clamp(11px,1vw,13px)] text-white uppercase tracking-[0.4em] mb-4 block font-semibold drop-shadow-md">
-                    {slide.overtitle}
+                {/* 1. Kicker / Overtitle (Only if short, refined tag) */}
+                {kickerText && (
+                  <span className="font-navigation text-[clamp(10px,0.85vw,12px)] text-white/90 uppercase tracking-[0.35em] mb-3 block font-semibold drop-shadow-md">
+                    {kickerText}
                   </span>
                 )}
 
-                {/* Main Heading */}
+                {/* 2. Main Heading (Centered, balanced font size) */}
                 {hasTitle && (
                   <h1 
-                    className="font-serif text-[clamp(28px,4.5vw,60px)] leading-[1.1] tracking-tight font-light text-white uppercase max-w-4xl mx-auto mb-10 drop-shadow-lg"
+                    className="font-serif text-[clamp(26px,3.8vw,52px)] leading-[1.14] tracking-tight font-light text-white uppercase max-w-3xl mx-auto mb-3 drop-shadow-lg"
                     dangerouslySetInnerHTML={{ __html: slideTitle }}
                   />
                 )}
 
-                {/* CTA Buttons */}
+                {/* 3. Description / Subtitle (Rendered BELOW the title in elegant sentence-case) */}
+                {hasDesc && (
+                  <p className="font-sans text-[clamp(13px,1vw,16px)] text-stone-200/90 font-light max-w-2xl mx-auto mb-6 leading-relaxed drop-shadow-md">
+                    {descText}
+                  </p>
+                )}
+
+                {/* 4. CTA Buttons (Fixed baseline clearance above dots) */}
                 {(hasBtn1 || hasBtn2) && (
                   <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center w-full max-w-md sm:max-w-none pt-2 pointer-events-auto">
                     {/* Primary CTA */}
                     {hasBtn1 && (
                       <button
                         onClick={() => handleCtaClick(slide.btn1Route)}
-                        className="bg-[#8C4723] border border-[#8C4723] hover:bg-[#a6562b] hover:border-[#a6562b] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-medium py-3.5 px-8 transition-all duration-500 min-w-[180px] md:min-w-[200px] text-center shadow-lg hover:shadow-xl cursor-pointer"
+                        className="bg-[#8C4723] border border-[#8C4723] hover:bg-[#a6562b] hover:border-[#a6562b] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-medium py-3.5 px-8 transition-all duration-300 min-w-[180px] md:min-w-[200px] text-center shadow-lg hover:shadow-xl cursor-pointer"
                       >
                         {btn1Text}
                       </button>
@@ -584,7 +594,7 @@ export default function Home({ lang = "es", setPage, setLang }) {
                     {hasBtn2 && (
                       <button
                         onClick={() => handleCtaClick(slide.btn2Route)}
-                        className="border border-white/60 hover:bg-[#8C4723] hover:border-[#8C4723] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.3em] font-medium py-3.5 px-8 transition-all duration-500 min-w-[180px] md:min-w-[200px] text-center shadow-lg cursor-pointer"
+                        className="border border-white/60 hover:bg-[#8C4723] hover:border-[#8C4723] text-white font-navigation text-[10px] sm:text-[11px] uppercase tracking-[0.25em] font-medium py-3.5 px-8 transition-all duration-300 min-w-[180px] md:min-w-[200px] text-center shadow-lg cursor-pointer"
                       >
                         {btn2Text}
                       </button>
@@ -596,41 +606,18 @@ export default function Home({ lang = "es", setPage, setLang }) {
           })}
         </div>
 
-        {/* Slide Indicators (Dots) */}
-        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-20 flex gap-4">
+        {/* Slide Indicators (Dots - Fixed and separated from buttons) */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3">
           {activeSlides.map((_, idx) => (
             <button
               key={idx}
               onClick={() => handleManualSelect(idx)}
-              className={`h-1.5 transition-all duration-500 rounded-full ${
-                idx === activeSlide ? "w-8 bg-primary" : "w-2.5 bg-white/30 hover:bg-white/50"
+              className={`h-1.5 transition-all duration-500 rounded-full cursor-pointer ${
+                idx === activeSlide ? "w-8 bg-[#8C4723]" : "w-2.5 bg-white/40 hover:bg-white/70"
               }`}
               aria-label={`Go to slide ${idx + 1}`}
             />
           ))}
-        </div>
-
-        {/* Elegant scroll indicator (el tipo de flecha de scroll y estilo se respeta) */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1.5 opacity-70">
-          <style>{`
-            @keyframes scroll-arrow-down {
-              0% { transform: translateY(-4px); opacity: 0; }
-              50% { opacity: 1; }
-              100% { transform: translateY(4px); opacity: 0; }
-            }
-            .animate-scroll-arrow {
-              animation: scroll-arrow-down 2.2s infinite cubic-bezier(0.25, 1, 0.5, 1);
-            }
-          `}</style>
-          <svg 
-            className="w-4 h-4 text-white/70 animate-scroll-arrow" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="1.5" 
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-          </svg>
         </div>
 
       </section>
