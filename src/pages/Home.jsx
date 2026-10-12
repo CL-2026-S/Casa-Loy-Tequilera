@@ -533,7 +533,7 @@ export default function Home({ lang = "es", setPage, setLang }) {
         ))}
 
         {/* Content Container (Crossfading slides content) */}
-        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto flex flex-col items-center justify-center h-full pt-16 pb-20 pointer-events-none">
+        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto flex flex-col items-center justify-center h-full pt-16 pb-28 pointer-events-none">
           {activeSlides.map((slide, idx) => {
             const isActive = idx === activeSlide;
             const slideTitle = currentLang === "es" ? slide.titleEs : slide.titleEn;
@@ -607,7 +607,7 @@ export default function Home({ lang = "es", setPage, setLang }) {
         </div>
 
         {/* Slide Indicators (Dots - Fixed and separated from buttons) */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3">
+        <div className="absolute bottom-11 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3">
           {activeSlides.map((_, idx) => (
             <button
               key={idx}
@@ -618,6 +618,34 @@ export default function Home({ lang = "es", setPage, setLang }) {
               aria-label={`Go to slide ${idx + 1}`}
             />
           ))}
+        </div>
+
+        {/* Elegant scroll down indicator */}
+        <div 
+          onClick={() => {
+            window.scrollBy({ top: window.innerHeight * 0.85, behavior: "smooth" });
+          }}
+          className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-1 opacity-70 hover:opacity-100 cursor-pointer transition-opacity"
+        >
+          <style>{`
+            @keyframes scroll-arrow-down {
+              0% { transform: translateY(-4px); opacity: 0; }
+              50% { opacity: 1; }
+              100% { transform: translateY(4px); opacity: 0; }
+            }
+            .animate-scroll-arrow {
+              animation: scroll-arrow-down 2.2s infinite cubic-bezier(0.25, 1, 0.5, 1);
+            }
+          `}</style>
+          <svg 
+            className="w-4 h-4 text-white/80 animate-scroll-arrow" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="1.5" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+          </svg>
         </div>
 
       </section>
