@@ -25,6 +25,92 @@ const PREDEFINED_LINKS = [
   { value: "custom", label: "🔗 Enlace personalizado o externo..." },
 ];
 
+export const SYSTEM_PRESET_IMAGES = [
+  { label: "Piedra y Agave (Escritorio)", url: "/Banner Casa Loy Piedra y Agave-escritorio.webp", device: "desktop" },
+  { label: "Piedra y Agave (Móvil)", url: "/Banner Casa Loy Piedra y Agave-movil.webp", device: "mobile" },
+  { label: "Casa Loy Tequilera (Escritorio)", url: "/Casa Loy Tequilera-escritorio.webp", device: "desktop" },
+  { label: "Casa Loy Tequilera (Móvil)", url: "/Casa Loy Tequilera-movil.webp", device: "mobile" },
+  { label: "Experiencias Tours (Escritorio)", url: "/Banner Experiencias-escritorio.webp", device: "desktop" },
+  { label: "Experiencias Tours (Móvil)", url: "/Banner Experiencias-movil.webp", device: "mobile" },
+  { label: "Restaurante 1937 Nativo (Escritorio)", url: "/Banner Restaurante 1937 Nativo-escritorio.webp", device: "desktop" },
+  { label: "Restaurante 1937 Nativo (Móvil)", url: "/Banner Restaurante 1937 Nativo-movil.webp", device: "mobile" },
+  { label: "TADDEL Tequila", url: "/Banner TADDEL Tequila.webp", device: "desktop" },
+  { label: "Tierra Zafio Tequila", url: "/Banner Tierra Zafio Tequila.webp", device: "desktop" },
+  { label: "Hacienda 1937 Nativo", url: "/Restaurante 1937 Nativo.webp", device: "desktop" },
+];
+
+// Optimiza y comprime imágenes automáticamente en el navegador
+// Garantiza que la imagen no sobrepase los límites de Vercel (4.5 MB) y cargue de inmediato
+export async function compressImageFile(file, isMobile = false) {
+  if (!file) return null;
+
+  // Si es SVG, se procesa directamente
+  if (file.type === "image/svg+xml") {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result;
+        resolve({
+          dataUrl,
+          base64: dataUrl.split(",")[1],
+          name: file.name,
+          sizeKb: Math.round(file.size / 1024),
+        });
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // Dimensiones máximas según dispositivo
+  const maxW = isMobile ? 1080 : 1920;
+  const maxH = isMobile ? 1920 : 1080;
+
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      let { width, height } = img;
+
+      // Escalar proporcionalmente si excede las dimensiones objetivo
+      if (width > maxW || height > maxH) {
+        const ratio = Math.min(maxW / width, maxH / height);
+        width = Math.round(width * ratio);
+        height = Math.round(height * ratio);
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Comprimir a formato WebP de alta fidelidad (0.85) o JPEG si no es soportado
+      let dataUrl = canvas.toDataURL("image/webp", 0.85);
+      if (!dataUrl.startsWith("data:image/webp")) {
+        dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+      }
+      const base64 = dataUrl.split(",")[1];
+      const ext = dataUrl.startsWith("data:image/webp") ? ".webp" : ".jpg";
+      const cleanName = file.name.replace(/\.[^/.]+$/, "") + ext;
+      const approxKb = Math.round((base64.length * 3) / 4 / 1024);
+
+      resolve({
+        dataUrl,
+        base64,
+        name: cleanName,
+        sizeKb: approxKb,
+      });
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error("No se pudo cargar el archivo como imagen. Verifica que sea un formato válido (.jpg, .png, .webp)."));
+    };
+    img.src = objectUrl;
+  });
+}
+
 export default function BannerManager({ bannersList = [], token, onRefresh, userRole }) {
   const [selectedPageFilter, setSelectedPageFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -503,73 +589,100 @@ function BannerEditorModal({ banner, token, onClose, onSaved }) {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [processingTarget, setProcessingTarget] = useState(null);
+
+  const processImageFile = async (file, target) => {
+    if (!file) return;
+    const isMobile = target === "mob_es" || target === "mob_en";
+    setProcessingTarget(target);
+    setErrorMessage("");
+    try {
+      const res = await compressImageFile(file, isMobile);
+      if (!res) return;
+      if (target === "desk_es") {
+        setDesktopEsPreview(res.dataUrl);
+        setDesktopEsBase64(res.base64);
+        setDesktopEsName(res.name);
+      } else if (target === "mob_es") {
+        setMobileEsPreview(res.dataUrl);
+        setMobileEsBase64(res.base64);
+        setMobileEsName(res.name);
+      } else if (target === "desk_en") {
+        setDesktopEnPreview(res.dataUrl);
+        setDesktopEnBase64(res.base64);
+        setDesktopEnName(res.name);
+      } else if (target === "mob_en") {
+        setMobileEnPreview(res.dataUrl);
+        setMobileEnBase64(res.base64);
+        setMobileEnName(res.name);
+      }
+    } catch (err) {
+      console.error(err);
+      setErrorMessage("Error al procesar imagen: " + (err.message || "Formato no compatible"));
+    } finally {
+      setProcessingTarget(null);
+    }
+  };
+
+  const handleSelectPresetUrl = (url, target) => {
+    if (target === "desk_es") {
+      setDesktopEsPreview(url);
+      setDesktopEsBase64("");
+      setDesktopEsName("");
+    } else if (target === "mob_es") {
+      setMobileEsPreview(url);
+      setMobileEsBase64("");
+      setMobileEsName("");
+    } else if (target === "desk_en") {
+      setDesktopEnPreview(url);
+      setDesktopEnBase64("");
+      setDesktopEnName("");
+    } else if (target === "mob_en") {
+      setMobileEnPreview(url);
+      setMobileEnBase64("");
+      setMobileEnName("");
+    }
+  };
 
   const handleFileChange = (e, target) => {
     const file = e.target.files && e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = reader.result;
-      const base64Only = dataUrl.split(",")[1];
-
-      if (target === "desk_es") {
-        setDesktopEsPreview(dataUrl);
-        setDesktopEsBase64(base64Only);
-        setDesktopEsName(file.name);
-      } else if (target === "mob_es") {
-        setMobileEsPreview(dataUrl);
-        setMobileEsBase64(base64Only);
-        setMobileEsName(file.name);
-      } else if (target === "desk_en") {
-        setDesktopEnPreview(dataUrl);
-        setDesktopEnBase64(base64Only);
-        setDesktopEnName(file.name);
-      } else if (target === "mob_en") {
-        setMobileEnPreview(dataUrl);
-        setMobileEnBase64(base64Only);
-        setMobileEnName(file.name);
-      }
-    };
-    reader.readAsDataURL(file);
+    if (file) {
+      processImageFile(file, target);
+    }
   };
 
   const handleDrop = (e, target) => {
     e.preventDefault();
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const file = e.dataTransfer.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        const dataUrl = reader.result;
-        const base64Only = dataUrl.split(",")[1];
-
-        if (target === "desk_es") {
-          setDesktopEsPreview(dataUrl);
-          setDesktopEsBase64(base64Only);
-          setDesktopEsName(file.name);
-        } else if (target === "mob_es") {
-          setMobileEsPreview(dataUrl);
-          setMobileEsBase64(base64Only);
-          setMobileEsName(file.name);
-        } else if (target === "desk_en") {
-          setDesktopEnPreview(dataUrl);
-          setDesktopEnBase64(base64Only);
-          setDesktopEnName(file.name);
-        } else if (target === "mob_en") {
-          setMobileEnPreview(dataUrl);
-          setMobileEnBase64(base64Only);
-          setMobileEnName(file.name);
-        }
-      };
-      reader.readAsDataURL(file);
+      processImageFile(e.dataTransfer.files[0], target);
     }
   };
 
   const handleSave = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setErrorMessage("");
 
+    if (!titleEs.trim()) {
+      setErrorMessage("Por favor ingresa un título para el banner en Español.");
+      return;
+    }
+
+    const hasAnyImage =
+      desktopEsBase64 ||
+      desktopEsPreview ||
+      mobileEsBase64 ||
+      mobileEsPreview ||
+      desktopEnBase64 ||
+      desktopEnPreview ||
+      mobileEnBase64 ||
+      mobileEnPreview;
+
+    if (!hasAnyImage) {
+      setErrorMessage("Debes subir o seleccionar al menos una imagen (escritorio o celular) para el banner.");
+      return;
+    }
+
+    setIsSubmitting(true);
     const targetLinkUrl = linkPreset === "custom" ? customLinkUrl.trim() : linkPreset;
 
     const payload = {
@@ -616,15 +729,28 @@ function BannerEditorModal({ banner, token, onClose, onSaved }) {
         body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
-      if (res.ok) {
+      let data;
+      const text = await res.text();
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = { error: text };
+      }
+
+      if (res.ok && data?.success) {
         onSaved();
       } else {
-        setErrorMessage(data.error || "Error al guardar el banner.");
+        if (res.status === 413) {
+          setErrorMessage("La imagen supera el límite permitido por el servidor. Te recomendamos usar un archivo optimizado.");
+        } else if (res.status === 401 || res.status === 403) {
+          setErrorMessage("Tu sesión ha expirado o no tienes permisos de administrador. Por favor vuelve a iniciar sesión.");
+        } else {
+          setErrorMessage(data?.error || data?.message || `Error al guardar banner (${res.status}).`);
+        }
       }
     } catch (err) {
       console.error(err);
-      setErrorMessage("Error de conexión al guardar el banner.");
+      setErrorMessage("Error de conexión al guardar el banner. Verifica tu conexión e inténtalo nuevamente.");
     } finally {
       setIsSubmitting(false);
     }
@@ -938,6 +1064,9 @@ function BannerEditorModal({ banner, token, onClose, onSaved }) {
                     setDesktopEsBase64("");
                     setDesktopEsName("");
                   }}
+                  onSelectUrl={(url) => handleSelectPresetUrl(url, "desk_es")}
+                  isProcessing={processingTarget === "desk_es"}
+                  device="desktop"
                   isPrimary={true}
                   badge="Principal"
                 />
@@ -955,6 +1084,9 @@ function BannerEditorModal({ banner, token, onClose, onSaved }) {
                     setMobileEsBase64("");
                     setMobileEsName("");
                   }}
+                  onSelectUrl={(url) => handleSelectPresetUrl(url, "mob_es")}
+                  isProcessing={processingTarget === "mob_es"}
+                  device="mobile"
                   badge={mobileEsPreview ? "Móvil dedicado" : "Usa escritorio"}
                   isMobileAspect={true}
                 />
@@ -982,6 +1114,9 @@ function BannerEditorModal({ banner, token, onClose, onSaved }) {
                       setDesktopEnBase64("");
                       setDesktopEnName("");
                     }}
+                    onSelectUrl={(url) => handleSelectPresetUrl(url, "desk_en")}
+                    isProcessing={processingTarget === "desk_en"}
+                    device="desktop"
                     badge={desktopEnPreview ? "Inglés dedicado" : "Usa español"}
                   />
 
@@ -998,6 +1133,9 @@ function BannerEditorModal({ banner, token, onClose, onSaved }) {
                       setMobileEnBase64("");
                       setMobileEnName("");
                     }}
+                    onSelectUrl={(url) => handleSelectPresetUrl(url, "mob_en")}
+                    isProcessing={processingTarget === "mob_en"}
+                    device="mobile"
                     badge={mobileEnPreview ? "Móvil inglés dedicado" : "Usa fallback"}
                     isMobileAspect={true}
                   />
@@ -1011,14 +1149,14 @@ function BannerEditorModal({ banner, token, onClose, onSaved }) {
             <button
               type="button"
               onClick={onClose}
-              disabled={isSubmitting}
+              disabled={isSubmitting || !!processingTarget}
               className="px-4 py-2 text-xs font-semibold text-stone-600 hover:text-stone-900 border border-stone-200 rounded-lg hover:bg-stone-100 cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !!processingTarget}
               className="px-6 py-2 text-xs font-semibold bg-[#8C4723] hover:bg-[#a6562b] text-white rounded-lg shadow-xs cursor-pointer flex items-center gap-2 transition-all disabled:opacity-50"
             >
               {isSubmitting ? (
@@ -1040,7 +1178,7 @@ function BannerEditorModal({ banner, token, onClose, onSaved }) {
   );
 }
 
-// Subcomponent: Image Drop Zone with File Upload & Preview
+// Subcomponent: Image Drop Zone with File Upload, Optimization & Preset Gallery
 function ImageDropZone({
   title,
   subtitle,
@@ -1049,15 +1187,33 @@ function ImageDropZone({
   onFileSelect,
   onDrop,
   onClear,
+  onSelectUrl,
   badge,
   isPrimary = false,
   isMobileAspect = false,
+  isProcessing = false,
+  device = "desktop",
 }) {
   const [isDragOver, setIsDragOver] = useState(false);
+  const [showUrlModal, setShowUrlModal] = useState(false);
+  const [customInputUrl, setCustomInputUrl] = useState("");
   const fileInputRef = useRef(null);
 
   const displayUrl = previewUrl || fallbackPreviewUrl;
   const isFallback = !previewUrl && !!fallbackPreviewUrl;
+
+  const handleApplyCustomUrl = (urlToApply) => {
+    const val = (urlToApply || customInputUrl).trim();
+    if (val && onSelectUrl) {
+      onSelectUrl(val);
+      setShowUrlModal(false);
+      setCustomInputUrl("");
+    }
+  };
+
+  const relevantPresets = SYSTEM_PRESET_IMAGES.filter(
+    (p) => device === "all" || p.device === device
+  );
 
   return (
     <div
@@ -1078,6 +1234,15 @@ function ImageDropZone({
           : "border-dashed border-stone-300 hover:border-stone-400"
       }`}
     >
+      {/* Processing Loader Overlay */}
+      {isProcessing && (
+        <div className="absolute inset-0 bg-stone-900/80 backdrop-blur-2xs z-20 flex flex-col items-center justify-center p-4 text-white text-center gap-2 rounded-xl">
+          <span className="material-symbols-outlined text-3xl animate-spin text-amber-400">progress_activity</span>
+          <span className="text-xs font-semibold">Optimizando imagen...</span>
+          <span className="text-[10px] text-stone-300">Comprimiendo y adaptando resolución</span>
+        </div>
+      )}
+
       {/* Header of zone */}
       <div className="flex items-center justify-between gap-1 mb-2">
         <div>
@@ -1101,7 +1266,7 @@ function ImageDropZone({
 
       {/* Visual Area */}
       <div
-        onClick={() => fileInputRef.current?.click()}
+        onClick={() => !isProcessing && fileInputRef.current?.click()}
         className={`relative w-full rounded-lg overflow-hidden cursor-pointer group flex items-center justify-center bg-stone-900 ${
           isMobileAspect ? "aspect-[9/10] max-h-[180px]" : "aspect-[16/9]"
         }`}
@@ -1139,7 +1304,7 @@ function ImageDropZone({
               add_photo_alternate
             </span>
             <p className="text-[11px] font-medium text-stone-300">Arrastra una imagen o haz clic aquí</p>
-            <p className="text-[9px] text-stone-500">Seleccionar desde tu computadora</p>
+            <p className="text-[9px] text-stone-500">Optimización automática al subir</p>
           </div>
         )}
       </div>
@@ -1154,15 +1319,28 @@ function ImageDropZone({
       />
 
       {/* Action Buttons below preview */}
-      <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-stone-100">
-        <button
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
-          className="text-[10px] text-[#8C4723] hover:underline font-bold uppercase flex items-center gap-1 cursor-pointer"
-        >
-          <span className="material-symbols-outlined text-[12px]">folder_open</span>
-          <span>{previewUrl ? "Reemplazar archivo" : "Seleccionar archivo"}</span>
-        </button>
+      <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-stone-100 flex-wrap">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            disabled={isProcessing}
+            onClick={() => fileInputRef.current?.click()}
+            className="text-[10px] text-[#8C4723] hover:underline font-bold uppercase flex items-center gap-1 cursor-pointer disabled:opacity-50"
+          >
+            <span className="material-symbols-outlined text-[13px]">upload_file</span>
+            <span>{previewUrl ? "Reemplazar" : "Subir archivo"}</span>
+          </button>
+
+          <button
+            type="button"
+            disabled={isProcessing}
+            onClick={() => setShowUrlModal(!showUrlModal)}
+            className="text-[10px] text-stone-600 hover:text-[#8C4723] hover:underline font-semibold flex items-center gap-1 cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-[13px]">photo_library</span>
+            <span>Galería / URL</span>
+          </button>
+        </div>
 
         {previewUrl && (
           <button
@@ -1174,6 +1352,64 @@ function ImageDropZone({
           </button>
         )}
       </div>
+
+      {/* URL or Gallery Modal / Panel */}
+      {showUrlModal && (
+        <div className="mt-2.5 p-3 bg-stone-50 border border-stone-200 rounded-lg space-y-2 text-xs">
+          <div className="flex items-center justify-between">
+            <span className="font-semibold text-stone-700 text-[11px]">Elegir imagen de galería o URL</span>
+            <button
+              type="button"
+              onClick={() => setShowUrlModal(false)}
+              className="text-stone-400 hover:text-stone-600 text-xs cursor-pointer"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div>
+            <label className="text-[10px] text-stone-500 font-medium block mb-1">
+              Seleccionar foto oficial del sitio:
+            </label>
+            <select
+              onChange={(e) => {
+                if (e.target.value) handleApplyCustomUrl(e.target.value);
+              }}
+              defaultValue=""
+              className="w-full bg-white border border-stone-300 rounded p-1.5 text-xs text-stone-800 font-medium focus:border-[#8C4723]"
+            >
+              <option value="" disabled>-- Selecciona una foto oficial --</option>
+              {relevantPresets.map((p) => (
+                <option key={p.url} value={p.url}>
+                  {p.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="text-[10px] text-stone-500 font-medium block mb-1">
+              O escribe/pega la ruta directa de la imagen:
+            </label>
+            <div className="flex gap-1.5">
+              <input
+                type="text"
+                placeholder="/Banner...webp o https://..."
+                value={customInputUrl}
+                onChange={(e) => setCustomInputUrl(e.target.value)}
+                className="flex-1 bg-white border border-stone-300 rounded p-1.5 text-xs font-mono"
+              />
+              <button
+                type="button"
+                onClick={() => handleApplyCustomUrl()}
+                className="bg-[#2F403E] text-white px-3 py-1 rounded text-xs font-semibold hover:bg-[#8C4723] cursor-pointer"
+              >
+                Aplicar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

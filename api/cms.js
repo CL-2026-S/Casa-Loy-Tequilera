@@ -351,22 +351,24 @@ export default async function handler(req, res) {
 
         let dbRes;
         if (id) {
-          dbRes = await supabase.from('banners').update(bannerData).eq('id', id);
+          dbRes = await supabase.from('banners').update(bannerData).eq('id', id).select().single();
         } else {
-          dbRes = await supabase.from('banners').insert(bannerData);
+          dbRes = await supabase.from('banners').insert(bannerData).select().single();
         }
 
         if (dbRes.error) throw dbRes.error;
+
+        const savedBanner = dbRes.data || bannerData;
 
         await auditLog(
           currentUser.userId,
           currentUser.email,
           currentUser.role,
           id ? 'update_banner' : 'create_banner',
-          `Banner ${id ? 'actualizado' : 'creado'} para página: ${page} (${bannerData.title_es || 'Sin título'})`
+          `Banner ${id ? 'actualizado' : 'creado'} para página: ${page} (${savedBanner.title_es || 'Sin título'})`
         );
 
-        return res.status(200).json({ success: true, banner: bannerData });
+        return res.status(200).json({ success: true, banner: savedBanner });
       }
 
       // Action: Delete Banner
