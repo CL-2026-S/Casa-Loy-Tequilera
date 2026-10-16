@@ -23,7 +23,7 @@ export default function VCardLELB({ lang: initialLang = "es", setLang: parentSet
   };
 
   const contact = {
-    name: "Luis Emmanuel Loy Bermudez",
+    name: "Luis Loy Bermudez",
     role: "Head of Private Labels & Bulk Tequila",
     company: "Casa Loy Tequilera",
     nom: "NOM 1633",
@@ -35,7 +35,7 @@ export default function VCardLELB({ lang: initialLang = "es", setLang: parentSet
     websiteDisplay: "casaloy.com",
     websiteUrl: "https://casaloy.com",
     vcardUrl: "https://casaloy.com/contact/lelb",
-    photoUrl: "/luis-emmanuel-loy-bermudez.webp",
+    photoUrl: "/luis-loy-bermudez.webp",
   };
 
   const i18n = {
@@ -103,10 +103,10 @@ export default function VCardLELB({ lang: initialLang = "es", setLang: parentSet
 
   const handleDownloadVCard = () => {
     // Direct static link with cache buster so mobile browser never serves cached .vcf
-    const staticUrl = `/Luis_Emmanuel_Loy_Bermudez.vcf?t=${Date.now()}`;
+    const staticUrl = `/Luis_Loy_Bermudez.vcf?t=${Date.now()}`;
     const link = document.createElement("a");
     link.href = staticUrl;
-    link.setAttribute("download", "Luis_Emmanuel_Loy_Bermudez.vcf");
+    link.setAttribute("download", "Luis_Loy_Bermudez.vcf");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -418,8 +418,8 @@ export default function VCardLELB({ lang: initialLang = "es", setLang: parentSet
               <a
                 href={`https://wa.me/14698798739?text=${encodeURIComponent(
                   lang === "es"
-                    ? "Hola Luis Emmanuel, te contacto desde tu tarjeta digital Casa Loy."
-                    : "Hello Luis Emmanuel, I am reaching out through your Casa Loy digital card."
+                    ? "Hola Luis, te contacto desde tu tarjeta digital Casa Loy."
+                    : "Hello Luis, I am reaching out through your Casa Loy digital card."
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"

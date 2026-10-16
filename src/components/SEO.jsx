@@ -356,15 +356,15 @@ const seoData = {
       ogImage: "/Casa Loy Tequilera.webp"
     },
     "vcard-lelb": {
-      title: "Luis Emmanuel Loy Bermudez | Head of Private Labels & Bulk Tequila | Casa Loy",
-      description: "Tarjeta de contacto digital de Luis Emmanuel Loy Bermudez. Head of Private Labels & Bulk Tequila en Casa Loy Tequilera. Ayotlán, Jalisco.",
-      ogTitle: "Luis Emmanuel Loy Bermudez — Casa Loy Tequilera",
+      title: "Luis Loy Bermudez | Head of Private Labels & Bulk Tequila | Casa Loy",
+      description: "Tarjeta de contacto digital de Luis Loy Bermudez. Head of Private Labels & Bulk Tequila en Casa Loy Tequilera. Ayotlán, Jalisco.",
+      ogTitle: "Luis Loy Bermudez — Casa Loy Tequilera",
       ogDesc: "Head of Private Labels & Bulk Tequila. Contacto directo, teléfono, correo y ubicación.",
       ogImage: "/Casa Loy Tequilera.webp",
       schema: {
         "@context": "https://schema.org",
         "@type": "Person",
-        "name": "Luis Emmanuel Loy Bermudez",
+        "name": "Luis Loy Bermudez",
         "jobTitle": "Head of Private Labels & Bulk Tequila",
         "worksFor": {
           "@type": "Organization",
@@ -572,15 +572,15 @@ const seoData = {
       ogImage: "/Casa Loy Tequilera.webp"
     },
     "vcard-lelb": {
-      title: "Luis Emmanuel Loy Bermudez | Head of Private Labels & Bulk Tequila | Casa Loy",
-      description: "Digital business card of Luis Emmanuel Loy Bermudez. Head of Private Labels & Bulk Tequila at Casa Loy Tequilera. Ayotlán, Jalisco.",
-      ogTitle: "Luis Emmanuel Loy Bermudez — Casa Loy Tequilera",
+      title: "Luis Loy Bermudez | Head of Private Labels & Bulk Tequila | Casa Loy",
+      description: "Digital business card of Luis Loy Bermudez. Head of Private Labels & Bulk Tequila at Casa Loy Tequilera. Ayotlán, Jalisco.",
+      ogTitle: "Luis Loy Bermudez — Casa Loy Tequilera",
       ogDesc: "Head of Private Labels & Bulk Tequila. Direct phone, email, and distillery location.",
       ogImage: "/Casa Loy Tequilera.webp",
       schema: {
         "@context": "https://schema.org",
         "@type": "Person",
-        "name": "Luis Emmanuel Loy Bermudez",
+        "name": "Luis Loy Bermudez",
         "jobTitle": "Head of Private Labels & Bulk Tequila",
         "worksFor": {
           "@type": "Organization",

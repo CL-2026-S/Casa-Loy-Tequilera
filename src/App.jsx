@@ -702,7 +702,7 @@ export default function App() {
             <Route path="/soluciones" element={<SolutionsHub lang="es" setPage={setPage} />} />
             <Route path="/solutions" element={<SolutionsHub lang="en" setPage={setPage} />} />
 
-            {/* Digital Business Card (vCard Luis Emmanuel Loy Bermudez) */}
+            {/* Digital Business Card (vCard Luis Loy Bermudez) */}
             <Route path="/contact/lelb" element={<VCardLELB lang={lang} setLang={setLang} />} />
             <Route path="/contacto/lelb" element={<VCardLELB lang={lang} setLang={setLang} />} />
             <Route path="/lelb" element={<VCardLELB lang={lang} setLang={setLang} />} />
