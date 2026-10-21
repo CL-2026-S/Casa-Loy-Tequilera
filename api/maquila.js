@@ -267,21 +267,39 @@ function checkIsSpamLead(body) {
   // 3. Name heuristic: Random character gibberish pattern (e.g. KHzeYZxtNaYDKiQvTkziVVp)
   if (name && typeof name === 'string') {
     const cleanName = name.trim();
-    // Pattern: 13+ characters, no spaces, mixed uppercase and lowercase transitions
-    if (!cleanName.includes(' ') && cleanName.length >= 13 && /[a-z]/.test(cleanName) && /[A-Z]/.test(cleanName)) {
+    // Pattern A: 12+ characters, no spaces, mixed uppercase and lowercase transitions
+    if (!cleanName.includes(' ') && cleanName.length >= 12 && /[a-z]/.test(cleanName) && /[A-Z]/.test(cleanName)) {
       let caseTransitions = 0;
       for (let i = 0; i < cleanName.length - 1; i++) {
         const isUp1 = cleanName[i] === cleanName[i].toUpperCase();
         const isUp2 = cleanName[i + 1] === cleanName[i + 1].toUpperCase();
         if (isUp1 !== isUp2) caseTransitions++;
       }
-      if (caseTransitions >= 3) {
-        return { isSpam: true, reason: 'gibberish_name_detected' };
+      if (caseTransitions >= 2) {
+        return { isSpam: true, reason: 'gibberish_name_transitions' };
+      }
+    }
+    // Pattern B: 4+ consecutive consonants in name or zero vowels in 4+ char name
+    if (/[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{4,}/.test(cleanName) || (!cleanName.includes(' ') && cleanName.length >= 4 && !/[aeiouyAEIOUY]/.test(cleanName))) {
+      return { isSpam: true, reason: 'gibberish_name_consonants' };
+    }
+  }
+
+  // 4. Company heuristic: Bot generator patterns (e.g. Usjjpta LLC, Xmlwh LLC)
+  if (company && typeof company === 'string') {
+    const cleanCo = company.trim();
+    if (/[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{4,}/.test(cleanCo)) {
+      return { isSpam: true, reason: 'gibberish_company_consonants' };
+    }
+    const words = cleanCo.split(/\s+/);
+    for (const w of words) {
+      if (w.length >= 4 && !/[aeiouyAEIOUY]/.test(w) && w.toUpperCase() !== 'CORP' && w.toUpperCase() !== 'TECH') {
+        return { isSpam: true, reason: 'gibberish_company_no_vowels' };
       }
     }
   }
 
-  // 4. Email heuristic: Bot generators using massive dots in Gmail (e.g. kyla.n.o.h.o.ove.n.s.t.a.t1@gmail.com)
+  // 5. Email heuristic: Bot generators using massive dots in Gmail (e.g. kyla.n.o.h.o.ove.n.s.t.a.t1@gmail.com)
   if (email && typeof email === 'string') {
     const [localPart] = email.split('@');
     if (localPart) {
@@ -292,10 +310,10 @@ function checkIsSpamLead(body) {
     }
   }
 
-  // 5. Volume / Solution gibberish (e.g. Bulk Tequila - ldBCSPaRvuBOhwFicaYegBcg)
+  // 6. Volume / Solution gibberish (e.g. Bulk Tequila - ldBCSPaRvuBOhwFicaYegBcg)
   if (solution && typeof solution === 'string') {
     const volMatch = solution.match(/Bulk Tequila - ([A-Za-z0-9]+)$/);
-    if (volMatch && volMatch[1] && volMatch[1].length >= 15 && !volMatch[1].includes(' ')) {
+    if (volMatch && volMatch[1] && volMatch[1].length >= 14 && !volMatch[1].includes(' ')) {
       return { isSpam: true, reason: 'gibberish_volume_detected' };
     }
   }

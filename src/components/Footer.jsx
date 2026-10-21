@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 
 export default function Footer({ lang = "es", setPage }) {
   const [email, setEmail] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+  const [renderTime] = useState(() => Date.now());
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -21,7 +23,9 @@ export default function Footer({ lang = "es", setPage }) {
         },
         body: JSON.stringify({
           email: email,
-          source_page: "footer"
+          source_page: "footer",
+          _hp: honeypot,
+          _render_time: renderTime
         }),
       });
 
@@ -322,6 +326,17 @@ export default function Footer({ lang = "es", setPage }) {
                   onSubmit={handleSubscribe}
                   className="space-y-3"
                 >
+                  {/* Anti-Bot Honeypot */}
+                  <div style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, width: 0, overflow: "hidden", pointerEvents: "none" }} aria-hidden="true">
+                    <input
+                      type="text"
+                      name="company_fax"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={honeypot}
+                      onChange={(e) => setHoneypot(e.target.value)}
+                    />
+                  </div>
                   <input
                     value={email}
                     onChange={(e) => {

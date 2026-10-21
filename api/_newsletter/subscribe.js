@@ -21,10 +21,34 @@ export default async function handler(req, res) {
   }
 
   // Parse input parameters
-  const { email, source_page } = req.body || {};
+  const { email, source_page, _hp, company_fax, company_url, _render_time } = req.body || {};
 
   if (!email || typeof email !== 'string' || !email.includes('@')) {
     return res.status(400).json({ error: 'Un correo electrónico válido es obligatorio.' });
+  }
+
+  // Anti-Spam & Bot Protection (silent drop so bots do not retry)
+  const honeypotVal = _hp || company_fax || company_url || req.body?.website || req.body?.url;
+  if (honeypotVal && String(honeypotVal).trim().length > 0) {
+    console.warn(`[Anti-Spam] Newsletter bot rejected silently (honeypot): ${email}`);
+    return res.status(200).json({ success: true, status: 'created', message: 'Suscripción completada.' });
+  }
+
+  if (_render_time) {
+    const elapsed = Date.now() - Number(_render_time);
+    if (!isNaN(elapsed) && elapsed > 0 && elapsed < 2000) {
+      console.warn(`[Anti-Spam] Newsletter bot rejected silently (velocity < 2s): ${email}`);
+      return res.status(200).json({ success: true, status: 'created', message: 'Suscripción completada.' });
+    }
+  }
+
+  const [localPart] = email.split('@');
+  if (localPart) {
+    const dotCount = (localPart.match(/\./g) || []).length;
+    if (dotCount >= 3) {
+      console.warn(`[Anti-Spam] Newsletter bot rejected silently (excessive dots): ${email}`);
+      return res.status(200).json({ success: true, status: 'created', message: 'Suscripción completada.' });
+    }
   }
 
   if (!supabase) {

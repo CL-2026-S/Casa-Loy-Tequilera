@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 export default function NewsletterPopup({ lang = "es" }) {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+  const [renderTime] = useState(() => Date.now());
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
   const [message, setMessage] = useState("");
 
@@ -67,7 +69,9 @@ export default function NewsletterPopup({ lang = "es" }) {
         },
         body: JSON.stringify({
           email: email,
-          source_page: "popup_global"
+          source_page: "popup_global",
+          _hp: honeypot,
+          _render_time: renderTime
         }),
       });
 
@@ -144,6 +148,17 @@ export default function NewsletterPopup({ lang = "es" }) {
 
                 {/* Subscription Form */}
                 <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+                  {/* Anti-Bot Honeypot */}
+                  <div style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, width: 0, overflow: "hidden", pointerEvents: "none" }} aria-hidden="true">
+                    <input
+                      type="text"
+                      name="company_fax"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={honeypot}
+                      onChange={(e) => setHoneypot(e.target.value)}
+                    />
+                  </div>
                   <div className="relative">
                     <input
                       type="email"

@@ -7,6 +7,8 @@ export default function Blog({ setPage, lang = "es" }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
   const [email, setEmail] = useState("");
+  const [honeypot, setHoneypot] = useState("");
+  const [renderTime] = useState(() => Date.now());
   const [errorMessage, setErrorMessage] = useState("");
   const [dynamicArticles, setDynamicArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -115,7 +117,7 @@ export default function Blog({ setPage, lang = "es" }) {
       const response = await fetch("/api/newsletter/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, source_page: "blog" }),
+        body: JSON.stringify({ email, source_page: "blog", _hp: honeypot, _render_time: renderTime }),
       });
 
       const data = await response.json();
@@ -407,6 +409,17 @@ export default function Blog({ setPage, lang = "es" }) {
           </div>
 
           <form onSubmit={handleSubscribe} className="w-full max-w-md flex flex-col gap-4 text-left">
+            {/* Anti-Bot Honeypot */}
+            <div style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, width: 0, overflow: "hidden", pointerEvents: "none" }} aria-hidden="true">
+              <input
+                type="text"
+                name="company_fax"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+              />
+            </div>
             {status === "success" ? (
               <div className="p-5 bg-white border border-[#D4AF37] rounded-xl text-center shadow-xs">
                 <span className="material-symbols-outlined text-2xl text-[#8C4723] mb-1">
