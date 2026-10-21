@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const MexicoFlag = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20" className="w-5 h-3.5 shadow-sm border border-black/10 flex-shrink-0 inline-block align-middle">
@@ -44,6 +45,7 @@ const USFlag = () => (
 );
 
 export default function Maquilas({ lang = "es" }) {
+  const navigate = useNavigate();
   // Diagnostic Quiz State
   const [quizStep, setQuizStep] = useState(1);
   const [quizAnswers, setQuizAnswers] = useState({ solution: "", objective: "", stage: "" });
@@ -819,33 +821,53 @@ export default function Maquilas({ lang = "es" }) {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-          {currentT.capabilitiesList.map((serv) => (
-            <div
-              key={serv.num}
-              className={`p-10 border border-outline-variant flex flex-col h-[460px] transition-transform duration-500 hover:-translate-y-2 hover:shadow-lg ${
-                serv.lightBg ? "bg-[#EDE7DE]/20" : "bg-white"
-              }`}
-            >
-              <div className="flex-1 space-y-4">
-                <span className="text-[#8f4d1d] font-label-caps font-bold block">{serv.num}</span>
-                <h3 className="font-headline-md text-2xl font-semibold">{serv.title}</h3>
-                <p className="font-body-md text-on-surface-variant font-light leading-relaxed">
-                  {serv.desc}
-                </p>
+          {currentT.capabilitiesList.map((serv) => {
+            const isGranel = serv.num === "02";
+            return (
+              <div
+                key={serv.num}
+                onClick={isGranel ? () => navigate(lang === "es" ? "/granel" : "/bulk") : undefined}
+                role={isGranel ? "link" : undefined}
+                tabIndex={isGranel ? 0 : undefined}
+                onKeyDown={isGranel ? (e) => { if (e.key === "Enter") navigate(lang === "es" ? "/granel" : "/bulk"); } : undefined}
+                className={`p-10 border border-outline-variant flex flex-col h-[460px] transition-all duration-500 hover:-translate-y-2 hover:shadow-xl ${
+                  serv.lightBg ? "bg-[#EDE7DE]/20" : "bg-white"
+                } ${isGranel ? "cursor-pointer group hover:border-[#8C4723]" : ""}`}
+              >
+                <div className="flex-1 space-y-4">
+                  <span className="text-[#8f4d1d] font-label-caps font-bold block">{serv.num}</span>
+                  <h3 className={`font-headline-md text-2xl font-semibold transition-colors ${isGranel ? "group-hover:text-primary" : ""}`}>
+                    {serv.title}
+                  </h3>
+                  <p className="font-body-md text-on-surface-variant font-light leading-relaxed">
+                    {serv.desc}
+                  </p>
+                </div>
+                <ul className="space-y-3 mb-10 text-xs font-navigation text-on-surface-variant/80">
+                  {serv.bullets.map((b) => (
+                    <li key={b} className="flex items-center gap-3">
+                      <span className="material-symbols-outlined text-xs text-primary font-bold">check</span>
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="flex items-center justify-between mt-auto pt-2">
+                  {isGranel && (
+                    <span className="font-navigation text-[10.5px] uppercase tracking-wider font-bold text-primary group-hover:underline">
+                      {lang === "es" ? "Ver Programa de Granel" : "Explore Bulk Program"}
+                    </span>
+                  )}
+                  <span className={`material-symbols-outlined ml-auto text-outline-variant transition-all ${
+                    isGranel 
+                      ? "text-primary group-hover:translate-x-1 group-hover:-translate-y-1" 
+                      : "hover:text-primary"
+                  }`}>
+                    arrow_outward
+                  </span>
+                </div>
               </div>
-              <ul className="space-y-3 mb-10 text-xs font-navigation text-on-surface-variant/80">
-                {serv.bullets.map((b) => (
-                  <li key={b} className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-xs text-primary font-bold">check</span>
-                    <span>{b}</span>
-                  </li>
-                ))}
-              </ul>
-              <span className="material-symbols-outlined self-end text-outline-variant hover:text-primary transition-colors">
-                arrow_outward
-              </span>
-            </div>
-          ))}
+            );
+          })}
 
           {/* Solid Copper Highlight Card */}
           <div className="bg-primary text-white p-10 flex flex-col h-[460px] transition-transform duration-500 hover:-translate-y-2 hover:shadow-xl">

@@ -273,6 +273,34 @@ input::placeholder, textarea::placeholder {
   opacity: 1;
 }
 
+/* Age gate year input explicit white text, caret, and placeholder */
+.agegate-year-input,
+input.agegate-year-input,
+input.agegate-year-input:focus,
+input.agegate-year-input:active {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  caret-color: #ffffff !important;
+}
+
+.agegate-year-input::placeholder,
+input.agegate-year-input::placeholder {
+  color: rgba(255, 255, 255, 0.65) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.65) !important;
+  opacity: 1 !important;
+}
+
+.agegate-year-input:-webkit-autofill,
+.agegate-year-input:-webkit-autofill:hover,
+.agegate-year-input:-webkit-autofill:focus,
+.agegate-year-input:-webkit-autofill:active {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+
 @utility material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
   display: inline-block;

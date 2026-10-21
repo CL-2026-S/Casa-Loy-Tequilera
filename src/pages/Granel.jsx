@@ -161,8 +161,10 @@ export default function Granel({ lang = "es" }) {
     market: "",
     volume: "",
     profile: "",
-    timeline: ""
+    timeline: "",
+    fax_website: "" // Anti-bot honeypot field
   });
+  const [formRenderTime] = useState(() => Date.now());
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -188,7 +190,9 @@ export default function Granel({ lang = "es" }) {
         stage: `Plazos: ${leadForm.timeline || "No especificado"}`,
         comments: `Solicitud generada desde One-Pager de Granel Casa Loy (Atención: Fernanda Quintana).`,
         origin: currentLang === "es" ? "granel" : "bulk",
-        lead_type: "bulk_tequila"
+        lead_type: "bulk_tequila",
+        _hp: leadForm.fax_website,
+        _render_time: formRenderTime
       };
 
       const res = await fetch("/api/maquila", {
@@ -1347,6 +1351,32 @@ export default function Granel({ lang = "es" }) {
                         {submitError}
                       </div>
                     )}
+
+                    {/* Anti-Bot Honeypot Field (Hidden from humans, filled by spam bots) */}
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: "-9999px",
+                        top: "-9999px",
+                        opacity: 0,
+                        height: 0,
+                        width: 0,
+                        overflow: "hidden",
+                        pointerEvents: "none"
+                      }}
+                      aria-hidden="true"
+                    >
+                      <label htmlFor="fax_website">Fax or Company URL</label>
+                      <input
+                        type="text"
+                        id="fax_website"
+                        name="fax_website"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={leadForm.fax_website || ""}
+                        onChange={handleFormChange}
+                      />
+                    </div>
 
                     {/* Name & Company */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

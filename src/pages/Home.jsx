@@ -342,8 +342,8 @@ export default function Home({ lang = "es", setPage, setLang }) {
       bg: "/Casa Loy Tequilera-escritorio.webp",
       bgMobile: "/Casa Loy Tequilera-movil.webp",
       bgRetina: "/Casa Loy Tequilera-retina.webp",
-      brightness: "brightness-[0.82]",
-      overlay: "from-black/30 via-transparent to-black/45",
+      brightness: "brightness-[0.78]",
+      overlay: "from-black/60 via-black/35 to-black/75",
     },
     {
       id: "piedra",
@@ -363,8 +363,8 @@ export default function Home({ lang = "es", setPage, setLang }) {
       bg: "/Banner Casa Loy Piedra y Agave-escritorio.webp",
       bgMobile: "/Banner Casa Loy Piedra y Agave-movil.webp",
       bgRetina: "/Banner Casa Loy Piedra y Agave-retina.webp",
-      brightness: "brightness-[0.82]",
-      overlay: "from-black/30 via-transparent to-black/45",
+      brightness: "brightness-[0.78]",
+      overlay: "from-black/60 via-black/35 to-black/75",
     }
   ];
 
@@ -572,7 +572,10 @@ export default function Home({ lang = "es", setPage, setLang }) {
 
                 {/* 3. Description / Subtitle (Rendered BELOW the title in elegant sentence-case) */}
                 {hasDesc && (
-                  <p className="font-sans text-[clamp(13px,1vw,16px)] text-stone-200/90 font-light max-w-2xl mx-auto mb-6 leading-relaxed drop-shadow-md">
+                  <p 
+                    style={{ color: "#ffffff" }}
+                    className="font-sans text-[clamp(14px,1.15vw,17px)] !text-white text-white font-normal max-w-2xl mx-auto mb-6 leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]"
+                  >
                     {descText}
                   </p>
                 )}

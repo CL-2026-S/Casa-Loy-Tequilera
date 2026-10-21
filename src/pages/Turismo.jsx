@@ -375,7 +375,7 @@ export default function Turismo({ lang, setPage }) {
             <div 
               key={exp.id} 
               onClick={() => setPage(`experience-${exp.id}`)}
-              className="group relative overflow-hidden shadow-lg h-[620px] cursor-pointer"
+              className="group relative overflow-hidden shadow-xl rounded-none min-h-[650px] lg:h-[660px] flex flex-col justify-end cursor-pointer transition-all duration-300 hover:shadow-2xl hover:border-[#8C4723]/50 border border-transparent"
             >
               <img
                 alt={exp.title}
@@ -383,34 +383,46 @@ export default function Turismo({ lang, setPage }) {
                 src={exp.img}
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/75 via-45% to-black/20"></div>
 
-              <div className="absolute bottom-0 left-0 p-6 sm:p-8 w-full transition-all duration-500 transform translate-y-0 lg:translate-y-[295px] lg:group-hover:translate-y-0">
-                <div className="flex justify-between items-end mb-6">
-                  <div>
-                    <h3 className="font-headline-md text-white text-xl md:text-2xl font-semibold leading-tight">
-                      {exp.title}
-                    </h3>
-                    <p className="font-label-caps text-secondary-fixed mt-2">
-                      {exp.price}
-                    </p>
+              <div className="relative z-10 p-6 sm:p-7 w-full flex flex-col justify-end">
+                <div className="mb-4">
+                  <h3 className="font-headline-md !text-white text-white text-xl md:text-2xl font-semibold leading-tight drop-shadow">
+                    {exp.title}
+                  </h3>
+                  <div 
+                    style={{ color: "#FDA377" }}
+                    className="font-navigation !text-[#FDA377] text-[#FDA377] text-sm sm:text-[15px] font-bold tracking-wider mt-1.5 drop-shadow"
+                  >
+                    {exp.price}
                   </div>
                 </div>
-                <div className="opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-500 lg:delay-100 space-y-4 lg:space-y-6">
-                  <ul className="text-white/80 space-y-2 font-body-md text-xs font-light">
-                    {exp.bullets.map((bullet, idx) => (
-                      <li key={idx} className="flex items-start gap-1.5 leading-relaxed">
-                        {bullet}
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="flex flex-col gap-3">
+
+                <div className="space-y-4">
+                  <div className="border-t border-white/15 pt-3">
+                    <p className="text-[10px] uppercase tracking-widest text-[#FDA377] font-semibold mb-2 font-navigation">
+                      {lang === "es" ? "Qué incluye:" : "Includes:"}
+                    </p>
+                    <ul 
+                      style={{ color: "#ffffff" }}
+                      className="!text-white text-white space-y-1.5 font-body-md text-xs sm:text-[12px] font-normal leading-snug drop-shadow"
+                    >
+                      {exp.bullets.map((bullet, idx) => (
+                        <li key={idx} className="flex items-start gap-1.5 text-white/95">
+                          <span className="text-[#FDA377] font-bold text-xs shrink-0">✓</span>
+                          <span>{bullet.replace(/^✓\s*/, "")}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="flex flex-col gap-2.5 pt-2">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         setPage(`experience-${exp.id}`);
                       }}
-                      className="w-full bg-white text-primary py-3.5 font-label-caps text-xs text-center uppercase tracking-widest hover:bg-[#8C4723] hover:text-white transition-all block shadow-md font-semibold cursor-pointer"
+                      className="w-full bg-white text-primary py-3 font-label-caps text-xs text-center uppercase tracking-widest hover:bg-[#8C4723] hover:text-white transition-all block shadow-md font-semibold cursor-pointer"
                     >
                       {lang === "es" ? "Ver Detalles" : "View Details"}
                     </button>
@@ -425,7 +437,7 @@ export default function Turismo({ lang, setPage }) {
                           }
                         }, 200);
                       }}
-                      className="w-full border border-white/50 text-white hover:border-white hover:bg-white/10 py-3.5 font-label-caps text-xs text-center uppercase tracking-widest transition-all block font-bold cursor-pointer"
+                      className="w-full border border-white/60 text-white hover:border-[#FDA377] hover:bg-[#8C4723]/30 py-3 font-label-caps text-xs text-center uppercase tracking-widest transition-all block font-bold cursor-pointer"
                     >
                       {exp.btnText}
                     </button>

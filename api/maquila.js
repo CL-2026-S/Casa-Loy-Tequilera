@@ -117,6 +117,20 @@ export default async function handler(req, res) {
   const isGranel = origin === 'granel' || origin === 'bulk';
   const isManual = creation_mode === 'manual' || origin === 'manual';
 
+  // Anti-Spam & Bot Protection (for public submissions)
+  if (!isManual) {
+    const spamCheck = checkIsSpamLead(req.body);
+    if (spamCheck.isSpam) {
+      console.warn(`[Anti-Spam] Bot lead rejected silently (${spamCheck.reason}): name="${name}", email="${email}", company="${company}"`);
+      // Return simulated success so bots don't adapt or retry
+      return res.status(200).json({
+        success: true,
+        message: 'Lead registrado correctamente.',
+        leadId: 'spam-filtered'
+      });
+    }
+  }
+
   // If manual creation, verify authentication and minimum fields
   if (isManual) {
     const staffUser = getAuthUser(req);
@@ -228,3 +242,64 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Ocurrió un error inesperado al procesar el lead.' });
   }
 }
+
+/**
+ * Intelligent Anti-Spam / Anti-Bot Detector
+ * Analyzes Honeypot, Submission Velocity, and High-Entropy Gibberish patterns.
+ */
+function checkIsSpamLead(body) {
+  const { name, company, email, solution, _hp, website_url, _render_time } = body || {};
+
+  // 1. Honeypot check: If hidden field was filled by an automated bot
+  const honeypotVal = _hp || website_url || body.website || body.company_website || body.fax_number;
+  if (honeypotVal && String(honeypotVal).trim().length > 0) {
+    return { isSpam: true, reason: 'honeypot_triggered' };
+  }
+
+  // 2. Submission velocity check: Submissions under 2 seconds are bots
+  if (_render_time) {
+    const elapsed = Date.now() - Number(_render_time);
+    if (!isNaN(elapsed) && elapsed > 0 && elapsed < 2000) {
+      return { isSpam: true, reason: 'submission_too_fast' };
+    }
+  }
+
+  // 3. Name heuristic: Random character gibberish pattern (e.g. KHzeYZxtNaYDKiQvTkziVVp)
+  if (name && typeof name === 'string') {
+    const cleanName = name.trim();
+    // Pattern: 13+ characters, no spaces, mixed uppercase and lowercase transitions
+    if (!cleanName.includes(' ') && cleanName.length >= 13 && /[a-z]/.test(cleanName) && /[A-Z]/.test(cleanName)) {
+      let caseTransitions = 0;
+      for (let i = 0; i < cleanName.length - 1; i++) {
+        const isUp1 = cleanName[i] === cleanName[i].toUpperCase();
+        const isUp2 = cleanName[i + 1] === cleanName[i + 1].toUpperCase();
+        if (isUp1 !== isUp2) caseTransitions++;
+      }
+      if (caseTransitions >= 3) {
+        return { isSpam: true, reason: 'gibberish_name_detected' };
+      }
+    }
+  }
+
+  // 4. Email heuristic: Bot generators using massive dots in Gmail (e.g. kyla.n.o.h.o.ove.n.s.t.a.t1@gmail.com)
+  if (email && typeof email === 'string') {
+    const [localPart] = email.split('@');
+    if (localPart) {
+      const dotCount = (localPart.match(/\./g) || []).length;
+      if (dotCount >= 3) {
+        return { isSpam: true, reason: 'excessive_dots_in_email' };
+      }
+    }
+  }
+
+  // 5. Volume / Solution gibberish (e.g. Bulk Tequila - ldBCSPaRvuBOhwFicaYegBcg)
+  if (solution && typeof solution === 'string') {
+    const volMatch = solution.match(/Bulk Tequila - ([A-Za-z0-9]+)$/);
+    if (volMatch && volMatch[1] && volMatch[1].length >= 15 && !volMatch[1].includes(' ')) {
+      return { isSpam: true, reason: 'gibberish_volume_detected' };
+    }
+  }
+
+  return { isSpam: false };
+}
+

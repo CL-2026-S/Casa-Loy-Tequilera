@@ -428,9 +428,14 @@ export default function AgeGatePremium({ onVerify, lang, setLang }) {
                           value={year}
                           onChange={handleYearInput}
                           placeholder="YYYY"
-                          className="w-24 bg-transparent border-b-2 border-[#fcf9f3]/40 focus:border-[#C8A86B] text-center text-lg sm:text-xl font-bold text-[#fcf9f3] outline-none py-1 transition-colors tracking-widest placeholder-[#fcf9f3]/35 font-mono"
+                          style={{
+                            color: "#ffffff",
+                            WebkitTextFillColor: "#ffffff",
+                            caretColor: "#ffffff"
+                          }}
+                          className="agegate-year-input w-24 bg-transparent border-b-2 border-white/50 focus:border-[#C8A86B] text-center text-lg sm:text-xl font-bold !text-white text-white outline-none py-1 transition-colors tracking-widest placeholder:text-white/60 font-mono"
                         />
-                        <span style={{ fontFamily: "'Montserrat', sans-serif" }} className="text-[8.5px] tracking-[0.15em] text-[#fcf9f3]/70 uppercase font-bold mt-1">
+                        <span style={{ fontFamily: "'Montserrat', sans-serif" }} className="text-[8.5px] tracking-[0.15em] text-white/80 uppercase font-bold mt-1">
                           {lang === "es" ? "Año" : "Year"}
                         </span>
                       </div>
