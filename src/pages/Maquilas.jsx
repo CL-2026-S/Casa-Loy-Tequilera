@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import TurnstileWidget from "../components/TurnstileWidget";
 
 const MexicoFlag = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20" className="w-5 h-3.5 shadow-sm border border-black/10 flex-shrink-0 inline-block align-middle">
@@ -50,6 +51,7 @@ export default function Maquilas({ lang = "es" }) {
   const [quizStep, setQuizStep] = useState(1);
   const [quizAnswers, setQuizAnswers] = useState({ solution: "", objective: "", stage: "" });
   const [contactForm, setContactForm] = useState({ name: "", company: "", lada: "", phone: "", email: "" });
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showScheduler, setShowScheduler] = useState(true);
 
@@ -389,6 +391,7 @@ export default function Maquilas({ lang = "es" }) {
           solution: quizAnswers.solution,
           objective: quizAnswers.objective,
           stage: quizAnswers.stage,
+          cf_token: turnstileToken
         }),
       });
 
@@ -669,6 +672,12 @@ export default function Maquilas({ lang = "es" }) {
                     </div>
                   </div>
                   
+                  <TurnstileWidget
+                    theme="dark"
+                    onVerify={(token) => setTurnstileToken(token)}
+                    onExpire={() => setTurnstileToken("")}
+                  />
+
                   <button
                     type="submit"
                     disabled={isSubmitting}

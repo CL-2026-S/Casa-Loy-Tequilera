@@ -1,5 +1,6 @@
 import { supabase, getSiteUrl } from '../_utils/clients.js';
 import { sendWelcomeEmail } from '../_utils/emails.js';
+import { verifyTurnstileToken } from '../_utils/turnstile.js';
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -47,6 +48,23 @@ export default async function handler(req, res) {
     const dotCount = (localPart.match(/\./g) || []).length;
     if (dotCount >= 3) {
       console.warn(`[Anti-Spam] Newsletter bot rejected silently (excessive dots): ${email}`);
+      return res.status(200).json({ success: true, status: 'created', message: 'Suscripción completada.' });
+    }
+  }
+
+  // Cloudflare Turnstile Verification
+  const cfToken = req.body?.cf_token || req.body?.turnstileToken || req.body?.['cf-turnstile-response'];
+  if (cfToken) {
+    const turnstileResult = await verifyTurnstileToken(cfToken, req);
+    if (!turnstileResult.success) {
+      console.warn(`[Anti-Spam] Cloudflare Turnstile rejected newsletter token: ${email}`);
+      return res.status(200).json({ success: true, status: 'created', message: 'Suscripción completada.' });
+    }
+  } else {
+    const isProd = process.env.NODE_ENV === 'production' || req.headers?.host?.includes('casaloy.com');
+    const originHeader = req.headers?.origin || req.headers?.referer || '';
+    if (isProd && (!originHeader || !originHeader.includes('casaloy.com'))) {
+      console.warn(`[Anti-Spam] Direct newsletter API hit rejected without Turnstile: ${email}`);
       return res.status(200).json({ success: true, status: 'created', message: 'Suscripción completada.' });
     }
   }

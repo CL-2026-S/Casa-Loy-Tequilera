@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import TurnstileWidget from "./TurnstileWidget";
 
 export default function Footer({ lang = "es", setPage }) {
   const [email, setEmail] = useState("");
   const [honeypot, setHoneypot] = useState("");
   const [renderTime] = useState(() => Date.now());
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -25,7 +27,8 @@ export default function Footer({ lang = "es", setPage }) {
           email: email,
           source_page: "footer",
           _hp: honeypot,
-          _render_time: renderTime
+          _render_time: renderTime,
+          cf_token: turnstileToken
         }),
       });
 
@@ -354,6 +357,12 @@ export default function Footer({ lang = "es", setPage }) {
                       {errorMessage}
                     </p>
                   )}
+                  <TurnstileWidget
+                    theme="light"
+                    size="flexible"
+                    onVerify={(token) => setTurnstileToken(token)}
+                    onExpire={() => setTurnstileToken("")}
+                  />
                   <button
                     type="submit"
                     disabled={status === "loading"}

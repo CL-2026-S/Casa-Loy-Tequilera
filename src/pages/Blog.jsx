@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import TurnstileWidget from "../components/TurnstileWidget";
 
 export default function Blog({ setPage, lang = "es" }) {
   const navigate = useNavigate();
@@ -9,6 +10,7 @@ export default function Blog({ setPage, lang = "es" }) {
   const [email, setEmail] = useState("");
   const [honeypot, setHoneypot] = useState("");
   const [renderTime] = useState(() => Date.now());
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [dynamicArticles, setDynamicArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -117,7 +119,13 @@ export default function Blog({ setPage, lang = "es" }) {
       const response = await fetch("/api/newsletter/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, source_page: "blog", _hp: honeypot, _render_time: renderTime }),
+        body: JSON.stringify({
+          email,
+          source_page: "blog",
+          _hp: honeypot,
+          _render_time: renderTime,
+          cf_token: turnstileToken
+        }),
       });
 
       const data = await response.json();
@@ -450,6 +458,11 @@ export default function Blog({ setPage, lang = "es" }) {
                     {errorMessage}
                   </p>
                 )}
+                <TurnstileWidget
+                  theme="light"
+                  onVerify={(token) => setTurnstileToken(token)}
+                  onExpire={() => setTurnstileToken("")}
+                />
                 <button
                   type="submit"
                   disabled={status === "loading"}

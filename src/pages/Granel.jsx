@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SEO from "../components/SEO";
+import TurnstileWidget from "../components/TurnstileWidget";
 
 // Intersection Observer Reveal Component for clean scroll entrance animations
 function Reveal({ children, className = "", delay = 0, duration = 800 }) {
@@ -165,6 +166,7 @@ export default function Granel({ lang = "es" }) {
     fax_website: "" // Anti-bot honeypot field
   });
   const [formRenderTime] = useState(() => Date.now());
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -192,7 +194,8 @@ export default function Granel({ lang = "es" }) {
         origin: currentLang === "es" ? "granel" : "bulk",
         lead_type: "bulk_tequila",
         _hp: leadForm.fax_website,
-        _render_time: formRenderTime
+        _render_time: formRenderTime,
+        cf_token: turnstileToken
       };
 
       const res = await fetch("/api/maquila", {
@@ -1501,6 +1504,12 @@ export default function Granel({ lang = "es" }) {
                         />
                       </div>
                     </div>
+
+                    <TurnstileWidget
+                      theme="light"
+                      onVerify={(token) => setTurnstileToken(token)}
+                      onExpire={() => setTurnstileToken("")}
+                    />
 
                     <div className="pt-2">
                       <button

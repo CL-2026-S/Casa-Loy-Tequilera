@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import TurnstileWidget from "./TurnstileWidget";
 
 export default function NewsletterPopup({ lang = "es" }) {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [honeypot, setHoneypot] = useState("");
   const [renderTime] = useState(() => Date.now());
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
   const [message, setMessage] = useState("");
 
@@ -71,7 +73,8 @@ export default function NewsletterPopup({ lang = "es" }) {
           email: email,
           source_page: "popup_global",
           _hp: honeypot,
-          _render_time: renderTime
+          _render_time: renderTime,
+          cf_token: turnstileToken
         }),
       });
 
@@ -179,6 +182,13 @@ export default function NewsletterPopup({ lang = "es" }) {
                       {message}
                     </p>
                   )}
+
+                  <TurnstileWidget
+                    theme="light"
+                    size="flexible"
+                    onVerify={(token) => setTurnstileToken(token)}
+                    onExpire={() => setTurnstileToken("")}
+                  />
 
                   <button
                     type="submit"

@@ -1,6 +1,7 @@
 import { supabase } from './_utils/clients.js';
 import { sendMaquilaLeadEmail } from './_utils/emails.js';
 import { getAuthUser, userHasRole } from './_utils/auth.js';
+import { verifyTurnstileToken } from './_utils/turnstile.js';
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -128,6 +129,32 @@ export default async function handler(req, res) {
         message: 'Lead registrado correctamente.',
         leadId: 'spam-filtered'
       });
+    }
+
+    // Cloudflare Turnstile Verification
+    const cfToken = req.body?.cf_token || req.body?.turnstileToken || req.body?.['cf-turnstile-response'];
+    if (cfToken) {
+      const turnstileResult = await verifyTurnstileToken(cfToken, req);
+      if (!turnstileResult.success) {
+        console.warn(`[Anti-Spam] Cloudflare Turnstile token verification failed for lead: ${email}`);
+        return res.status(200).json({
+          success: true,
+          message: 'Lead registrado correctamente.',
+          leadId: 'spam-filtered'
+        });
+      }
+    } else {
+      // In production, block direct API hits lacking Turnstile token
+      const isProd = process.env.NODE_ENV === 'production' || req.headers?.host?.includes('casaloy.com');
+      const originHeader = req.headers?.origin || req.headers?.referer || '';
+      if (isProd && (!originHeader || !originHeader.includes('casaloy.com'))) {
+        console.warn(`[Anti-Spam] Direct API hit rejected without Turnstile: ${email}`);
+        return res.status(200).json({
+          success: true,
+          message: 'Lead registrado correctamente.',
+          leadId: 'spam-filtered'
+        });
+      }
     }
   }
 
