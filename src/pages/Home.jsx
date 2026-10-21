@@ -533,7 +533,7 @@ export default function Home({ lang = "es", setPage, setLang }) {
         ))}
 
         {/* Content Container (Crossfading slides content) */}
-        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto flex flex-col items-center justify-center h-full pt-16 pb-28 pointer-events-none">
+        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center justify-center h-full pt-12 pb-28 pointer-events-none">
           {activeSlides.map((slide, idx) => {
             const isActive = idx === activeSlide;
             const slideTitle = currentLang === "es" ? slide.titleEs : slide.titleEn;
@@ -557,24 +557,24 @@ export default function Home({ lang = "es", setPage, setLang }) {
               >
                 {/* 1. Kicker / Overtitle (Only if short, refined tag) */}
                 {kickerText && (
-                  <span className="font-navigation text-[clamp(10px,0.85vw,12px)] text-white/90 uppercase tracking-[0.35em] mb-3 block font-semibold drop-shadow-md">
+                  <span className="font-navigation text-[clamp(11px,0.9vw,13px)] text-white/90 uppercase tracking-[0.35em] mb-3 block font-semibold drop-shadow-md">
                     {kickerText}
                   </span>
                 )}
 
-                {/* 2. Main Heading (Centered, balanced font size) */}
+                {/* 2. Main Heading (Centered, prominent luxury scale) */}
                 {hasTitle && (
                   <h1 
-                    className="font-serif text-[clamp(26px,3.8vw,52px)] leading-[1.14] tracking-tight font-light text-white uppercase max-w-3xl mx-auto mb-3 drop-shadow-lg"
+                    className="font-serif text-[clamp(32px,4.8vw,66px)] leading-[1.08] tracking-tight font-light text-white uppercase max-w-4xl mx-auto mb-4 drop-shadow-xl"
                     dangerouslySetInnerHTML={{ __html: slideTitle }}
                   />
                 )}
 
-                {/* 3. Description / Subtitle (Rendered BELOW the title in elegant sentence-case) */}
+                {/* 3. Description / Subtitle (Generous, highly readable editorial size) */}
                 {hasDesc && (
                   <p 
                     style={{ color: "#ffffff" }}
-                    className="font-sans text-[clamp(14px,1.15vw,17px)] !text-white text-white font-normal max-w-2xl mx-auto mb-6 leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]"
+                    className="font-sans text-[clamp(16px,1.45vw,22px)] !text-white text-white font-normal max-w-3xl mx-auto mb-7 leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]"
                   >
                     {descText}
                   </p>
