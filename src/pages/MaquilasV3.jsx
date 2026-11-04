@@ -1876,14 +1876,9 @@ export default function MaquilasV3({ lang = "es" }) {
                   }`}>
                     {/* Step Indicator Dot & Arrow */}
                     <div className="w-full flex items-center justify-center relative mb-4">
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-5 h-5 rounded-full bg-[#8C4723] text-white flex items-center justify-center font-navigation text-[10px] font-bold">
-                          {idx + 1}
-                        </span>
-                        <span className="font-navigation text-[9px] text-[#8C4723] uppercase tracking-[0.2em] font-semibold">
-                          {lang === "es" ? "PASO" : "STEP"} {step.num}
-                        </span>
-                      </div>
+                      <span className="font-navigation text-[10px] sm:text-[11px] text-[#8C4723] uppercase tracking-[0.25em] font-bold">
+                        {lang === "es" ? "PASO" : "STEP"} {step.num}
+                      </span>
                       {idx < 6 && (
                         <span className="material-symbols-outlined text-xs text-[#8C4723]/40 group-hover:text-[#8C4723] group-hover:translate-x-0.5 transition-all hidden xl:inline absolute right-0">
                           arrow_forward
