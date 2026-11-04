@@ -24,7 +24,27 @@
     },
     {
       "source": "/maquilas",
-      "destination": "/marca-propia",
+      "destination": "/maquiladetequila",
+      "permanent": true
+    },
+    {
+      "source": "/marca-privada",
+      "destination": "/maquiladetequila",
+      "permanent": true
+    },
+    {
+      "source": "/marca-propia",
+      "destination": "/maquiladetequila",
+      "permanent": true
+    },
+    {
+      "source": "/maquilas-v2",
+      "destination": "/maquiladetequila",
+      "permanent": true
+    },
+    {
+      "source": "/maquilas-v3",
+      "destination": "/maquiladetequila",
       "permanent": true
     },
     {
@@ -33,12 +53,12 @@
       "permanent": true
     },
     {
-      "source": "/maquilas-v2",
-      "destination": "/marca-propia",
+      "source": "/bottling-v2",
+      "destination": "/private-label",
       "permanent": true
     },
     {
-      "source": "/bottling-v2",
+      "source": "/bottling-v3",
       "destination": "/private-label",
       "permanent": true
     }

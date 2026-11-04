@@ -5433,12 +5433,12 @@ export default function AdminPanel({
                           </h6>
                         </div>
                         <p className="text-xs text-stone-500 font-sans mt-1">
-                          Controla si el bloque de <strong>"Reserva una Videollamada Técnica"</strong> y el calendario de Cal.com se muestran o se ocultan en las páginas públicas (<code className="text-[#8C4723] bg-stone-100 px-1 py-0.5 rounded">/marca-privada</code>, <code className="text-[#8C4723] bg-stone-100 px-1 py-0.5 rounded">/maquilas</code> y <code className="text-[#8C4723] bg-stone-100 px-1 py-0.5 rounded">/private-label</code>).
+                          Controla si el bloque de <strong>"Reserva una Videollamada Técnica"</strong> y el calendario de Cal.com se muestran o se ocultan en las páginas públicas (<code className="text-[#8C4723] bg-stone-100 px-1 py-0.5 rounded">/maquiladetequila</code> y <code className="text-[#8C4723] bg-stone-100 px-1 py-0.5 rounded">/private-label</code>).
                         </p>
                       </div>
 
                       <a
-                        href="/marca-privada#contact"
+                        href="/maquiladetequila#contact"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-xs text-stone-700 hover:text-[#8C4723] border border-stone-200 hover:border-stone-300 bg-stone-50 hover:bg-white px-3.5 py-2 font-medium flex items-center gap-1.5 transition-all w-fit shadow-2xs"
@@ -7797,8 +7797,8 @@ export default function AdminPanel({
                     </div>
                     <p className="text-[11px] text-stone-500 font-sans mt-0.5">
                       {maquilaSchedulerEnabled
-                        ? "El bloque de 'Reserva una Videollamada Técnica' con el calendario Cal.com está actualmente visible en /marca-privada."
-                        : "El bloque de agenda técnica está completamente desactivado y oculto en /marca-privada."}
+                        ? "El bloque de 'Reserva una Videollamada Técnica' con el calendario Cal.com está actualmente visible en /maquiladetequila."
+                        : "El bloque de agenda técnica está completamente desactivado y oculto en /maquiladetequila."}
                     </p>
                   </div>
                 </div>
@@ -7806,7 +7806,7 @@ export default function AdminPanel({
                 {!userHasRole("viewer") && (
                   <div className="flex items-center gap-2 shrink-0">
                     <a
-                      href="/marca-privada#contact"
+                      href="/maquiladetequila#contact"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-xs text-stone-600 hover:text-stone-900 border border-stone-200 hover:bg-stone-50 px-3 py-1.5 font-sans font-medium flex items-center gap-1 transition-colors"

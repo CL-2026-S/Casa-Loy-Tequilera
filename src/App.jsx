@@ -43,15 +43,16 @@ const routesMap = {
   "/": { page: "home", lang: null }, // Shared
   "/interactivo": { page: "home-interactive", lang: null }, // Shared
   "/quienes-somos": { page: "about", lang: "es" },
+  "/maquiladetequila": { page: "maquilas", lang: "es" },
   "/marca-privada": { page: "maquilas", lang: "es" },
   "/marca-propia": { page: "maquilas", lang: "es" },
   "/maquilas": { page: "maquilas", lang: "es" },
   "/maquilas-v2": { page: "maquilas", lang: "es" },
-  "/maquilas-v3": { page: "maquilas-v3", lang: "es" },
+  "/maquilas-v3": { page: "maquilas", lang: "es" },
   "/granel": { page: "granel", lang: "es" },
   "/graneles": { page: "granel", lang: "es" },
   "/tequila-a-granel": { page: "granel", lang: "es" },
-  "/test1mbb": { page: "maquilas-v3", lang: "es" },
+  "/test1mbb": { page: "maquilas", lang: "es" },
   "/test2mbb": { page: "test2mbb", lang: "es" },
   "/marcas": { page: "brands", lang: "es" },
   "/turismo": { page: "turismo", lang: "es" },
@@ -80,11 +81,13 @@ const routesMap = {
   "/about": { page: "about", lang: "en" },
   "/about-us": { page: "about", lang: "en" },
   "/private-label": { page: "maquilas", lang: "en" },
+  "/private label": { page: "maquilas", lang: "en" },
+  "/private%20label": { page: "maquilas", lang: "en" },
   "/bottling": { page: "maquilas", lang: "en" },
   "/bottling-v2": { page: "maquilas", lang: "en" },
-  "/bottling-v3": { page: "maquilas-v3", lang: "en" },
-  "/maquilas-v3-en": { page: "maquilas-v3", lang: "en" },
-  "/maquilas-v3/en": { page: "maquilas-v3", lang: "en" },
+  "/bottling-v3": { page: "maquilas", lang: "en" },
+  "/maquilas-v3-en": { page: "maquilas", lang: "en" },
+  "/maquilas-v3/en": { page: "maquilas", lang: "en" },
   "/bulk": { page: "granel", lang: "en" },
   "/bulk-tequila": { page: "granel", lang: "en" },
   "/granel-en": { page: "granel", lang: "en" },
@@ -240,9 +243,10 @@ export default function App() {
         "home": "/",
         "home-interactive": "/interactivo",
         "about": "/quienes-somos",
-        "maquilas": "/marca-privada",
-        "maquilas-v2": "/marca-privada",
-        "maquilas-v3": "/maquilas-v3",
+        "maquilas": "/maquiladetequila",
+        "maquilas-v2": "/maquiladetequila",
+        "maquilas-v3": "/maquiladetequila",
+        "maquiladetequila": "/maquiladetequila",
         "test2mbb": "/test2mbb",
         "brands": "/marcas",
         "turismo": "/turismo",
@@ -267,7 +271,8 @@ export default function App() {
         "about": "/about",
         "maquilas": "/private-label",
         "maquilas-v2": "/private-label",
-        "maquilas-v3": "/bottling-v3",
+        "maquilas-v3": "/private-label",
+        "maquiladetequila": "/private-label",
         "test2mbb": "/test2mbb-en",
         "brands": "/brands",
         "turismo": "/tourism",
@@ -318,8 +323,10 @@ export default function App() {
         home: "/",
         "home-interactive": "/interactivo",
         about: "/quienes-somos",
-        maquilas: "/marca-privada",
-        "maquilas-v2": "/marca-privada",
+        maquilas: "/maquiladetequila",
+        "maquilas-v2": "/maquiladetequila",
+        "maquilas-v3": "/maquiladetequila",
+        maquiladetequila: "/maquiladetequila",
         test2mbb: "/test2mbb",
         brands: "/marcas",
         turismo: "/turismo",
@@ -350,6 +357,8 @@ export default function App() {
         about: "/about",
         maquilas: "/private-label",
         "maquilas-v2": "/private-label",
+        "maquilas-v3": "/private-label",
+        maquiladetequila: "/private-label",
         test2mbb: "/test2mbb-en",
         brands: "/brands",
         turismo: "/tourism",
@@ -542,20 +551,25 @@ export default function App() {
             <Route path="/about" element={<AboutUs t={t} lang={lang} setPage={setPage} />} />
             <Route path="/about-us" element={<AboutUs t={t} lang={lang} setPage={setPage} />} />
             
-            <Route path="/marca-privada" element={<Maquilas t={t} lang={lang} />} />
-            <Route path="/marca-propia" element={<Navigate to="/marca-privada" replace />} />
-            <Route path="/private-label" element={<Maquilas t={t} lang={lang} />} />
-            <Route path="/maquilas" element={<Navigate to="/marca-privada" replace />} />
+            {/* Maquila de Tequila / Private Label */}
+            <Route path="/maquiladetequila" element={<MaquilasV3 lang="es" />} />
+            <Route path="/private-label" element={<MaquilasV3 lang="en" />} />
+            <Route path="/private label" element={<MaquilasV3 lang="en" />} />
+            
+            {/* Redirecciones automáticas para ocultar la página previa y unificar en MaquilasV3 */}
+            <Route path="/marca-privada" element={<Navigate to="/maquiladetequila" replace />} />
+            <Route path="/marca-propia" element={<Navigate to="/maquiladetequila" replace />} />
+            <Route path="/maquilas" element={<Navigate to="/maquiladetequila" replace />} />
             <Route path="/bottling" element={<Navigate to="/private-label" replace />} />
-            <Route path="/maquilas-v2" element={<MaquilasV2 lang="es" />} />
-            <Route path="/bottling-v2" element={<MaquilasV2 lang="en" />} />
-            <Route path="/maquilas-v3" element={<MaquilasV3 lang="es" />} />
-            <Route path="/bottling-v3" element={<MaquilasV3 lang="en" />} />
-            <Route path="/maquilas-v3-en" element={<MaquilasV3 lang="en" />} />
-            <Route path="/maquilas-v3/en" element={<MaquilasV3 lang="en" />} />
-            <Route path="/test1mbb" element={<MaquilasV3 lang="es" />} />
-            <Route path="/test1mbb-en" element={<MaquilasV3 lang="en" />} />
-            <Route path="/test1mbb/en" element={<MaquilasV3 lang="en" />} />
+            <Route path="/maquilas-v2" element={<Navigate to="/maquiladetequila" replace />} />
+            <Route path="/bottling-v2" element={<Navigate to="/private-label" replace />} />
+            <Route path="/maquilas-v3" element={<Navigate to="/maquiladetequila" replace />} />
+            <Route path="/bottling-v3" element={<Navigate to="/private-label" replace />} />
+            <Route path="/maquilas-v3-en" element={<Navigate to="/private-label" replace />} />
+            <Route path="/maquilas-v3/en" element={<Navigate to="/private-label" replace />} />
+            <Route path="/test1mbb" element={<Navigate to="/maquiladetequila" replace />} />
+            <Route path="/test1mbb-en" element={<Navigate to="/private-label" replace />} />
+            <Route path="/test1mbb/en" element={<Navigate to="/private-label" replace />} />
             <Route path="/test2mbb" element={<Test2MBB lang="es" setPage={setPage} />} />
             <Route path="/test2mbb-en" element={<Test2MBB lang="en" setPage={setPage} />} />
             <Route path="/test2mbb/en" element={<Test2MBB lang="en" setPage={setPage} />} />

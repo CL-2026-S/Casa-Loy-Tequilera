@@ -197,7 +197,7 @@ export default function Footer({ lang = "es", setPage }) {
                 const getPageRoute = (p) => {
                   const paths = {
                     es: {
-                      maquilas: "/marca-privada",
+                      maquilas: "/maquiladetequila",
                       granel: "/granel",
                       solutions: "/soluciones",
                       turismo: "/turismo",

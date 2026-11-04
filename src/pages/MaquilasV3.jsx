@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import SEO from "../components/SEO";
+import TurnstileWidget from "../components/TurnstileWidget";
 
 // Intersection Observer Reveal Component for clean scroll entrance animations
 function Reveal({ children, className = "", delay = 0, duration = 800 }) {
@@ -51,6 +52,7 @@ export default function MaquilasV3({ lang = "es" }) {
   const [quizStep, setQuizStep] = useState(1);
   const [quizAnswers, setQuizAnswers] = useState({ profile: "", solution: "", objective: "", stage: "" });
   const [contactForm, setContactForm] = useState({ name: "", company: "", lada: "", phone: "", email: "" });
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Active Station State for "Dentro de Casa Loy" Interactive Showcase
@@ -228,7 +230,7 @@ export default function MaquilasV3({ lang = "es" }) {
       // Inside Casa Loy
       insideEyebrow: "Dentro de Casa Loy",
       insideTitle: "Del agave a la botella",
-      insideSub: "Recorre interactivamente las 8 estaciones de nuestra destilería en Ayotlán, Jalisco.",
+      insideSub: "Recorre interactivamente las estaciones de nuestra destilería en Ayotlán, Jalisco.",
 
       // Solutions
       solutionsEyebrow: "SOLUCIONES",
@@ -352,7 +354,7 @@ export default function MaquilasV3({ lang = "es" }) {
       // Inside Casa Loy
       insideEyebrow: "Inside Casa Loy",
       insideTitle: "From agave to the bottle",
-      insideSub: "Take an interactive journey through the 8 stations of our distillery in Ayotlán, Jalisco.",
+      insideSub: "Take an interactive journey through the stations of our distillery in Ayotlán, Jalisco.",
 
       // Solutions
       solutionsEyebrow: "SOLUTIONS",
@@ -475,6 +477,8 @@ export default function MaquilasV3({ lang = "es" }) {
           solution: quizAnswers.solution,
           objective: quizAnswers.objective,
           stage: quizAnswers.stage,
+          origin: "maquiladetequila",
+          cf_token: turnstileToken,
         }),
       });
 
@@ -503,11 +507,45 @@ export default function MaquilasV3({ lang = "es" }) {
   const handleResetQuiz = () => {
     setQuizAnswers({ profile: "", solution: "", objective: "", stage: "" });
     setContactForm({ name: "", company: "", lada: "", phone: "", email: "" });
+    setTurnstileToken("");
     setQuizStep(1);
   };
 
-  // 8 Stations of "Dentro de Casa Loy" Interactive Showcase with tailored per-image content
+  // Stations of "Dentro de Casa Loy" Interactive Showcase with tailored per-image content
   const stations = [
+    {
+      num: "",
+      tag: lang === "es" ? "Nuestra Destilería" : "Our Distillery",
+      name: lang === "es" ? "Nuestra Destilería" : "Our Distillery",
+      desc: lang === "es"
+        ? "Desde Ayotlán, Casa Loy da la bienvenida a cada proyecto dentro de una destilería con origen, estructura y visión de largo plazo."
+        : "From Ayotlán, Casa Loy welcomes every project into a distillery with heritage, solid infrastructure, and long-term vision.",
+      specs: lang === "es" ? ["Los Altos de Jalisco", "Ayotlán", "NOM 1633"] : ["Highlands of Jalisco", "Ayotlán", "NOM 1633"],
+      images: [
+        { 
+          src: "/Casa Loy Tequilera Naves.webp", 
+          label: lang === "es" ? "Destilería" : "Distillery",
+          copperTag: lang === "es" ? "NUESTRA DESTILERÍA" : "OUR DISTILLERY",
+          whiteTag: lang === "es" ? "Una casa tequilera en Los Altos de Jalisco" : "A Tequila House in The Highlands of Jalisco",
+          tag: lang === "es" ? "Nuestra Destilería" : "Our Distillery",
+          desc: lang === "es" 
+            ? "Desde Ayotlán, Casa Loy da la bienvenida a cada proyecto dentro de una destilería con origen, estructura y visión de largo plazo."
+            : "From Ayotlán, Casa Loy welcomes every project into a distillery with heritage, solid infrastructure, and long-term vision.",
+          specs: lang === "es" ? ["Los Altos de Jalisco", "Ayotlán", "NOM 1633"] : ["Highlands of Jalisco", "Ayotlán", "NOM 1633"]
+        },
+        { 
+          src: "/Empleado Casa Loy Tequilera en campos de Ayotlán.webp", 
+          label: lang === "es" ? "Nuestra Gente" : "Our People",
+          copperTag: lang === "es" ? "PERSONAS REALES" : "REAL PEOPLE",
+          whiteTag: lang === "es" ? "Personas reales detrás de cada proyecto" : "Real People Behind Every Project",
+          tag: lang === "es" ? "Nuestra Gente" : "Our People",
+          desc: lang === "es"
+            ? "Cada marca cuenta con seguimiento cercano de ejecutivos, project managers, maestros tequileros, laboratorio y control de calidad, cumplimiento regulatorio y coordinación de exportación."
+            : "Each brand receives close guidance from account executives, project managers, master distillers, QA/QC laboratory, regulatory compliance, and export coordination.",
+          specs: lang === "es" ? ["Personas Reales", "Maestros Tequileros", "Seguimiento Cercano"] : ["Real People", "Master Distillers", "Dedicated Support"]
+        }
+      ]
+    },
     {
       num: "01",
       tag: lang === "es" ? "Jima" : "Harvest",
@@ -574,14 +612,14 @@ export default function MaquilasV3({ lang = "es" }) {
         },
         { 
           src: "/Cocedores Serpentin Vapor Tequila Casa Loy.jpg", 
-          label: lang === "es" ? "Serpentín de Vapor" : "Steam-Coil Cookers",
-          copperTag: lang === "es" ? "02 · COCEDORES CON SERPENTÍN DE VAPOR" : "02 · STEAM-COIL JUICE COOKERS",
-          whiteTag: lang === "es" ? "PERFIL ESCALABLE DE VALOR" : "SCALABLE VALUE PROFILE",
-          tag: lang === "es" ? "Serpentín de Vapor" : "Steam-Coil Cookers",
+          label: lang === "es" ? "COCEDORES DE VAPOR" : "STEAM COOKERS",
+          copperTag: lang === "es" ? "02 · COCEDORES DE VAPOR" : "02 · STEAM COOKERS",
+          whiteTag: lang === "es" ? "Cocedores con Serpentín de Vapor" : "Steam-Coil Cookers",
+          tag: lang === "es" ? "Cocedores de Vapor" : "Steam Cookers",
           desc: lang === "es"
-            ? "Método de cocimiento controlado para jugo crudo de agave, diseñado para marcas que buscan eficiencia, consistencia y producción escalable con un precio alineado al mercado."
-            : "A controlled cooking method for raw agave juice, designed for brands seeking efficiency, consistency, and scalable production with market-aligned pricing.",
-          specs: lang === "es" ? ["Serpentín de Vapor", "Perfil Escalable de Valor", "Eficiencia en Costo"] : ["Steam-Coil Cooker", "Scalable Value Profile", "Cost Efficiency"]
+            ? "Cocimiento controlado de jugo crudo de agave mediante serpentín de vapor, diseñado para perfiles consistentes, producción escalable y precios alineados al mercado."
+            : "Controlled cooking of raw agave juice via steam coil, designed for consistent profiles, scalable production, and market-aligned pricing.",
+          specs: lang === "es" ? ["COCEDORES DE VAPOR", "SERPENTÍN DE VAPOR", "PRECIOS ALINEADOS AL MERCADO"] : ["STEAM COOKERS", "STEAM COIL", "MARKET-ALIGNED PRICING"]
         }
       ]
     },
@@ -609,12 +647,12 @@ export default function MaquilasV3({ lang = "es" }) {
           src: "/Molino Rosh Molienda Agave Casa Loy.jpg", 
           label: lang === "es" ? "Molino de Tornillo" : "Screw Mill",
           copperTag: lang === "es" ? "03 · MOLINO DE TORNILLO" : "03 · SCREW MILL",
-          whiteTag: lang === "es" ? "EXTRACCIÓN NOBLE" : "GENTLE EXTRACTION",
+          whiteTag: lang === "es" ? "Extracción noble" : "Gentle Extraction",
           tag: lang === "es" ? "Molino de Tornillo" : "Screw Mill",
           desc: lang === "es"
-            ? "Mediante un prensado continuo y controlado, extraemos los jugos del agave cocido sin triturar agresivamente sus fibras. Esta tecnología, también utilizada en la industria vinícola, permite una extracción suave, uniforme y eficiente."
-            : "Through a continuous, controlled pressing process, we extract the juices from the cooked agave without crushing its fibers. This technology, also used in winemaking, allows for a gentle, consistent, and efficient extraction.",
-          specs: lang === "es" ? ["Prensado Continuo", "Extracción Suave", "Inspiración Vinícola"] : ["Continuous Press", "Gentle Extraction", "Winemaking Tech"]
+            ? "Después del cocimiento en hornos de piedra o autoclave, el molino de tornillo permite una extracción suave y uniforme de los jugos del agave, conservando limpieza, equilibrio y expresión."
+            : "After cooking in stone ovens or autoclaves, the screw mill enables gentle and uniform extraction of agave juices, preserving cleanliness, balance, and expression.",
+          specs: lang === "es" ? ["PRENSADO CONTINUO", "EXTRACCIÓN SUAVE Y UNIFORME", "INSPIRACIÓN VINÍCOLA"] : ["CONTINUOUS PRESS", "GENTLE & UNIFORM EXTRACTION", "WINEMAKING INSPIRATION"]
         },
         { 
           src: "/Molino Desgarrador Agave.jpg", 
@@ -623,9 +661,9 @@ export default function MaquilasV3({ lang = "es" }) {
           whiteTag: lang === "es" ? "PERFIL COMERCIAL ESCALABLE" : "SCALABLE COMMERCIAL PROFILE",
           tag: lang === "es" ? "Extracción en Crudo" : "Raw Extraction",
           desc: lang === "es"
-            ? "Ruta de extracción controlada para marcas que buscan eficiencia, consistencia y producción escalable, manteniendo el perfil del tequila alineado al mercado objetivo."
-            : "A controlled extraction path for brands seeking efficiency, consistency, and scalable production while keeping the tequila profile aligned with market needs.",
-          specs: lang === "es" ? ["Extracción en Crudo", "Perfil Comercial Escalable", "Eficiencia & Escala"] : ["Raw Extraction", "Scalable Commercial", "Efficiency & Scale"]
+            ? "Ruta de extracción controlada para marcas que buscan consistencia, volumen y crecimiento escalable, con un perfil de tequila alineado al mercado objetivo."
+            : "Controlled extraction path for brands seeking consistency, volume, and scalable growth, with a tequila profile aligned to the target market.",
+          specs: lang === "es" ? ["EXTRACCIÓN EN CRUDO", "PERFIL COMERCIAL ESCALABLE", "CONSISTENCIA & ESCALA"] : ["RAW EXTRACTION", "SCALABLE COMMERCIAL PROFILE", "CONSISTENCY & SCALE"]
         }
       ]
     },
@@ -645,9 +683,9 @@ export default function MaquilasV3({ lang = "es" }) {
           whiteTag: lang === "es" ? "PERFIL EXPRESIVO" : "EXPRESSIVE PROFILE",
           tag: lang === "es" ? "Fermentación Abierta" : "Open-Air Fermentation",
           desc: lang === "es"
-            ? "Método tradicional de fermentación en tanques abiertos de acero inoxidable, diseñado para desarrollar complejidad aromática, carácter natural y perfiles de agave más expresivos, con notas cítricas, frutales y florales."
-            : "A traditional fermentation method in open stainless steel tanks, developing aromatic complexity, natural character, and expressive agave profiles with citrus, fruity, and floral notes.",
-          specs: lang === "es" ? ["Fermentación Abierta", "Perfil Expresivo", "Notas Frutales & Florales"] : ["Open Fermentation", "Expressive Profile", "Fruity & Floral Notes"]
+            ? "Método tradicional de fermentación en tanques abiertos de acero inoxidable, diseñado para favorecer mayor complejidad aromática, carácter natural y perfiles de agave más expresivos."
+            : "Traditional fermentation method in open stainless steel tanks, designed to favor greater aromatic complexity, natural character, and more expressive agave profiles.",
+          specs: lang === "es" ? ["FERMENTACIÓN ABIERTA", "PERFIL EXPRESIVO", "EXPRESIÓN AROMÁTICA"] : ["OPEN FERMENTATION", "EXPRESSIVE PROFILE", "AROMATIC EXPRESSION"]
         },
         { 
           src: "/Tanques Fermentacion Cerrada Acero Casa Loy.jpg", 
@@ -656,9 +694,9 @@ export default function MaquilasV3({ lang = "es" }) {
           whiteTag: lang === "es" ? "PERFIL CONTROLADO" : "CONTROLLED PROFILE",
           tag: lang === "es" ? "Fermentación Cerrada" : "Closed Fermentation",
           desc: lang === "es"
-            ? "Método de fermentación controlada en tanques cerrados de acero inoxidable, diseñado para preservar un perfil limpio, mejorar la consistencia y desarrollar un carácter refinado de agave con mayor estabilidad entre lotes."
-            : "A controlled fermentation method in closed stainless steel tanks, designed to preserve a clean profile, enhance consistency, and develop refined agave character with greater batch-to-batch stability.",
-          specs: lang === "es" ? ["Fermentación Cerrada", "Perfil Controlado", "Estabilidad entre Lotes"] : ["Closed Fermentation", "Controlled Profile", "Batch Stability"]
+            ? "Fermentación orientada a desarrollar perfiles limpios, consistentes y estables, pensados para marcas que buscan repetibilidad y control en cada producción."
+            : "Fermentation oriented towards developing clean, consistent, and stable profiles, designed for brands seeking repeatability and control in every production.",
+          specs: lang === "es" ? ["FERMENTACIÓN CERRADA", "PERFIL CONTROLADO", "CONSISTENCIA POR LOTE"] : ["CLOSED FERMENTATION", "CONTROLLED PROFILE", "BATCH CONSISTENCY"]
         }
       ]
     },
@@ -864,7 +902,7 @@ export default function MaquilasV3({ lang = "es" }) {
       <SEO
         title={t.seoTitle}
         description={t.seoDesc}
-        url="/test1mbb"
+        url={lang === "es" ? "/maquiladetequila" : "/private-label"}
       />
 
       {/* ============================================================
@@ -1101,8 +1139,8 @@ export default function MaquilasV3({ lang = "es" }) {
                   </h3>
                   <p className="font-body-md text-[#53443a] font-light leading-snug text-[11.5px] sm:text-xs lg:text-[12.5px]">
                     {lang === "es"
-                      ? "Maestros tequileros, ingenieros químicos y coordinadores de exportación."
-                      : "Master distillers, chemical engineers, and international trade advisers."}
+                      ? "Cada marca cuenta con seguimiento cercano de ejecutivos, project managers, maestros tequileros, laboratorio y control de calidad, cumplimiento regulatorio y coordinación de exportación."
+                      : "Each brand receives close guidance from account executives, project managers, master distillers, QA/QC laboratory, regulatory compliance, and export coordination."}
                   </p>
                 </div>
               </div>
@@ -1143,8 +1181,8 @@ export default function MaquilasV3({ lang = "es" }) {
                   </h3>
                   <p className="font-body-md text-[#53443a] font-light leading-snug text-[11.5px] sm:text-xs lg:text-[12.5px]">
                     {lang === "es"
-                      ? "Laboratorio interno y verificación estricta de cumplimiento CRT por lote."
-                      : "Internal laboratory and CRT compliance verification on every run."}
+                      ? "Cada lote se revisa con análisis de laboratorio, validación sensorial y verificación regulatoria antes de avanzar a envasado o liberación."
+                      : "Every batch is reviewed through laboratory analysis, sensory validation, and regulatory verification before moving to bottling or release."}
                   </p>
                 </div>
               </div>
@@ -1244,7 +1282,7 @@ export default function MaquilasV3({ lang = "es" }) {
                       <div className="space-y-1.5 max-w-2xl">
                         <div className="flex flex-wrap items-center gap-2 mb-1.5">
                           <span className="font-navigation text-[10.5px] sm:text-[12px] text-white uppercase tracking-[0.2em] bg-[#8C4723] px-3 py-0.5 font-semibold inline-block rounded-none shadow-sm">
-                            {currentImgObj.copperTag || `${currentStation.num} · ${currentImgObj.tag || currentStation.tag}`}
+                            {currentImgObj.copperTag || (currentStation.num ? `${currentStation.num} · ${currentImgObj.tag || currentStation.tag}` : currentImgObj.tag || currentStation.tag)}
                           </span>
                           {(currentImgObj.whiteTag || currentImgObj.label) && (
                             <span className="font-navigation text-[10.5px] sm:text-[12px] text-white uppercase tracking-wider bg-white/15 backdrop-blur-md px-2.5 py-0.5 border border-white/20 inline-block rounded-none shadow-sm">
@@ -1272,8 +1310,8 @@ export default function MaquilasV3({ lang = "es" }) {
             </div>
           </Reveal>
 
-          {/* Station Selectors (8 Sharp Buttons matching site buttons) */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 sm:gap-2.5">
+          {/* Station Selectors (9 Sharp Buttons matching site buttons) */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-2 sm:gap-2.5">
             {stations.map((s, idx) => (
               <button
                 key={idx}
@@ -1289,7 +1327,7 @@ export default function MaquilasV3({ lang = "es" }) {
               >
                 <div className="flex items-center justify-between mb-0.5">
                   <span className={`font-navigation text-[9px] sm:text-[10px] font-bold ${activeStation === idx ? "text-[#ffdbc7]" : "text-primary"}`}>
-                    {s.num}
+                    {s.num || "✦"}
                   </span>
                   {activeStation === idx && <span className="w-1.5 h-1.5 rounded-full bg-[#ffdbc7] animate-pulse"></span>}
                 </div>
@@ -1721,6 +1759,12 @@ export default function MaquilasV3({ lang = "es" }) {
                       />
                     </div>
                   </div>
+
+                  <TurnstileWidget
+                    theme="dark"
+                    onVerify={(token) => setTurnstileToken(token)}
+                    onExpire={() => setTurnstileToken("")}
+                  />
 
                   <button
                     type="submit"

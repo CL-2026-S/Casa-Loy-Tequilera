@@ -11,7 +11,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
       es: {
         home: "/",
         about: "/quienes-somos",
-        maquilas: "/marca-privada",
+        maquilas: "/maquiladetequila",
         granel: "/granel",
         brands: "/marcas",
         turismo: "/turismo",
