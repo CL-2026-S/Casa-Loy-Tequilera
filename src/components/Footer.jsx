@@ -77,7 +77,7 @@ export default function Footer({ lang = "es", setPage }) {
         { name: "Reserva Casa Loy", url: "https://reservatequila.com/", external: true },
         { name: "TADDEL Tequila", url: "https://TADDELtequila.com/", external: true },
         { name: "Tierra Zafiro Tequila", url: "https://TierraZafirotequila.com/", external: true },
-        { name: "Marca Privada", page: "maquilas", external: false },
+        { name: "Maquila de Tequila", page: "maquilas", external: false },
         { name: "Tequila a Granel", page: "granel", external: false },
         { name: "Soluciones B2B", page: "solutions", external: false },
         { name: "Experiencias Casa Loy", page: "turismo", external: false },
