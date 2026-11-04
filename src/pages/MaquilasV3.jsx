@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
 import TurnstileWidget from "../components/TurnstileWidget";
 
@@ -1399,7 +1400,12 @@ export default function MaquilasV3({ lang = "es" }) {
                     </span>
                   </div>
                   <h3 className="font-serif text-xl sm:text-2xl font-semibold text-[#1c1c18] mb-2">
-                    {lang === "es" ? "Tequila a Granel (Bulk)" : "Bulk Tequila Supply"}
+                    <Link
+                      to={lang === "es" ? "/granel" : "/bulk"}
+                      className="hover:text-[#8C4723] transition-colors"
+                    >
+                      {lang === "es" ? "Tequila a Granel (Bulk)" : "Bulk Tequila Supply"}
+                    </Link>
                   </h3>
                   <p className="font-body-md text-[#53443a] font-light leading-relaxed mb-4 text-xs sm:text-sm">
                     {lang === "es"
@@ -1408,12 +1414,12 @@ export default function MaquilasV3({ lang = "es" }) {
                   </p>
                 </div>
                 <div className="pt-4">
-                  <a
-                    href="#agenda-llamada"
-                    className="w-full block bg-transparent border border-[#8C4723] hover:bg-[#8C4723] hover:text-white text-[#8C4723] font-navigation text-[10px] uppercase tracking-[0.25em] font-medium py-2.5 text-center transition-all duration-500 rounded-none"
+                  <Link
+                    to={lang === "es" ? "/granel" : "/bulk"}
+                    className="w-full block bg-transparent border border-[#8C4723] hover:bg-[#8C4723] hover:text-white text-[#8C4723] font-navigation text-[10px] uppercase tracking-[0.25em] font-medium py-2.5 text-center transition-all duration-500 rounded-none cursor-pointer"
                   >
                     {lang === "es" ? "Ver Más" : "See More"}
-                  </a>
+                  </Link>
                 </div>
               </div>
             </Reveal>
