@@ -211,13 +211,25 @@ export default async function handler(req, res) {
           console.warn("Could not count blog_comments:", commErr.message);
         }
 
-        const enriched = (data || []).map((post) => ({
-          ...post,
-          views_count: Number(post.views_count || 0),
-          likes_count: Number(post.likes_count || 0),
-          reactions: post.reactions || { corazon: 0, brindis: 0, aplauso: 0, fuego: 0 },
-          comments_count: Number(commentCountsBySlug[post.slug] || 0)
-        }));
+        const enriched = (data || []).map((post) => {
+          const parsedTags = String(post.seo_keywords || '')
+            .split(',')
+            .map((t) => t.trim())
+            .filter(Boolean);
+          const parsedRelated = Array.isArray(post.related_slugs)
+            ? post.related_slugs
+            : [];
+
+          return {
+            ...post,
+            tags: parsedTags,
+            related_slugs: parsedRelated,
+            views_count: Number(post.views_count || 0),
+            likes_count: Number(post.likes_count || 0),
+            reactions: post.reactions || { corazon: 0, brindis: 0, aplauso: 0, fuego: 0 },
+            comments_count: Number(commentCountsBySlug[post.slug] || 0)
+          };
+        });
 
         return res.status(200).json(enriched);
       }
@@ -632,7 +644,8 @@ export default async function handler(req, res) {
           author_bio,
           seo_title,
           seo_description,
-          seo_keywords
+          seo_keywords,
+          related_slugs
         } = req.body || {};
 
         let resolvedImageUrl = image_url;
@@ -650,6 +663,18 @@ export default async function handler(req, res) {
 
         if (!slug || !finalTitleEs || !description || !category || !label || !resolvedImageUrl) {
           return res.status(400).json({ error: 'Campos obligatorios del blog incompletos.' });
+        }
+
+        let normalizedRelatedSlugs = [];
+        if (Array.isArray(related_slugs)) {
+          normalizedRelatedSlugs = related_slugs.map(s => String(s).trim()).filter(Boolean);
+        } else if (typeof related_slugs === 'string' && related_slugs.trim()) {
+          try {
+            const parsed = JSON.parse(related_slugs);
+            if (Array.isArray(parsed)) normalizedRelatedSlugs = parsed.map(s => String(s).trim()).filter(Boolean);
+          } catch {
+            normalizedRelatedSlugs = related_slugs.split(',').map(s => s.trim()).filter(Boolean);
+          }
         }
 
         const blogData = {
@@ -670,7 +695,8 @@ export default async function handler(req, res) {
           author_bio: author_bio || 'Guardián de la tradición centenaria y el terroir de Los Altos de Jalisco en Casa Loy.',
           seo_title: seo_title || finalTitleEs,
           seo_description: seo_description || description,
-          seo_keywords: seo_keywords || category
+          seo_keywords: seo_keywords || category,
+          related_slugs: normalizedRelatedSlugs
         };
 
         let dbRes;

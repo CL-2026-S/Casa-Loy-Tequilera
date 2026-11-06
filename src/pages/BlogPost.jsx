@@ -482,15 +482,71 @@ export default function BlogPost({ lang = "es", setPage }) {
     return { rootComments: roots, repliesByParentId: map };
   }, [comments, commentSort]);
 
-  // Compute Prev / Next article & Related articles
+  // Compute Prev / Next article & Related articles (matched by CMS selection + shared Tags, only real DB articles)
   const { prevPost, nextPost, relatedPosts } = useMemo(() => {
     if (!allPosts || allPosts.length === 0) return { prevPost: null, nextPost: null, relatedPosts: [] };
     const currentIndex = allPosts.findIndex(p => p.slug === slug);
     const prev = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
     const next = currentIndex !== -1 && currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
-    const others = allPosts.filter(p => p.slug !== slug).slice(0, 3);
-    return { prevPost: prev, nextPost: next, relatedPosts: others };
-  }, [allPosts, slug]);
+
+    const currentTags = String(post?.seo_keywords || "")
+      .split(",")
+      .map(k => k.trim().toLowerCase())
+      .filter(Boolean);
+
+    const candidates = allPosts
+      .filter(p => p.slug && p.slug !== slug)
+      .map(candidate => {
+        const candidateTagsRaw = String(candidate.seo_keywords || "")
+          .split(",")
+          .map(k => k.trim())
+          .filter(Boolean);
+        const sharedTags = candidateTagsRaw.filter(ct =>
+          currentTags.includes(ct.toLowerCase())
+        );
+        const sameCategory =
+          post?.category &&
+          candidate.category &&
+          candidate.category.toLowerCase() === post.category.toLowerCase();
+
+        const tagScore = sharedTags.length * 10 + (sameCategory ? 3 : 0);
+        return {
+          ...candidate,
+          allTags: candidateTagsRaw,
+          sharedTags,
+          tagScore
+        };
+      });
+
+    // 1. Honor explicit CMS selection (related_slugs) if the target article actually exists in allPosts
+    const pinnedSlugs = Array.isArray(post?.related_slugs) ? post.related_slugs : [];
+    const selected = [];
+    const usedSlugs = new Set();
+
+    pinnedSlugs.forEach(rSlug => {
+      const match = candidates.find(c => c.slug === rSlug);
+      if (match && !usedSlugs.has(match.slug) && selected.length < 3) {
+        selected.push(match);
+        usedSlugs.add(match.slug);
+      }
+    });
+
+    // 2. Fill remaining slots up to 3 using highest Tag match score, then most recent
+    const remaining = candidates
+      .filter(c => !usedSlugs.has(c.slug))
+      .sort((a, b) => {
+        if (b.tagScore !== a.tagScore) return b.tagScore - a.tagScore;
+        return new Date(b.published_at || 0).getTime() - new Date(a.published_at || 0).getTime();
+      });
+
+    for (const item of remaining) {
+      if (selected.length >= 3) break;
+      selected.push(item);
+      usedSlugs.add(item.slug);
+    }
+
+    return { prevPost: prev, nextPost: next, relatedPosts: selected };
+  }, [allPosts, post, slug]);
 
   // Helpers for text metrics & formatting
   const calculateReadTime = (bodyText) => {
@@ -924,12 +980,15 @@ export default function BlogPost({ lang = "es", setPage }) {
                 {lang === "es" ? "Etiquetas:" : "Tags:"}
               </span>
               {postKeywordsArray.map((tag, idx) => (
-                <span
+                <button
+                  type="button"
                   key={idx}
-                  className="font-navigation text-[11px] uppercase tracking-wider bg-stone-100 text-stone-700 border border-stone-200/80 px-3 py-1 font-semibold rounded-md select-none transition-colors hover:bg-primary/10 hover:text-primary hover:border-primary/30"
+                  onClick={() => navigate(`/blog?tag=${encodeURIComponent(tag.trim())}`)}
+                  className="font-navigation text-[11px] uppercase tracking-wider bg-stone-100 text-stone-700 border border-stone-200/80 px-3 py-1 font-semibold rounded-md transition-colors hover:bg-primary hover:text-white hover:border-primary cursor-pointer"
+                  title={lang === "es" ? `Ver artículos con la etiqueta #${tag.trim()}` : `View stories tagged #${tag.trim()}`}
                 >
                   #{tag.trim()}
-                </span>
+                </button>
               ))}
             </div>
           </section>
@@ -1476,11 +1535,15 @@ export default function BlogPost({ lang = "es", setPage }) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {relatedPosts.map((rel) => {
                 const relTitle = lang === "es" ? (rel.title_es || rel.title) : (rel.title_en || rel.title_es || rel.title);
+                const tagsToDisplay = (rel.sharedTags && rel.sharedTags.length > 0)
+                  ? rel.sharedTags.slice(0, 3)
+                  : (rel.allTags || []).slice(0, 2);
+
                 return (
                   <article
                     key={rel.slug}
                     onClick={() => navigate(`/blog/${rel.slug}`)}
-                    className="group cursor-pointer bg-white border border-stone-200/80 rounded-2xl overflow-hidden shadow-2xs hover:shadow-md transition-all flex flex-col justify-between text-left"
+                    className="group cursor-pointer bg-white border border-stone-200/80 rounded-2xl overflow-hidden shadow-2xs hover:shadow-lg hover:border-primary/40 transition-all flex flex-col justify-between text-left"
                   >
                     <div>
                       <div className="aspect-[16/10] overflow-hidden bg-stone-100 relative">
@@ -1489,11 +1552,11 @@ export default function BlogPost({ lang = "es", setPage }) {
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                           src={rel.image_url || "/Barra Casa Loy Experiencias.webp"}
                         />
-                        <span className="absolute top-3 left-3 bg-white/95 text-primary font-navigation text-[10px] uppercase tracking-widest font-bold px-2.5 py-1 rounded-full">
+                        <span className="absolute top-3 left-3 bg-white/95 text-primary font-navigation text-[10px] uppercase tracking-widest font-bold px-2.5 py-1 rounded-full shadow-2xs">
                           {rel.category || "Journal"}
                         </span>
                       </div>
-                      <div className="p-5 space-y-2">
+                      <div className="p-5 space-y-2.5">
                         <div className="flex items-center gap-3 text-[11px] text-stone-500 font-medium">
                           <span className="flex items-center gap-1">
                             <span className="material-symbols-outlined text-[13px] text-[#8C4723]">visibility</span>
@@ -1511,10 +1574,37 @@ export default function BlogPost({ lang = "es", setPage }) {
                         <h4 className="font-serif text-lg font-bold group-hover:text-primary transition-colors text-stone-900 line-clamp-2">
                           {relTitle}
                         </h4>
-                        <p className="text-xs text-stone-600 line-clamp-2">
+                        <p className="text-xs text-stone-600 line-clamp-2 leading-relaxed">
                           {rel.description}
                         </p>
+
+                        {tagsToDisplay.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 pt-1">
+                            {tagsToDisplay.map((tg, i) => (
+                              <span
+                                key={i}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  navigate(`/blog?tag=${encodeURIComponent(tg)}`);
+                                }}
+                                className="text-[10px] font-navigation uppercase tracking-wider bg-stone-100 hover:bg-primary hover:text-white text-stone-700 px-2 py-0.5 rounded font-semibold transition-colors"
+                              >
+                                #{tg}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
+                    </div>
+
+                    <div className="px-5 pb-4 pt-2 border-t border-stone-100 flex items-center justify-between">
+                      <span className="text-xs font-serif font-bold text-stone-800 truncate">
+                        {lang === "es" ? (rel.author_es || "Casa Loy") : (rel.author_en || rel.author_es || "Casa Loy")}
+                      </span>
+                      <span className="text-[11px] font-navigation uppercase tracking-wider text-primary font-bold flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+                        {lang === "es" ? "Leer" : "Read"}
+                        <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                      </span>
                     </div>
                   </article>
                 );

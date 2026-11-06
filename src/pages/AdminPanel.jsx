@@ -449,6 +449,8 @@ export default function AdminPanel({
   }, [editingJob]);
 
   const [editingBlog, setEditingBlog] = useState(null);
+  const [blogTagsInput, setBlogTagsInput] = useState("");
+  const [blogRelatedSlugs, setBlogRelatedSlugs] = useState([]);
   const [authorsList, setAuthorsList] = useState([]);
   const [showAuthorModal, setShowAuthorModal] = useState(false);
   const [editingAuthor, setEditingAuthor] = useState(null);
@@ -456,6 +458,16 @@ export default function AdminPanel({
   const [blogCommentsList, setBlogCommentsList] = useState([]);
   const [adminReplyTarget, setAdminReplyTarget] = useState(null);
   const [adminReplyText, setAdminReplyText] = useState("");
+
+  useEffect(() => {
+    if (editingBlog) {
+      setBlogTagsInput(editingBlog.seo_keywords || "Casa Loy, Tequila, Agave Azul, Los Altos de Jalisco");
+      setBlogRelatedSlugs(Array.isArray(editingBlog.related_slugs) ? editingBlog.related_slugs : []);
+    } else {
+      setBlogTagsInput("");
+      setBlogRelatedSlugs([]);
+    }
+  }, [editingBlog]);
   const [editingPos, setEditingPos] = useState(null);
   const [posFilterRegion, setPosFilterRegion] = useState("all"); // "all" | "mx" | "usa"
   const [posFilterSeller, setPosFilterSeller] = useState("all"); // "all" | seller name
@@ -2522,7 +2534,12 @@ export default function AdminPanel({
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({ ...data, id: editingBlog?.id })
+        body: JSON.stringify({
+          ...data,
+          id: editingBlog?.id,
+          seo_keywords: blogTagsInput || data.seo_keywords || "",
+          related_slugs: blogRelatedSlugs
+        })
       });
       if (res.ok) {
         alert("Artículo de blog guardado.");
@@ -5854,9 +5871,203 @@ export default function AdminPanel({
                         <textarea name="body_en" defaultValue={editingBlog.body_en} rows="8" placeholder="Escribe aquí el contenido en inglés..." className="w-full bg-white border border-stone-200 p-2.5 text-xs focus:outline-none font-sans leading-relaxed"></textarea>
                       </div>
 
+                      {/* Etiquetas (Tags) & Historias Relacionadas Selector */}
+                      <div className="bg-stone-100/80 border border-stone-200 p-4 rounded-sm space-y-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1.5 text-[10px] text-[#8C4723] uppercase font-bold tracking-wider">
+                            <span className="material-symbols-outlined text-[15px]">sell</span>
+                            Etiquetas (Tags) & Historias Relacionadas del Artículo
+                          </div>
+                        </div>
+
+                        {/* Tags Input & Quick Tag Chips */}
+                        <div className="bg-white p-3 border border-stone-200 rounded space-y-2.5">
+                          <label className="block text-[10px] text-stone-800 uppercase font-bold">
+                            Etiquetas del Artículo (separadas por coma — conectan historias relacionadas):
+                          </label>
+                          <input
+                            type="text"
+                            name="seo_keywords"
+                            value={blogTagsInput}
+                            onChange={(e) => setBlogTagsInput(e.target.value)}
+                            placeholder="Ej. Cata de Tequila, Maridaje, Terroir, Agave Azul, Casa Loy"
+                            className="w-full bg-stone-50 border border-stone-300 p-2 text-xs text-stone-900 rounded focus:outline-none focus:border-[#8C4723]"
+                          />
+
+                          {/* Quick Clickable Tag Pool */}
+                          <div className="space-y-1">
+                            <span className="block text-[9px] text-stone-500 uppercase font-semibold">
+                              Haz clic para agregar o quitar etiquetas rápidamente:
+                            </span>
+                            <div className="flex flex-wrap gap-1.5">
+                              {Array.from(
+                                new Set([
+                                  "Casa Loy",
+                                  "Cata de Tequila",
+                                  "Maridaje",
+                                  "Terroir",
+                                  "Agave Azul",
+                                  "La Jima",
+                                  "Jimadores",
+                                  "Los Altos de Jalisco",
+                                  "1937 Nativo",
+                                  "Gastronomía",
+                                  "Roble Blanco",
+                                  "Origen",
+                                  "Hospitalidad",
+                                  "Experiencias",
+                                  ...blogList.flatMap((b) =>
+                                    String(b.seo_keywords || "")
+                                      .split(",")
+                                      .map((t) => t.trim())
+                                      .filter(Boolean)
+                                  )
+                                ])
+                              ).map((tagOption) => {
+                                const currentTagList = blogTagsInput
+                                  .split(",")
+                                  .map((t) => t.trim())
+                                  .filter(Boolean);
+                                const isActiveTag = currentTagList.some(
+                                  (t) => t.toLowerCase() === tagOption.toLowerCase()
+                                );
+                                return (
+                                  <button
+                                    key={tagOption}
+                                    type="button"
+                                    onClick={() => {
+                                      if (isActiveTag) {
+                                        const filtered = currentTagList.filter(
+                                          (t) => t.toLowerCase() !== tagOption.toLowerCase()
+                                        );
+                                        setBlogTagsInput(filtered.join(", "));
+                                      } else {
+                                        setBlogTagsInput([...currentTagList, tagOption].join(", "));
+                                      }
+                                    }}
+                                    className={`text-[10px] px-2.5 py-1 rounded-full font-semibold transition-all cursor-pointer border ${
+                                      isActiveTag
+                                        ? "bg-[#8C4723] text-white border-[#8C4723]"
+                                        : "bg-stone-50 text-stone-600 border-stone-200 hover:border-[#8C4723]/50"
+                                    }`}
+                                  >
+                                    #{tagOption} {isActiveTag ? "✓" : "+"}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Related Stories Selector (Matched by Tags or Manual Selection) */}
+                        <div className="bg-white p-3 border border-stone-200 rounded space-y-2.5">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                              <label className="block text-[10px] text-stone-800 uppercase font-bold">
+                                Historias Relacionadas (Elegibles por Tags o Selección Manual — Máx. 3):
+                              </label>
+                              <p className="text-[10px] text-stone-500">
+                                Si no marcas ninguna manualmente, el sistema mostrará automáticamente los 3 artículos reales con más etiquetas (#Tags) en común.
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const activeTagsLower = blogTagsInput
+                                  .split(",")
+                                  .map((t) => t.trim().toLowerCase())
+                                  .filter(Boolean);
+                                const ranked = blogList
+                                  .filter((b) => b.slug && b.slug !== editingBlog?.slug)
+                                  .map((b) => {
+                                    const bTags = String(b.seo_keywords || "")
+                                      .split(",")
+                                      .map((t) => t.trim().toLowerCase())
+                                      .filter(Boolean);
+                                    const sharedCount = bTags.filter((bt) => activeTagsLower.includes(bt)).length;
+                                    return { slug: b.slug, sharedCount };
+                                  })
+                                  .sort((a, b) => b.sharedCount - a.sharedCount)
+                                  .slice(0, 3)
+                                  .map((item) => item.slug);
+                                setBlogRelatedSlugs(ranked);
+                              }}
+                              className="text-[10px] bg-[#2F403E] hover:bg-[#8C4723] text-white px-2.5 py-1 rounded font-bold uppercase cursor-pointer"
+                            >
+                              ⚡ Auto-elegir 3 por Tags
+                            </button>
+                          </div>
+
+                          <div className="divide-y divide-stone-100 border border-stone-200 rounded max-h-48 overflow-y-auto">
+                            {blogList
+                              .filter((b) => b.slug && b.slug !== editingBlog?.slug)
+                              .map((candidate) => {
+                                const isChecked = blogRelatedSlugs.includes(candidate.slug);
+                                const activeTagsLower = blogTagsInput
+                                  .split(",")
+                                  .map((t) => t.trim().toLowerCase())
+                                  .filter(Boolean);
+                                const candTags = String(candidate.seo_keywords || "")
+                                  .split(",")
+                                  .map((t) => t.trim())
+                                  .filter(Boolean);
+                                const shared = candTags.filter((ct) =>
+                                  activeTagsLower.includes(ct.toLowerCase())
+                                );
+
+                                return (
+                                  <label
+                                    key={candidate.slug}
+                                    className={`flex items-center justify-between gap-3 p-2.5 text-xs cursor-pointer transition-colors ${
+                                      isChecked ? "bg-[#8C4723]/5" : "hover:bg-stone-50"
+                                    }`}
+                                  >
+                                    <div className="flex items-center gap-2.5 min-w-0">
+                                      <input
+                                        type="checkbox"
+                                        checked={isChecked}
+                                        onChange={() => {
+                                          if (isChecked) {
+                                            setBlogRelatedSlugs((prev) => prev.filter((s) => s !== candidate.slug));
+                                          } else {
+                                            if (blogRelatedSlugs.length >= 3) {
+                                              alert("Puedes fijar hasta 3 historias relacionadas por artículo.");
+                                              return;
+                                            }
+                                            setBlogRelatedSlugs((prev) => [...prev, candidate.slug]);
+                                          }
+                                        }}
+                                        className="accent-[#8C4723]"
+                                      />
+                                      <div className="truncate">
+                                        <span className="font-semibold text-stone-900 block truncate">
+                                          {candidate.title}
+                                        </span>
+                                        <span className="text-[10px] text-stone-500">
+                                          {candidate.category} • /{candidate.slug}
+                                        </span>
+                                      </div>
+                                    </div>
+
+                                    <div className="shrink-0 text-right">
+                                      {shared.length > 0 ? (
+                                        <span className="inline-block bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                          {shared.length} {shared.length === 1 ? "tag en común" : "tags en común"}
+                                        </span>
+                                      ) : (
+                                        <span className="text-[10px] text-stone-400">Sin tags en común</span>
+                                      )}
+                                    </div>
+                                  </label>
+                                );
+                              })}
+                          </div>
+                        </div>
+                      </div>
+
                       <div className="border-t border-stone-200 pt-3 space-y-3">
                         <span className="text-[10px] font-bold text-stone-500 uppercase block">Metadatos SEO Avanzados</span>
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-2 gap-2">
                           <div>
                             <label className="block text-[9px] text-stone-400">Título SEO</label>
                             <input type="text" name="seo_title" defaultValue={editingBlog.seo_title} className="w-full bg-white border border-stone-200 p-1.5 text-[11px]" />
@@ -5864,10 +6075,6 @@ export default function AdminPanel({
                           <div>
                             <label className="block text-[9px] text-stone-400">Descripción SEO</label>
                             <input type="text" name="seo_description" defaultValue={editingBlog.seo_description} className="w-full bg-white border border-stone-200 p-1.5 text-[11px]" />
-                          </div>
-                          <div>
-                            <label className="block text-[9px] text-stone-400">Palabras Clave SEO</label>
-                            <input type="text" name="seo_keywords" defaultValue={editingBlog.seo_keywords} placeholder="tequila, agave, jalisco" className="w-full bg-white border border-stone-200 p-1.5 text-[11px]" />
                           </div>
                         </div>
                       </div>
@@ -5906,6 +6113,20 @@ export default function AdminPanel({
                                 <a href={`/blog/${b.slug}`} target="_blank" rel="noopener noreferrer" className="font-mono text-[10px] text-[#8C4723] hover:underline">
                                   /blog/{b.slug} ↗
                                 </a>
+                                {b.seo_keywords && (
+                                  <div className="flex flex-wrap gap-1 mt-1">
+                                    {String(b.seo_keywords)
+                                      .split(",")
+                                      .map((tg) => tg.trim())
+                                      .filter(Boolean)
+                                      .slice(0, 4)
+                                      .map((tg, i) => (
+                                        <span key={i} className="bg-stone-100 text-stone-600 text-[9px] px-1.5 py-0.5 rounded font-semibold">
+                                          #{tg}
+                                        </span>
+                                      ))}
+                                  </div>
+                                )}
                               </td>
                               <td className="p-3"><span className="bg-stone-100 text-stone-600 px-2 py-0.5 text-[10px] font-bold uppercase">{b.category}</span></td>
                               <td className="p-3 text-center font-semibold text-stone-800">{b.views_count || 0}</td>

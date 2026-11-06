@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import TurnstileWidget from "../components/TurnstileWidget";
 
 export default function Blog({ setPage, lang = "es" }) {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTag = searchParams.get("tag") || "";
   const [activeFilter, setActiveFilter] = useState("Todas");
   const [sortBy, setSortBy] = useState("recent"); // recent | popular | liked
   const [searchQuery, setSearchQuery] = useState("");
@@ -78,6 +80,13 @@ export default function Blog({ setPage, lang = "es" }) {
                 }
               }
 
+              const tags = Array.isArray(b.tags)
+                ? b.tags
+                : String(b.seo_keywords || "")
+                    .split(",")
+                    .map((t) => t.trim())
+                    .filter(Boolean);
+
               return {
                 id: b.slug,
                 category: b.category || "Noticias",
@@ -90,6 +99,7 @@ export default function Blog({ setPage, lang = "es" }) {
                 author_name: lang === "es" ? (b.author_es || "Casa Loy Tequilera") : (b.author_en || b.author_es || "Casa Loy Tequilera"),
                 author_role: b.author_role || (lang === "es" ? "Maestro Tequilero & Selección" : "Master Distiller"),
                 author_photo: photo,
+                tags,
                 clickable: true,
                 views_count: Number(b.views_count || 0),
                 likes_count: Number(b.likes_count || 0),
@@ -204,7 +214,7 @@ export default function Blog({ setPage, lang = "es" }) {
 
   const currentT = content[lang] || content.es;
 
-  // Filter, Search & Sort logic
+  // Filter, Tag, Search & Sort logic
   const filteredArticles = useMemo(() => {
     const filtered = dynamicArticles.filter((art) => {
       const matchesCategory =
@@ -212,14 +222,19 @@ export default function Blog({ setPage, lang = "es" }) {
         art.category?.toLowerCase() === activeFilter.toLowerCase() ||
         (activeFilter === "Noticias" && (art.category === "Noticias" || !art.category));
 
+      const matchesTag =
+        !activeTag ||
+        (art.tags || []).some((t) => t.toLowerCase() === activeTag.toLowerCase());
+
       const matchesSearch =
         !searchQuery.trim() ||
         art.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         art.desc?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         art.category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        art.author_name?.toLowerCase().includes(searchQuery.toLowerCase());
+        art.author_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (art.tags || []).some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
 
-      return matchesCategory && matchesSearch;
+      return matchesCategory && matchesTag && matchesSearch;
     });
 
     return [...filtered].sort((a, b) => {
@@ -234,9 +249,9 @@ export default function Blog({ setPage, lang = "es" }) {
       // default: recent
       return new Date(b.published_at || 0).getTime() - new Date(a.published_at || 0).getTime();
     });
-  }, [dynamicArticles, activeFilter, searchQuery, sortBy]);
+  }, [dynamicArticles, activeFilter, activeTag, searchQuery, sortBy]);
 
-  const showFeaturedSpotlight = activeFilter === "Todas" && !searchQuery.trim() && sortBy === "recent" && filteredArticles.length > 0;
+  const showFeaturedSpotlight = activeFilter === "Todas" && !activeTag && !searchQuery.trim() && sortBy === "recent" && filteredArticles.length > 0;
   const featuredArticle = showFeaturedSpotlight ? filteredArticles[0] : null;
   const gridArticles = showFeaturedSpotlight ? filteredArticles.slice(1) : filteredArticles;
 
@@ -346,6 +361,24 @@ export default function Blog({ setPage, lang = "es" }) {
         </section>
       ) : (
         <section className="py-12 md:py-16 max-w-container-max mx-auto px-margin-desktop space-y-12">
+          {activeTag && (
+            <div className="flex items-center justify-between bg-white border border-stone-200 rounded-2xl px-5 py-3 shadow-2xs">
+              <div className="flex items-center gap-2 text-xs text-stone-700">
+                <span className="material-symbols-outlined text-[16px] text-primary">sell</span>
+                <span>{lang === "es" ? "Filtrando por etiqueta:" : "Filtering by tag:"}</span>
+                <span className="bg-primary text-white font-navigation text-[11px] uppercase tracking-wider font-bold px-3 py-1 rounded-full">
+                  #{activeTag}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSearchParams({})}
+                className="text-xs font-navigation uppercase tracking-wider text-stone-500 hover:text-stone-900 font-bold cursor-pointer"
+              >
+                {lang === "es" ? "Quitar filtro ✕" : "Clear filter ✕"}
+              </button>
+            </div>
+          )}
           
           {/* Featured Article Spotlight */}
           {featuredArticle && (
@@ -488,6 +521,23 @@ export default function Blog({ setPage, lang = "es" }) {
                         <p className="font-sans text-stone-700 text-sm leading-relaxed font-normal line-clamp-3">
                           {art.desc}
                         </p>
+
+                        {art.tags && art.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 pt-1">
+                            {art.tags.slice(0, 3).map((tg, idx) => (
+                              <span
+                                key={idx}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSearchParams({ tag: tg });
+                                }}
+                                className="font-navigation text-[10px] uppercase tracking-wider bg-stone-100 hover:bg-primary hover:text-white text-stone-600 px-2 py-0.5 rounded font-semibold transition-colors"
+                              >
+                                #{tg}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
 
