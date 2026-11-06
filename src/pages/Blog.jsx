@@ -5,6 +5,7 @@ import TurnstileWidget from "../components/TurnstileWidget";
 export default function Blog({ setPage, lang = "es" }) {
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState("Todas");
+  const [sortBy, setSortBy] = useState("recent"); // recent | popular | liked
   const [searchQuery, setSearchQuery] = useState("");
   const [status, setStatus] = useState("idle"); // idle | loading | success | error
   const [email, setEmail] = useState("");
@@ -15,11 +16,13 @@ export default function Blog({ setPage, lang = "es" }) {
   const [dynamicArticles, setDynamicArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Helper for read time
-  const calculateReadTime = (desc) => {
-    if (!desc) return 4;
-    const words = desc.trim().split(/\s+/).length;
-    return Math.max(2, Math.ceil(words / 40));
+  // Helper for read time based on full body HTML or description
+  const calculateReadTime = (bodyText, desc) => {
+    const raw = bodyText || desc || "";
+    if (!raw) return 3;
+    const clean = String(raw).replace(/<[^>]*>?/gm, " ");
+    const words = clean.trim().split(/\s+/).filter(Boolean).length;
+    return Math.max(2, Math.ceil(words / 180));
   };
 
   // Helper for date formatting
@@ -33,7 +36,7 @@ export default function Blog({ setPage, lang = "es" }) {
     );
   };
 
-  // Default curated showcase articles to ensure the journal is rich and vibrant
+  // Default curated showcase articles as safety fallback if offline
   const fallbackShowcaseArticles = [
     {
       id: "el-arte-de-la-cata",
@@ -43,13 +46,16 @@ export default function Blog({ setPage, lang = "es" }) {
       desc: lang === "es"
         ? "Descubra el diálogo silencioso entre la tierra volcánica, la paciencia del roble y el retrogusto inconfundible de Casa Loy."
         : "Discover the silent dialogue between volcanic soil, the patience of oak, and Casa Loy's unmistakable finish.",
+      body: "",
       img: "/Barra Casa Loy Experiencias.webp",
       published_at: "2026-07-20T10:00:00Z",
       author_name: "Don Manuel Loy",
       author_role: lang === "es" ? "Patriarca & Guardián del Terroir" : "Patriarch & Terroir Guardian",
       author_photo: "/Don Manuel Loy.webp",
       clickable: true,
-      comments_count: 5
+      views_count: 215,
+      likes_count: 32,
+      comments_count: 2
     }
   ];
 
@@ -60,8 +66,7 @@ export default function Blog({ setPage, lang = "es" }) {
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data) && data.length > 0) {
-            const mapped = data.map((b, idx) => {
-              // Author smart photo fallback
+            const mapped = data.map((b) => {
               let photo = b.author_photo;
               if (!photo) {
                 if (b.category?.toLowerCase().includes("gastro") || b.category?.toLowerCase().includes("mixo")) {
@@ -79,19 +84,20 @@ export default function Blog({ setPage, lang = "es" }) {
                 label: b.label || "CRÓNICAS",
                 title: lang === "es" ? (b.title_es || b.title) : (b.title_en || b.title_es || b.title),
                 desc: b.description,
+                body: lang === "es" ? (b.body_es || b.description) : (b.body_en || b.body_es || b.description),
                 img: b.image_url || "/Barra Casa Loy Experiencias.webp",
                 published_at: b.published_at || b.created_at,
-                author_name: lang === "es" ? b.author_es : (b.author_en || b.author_es || "Casa Loy Tequilera"),
+                author_name: lang === "es" ? (b.author_es || "Casa Loy Tequilera") : (b.author_en || b.author_es || "Casa Loy Tequilera"),
                 author_role: b.author_role || (lang === "es" ? "Maestro Tequilero & Selección" : "Master Distiller"),
                 author_photo: photo,
                 clickable: true,
-                comments_count: (idx === 0 ? 2 : 1)
+                views_count: Number(b.views_count || 0),
+                likes_count: Number(b.likes_count || 0),
+                comments_count: Number(b.comments_count || 0)
               };
             });
 
-            // Combine with curated showcase if not already present
-            const hasCata = mapped.some(m => m.id === "el-arte-de-la-cata");
-            setDynamicArticles(hasCata ? mapped : [...mapped, ...fallbackShowcaseArticles]);
+            setDynamicArticles(mapped);
           } else {
             setDynamicArticles(fallbackShowcaseArticles);
           }
@@ -147,8 +153,9 @@ export default function Blog({ setPage, lang = "es" }) {
   const filters = [
     { id: "Todas", label: lang === "es" ? "Todas" : "All" },
     { id: "Noticias", label: lang === "es" ? "Noticias" : "News" },
-    { id: "Lanzamientos", label: lang === "es" ? "Lanzamientos" : "Launches" },
+    { id: "Festividades", label: lang === "es" ? "Festividades" : "Celebrations" },
     { id: "Cultura & Gastronomía", label: lang === "es" ? "Cultura & Terroir" : "Culture & Terroir" },
+    { id: "Lanzamientos", label: lang === "es" ? "Lanzamientos" : "Launches" },
     { id: "Datos Relevantes", label: lang === "es" ? "Procesos" : "Processes" },
     { id: "Mixología", label: lang === "es" ? "Mixología" : "Mixology" },
     { id: "Sustentabilidad", label: lang === "es" ? "Sustentabilidad" : "Sustainability" },
@@ -159,8 +166,13 @@ export default function Blog({ setPage, lang = "es" }) {
       heroOvertitle: "CRÓNICAS, TERROIR Y MAESTRÍA",
       heroTitle: "JOURNAL",
       heroDesc: "El espacio editorial oficial de Casa Loy Tequilera: historias que nacen en la tierra volcánica de Ayotlán y maduran con la maestría de nuestros artesanos.",
-      readMore: "LEER ARTÍCULO COMPLETO",
+      readMore: "LEER CRÓNICA COMPLETA",
+      featuredBadge: "CRÓNICA DESTACADA",
       searchPlaceholder: "Buscar crónicas, aromas, procesos...",
+      sortRecent: "Más recientes",
+      sortPopular: "Más leídos",
+      sortLiked: "Más valorados",
+      viewsLabel: "lecturas",
       newsletterOvertitle: "COMUNIDAD EXCLUSIVA",
       newsletterTitle: "Únete a la Comunidad del Journal",
       newsletterDesc: "Recibe crónicas exclusivas, lanzamientos privados y notas de cata directo en tu bandeja.",
@@ -173,8 +185,13 @@ export default function Blog({ setPage, lang = "es" }) {
       heroOvertitle: "CHRONICLES, TERROIR & MASTERY",
       heroTitle: "JOURNAL",
       heroDesc: "The official editorial journal of Casa Loy Tequilera: stories born in Ayotlán's volcanic soil and matured with our artisans' mastery.",
-      readMore: "READ FULL STORY",
+      readMore: "READ FULL CHRONICLE",
+      featuredBadge: "FEATURED CHRONICLE",
       searchPlaceholder: "Search stories, terroir, distillation...",
+      sortRecent: "Most recent",
+      sortPopular: "Most read",
+      sortLiked: "Most appreciated",
+      viewsLabel: "reads",
       newsletterOvertitle: "EXCLUSIVE COMMUNITY",
       newsletterTitle: "Join the Journal Community",
       newsletterDesc: "Receive exclusive chronicles, private launches, and tasting notes directly in your inbox.",
@@ -187,9 +204,9 @@ export default function Blog({ setPage, lang = "es" }) {
 
   const currentT = content[lang] || content.es;
 
-  // Filter & Search logic
+  // Filter, Search & Sort logic
   const filteredArticles = useMemo(() => {
-    return dynamicArticles.filter((art) => {
+    const filtered = dynamicArticles.filter((art) => {
       const matchesCategory =
         activeFilter === "Todas" ||
         art.category?.toLowerCase() === activeFilter.toLowerCase() ||
@@ -199,11 +216,29 @@ export default function Blog({ setPage, lang = "es" }) {
         !searchQuery.trim() ||
         art.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         art.desc?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        art.category?.toLowerCase().includes(searchQuery.toLowerCase());
+        art.category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        art.author_name?.toLowerCase().includes(searchQuery.toLowerCase());
 
       return matchesCategory && matchesSearch;
     });
-  }, [dynamicArticles, activeFilter, searchQuery]);
+
+    return [...filtered].sort((a, b) => {
+      if (sortBy === "popular") {
+        return (b.views_count || 0) - (a.views_count || 0);
+      }
+      if (sortBy === "liked") {
+        const scoreB = (b.likes_count || 0) * 2 + (b.comments_count || 0) * 3;
+        const scoreA = (a.likes_count || 0) * 2 + (a.comments_count || 0) * 3;
+        return scoreB - scoreA;
+      }
+      // default: recent
+      return new Date(b.published_at || 0).getTime() - new Date(a.published_at || 0).getTime();
+    });
+  }, [dynamicArticles, activeFilter, searchQuery, sortBy]);
+
+  const showFeaturedSpotlight = activeFilter === "Todas" && !searchQuery.trim() && sortBy === "recent" && filteredArticles.length > 0;
+  const featuredArticle = showFeaturedSpotlight ? filteredArticles[0] : null;
+  const gridArticles = showFeaturedSpotlight ? filteredArticles.slice(1) : filteredArticles;
 
   return (
     <div className="bg-[#FAF8F5] text-on-surface text-left min-h-screen selection:bg-primary/20 selection:text-primary">
@@ -235,13 +270,13 @@ export default function Blog({ setPage, lang = "es" }) {
         </div>
       </section>
 
-      {/* Filter & Search Bar */}
+      {/* Filter, Sort & Search Bar */}
       <section className="bg-white sticky top-16 z-40 border-b border-stone-200/80 shadow-xs">
         <div className="max-w-container-max mx-auto px-margin-desktop py-3">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
             
             {/* Category Pills */}
-            <div className="flex items-center gap-2 overflow-x-auto select-none no-scrollbar whitespace-nowrap pb-1 md:pb-0">
+            <div className="flex items-center gap-2 overflow-x-auto select-none no-scrollbar whitespace-nowrap pb-1 lg:pb-0">
               {filters.map((f) => (
                 <button
                   key={f.id}
@@ -257,26 +292,44 @@ export default function Blog({ setPage, lang = "es" }) {
               ))}
             </div>
 
-            {/* Instant Search Box */}
-            <div className="relative w-full md:w-72 shrink-0">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-[18px]">
-                search
-              </span>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={currentT.searchPlaceholder}
-                className="w-full bg-stone-50 border border-stone-300 rounded-full pl-9 pr-8 py-2.5 text-xs text-stone-900 placeholder:text-stone-500 focus:outline-none focus:border-primary focus:bg-white transition-colors"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 text-xs"
+            {/* Sort & Instant Search Box */}
+            <div className="flex items-center gap-2.5 shrink-0">
+              <div className="relative shrink-0">
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  aria-label={lang === "es" ? "Ordenar artículos" : "Sort articles"}
+                  className="bg-stone-50 border border-stone-300 rounded-full pl-3.5 pr-8 py-2.5 text-xs font-semibold text-stone-700 focus:outline-none focus:border-primary cursor-pointer appearance-none"
                 >
-                  ✕
-                </button>
-              )}
+                  <option value="recent">{currentT.sortRecent}</option>
+                  <option value="popular">{currentT.sortPopular}</option>
+                  <option value="liked">{currentT.sortLiked}</option>
+                </select>
+                <span className="material-symbols-outlined text-[16px] text-stone-500 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">
+                  expand_more
+                </span>
+              </div>
+
+              <div className="relative w-full sm:w-64">
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-[18px]">
+                  search
+                </span>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={currentT.searchPlaceholder}
+                  className="w-full bg-stone-50 border border-stone-300 rounded-full pl-9 pr-8 py-2.5 text-xs text-stone-900 placeholder:text-stone-500 focus:outline-none focus:border-primary focus:bg-white transition-colors"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 text-xs cursor-pointer"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
             </div>
 
           </div>
@@ -292,11 +345,96 @@ export default function Blog({ setPage, lang = "es" }) {
           </p>
         </section>
       ) : (
-        <section className="py-16 md:py-20 max-w-container-max mx-auto px-margin-desktop">
-          {filteredArticles.length > 0 ? (
+        <section className="py-12 md:py-16 max-w-container-max mx-auto px-margin-desktop space-y-12">
+          
+          {/* Featured Article Spotlight */}
+          {featuredArticle && (
+            <article
+              onClick={() => featuredArticle.clickable && navigate(`/blog/${featuredArticle.id}`)}
+              className="group cursor-pointer bg-white border border-stone-200/90 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:border-primary/40 transition-all duration-500 grid grid-cols-1 lg:grid-cols-12 animate-fade-in-slide"
+            >
+              <div className="lg:col-span-7 relative overflow-hidden bg-stone-100 min-h-[280px] sm:min-h-[360px]">
+                <img
+                  src={featuredArticle.img}
+                  alt={featuredArticle.title}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute top-4 left-4 flex items-center gap-2">
+                  <span className="bg-[#8C4723] text-white font-navigation text-[10px] uppercase tracking-widest font-bold px-3.5 py-1.5 rounded-full shadow-sm flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[13px]">auto_awesome</span>
+                    {currentT.featuredBadge}
+                  </span>
+                  <span className="bg-white/95 backdrop-blur-xs text-stone-900 font-navigation text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full shadow-xs">
+                    {featuredArticle.category}
+                  </span>
+                </div>
+              </div>
+
+              <div className="lg:col-span-5 p-7 sm:p-10 flex flex-col justify-between bg-white">
+                <div className="space-y-4">
+                  {/* Live Metrics Row */}
+                  <div className="flex flex-wrap items-center gap-3 text-xs text-stone-600 font-medium font-sans">
+                    <span>{formatCardDate(featuredArticle.published_at)}</span>
+                    <span>•</span>
+                    <span className="flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[15px]">schedule</span>
+                      {calculateReadTime(featuredArticle.body, featuredArticle.desc)} min
+                    </span>
+                    <span>•</span>
+                    <span className="flex items-center gap-1 text-stone-700" title={lang === "es" ? "Visitas reales" : "Real views"}>
+                      <span className="material-symbols-outlined text-[15px] text-[#8C4723]">visibility</span>
+                      {featuredArticle.views_count}
+                    </span>
+                    <span className="flex items-center gap-1 text-rose-700 font-semibold" title={lang === "es" ? "Reacciones" : "Reactions"}>
+                      <span className="material-symbols-outlined text-[15px]">favorite</span>
+                      {featuredArticle.likes_count}
+                    </span>
+                    <span className="flex items-center gap-1 text-primary font-semibold" title={lang === "es" ? "Comentarios" : "Comments"}>
+                      <span className="material-symbols-outlined text-[15px]">chat</span>
+                      {featuredArticle.comments_count}
+                    </span>
+                  </div>
+
+                  <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-stone-950 leading-tight group-hover:text-primary transition-colors">
+                    {featuredArticle.title}
+                  </h2>
+
+                  <p className="font-sans text-stone-700 text-sm sm:text-base leading-relaxed line-clamp-3">
+                    {featuredArticle.desc}
+                  </p>
+                </div>
+
+                <div className="pt-6 mt-6 border-t border-stone-100 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={featuredArticle.author_photo}
+                      alt={featuredArticle.author_name}
+                      className="w-10 h-10 rounded-full object-cover border-2 border-[#D4AF37] shadow-xs shrink-0"
+                    />
+                    <div>
+                      <span className="font-serif font-bold text-sm text-stone-900 block leading-tight">
+                        {featuredArticle.author_name}
+                      </span>
+                      <span className="font-navigation text-[10px] text-[#8C4723] uppercase tracking-wider block font-bold">
+                        {featuredArticle.author_role}
+                      </span>
+                    </div>
+                  </div>
+
+                  <span className="inline-flex items-center gap-1.5 font-navigation text-[11px] uppercase tracking-widest font-bold text-primary group-hover:translate-x-1 transition-transform">
+                    {lang === "es" ? "Leer" : "Read"}
+                    <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                  </span>
+                </div>
+              </div>
+            </article>
+          )}
+
+          {/* Articles Grid */}
+          {gridArticles.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 animate-fade-in-slide">
-              {filteredArticles.map((art) => {
-                const readTime = calculateReadTime(art.desc);
+              {gridArticles.map((art) => {
+                const readTime = calculateReadTime(art.body, art.desc);
                 const cardDate = formatCardDate(art.published_at);
 
                 return (
@@ -321,7 +459,7 @@ export default function Blog({ setPage, lang = "es" }) {
 
                       {/* Card Body */}
                       <div className="p-6 space-y-3">
-                        <div className="flex items-center gap-2 text-xs text-stone-600 font-medium font-sans">
+                        <div className="flex flex-wrap items-center gap-2.5 text-xs text-stone-600 font-medium font-sans">
                           <span>{cardDate}</span>
                           <span>•</span>
                           <span className="flex items-center gap-1 font-medium">
@@ -329,7 +467,15 @@ export default function Blog({ setPage, lang = "es" }) {
                             {readTime} min
                           </span>
                           <span>•</span>
-                          <span className="flex items-center gap-1 text-primary font-semibold">
+                          <span className="flex items-center gap-1 text-stone-700" title={lang === "es" ? "Visitas" : "Views"}>
+                            <span className="material-symbols-outlined text-[14px] text-[#8C4723]">visibility</span>
+                            {art.views_count}
+                          </span>
+                          <span className="flex items-center gap-1 text-rose-700 font-semibold" title={lang === "es" ? "Reacciones" : "Reactions"}>
+                            <span className="material-symbols-outlined text-[14px]">favorite</span>
+                            {art.likes_count}
+                          </span>
+                          <span className="flex items-center gap-1 text-primary font-semibold" title={lang === "es" ? "Comentarios" : "Comments"}>
                             <span className="material-symbols-outlined text-[14px]">chat</span>
                             {art.comments_count}
                           </span>
@@ -375,7 +521,7 @@ export default function Blog({ setPage, lang = "es" }) {
                 );
               })}
             </div>
-          ) : (
+          ) : !featuredArticle ? (
             <div className="text-center py-24 max-w-md mx-auto animate-fade-in-slide">
               <span className="material-symbols-outlined text-4xl text-stone-300 mb-4 font-light select-none">
                 search_off
@@ -388,16 +534,19 @@ export default function Blog({ setPage, lang = "es" }) {
                   ? (lang === "es" ? `No hay resultados para "${searchQuery}". Intenta con otra palabra.` : `No matches for "${searchQuery}". Try another keyword.`)
                   : (lang === "es" ? "Estamos preparando nuevas crónicas sobre esta categoría." : "We are preparing new stories for this category.")}
               </p>
-              {searchQuery && (
+              {(searchQuery || activeFilter !== "Todas") && (
                 <button
-                  onClick={() => setSearchQuery("")}
-                  className="font-navigation text-xs uppercase tracking-widest text-primary font-bold border-b border-primary pb-1"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setActiveFilter("Todas");
+                  }}
+                  className="font-navigation text-xs uppercase tracking-widest text-primary font-bold border-b border-primary pb-1 cursor-pointer"
                 >
-                  {lang === "es" ? "Restablecer búsqueda" : "Clear search"}
+                  {lang === "es" ? "Ver todas las crónicas" : "View all stories"}
                 </button>
               )}
             </div>
-          )}
+          ) : null}
         </section>
       )}
 

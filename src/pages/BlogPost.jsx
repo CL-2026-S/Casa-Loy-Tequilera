@@ -1,29 +1,46 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+
+const REACTION_TYPES = [
+  { id: "corazon", emoji: "❤️", icon: "favorite", labelEs: "Me encanta", labelEn: "Love it" },
+  { id: "brindis", emoji: "🥂", icon: "wine_bar", labelEs: "¡Salud!", labelEn: "Cheers!" },
+  { id: "aplauso", emoji: "👏", icon: "celebration", labelEs: "Gran crónica", labelEn: "Great story" },
+  { id: "fuego", emoji: "🔥", icon: "local_fire_department", labelEs: "Inspirador", labelEn: "Inspiring" }
+];
 
 export default function BlogPost({ lang = "es", setPage }) {
   const { slug } = useParams();
   const navigate = useNavigate();
-  
+  const viewRecordedRef = useRef(null);
+
   const [post, setPost] = useState(null);
   const [allPosts, setAllPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
-  
+
   // Reading progress bar state
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  // Claps / Reacciones interactivas
-  const [claps, setClaps] = useState(() => {
-    const saved = localStorage.getItem(`casa_loy_claps_${slug}`);
-    return saved ? parseInt(saved, 10) : 18;
-  });
-  const [hasClapped, setHasClapped] = useState(false);
+  // Real Engagement Metrics (from Supabase)
+  const [viewsCount, setViewsCount] = useState(0);
+  const [likesCount, setLikesCount] = useState(0);
+  const [reactions, setReactions] = useState({ corazon: 0, brindis: 0, aplauso: 0, fuego: 0 });
+  const [userReactions, setUserReactions] = useState([]);
 
-  // Comments state
+  // Comments & Replies state
   const [comments, setComments] = useState([]);
   const [commentsLoading, setCommentsLoading] = useState(true);
-  const [commentForm, setCommentForm] = useState({ name: "", email: "", text: "" });
+  const [commentSort, setCommentSort] = useState("relevant"); // relevant | newest | oldest
+  const [commentForm, setCommentForm] = useState(() => {
+    try {
+      const savedProfile = JSON.parse(localStorage.getItem("casa_loy_reader_profile") || "{}");
+      return { name: savedProfile.name || "", email: savedProfile.email || "", text: "", website_hp: "" };
+    } catch {
+      return { name: "", email: "", text: "", website_hp: "" };
+    }
+  });
+  const [replyingTo, setReplyingTo] = useState(null); // comment object being replied to
+  const [replyText, setReplyText] = useState("");
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
   const [commentSuccessMsg, setCommentSuccessMsg] = useState("");
   const [commentErrorMsg, setCommentErrorMsg] = useState("");
@@ -34,6 +51,17 @@ export default function BlogPost({ lang = "es", setPage }) {
       return [];
     }
   });
+
+  // Load user's saved reactions for this slug
+  useEffect(() => {
+    if (!slug) return;
+    try {
+      const saved = JSON.parse(localStorage.getItem(`casa_loy_reactions_${slug}`) || "[]");
+      setUserReactions(Array.isArray(saved) ? saved : []);
+    } catch {
+      setUserReactions([]);
+    }
+  }, [slug]);
 
   // Track scroll progress for reading bar
   useEffect(() => {
@@ -48,9 +76,10 @@ export default function BlogPost({ lang = "es", setPage }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Fetch blog posts
+  // Fetch blog posts from CMS
   useEffect(() => {
     const fetchBlogData = async () => {
+      setLoading(true);
       try {
         const res = await fetch("/api/cms?type=blog");
         if (res.ok) {
@@ -60,6 +89,15 @@ export default function BlogPost({ lang = "es", setPage }) {
             const found = data.find(p => p.slug === slug);
             if (found) {
               setPost(found);
+              setViewsCount(Number(found.views_count || 0));
+              setLikesCount(Number(found.likes_count || 0));
+              setReactions({
+                corazon: 0,
+                brindis: 0,
+                aplauso: 0,
+                fuego: 0,
+                ...(found.reactions || {})
+              });
             }
           }
         }
@@ -75,17 +113,27 @@ export default function BlogPost({ lang = "es", setPage }) {
     }
   }, [slug]);
 
-  // Fetch comments for this article
+  // Fetch real comments + live stats & register real view once per session
   useEffect(() => {
-    const fetchComments = async () => {
-      if (!slug) return;
+    if (!slug) return;
+
+    const fetchCommentsAndStats = async () => {
       setCommentsLoading(true);
       try {
-        const res = await fetch(`/api/blog-comments?slug=${encodeURIComponent(slug)}`);
+        const res = await fetch(`/api/blog-comments?slug=${encodeURIComponent(slug)}&include_stats=true`);
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data)) {
             setComments(data);
+          } else if (data && Array.isArray(data.comments)) {
+            setComments(data.comments);
+            if (data.stats) {
+              setViewsCount(prev => Math.max(prev, Number(data.stats.views_count || 0)));
+              setLikesCount(Number(data.stats.likes_count || 0));
+              if (data.stats.reactions) {
+                setReactions(prev => ({ ...prev, ...data.stats.reactions }));
+              }
+            }
           }
         }
       } catch (e) {
@@ -95,7 +143,39 @@ export default function BlogPost({ lang = "es", setPage }) {
       }
     };
 
-    fetchComments();
+    const registerViewIfNeeded = async () => {
+      const sessionKey = `casa_loy_viewed_${slug}`;
+      if (viewRecordedRef.current === slug || sessionStorage.getItem(sessionKey)) {
+        return;
+      }
+      viewRecordedRef.current = slug;
+      sessionStorage.setItem(sessionKey, "1");
+
+      try {
+        const res = await fetch(`/api/blog-comments?action=view`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ slug })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.views_count !== undefined) {
+            setViewsCount(Number(data.views_count));
+          }
+          if (data.likes_count !== undefined) {
+            setLikesCount(Number(data.likes_count));
+          }
+          if (data.reactions) {
+            setReactions(prev => ({ ...prev, ...data.reactions }));
+          }
+        }
+      } catch (err) {
+        console.warn("Could not record article view:", err);
+      }
+    };
+
+    fetchCommentsAndStats();
+    registerViewIfNeeded();
   }, [slug]);
 
   useEffect(() => {
@@ -154,6 +234,23 @@ export default function BlogPost({ lang = "es", setPage }) {
         "image": post.image_url || "https://casaloy.com/Barra%20Casa%20Loy%20Experiencias.webp",
         "datePublished": post.published_at || post.created_at,
         "dateModified": post.published_at || post.created_at,
+        "interactionStatistic": [
+          {
+            "@type": "InteractionCounter",
+            "interactionType": "https://schema.org/ReadAction",
+            "userInteractionCount": viewsCount
+          },
+          {
+            "@type": "InteractionCounter",
+            "interactionType": "https://schema.org/LikeAction",
+            "userInteractionCount": likesCount
+          },
+          {
+            "@type": "InteractionCounter",
+            "interactionType": "https://schema.org/CommentAction",
+            "userInteractionCount": comments.length
+          }
+        ],
         "author": {
           "@type": "Person",
           "name": post.author_es || "Maestro Tequilero Casa Loy",
@@ -179,136 +276,165 @@ export default function BlogPost({ lang = "es", setPage }) {
       scriptTag.type = "application/ld+json";
       scriptTag.innerHTML = JSON.stringify(schema);
       document.head.appendChild(scriptTag);
-    } else if (!loading) {
-      const staticTitle = lang === "es"
-        ? "El Arte de la Cata: Una Inmersión en los Sentidos | Blog Casa Loy"
-        : "The Art of Tasting: An Immersion in the Senses | Blog Casa Loy";
-      const staticDesc = lang === "es"
-        ? "Guía paso a paso para catar tequila de ultra-lujo: vista, olfato y retrogusto."
-        : "Step-by-step guide to tasting ultra-luxury tequila: sight, smell, and aftertaste.";
-      const staticKeywords = "Día Internacional del Tequila, Tequila, Casa Loy, Agave azul, Origen, Tradición tequilera, Jimadores, Denominación de Origen";
-
-      document.title = staticTitle;
-
-      let metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc) metaDesc.content = staticDesc;
-
-      let metaKeywords = document.querySelector('meta[name="keywords"]');
-      if (metaKeywords) metaKeywords.content = staticKeywords;
-
-      const schema = {
-        "@context": "https://schema.org",
-        "@type": "BlogPosting",
-        "headline": staticTitle,
-        "description": staticDesc,
-        "image": "https://casaloy.com/Barra%20Casa%20Loy%20Experiencias.webp",
-        "datePublished": "2024-10-24T10:30:00Z",
-        "author": {
-          "@type": "Person",
-          "name": "Don Manuel Loy",
-          "jobTitle": "Patriarca & Guardián del Terroir",
-          "worksFor": {
-            "@type": "Organization",
-            "name": "Casa Loy Tequilera"
-          }
-        },
-        "publisher": {
-          "@type": "Organization",
-          "name": "Casa Loy Tequilera",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://casaloy.com/Logotipo%20Casa%20Loy%20Tequilera.webp"
-          }
-        },
-        "keywords": staticKeywords
-      };
-
-      scriptTag = document.createElement("script");
-      scriptTag.id = "blog-post-jsonld";
-      scriptTag.type = "application/ld+json";
-      scriptTag.innerHTML = JSON.stringify(schema);
-      document.head.appendChild(scriptTag);
     }
 
     return () => {
       if (scriptTag) scriptTag.remove();
     };
-  }, [post, lang, loading]);
+  }, [post, lang, loading, viewsCount, likesCount, comments.length]);
 
   // Social sharing
-  const handleShare = () => {
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: document.title,
+          url: window.location.href
+        });
+        return;
+      } catch {
+        // Fallback to clipboard
+      }
+    }
     navigator.clipboard.writeText(window.location.href);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };
 
-  // Claps / Likes handler
-  const handleClap = () => {
-    const nextClaps = claps + 1;
-    setClaps(nextClaps);
-    setHasClapped(true);
-    localStorage.setItem(`casa_loy_claps_${slug}`, nextClaps.toString());
-  };
+  // Real Persisted Reaction Handler
+  const handleReaction = async (reactionType = "corazon") => {
+    if (!slug) return;
+    const alreadyReacted = userReactions.includes(reactionType);
+    const delta = alreadyReacted ? -1 : 1;
 
-  // Like a specific comment
-  const handleLikeComment = async (commentId) => {
-    if (likedCommentIds.includes(commentId)) return;
+    const nextUserReactions = alreadyReacted
+      ? userReactions.filter(r => r !== reactionType)
+      : [...userReactions, reactionType];
+
+    setUserReactions(nextUserReactions);
+    localStorage.setItem(`casa_loy_reactions_${slug}`, JSON.stringify(nextUserReactions));
 
     // Optimistic UI update
-    setComments(prev => prev.map(c => c.id === commentId ? { ...c, likes: (c.likes || 0) + 1 } : c));
-    const nextLiked = [...likedCommentIds, commentId];
+    setReactions(prev => {
+      const updated = {
+        ...prev,
+        [reactionType]: Math.max(0, Number(prev[reactionType] || 0) + delta)
+      };
+      const nextTotal = Object.values(updated).reduce((sum, v) => sum + Math.max(0, Number(v || 0)), 0);
+      setLikesCount(nextTotal);
+      return updated;
+    });
+
+    try {
+      const res = await fetch("/api/blog-comments?action=react", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug, reactionType, delta })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.likes_count !== undefined) setLikesCount(Number(data.likes_count));
+        if (data.reactions) setReactions(prev => ({ ...prev, ...data.reactions }));
+      }
+    } catch (e) {
+      console.warn("Could not sync reaction to server:", e);
+    }
+  };
+
+  // Like / Unlike a specific comment (persisted in Supabase)
+  const handleLikeComment = async (commentId) => {
+    const alreadyLiked = likedCommentIds.includes(commentId);
+    const delta = alreadyLiked ? -1 : 1;
+
+    setComments(prev =>
+      prev.map(c =>
+        c.id === commentId ? { ...c, likes: Math.max(0, (c.likes || 0) + delta) } : c
+      )
+    );
+
+    const nextLiked = alreadyLiked
+      ? likedCommentIds.filter(id => id !== commentId)
+      : [...likedCommentIds, commentId];
+
     setLikedCommentIds(nextLiked);
     localStorage.setItem("casa_loy_liked_comments", JSON.stringify(nextLiked));
 
     try {
-      await fetch("/api/blog-comments?action=like", {
+      const res = await fetch("/api/blog-comments?action=like", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ commentId, postSlug: slug })
+        body: JSON.stringify({ commentId, postSlug: slug, delta })
       });
+      if (res.ok) {
+        const data = await res.json();
+        if (typeof data.likes === "number") {
+          setComments(prev =>
+            prev.map(c => (c.id === commentId ? { ...c, likes: data.likes } : c))
+          );
+        }
+      }
     } catch (e) {
-      console.warn("Could not sync like to server:", e);
+      console.warn("Could not sync comment like to server:", e);
     }
   };
 
-  // Submit comment handler
-  const handleSubmitComment = async (e) => {
+  // Submit comment or nested reply handler
+  const handleSubmitComment = async (e, parentComment = null) => {
     e.preventDefault();
-    if (!commentForm.name.trim() || !commentForm.text.trim()) return;
+    const textToSubmit = parentComment ? replyText.trim() : commentForm.text.trim();
+    const authorName = commentForm.name.trim();
+
+    if (!authorName || !textToSubmit) return;
 
     setIsSubmittingComment(true);
     setCommentErrorMsg("");
     setCommentSuccessMsg("");
 
+    // Save reader name & email locally for convenience
+    try {
+      localStorage.setItem(
+        "casa_loy_reader_profile",
+        JSON.stringify({ name: authorName, email: commentForm.email.trim() })
+      );
+    } catch {
+      // ignore storage errors
+    }
+
+    const token = localStorage.getItem("casa_loy_admin_token");
+    const headers = { "Content-Type": "application/json" };
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+
     const payload = {
       post_slug: slug,
-      author_name: commentForm.name.trim(),
+      parent_id: parentComment ? parentComment.id : null,
+      author_name: authorName,
       author_email: commentForm.email.trim() || null,
-      comment_text: commentForm.text.trim()
+      comment_text: textToSubmit,
+      website_hp: commentForm.website_hp
     };
 
     try {
       const res = await fetch("/api/blog-comments", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify(payload)
       });
 
       const data = await res.json();
       if (res.ok && data.success) {
-        const createdComment = data.comment || {
-          id: `local_${Date.now()}`,
-          ...payload,
-          likes: 0,
-          created_at: new Date().toISOString()
-        };
-
-        setComments(prev => [...prev, createdComment]);
-        setCommentForm({ name: "", email: "", text: "" });
+        if (!data.ignored && data.comment) {
+          setComments(prev => [...prev, data.comment]);
+        }
+        if (parentComment) {
+          setReplyText("");
+          setReplyingTo(null);
+        } else {
+          setCommentForm(prev => ({ ...prev, text: "" }));
+        }
         setCommentSuccessMsg(
           lang === "es"
-            ? "¡Gracias por enriquecer la conversación! Tu comentario ha sido publicado."
-            : "Thank you for joining the conversation! Your comment has been published."
+            ? "¡Gracias por enriquecer la conversación! Tu comentario ha sido publicado en tiempo real."
+            : "Thank you for joining the conversation! Your comment has been published live."
         );
         setTimeout(() => setCommentSuccessMsg(""), 6000);
       } else {
@@ -322,15 +448,48 @@ export default function BlogPost({ lang = "es", setPage }) {
     }
   };
 
-  // Compute Prev / Next article
-  const { prevPost, nextPost } = useMemo(() => {
-    if (!allPosts || allPosts.length <= 1) return { prevPost: null, nextPost: null };
-    const currentIndex = allPosts.findIndex(p => p.slug === slug);
-    if (currentIndex === -1) return { prevPost: null, nextPost: null };
+  // Organize comments into top-level threads and replies
+  const { rootComments, repliesByParentId } = useMemo(() => {
+    const roots = [];
+    const map = {};
+    const validIds = new Set(comments.map(c => c.id));
 
+    comments.forEach(c => {
+      if (c.parent_id && validIds.has(c.parent_id)) {
+        if (!map[c.parent_id]) map[c.parent_id] = [];
+        map[c.parent_id].push(c);
+      } else {
+        roots.push(c);
+      }
+    });
+
+    roots.sort((a, b) => {
+      if (a.is_pinned && !b.is_pinned) return -1;
+      if (!a.is_pinned && b.is_pinned) return 1;
+
+      if (commentSort === "newest") {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      }
+      if (commentSort === "oldest") {
+        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      }
+      // relevant: highest likes first, then newest
+      const likeDiff = (b.likes || 0) - (a.likes || 0);
+      if (likeDiff !== 0) return likeDiff;
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    });
+
+    return { rootComments: roots, repliesByParentId: map };
+  }, [comments, commentSort]);
+
+  // Compute Prev / Next article & Related articles
+  const { prevPost, nextPost, relatedPosts } = useMemo(() => {
+    if (!allPosts || allPosts.length === 0) return { prevPost: null, nextPost: null, relatedPosts: [] };
+    const currentIndex = allPosts.findIndex(p => p.slug === slug);
     const prev = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
-    const next = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
-    return { prevPost: prev, nextPost: next };
+    const next = currentIndex !== -1 && currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
+    const others = allPosts.filter(p => p.slug !== slug).slice(0, 3);
+    return { prevPost: prev, nextPost: next, relatedPosts: others };
   }, [allPosts, slug]);
 
   // Helpers for text metrics & formatting
@@ -338,7 +497,7 @@ export default function BlogPost({ lang = "es", setPage }) {
     if (!bodyText) return 4;
     const clean = String(bodyText).replace(/<[^>]*>?/gm, " ");
     const words = clean.trim().split(/\s+/).filter(Boolean).length;
-    return Math.max(1, Math.ceil(words / 190));
+    return Math.max(2, Math.ceil(words / 180));
   };
 
   const formatDateTime = (dateStr) => {
@@ -361,7 +520,6 @@ export default function BlogPost({ lang = "es", setPage }) {
       : `${dateFormatted} at ${timeFormatted}`;
   };
 
-  // Scroll smoothly to comments section
   const scrollToComments = () => {
     const el = document.getElementById("comments-section");
     if (el) {
@@ -369,7 +527,14 @@ export default function BlogPost({ lang = "es", setPage }) {
     }
   };
 
-  // Curated Fallback Static Content
+  const scrollToReactions = () => {
+    const el = document.getElementById("reactions-bar");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
+  // Curated Fallback Static Content if post is not found in DB
   const staticContent = {
     es: {
       category: "CULTURA & GASTRONOMÍA",
@@ -378,7 +543,7 @@ export default function BlogPost({ lang = "es", setPage }) {
       authorRole: "Patriarca & Guardián del Terroir",
       authorPhoto: "/Don Manuel Loy.webp",
       authorBio: "Con más de cuatro décadas custodiando los campos de agave azul en Ayotlán, Don Manuel Loy transmite la maestría del tiempo, el fuego y la destilación de ultra-lujo.",
-      date: "2024-10-24T10:30:00Z",
+      date: "2026-07-20T10:00:00Z",
       quote: `"La cata no es simplemente el acto de beber; es un diálogo silencioso entre la tierra, el fuego y el alma humana, donde cada gota cuenta la historia de una herencia milenaria."`,
       p1: "Degustar un tequila de ultra-lujo como Casa Loy requiere de una disposición particular del espíritu. No buscamos el impacto inmediato del alcohol, sino la sutileza de los terpenos, la danza de los ésteres y la herencia del suelo volcánico que nutrió al agave durante años. En esta exploración sensorial, dividimos la experiencia en tres momentos fundamentales que definen el carácter de nuestro destilado.",
       p2: "La vista es nuestro primer contacto. Al inclinar la copa, observamos el 'cuerpo' del tequila a través de sus piernas o lágrimas que descienden lentamente por el cristal. Un reposado de Casa Loy exhibirá matices dorados que evocan los atardeceres de Los Altos, una transparencia cristalina que habla de una filtración impecable y una pureza técnica inigualable.",
@@ -395,16 +560,8 @@ export default function BlogPost({ lang = "es", setPage }) {
       section2Title: "El Retrogusto: La Memoria del Paladar",
       section2Text1: "El ataque en boca debe ser sedoso, casi aceitoso. Un gran tequila no debe quemar, sino abrazar. Al pasar el destilado por la lengua, descubrimos la mineralidad del suelo de Casa Loy. Es un equilibrio precario entre la potencia del alcohol y la delicadeza de los sabores naturales del agave.",
       section2Text2: "Finalmente, el final de boca o retrogusto es lo que diferencia a lo bueno de lo excepcional. En Casa Loy, buscamos una persistencia prolongada que deje un recuerdo de agave dulce y especias. Es el eco de la fermentación lenta y la destilación cuidadosa que resuena minutos después de haber terminado la copa.",
-      terroirTitle: "El Terroir como Destino",
-      terroirText: "Cada botella de Casa Loy es un mapa líquido de nuestra geografía única.",
-      relatedTitle: "Historias Relacionadas",
-      relatedAction: "Ver Journal",
-      relatedCard1Cat: "Gastronomía",
-      relatedCard1Title: "Maridaje Perfecto: Tequila y Cacao",
-      relatedCard2Cat: "Proceso",
-      relatedCard2Title: "La Jima: El Primer Grito de la Tierra",
-      relatedCard3Cat: "Lifestyle",
-      relatedCard3Title: "Hospitalidad de Lujo en Los Altos",
+      relatedTitle: "Más Crónicas del Journal",
+      relatedAction: "Ver todo el Journal",
     },
     en: {
       category: "CULTURE & GASTRONOMY",
@@ -413,7 +570,7 @@ export default function BlogPost({ lang = "es", setPage }) {
       authorRole: "Patriarch & Guardian of the Terroir",
       authorPhoto: "/Don Manuel Loy.webp",
       authorBio: "With over four decades safeguarding the blue agave fields in Ayotlán, Don Manuel Loy passes down the mastery of time, fire, and ultra-luxury distillation.",
-      date: "2024-10-24T10:30:00Z",
+      date: "2026-07-20T10:00:00Z",
       quote: `"Tasting is not merely the act of drinking; it is a silent dialogue between earth, fire, and the human soul, where every drop tells the story of a millennial heritage."`,
       p1: "Tasting an ultra-luxury tequila like Casa Loy requires a specific disposition of the spirit. We do not seek the immediate impact of alcohol, but the subtlety of terpenes, the dance of esters, and the heritage of the volcanic soil that nourished the agave for years. In this sensory exploration, we divide the experience into three fundamental stages that define the character of our distillate.",
       p2: "Sight is our first contact. By tilting the glass, we observe the 'body' of the tequila through its legs or tears that slowly descend down the crystal. A rested Casa Loy will exhibit golden hues evoking Los Altos sunsets, crystalline transparency speaking of impeccable filtration, and unmatched technical purity.",
@@ -430,16 +587,8 @@ export default function BlogPost({ lang = "es", setPage }) {
       section2Title: "The Aftertaste: The Palate's Memory",
       section2Text1: "The entry on the palate must be silky, almost oily. A great tequila should not burn, but embrace. As the distillate passes over the tongue, we discover the mineral nature of Casa Loy's soil. It is a delicate balance between the power of alcohol and the gentleness of agave's natural flavors.",
       section2Text2: "Finally, the finish or aftertaste is what differentiates the good from the exceptional. At Casa Loy, we seek a long persistence leaving a memory of sweet agave and spices. It is the echo of slow fermentation and careful distillation that resonates minutes after empty glass.",
-      terroirTitle: "Terroir as Destiny",
-      terroirText: "Every bottle of Casa Loy is a liquid map of our unique geography.",
-      relatedTitle: "Related Stories",
-      relatedAction: "View Journal",
-      relatedCard1Cat: "Gastronomy",
-      relatedCard1Title: "Perfect Pairing: Tequila & Cacao",
-      relatedCard2Cat: "Process",
-      relatedCard2Title: "La Jima: The Earth's First Cry",
-      relatedCard3Cat: "Lifestyle",
-      relatedCard3Title: "Luxury Hospitality in Los Altos",
+      relatedTitle: "More Journal Chronicles",
+      relatedAction: "View Full Journal",
     }
   };
 
@@ -452,9 +601,8 @@ export default function BlogPost({ lang = "es", setPage }) {
       const role = post.author_role || (lang === "es" ? "Maestro Tequilero & Selección de Origen" : "Master Distiller & Origin Selection");
       const bio = post.author_bio || (lang === "es"
         ? "Custodiando la pureza del agave azul y la tradición destiladora centenaria en las tierras altas de Jalisco."
-        : "Safeguarding the purity of blue agave and centuries-old distillation tradition in The highlands of Jalisco.");
+        : "Safeguarding the purity of blue agave and centuries-old distillation tradition in the highlands of Jalisco.");
       
-      // Smart portrait selection
       let photo = post.author_photo;
       if (!photo) {
         if (post.category?.toLowerCase().includes("gastro") || post.category?.toLowerCase().includes("mixo")) {
@@ -488,6 +636,8 @@ export default function BlogPost({ lang = "es", setPage }) {
     ? post.seo_keywords.split(",").map(k => k.trim()).filter(Boolean)
     : ["Tequila Artesanal", "Tradición Agavera", "Casa Loy", "Los Altos de Jalisco", "Origen Certificado"];
 
+  const hasAnyReaction = userReactions.length > 0;
+
   return (
     <div className="bg-[#FAF8F5] text-on-surface text-left min-h-screen relative selection:bg-primary/20 selection:text-primary">
       {/* 1. Subtle Reading Progress Bar */}
@@ -497,20 +647,21 @@ export default function BlogPost({ lang = "es", setPage }) {
       />
 
       {/* 2. Floating Interaction Dock (Desktop Floating Left / Mobile Sticky Bottom) */}
-      <aside aria-label="Social and comments" className="fixed bottom-6 right-6 md:bottom-auto md:top-1/3 md:left-6 md:right-auto z-40 flex md:flex-col items-center gap-3 bg-white/90 backdrop-blur-md p-2.5 rounded-full border border-stone-200/80 shadow-xl transition-all duration-300 hover:shadow-2xl">
-        {/* Claps / Likes */}
+      <aside aria-label="Social and comments" className="fixed bottom-6 right-6 md:bottom-auto md:top-1/3 md:left-6 md:right-auto z-40 flex md:flex-col items-center gap-3 bg-white/95 backdrop-blur-md p-2.5 rounded-full border border-stone-200/80 shadow-xl transition-all duration-300 hover:shadow-2xl">
+        {/* Real Reactions Trigger */}
         <button
-          onClick={handleClap}
+          onClick={() => handleReaction("corazon")}
+          onDoubleClick={scrollToReactions}
           className={`w-11 h-11 rounded-full flex items-center justify-center transition-all duration-300 relative group cursor-pointer ${
-            hasClapped ? "bg-primary text-white scale-105" : "hover:bg-stone-100 text-stone-700"
+            hasAnyReaction ? "bg-primary text-white scale-105 shadow-md" : "hover:bg-stone-100 text-stone-700"
           }`}
-          title={lang === "es" ? "Aplaude este artículo" : "Clap for this story"}
+          title={lang === "es" ? "Reaccionar a esta crónica" : "React to this story"}
         >
           <span className="material-symbols-outlined text-[20px] transition-transform group-hover:scale-110">
             favorite
           </span>
           <span className="absolute -top-2 -right-2 bg-secondary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-sm">
-            {claps}
+            {likesCount}
           </span>
         </button>
 
@@ -523,11 +674,9 @@ export default function BlogPost({ lang = "es", setPage }) {
           <span className="material-symbols-outlined text-[20px] transition-transform group-hover:scale-110">
             chat_bubble
           </span>
-          {comments.length > 0 && (
-            <span className="absolute -top-1.5 -right-1.5 bg-[#8C4723] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-              {comments.length}
-            </span>
-          )}
+          <span className="absolute -top-1.5 -right-1.5 bg-[#8C4723] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+            {comments.length}
+          </span>
         </button>
 
         <div className="w-[1px] h-4 md:w-4 md:h-[1px] bg-stone-200" />
@@ -545,18 +694,18 @@ export default function BlogPost({ lang = "es", setPage }) {
           </svg>
         </a>
 
-        {/* Copy Link */}
+        {/* Copy / Share Link */}
         <button
           onClick={handleShare}
           className="w-10 h-10 rounded-full hover:bg-stone-900 hover:text-white flex items-center justify-center text-stone-600 transition-all cursor-pointer relative"
-          title={lang === "es" ? "Copiar enlace" : "Copy link"}
+          title={lang === "es" ? "Compartir o copiar enlace" : "Share or copy link"}
         >
           <span className="material-symbols-outlined text-[18px]">
-            {copied ? "check" : "link"}
+            {copied ? "check" : "share"}
           </span>
           {copied && (
             <span className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-stone-900 text-white text-[10px] font-sans px-2 py-0.5 rounded shadow-md">
-              {lang === "es" ? "¡Copiado!" : "Copied!"}
+              {lang === "es" ? "¡Enlace copiado!" : "Link copied!"}
             </span>
           )}
         </button>
@@ -580,7 +729,7 @@ export default function BlogPost({ lang = "es", setPage }) {
         </div>
 
         {/* Article Headline */}
-        <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-[66px] text-[#1A1816] leading-[1.14] tracking-tight font-medium max-w-4xl mx-auto mb-6">
+        <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-[64px] text-[#1A1816] leading-[1.14] tracking-tight font-medium max-w-4xl mx-auto mb-6">
           {postTitle}
         </h1>
 
@@ -592,9 +741,9 @@ export default function BlogPost({ lang = "es", setPage }) {
         )}
 
         {/* ========================================================================= */}
-        {/* 3. LITERAL BLOG BYLINE (FOTO, NOMBRE, CARGO, FECHA, HORA, TIEMPO LECTURA) */}
+        {/* 3. LITERAL BLOG BYLINE (FOTO, NOMBRE, CARGO, FECHA, LECTURAS, COMENTARIOS) */}
         {/* ========================================================================= */}
-        <div className="max-w-2xl mx-auto bg-white border border-stone-200/90 rounded-2xl p-4 sm:p-5 shadow-sm mt-4 text-left">
+        <div className="max-w-3xl mx-auto bg-white border border-stone-200/90 rounded-2xl p-4 sm:p-5 shadow-sm mt-4 text-left">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             
             {/* Author Photo, Name and Role */}
@@ -615,7 +764,7 @@ export default function BlogPost({ lang = "es", setPage }) {
 
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-serif font-bold text-stone-900 text-base sm:text-lg leading-tight hover:text-primary transition-colors">
+                  <span className="font-serif font-bold text-stone-900 text-base sm:text-lg leading-tight">
                     {authorData.name}
                   </span>
                 </div>
@@ -625,26 +774,39 @@ export default function BlogPost({ lang = "es", setPage }) {
               </div>
             </div>
 
-            {/* Publication Timestamp, Reading Time & Comments Anchor */}
-            <div className="flex flex-wrap sm:flex-col sm:items-end gap-2 sm:gap-1 text-xs text-stone-600 font-sans border-t sm:border-t-0 pt-2 sm:pt-0 border-stone-100 font-medium">
+            {/* Publication Timestamp, Real Views, Reading Time & Comments Anchor */}
+            <div className="flex flex-wrap sm:flex-col sm:items-end gap-2 sm:gap-1.5 text-xs text-stone-600 font-sans border-t sm:border-t-0 pt-2.5 sm:pt-0 border-stone-100 font-medium">
               {/* Fecha y Hora Exacta */}
               <div className="flex items-center gap-1.5 font-semibold text-stone-800">
                 <span className="material-symbols-outlined text-[15px] text-[#8C4723]">
-                  schedule
+                  calendar_today
                 </span>
                 <span>{formattedDateWithTime}</span>
               </div>
 
-              {/* Tiempo de lectura y Comentarios */}
-              <div className="flex items-center gap-3 text-xs text-stone-600 font-medium">
-                <span className="flex items-center gap-1">
+              {/* Métricas en vivo: Lecturas, Tiempo, Reacciones y Comentarios */}
+              <div className="flex flex-wrap items-center gap-2.5 text-xs text-stone-600 font-medium">
+                <span className="flex items-center gap-1" title={lang === "es" ? "Tiempo estimado de lectura" : "Estimated reading time"}>
                   <span className="material-symbols-outlined text-[14px]">auto_stories</span>
-                  {lang === "es" ? `${readTimeEstimate} min de lectura` : `${readTimeEstimate} min read`}
+                  {readTimeEstimate} min
+                </span>
+                <span>•</span>
+                <span className="flex items-center gap-1 text-stone-800 font-semibold" title={lang === "es" ? "Visitas reales verificadas" : "Verified real reads"}>
+                  <span className="material-symbols-outlined text-[15px] text-[#8C4723]">visibility</span>
+                  {viewsCount} {lang === "es" ? "lecturas" : "reads"}
                 </span>
                 <span>•</span>
                 <button
+                  onClick={scrollToReactions}
+                  className="flex items-center gap-1 text-rose-700 hover:underline cursor-pointer font-semibold"
+                >
+                  <span className="material-symbols-outlined text-[14px]">favorite</span>
+                  {likesCount}
+                </button>
+                <span>•</span>
+                <button
                   onClick={scrollToComments}
-                  className="flex items-center gap-1 text-primary hover:underline cursor-pointer font-medium"
+                  className="flex items-center gap-1 text-primary hover:underline cursor-pointer font-semibold"
                 >
                   <span className="material-symbols-outlined text-[14px]">chat</span>
                   {comments.length} {lang === "es" ? "comentarios" : "comments"}
@@ -774,9 +936,61 @@ export default function BlogPost({ lang = "es", setPage }) {
         )}
 
         {/* ========================================================================= */}
+        {/* 3.5 BARRA DE REACCIONES REALES EN VIVO (PERSISTIDAS EN SUPABASE)           */}
+        {/* ========================================================================= */}
+        <section
+          id="reactions-bar"
+          aria-label="Reacciones del artículo"
+          className="max-w-3xl mx-auto mt-10 p-6 sm:p-8 bg-gradient-to-br from-white via-[#FAF8F5] to-[#F3EFE8] border border-stone-200/90 rounded-2xl shadow-xs text-center"
+        >
+          <span className="font-navigation text-[10px] uppercase tracking-[0.3em] text-[#8C4723] font-bold block mb-1.5">
+            {lang === "es" ? "INTERACCIÓN DE LA COMUNIDAD" : "COMMUNITY INTERACTION"}
+          </span>
+          <h3 className="font-serif text-xl sm:text-2xl font-bold text-stone-900 mb-2">
+            {lang === "es" ? "¿Qué te pareció esta crónica?" : "What did you think of this chronicle?"}
+          </h3>
+          <p className="text-xs sm:text-sm text-stone-600 mb-6">
+            {lang === "es"
+              ? `${viewsCount} lecturas • ${likesCount} reacciones registradas por lectores reales`
+              : `${viewsCount} reads • ${likesCount} reactions recorded by real readers`}
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+            {REACTION_TYPES.map((rt) => {
+              const isSelected = userReactions.includes(rt.id);
+              const count = Number(reactions[rt.id] || 0);
+              return (
+                <button
+                  key={rt.id}
+                  type="button"
+                  onClick={() => handleReaction(rt.id)}
+                  className={`group flex items-center gap-2.5 px-4 sm:px-5 py-3 rounded-2xl border transition-all duration-200 cursor-pointer select-none ${
+                    isSelected
+                      ? "bg-[#8C4723] text-white border-[#8C4723] shadow-md scale-105"
+                      : "bg-white hover:bg-stone-50 text-stone-800 border-stone-200/90 hover:border-[#8C4723]/40 shadow-2xs"
+                  }`}
+                >
+                  <span className="text-lg sm:text-xl transition-transform duration-200 group-hover:scale-125">
+                    {rt.emoji}
+                  </span>
+                  <div className="text-left">
+                    <span className={`block text-xs font-bold leading-tight ${isSelected ? "text-white" : "text-stone-900"}`}>
+                      {lang === "es" ? rt.labelEs : rt.labelEn}
+                    </span>
+                    <span className={`block text-[11px] font-semibold ${isSelected ? "text-[#F3EFE8]" : "text-stone-500"}`}>
+                      {count}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
         {/* 4. TARJETA "ACERCA DEL AUTOR" (AUTHOR BIO CARD)                           */}
         {/* ========================================================================= */}
-        <section aria-label="Sobre el autor" className="max-w-3xl mx-auto mt-14 p-6 sm:p-8 bg-white border border-stone-200 rounded-2xl shadow-sm text-left">
+        <section aria-label="Sobre el autor" className="max-w-3xl mx-auto mt-10 p-6 sm:p-8 bg-white border border-stone-200 rounded-2xl shadow-sm text-left">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
             <img
               src={authorData.photo}
@@ -828,7 +1042,7 @@ export default function BlogPost({ lang = "es", setPage }) {
                   {lang === "es" ? "Artículo Anterior" : "Previous Story"}
                 </span>
                 <h4 className="font-serif text-base font-bold text-stone-900 group-hover:text-primary transition-colors line-clamp-2">
-                  {prevPost.title}
+                  {lang === "es" ? (prevPost.title_es || prevPost.title) : (prevPost.title_en || prevPost.title)}
                 </h4>
               </div>
             ) : <div />}
@@ -843,7 +1057,7 @@ export default function BlogPost({ lang = "es", setPage }) {
                   <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
                 </span>
                 <h4 className="font-serif text-base font-bold text-stone-900 group-hover:text-primary transition-colors line-clamp-2">
-                  {nextPost.title}
+                  {lang === "es" ? (nextPost.title_es || nextPost.title) : (nextPost.title_en || nextPost.title)}
                 </h4>
               </div>
             ) : <div />}
@@ -851,12 +1065,12 @@ export default function BlogPost({ lang = "es", setPage }) {
         )}
 
         {/* ========================================================================= */}
-        {/* 6. ESPACIO COMPLETO PARA COMENTARIOS (COMMENTS SECTION)                  */}
+        {/* 6. ESPACIO COMPLETO PARA COMENTARIOS REALES & RESPUESTAS ANIDADAS         */}
         {/* ========================================================================= */}
         <section id="comments-section" aria-label="Comentarios" className="max-w-3xl mx-auto mt-16 pt-12 border-t border-stone-200 text-left">
           
-          {/* Comments Section Header */}
-          <div className="flex items-center justify-between mb-8">
+          {/* Comments Section Header + Sort Selector */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-[#8C4723]/10 flex items-center justify-center text-primary">
                 <span className="material-symbols-outlined text-[22px]">forum</span>
@@ -870,20 +1084,49 @@ export default function BlogPost({ lang = "es", setPage }) {
                 </p>
               </div>
             </div>
+
+            {comments.length > 1 && (
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-stone-500 font-medium">
+                  {lang === "es" ? "Ordenar por:" : "Sort by:"}
+                </span>
+                <select
+                  value={commentSort}
+                  onChange={(e) => setCommentSort(e.target.value)}
+                  className="bg-white border border-stone-300 rounded-lg px-3 py-1.5 text-xs font-semibold text-stone-700 focus:outline-none focus:border-primary cursor-pointer"
+                >
+                  <option value="relevant">{lang === "es" ? "Destacados" : "Top comments"}</option>
+                  <option value="newest">{lang === "es" ? "Más recientes" : "Newest first"}</option>
+                  <option value="oldest">{lang === "es" ? "Más antiguos" : "Oldest first"}</option>
+                </select>
+              </div>
+            )}
           </div>
 
-          {/* Formulario para dejar comentario */}
+          {/* Formulario principal para dejar comentario */}
           <div className="bg-white border border-stone-200/90 rounded-2xl p-6 sm:p-8 shadow-sm mb-12">
             <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#1A1615] tracking-tight mb-2">
               {lang === "es" ? "Únete a la conversación" : "Leave a Comment"}
             </h3>
             <p className="text-sm sm:text-base text-stone-700 font-normal leading-relaxed mb-6">
               {lang === "es" 
-                ? "Comparte tus impresiones, dudas o experiencias sobre el destilado. Tu correo no será publicado."
-                : "Share your thoughts, questions, or experiences. Your email will remain private."}
+                ? "Comparte tus impresiones, notas de cata o preguntas. Tu correo no será mostrado públicamente."
+                : "Share your thoughts, tasting notes, or questions. Your email will remain private."}
             </p>
 
-            <form onSubmit={handleSubmitComment} className="space-y-5">
+            <form onSubmit={(e) => handleSubmitComment(e, null)} className="space-y-5">
+              {/* Honeypot anti-bot field */}
+              <div style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, width: 0, overflow: "hidden", pointerEvents: "none" }} aria-hidden="true">
+                <input
+                  type="text"
+                  name="website_hp"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={commentForm.website_hp}
+                  onChange={(e) => setCommentForm({ ...commentForm, website_hp: e.target.value })}
+                />
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-stone-800 uppercase tracking-wider mb-1.5">
@@ -946,7 +1189,7 @@ export default function BlogPost({ lang = "es", setPage }) {
 
               <div className="flex items-center justify-between pt-2">
                 <span className="text-[11px] text-stone-400">
-                  {lang === "es" ? "* Campos obligatorios" : "* Required fields"}
+                  {lang === "es" ? "* Publicación inmediata en el Journal" : "* Published immediately in the Journal"}
                 </span>
 
                 <button
@@ -970,14 +1213,14 @@ export default function BlogPost({ lang = "es", setPage }) {
             </form>
           </div>
 
-          {/* Listado de comentarios */}
-          <div className="space-y-4">
+          {/* Listado de comentarios y respuestas */}
+          <div className="space-y-5">
             {commentsLoading ? (
               <div className="py-12 text-center text-stone-400">
                 <div className="inline-block w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mb-2" />
                 <p className="text-xs">{lang === "es" ? "Cargando comentarios..." : "Loading comments..."}</p>
               </div>
-            ) : comments.length === 0 ? (
+            ) : rootComments.length === 0 ? (
               <div className="text-center py-12 bg-white/50 border border-dashed border-stone-200 rounded-xl p-8">
                 <span className="material-symbols-outlined text-3xl text-stone-300 mb-2">
                   chat_bubble_outline
@@ -987,14 +1230,14 @@ export default function BlogPost({ lang = "es", setPage }) {
                 </p>
                 <p className="text-sm text-stone-600 font-normal mt-1 leading-relaxed">
                   {lang === "es" 
-                    ? "Inicia la conversación sobre este tema y comparte tu punto de vista." 
+                    ? "Inicia la conversación sobre esta crónica y comparte tu punto de vista." 
                     : "Start the conversation and share your point of view."}
                 </p>
               </div>
             ) : (
-              comments.map((c) => {
+              rootComments.map((c) => {
                 const isLiked = likedCommentIds.includes(c.id);
-                // Dynamic initials monogram
+                const replies = repliesByParentId[c.id] || [];
                 const initials = (c.author_name || "A")
                   .split(" ")
                   .map(n => n[0])
@@ -1005,43 +1248,206 @@ export default function BlogPost({ lang = "es", setPage }) {
                 return (
                   <div
                     key={c.id}
-                    className="p-5 sm:p-6 bg-white border border-stone-200/90 rounded-xl shadow-2xs hover:shadow-xs transition-shadow"
+                    className={`p-5 sm:p-6 bg-white border rounded-2xl shadow-2xs transition-shadow ${
+                      c.is_pinned ? "border-[#D4AF37] bg-[#FAF8F5]/60" : "border-stone-200/90 hover:shadow-xs"
+                    }`}
                   >
+                    {c.is_pinned && (
+                      <div className="flex items-center gap-1 text-[10px] font-navigation uppercase tracking-widest text-[#8C4723] font-bold mb-2.5">
+                        <span className="material-symbols-outlined text-[14px]">push_pin</span>
+                        {lang === "es" ? "Comentario Destacado por Casa Loy" : "Pinned by Casa Loy"}
+                      </div>
+                    )}
+
                     <div className="flex items-start justify-between gap-3 mb-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#8C4723] to-[#D4AF37] text-white flex items-center justify-center font-bold text-xs shadow-inner">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#8C4723] to-[#D4AF37] text-white flex items-center justify-center font-bold text-xs shadow-inner shrink-0">
                           {initials}
                         </div>
                         <div>
-                          <h4 className="font-serif font-bold text-stone-900 text-base leading-tight">
-                            {c.author_name}
-                          </h4>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h4 className="font-serif font-bold text-stone-900 text-base leading-tight">
+                              {c.author_name}
+                            </h4>
+                            {c.author_role_badge && (
+                              <span className="inline-flex items-center gap-1 bg-[#8C4723] text-white text-[10px] font-navigation uppercase tracking-wider font-bold px-2 py-0.5 rounded-full">
+                                <span className="material-symbols-outlined text-[11px]">verified</span>
+                                {c.author_role_badge}
+                              </span>
+                            )}
+                          </div>
                           <span className="text-xs text-stone-500 font-sans font-medium block mt-0.5">
                             {formatDateTime(c.created_at)}
                           </span>
                         </div>
                       </div>
 
-                      {/* Botón de Like a Comentario */}
-                      <button
-                        onClick={() => handleLikeComment(c.id)}
-                        className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-all cursor-pointer font-medium ${
-                          isLiked
-                            ? "bg-rose-50 text-rose-600 border-rose-200"
-                            : "bg-stone-50 hover:bg-stone-100 text-stone-700 border-stone-200"
-                        }`}
-                        title={lang === "es" ? "Me gusta este comentario" : "Like this comment"}
-                      >
-                        <span className="material-symbols-outlined text-[15px]">
-                          {isLiked ? "favorite" : "favorite_border"}
-                        </span>
-                        <span className="font-semibold text-xs">{c.likes || 0}</span>
-                      </button>
+                      {/* Botones de Like y Responder */}
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setReplyingTo(replyingTo?.id === c.id ? null : c);
+                            setReplyText("");
+                          }}
+                          className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full border border-stone-200 bg-stone-50 hover:bg-stone-100 text-stone-700 transition-all cursor-pointer font-medium"
+                        >
+                          <span className="material-symbols-outlined text-[14px]">reply</span>
+                          <span>{lang === "es" ? "Responder" : "Reply"}</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleLikeComment(c.id)}
+                          className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-all cursor-pointer font-medium ${
+                            isLiked
+                              ? "bg-rose-50 text-rose-600 border-rose-200"
+                              : "bg-stone-50 hover:bg-stone-100 text-stone-700 border-stone-200"
+                          }`}
+                          title={lang === "es" ? "Me gusta este comentario" : "Like this comment"}
+                        >
+                          <span className="material-symbols-outlined text-[15px]">
+                            {isLiked ? "favorite" : "favorite_border"}
+                          </span>
+                          <span className="font-semibold text-xs">{c.likes || 0}</span>
+                        </button>
+                      </div>
                     </div>
 
-                    <p className="text-sm sm:text-base text-stone-800 leading-relaxed font-normal pl-13">
+                    <p className="text-sm sm:text-base text-stone-800 leading-relaxed font-normal sm:pl-13 whitespace-pre-line">
                       {c.comment_text}
                     </p>
+
+                    {/* Formulario inline para responder a este comentario */}
+                    {replyingTo?.id === c.id && (
+                      <form
+                        onSubmit={(e) => handleSubmitComment(e, c)}
+                        className="mt-4 sm:ml-13 p-4 bg-stone-50 border border-stone-200 rounded-xl space-y-3"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-[#8C4723]">
+                            {lang === "es" ? `Respondiendo a ${c.author_name}` : `Replying to ${c.author_name}`}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setReplyingTo(null)}
+                            className="text-xs text-stone-400 hover:text-stone-700 cursor-pointer"
+                          >
+                            ✕
+                          </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <input
+                            type="text"
+                            required
+                            maxLength={80}
+                            placeholder={lang === "es" ? "Tu nombre *" : "Your name *"}
+                            value={commentForm.name}
+                            onChange={(e) => setCommentForm({ ...commentForm, name: e.target.value })}
+                            className="w-full bg-white border border-stone-300 rounded-lg px-3 py-2 text-xs text-stone-900 focus:outline-none focus:border-primary"
+                          />
+                          <input
+                            type="email"
+                            maxLength={120}
+                            placeholder={lang === "es" ? "Tu correo (privado)" : "Your email (private)"}
+                            value={commentForm.email}
+                            onChange={(e) => setCommentForm({ ...commentForm, email: e.target.value })}
+                            className="w-full bg-white border border-stone-300 rounded-lg px-3 py-2 text-xs text-stone-900 focus:outline-none focus:border-primary"
+                          />
+                        </div>
+
+                        <textarea
+                          required
+                          rows={2}
+                          maxLength={1000}
+                          placeholder={lang === "es" ? "Escribe tu respuesta..." : "Write your reply..."}
+                          value={replyText}
+                          onChange={(e) => setReplyText(e.target.value)}
+                          className="w-full bg-white border border-stone-300 rounded-lg p-3 text-xs text-stone-900 focus:outline-none focus:border-primary"
+                        />
+
+                        <div className="flex justify-end gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setReplyingTo(null)}
+                            className="px-3 py-1.5 text-xs text-stone-600 hover:text-stone-900 cursor-pointer"
+                          >
+                            {lang === "es" ? "Cancelar" : "Cancel"}
+                          </button>
+                          <button
+                            type="submit"
+                            disabled={isSubmittingComment}
+                            className="bg-primary hover:bg-[#6D3418] text-white font-navigation text-[11px] uppercase tracking-wider font-bold px-4 py-1.5 rounded-lg cursor-pointer"
+                          >
+                            {isSubmittingComment
+                              ? (lang === "es" ? "Enviando..." : "Sending...")
+                              : (lang === "es" ? "Publicar respuesta" : "Post reply")}
+                          </button>
+                        </div>
+                      </form>
+                    )}
+
+                    {/* Respuestas anidadas */}
+                    {replies.length > 0 && (
+                      <div className="mt-4 sm:ml-13 pl-4 border-l-2 border-stone-200 space-y-3">
+                        {replies.map((reply) => {
+                          const isReplyLiked = likedCommentIds.includes(reply.id);
+                          const replyInitials = (reply.author_name || "A")
+                            .split(" ")
+                            .map(n => n[0])
+                            .slice(0, 2)
+                            .join("")
+                            .toUpperCase();
+
+                          return (
+                            <div key={reply.id} className="p-4 bg-stone-50/80 border border-stone-200/70 rounded-xl">
+                              <div className="flex items-start justify-between gap-2 mb-2">
+                                <div className="flex items-center gap-2.5">
+                                  <div className="w-8 h-8 rounded-full bg-stone-800 text-white flex items-center justify-center font-bold text-[10px] shrink-0">
+                                    {replyInitials}
+                                  </div>
+                                  <div>
+                                    <div className="flex flex-wrap items-center gap-1.5">
+                                      <h5 className="font-serif font-bold text-stone-900 text-sm leading-tight">
+                                        {reply.author_name}
+                                      </h5>
+                                      {reply.author_role_badge && (
+                                        <span className="inline-flex items-center gap-0.5 bg-[#8C4723] text-white text-[9px] font-navigation uppercase tracking-wider font-bold px-2 py-0.5 rounded-full">
+                                          <span className="material-symbols-outlined text-[10px]">verified</span>
+                                          {reply.author_role_badge}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <span className="text-[11px] text-stone-500 block">
+                                      {formatDateTime(reply.created_at)}
+                                    </span>
+                                  </div>
+                                </div>
+
+                                <button
+                                  type="button"
+                                  onClick={() => handleLikeComment(reply.id)}
+                                  className={`flex items-center gap-1 text-[11px] px-2.5 py-1 rounded-full border transition-all cursor-pointer font-medium ${
+                                    isReplyLiked
+                                      ? "bg-rose-50 text-rose-600 border-rose-200"
+                                      : "bg-white hover:bg-stone-100 text-stone-600 border-stone-200"
+                                  }`}
+                                >
+                                  <span className="material-symbols-outlined text-[13px]">
+                                    {isReplyLiked ? "favorite" : "favorite_border"}
+                                  </span>
+                                  <span>{reply.likes || 0}</span>
+                                </button>
+                              </div>
+                              <p className="text-xs sm:text-sm text-stone-800 leading-relaxed sm:pl-10 whitespace-pre-line">
+                                {reply.comment_text}
+                              </p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 );
               })
@@ -1050,70 +1456,72 @@ export default function BlogPost({ lang = "es", setPage }) {
 
         </section>
 
-        {/* Related Stories */}
-        <section aria-label="Historias relacionadas" className="mt-24 pt-12 border-t border-stone-200">
-          <div className="flex items-center justify-between mb-10 pb-4 border-b border-stone-200">
-            <h2 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-stone-900">
-              {t.relatedTitle}
-            </h2>
-            <button
-              onClick={() => navigate("/blog")}
-              className="font-label-caps text-xs text-primary border-b border-primary hover:opacity-75 transition-opacity tracking-widest font-bold cursor-pointer"
-            >
-              {t.relatedAction}
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-            <div className="group cursor-pointer text-left" onClick={() => navigate("/blog")}>
-              <div className="aspect-[4/5] overflow-hidden rounded-xl mb-4 shadow-sm bg-stone-100">
-                <img
-                  alt="Platillo Restaurante 1937 Nativo"
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  src="/Platillo 5 1937 Nativo.webp"
-                />
-              </div>
-              <span className="font-label-caps text-[10px] text-stone-400 block mb-1 uppercase tracking-widest font-semibold">
-                {t.relatedCard1Cat}
-              </span>
-              <h4 className="font-serif text-lg font-bold group-hover:text-primary transition-colors text-stone-900">
-                {t.relatedCard1Title}
-              </h4>
+        {/* ========================================================================= */}
+        {/* 7. HISTORIAS RELACIONADAS REALES DEL JOURNAL                              */}
+        {/* ========================================================================= */}
+        {relatedPosts.length > 0 && (
+          <section aria-label="Historias relacionadas" className="max-w-5xl mx-auto mt-24 pt-12 border-t border-stone-200">
+            <div className="flex items-center justify-between mb-10 pb-4 border-b border-stone-200">
+              <h2 className="font-serif text-2xl sm:text-3xl font-medium tracking-tight text-stone-900">
+                {t.relatedTitle}
+              </h2>
+              <button
+                onClick={() => navigate("/blog")}
+                className="font-label-caps text-xs text-primary border-b border-primary hover:opacity-75 transition-opacity tracking-widest font-bold cursor-pointer"
+              >
+                {t.relatedAction}
+              </button>
             </div>
 
-            <div className="group cursor-pointer text-left" onClick={() => navigate("/quienes-somos")}>
-              <div className="aspect-[4/5] overflow-hidden rounded-xl mb-4 shadow-sm bg-stone-100">
-                <img
-                  alt="Jimado Empleado Casa Loy"
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  src="/Jimado Empleado Casa Loy Tequilera.webp"
-                />
-              </div>
-              <span className="font-label-caps text-[10px] text-stone-400 block mb-1 uppercase tracking-widest font-semibold">
-                {t.relatedCard2Cat}
-              </span>
-              <h4 className="font-serif text-lg font-bold group-hover:text-primary transition-colors text-stone-900">
-                {t.relatedCard2Title}
-              </h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {relatedPosts.map((rel) => {
+                const relTitle = lang === "es" ? (rel.title_es || rel.title) : (rel.title_en || rel.title_es || rel.title);
+                return (
+                  <article
+                    key={rel.slug}
+                    onClick={() => navigate(`/blog/${rel.slug}`)}
+                    className="group cursor-pointer bg-white border border-stone-200/80 rounded-2xl overflow-hidden shadow-2xs hover:shadow-md transition-all flex flex-col justify-between text-left"
+                  >
+                    <div>
+                      <div className="aspect-[16/10] overflow-hidden bg-stone-100 relative">
+                        <img
+                          alt={relTitle}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          src={rel.image_url || "/Barra Casa Loy Experiencias.webp"}
+                        />
+                        <span className="absolute top-3 left-3 bg-white/95 text-primary font-navigation text-[10px] uppercase tracking-widest font-bold px-2.5 py-1 rounded-full">
+                          {rel.category || "Journal"}
+                        </span>
+                      </div>
+                      <div className="p-5 space-y-2">
+                        <div className="flex items-center gap-3 text-[11px] text-stone-500 font-medium">
+                          <span className="flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[13px] text-[#8C4723]">visibility</span>
+                            {rel.views_count || 0}
+                          </span>
+                          <span className="flex items-center gap-1 text-rose-700">
+                            <span className="material-symbols-outlined text-[13px]">favorite</span>
+                            {rel.likes_count || 0}
+                          </span>
+                          <span className="flex items-center gap-1 text-primary">
+                            <span className="material-symbols-outlined text-[13px]">chat</span>
+                            {rel.comments_count || 0}
+                          </span>
+                        </div>
+                        <h4 className="font-serif text-lg font-bold group-hover:text-primary transition-colors text-stone-900 line-clamp-2">
+                          {relTitle}
+                        </h4>
+                        <p className="text-xs text-stone-600 line-clamp-2">
+                          {rel.description}
+                        </p>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
-
-            <div className="group cursor-pointer text-left" onClick={() => navigate("/turismo")}>
-              <div className="aspect-[4/5] overflow-hidden rounded-xl mb-4 shadow-sm bg-stone-100">
-                <img
-                  alt="Terraza Casa Loy Experiencias"
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  src="/Terraza Casa Loy Experiencias.webp"
-                />
-              </div>
-              <span className="font-label-caps text-[10px] text-stone-400 block mb-1 uppercase tracking-widest font-semibold">
-                {t.relatedCard3Cat}
-              </span>
-              <h4 className="font-serif text-lg font-bold group-hover:text-primary transition-colors text-stone-900">
-                {t.relatedCard3Title}
-              </h4>
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
 
       </main>
     </div>

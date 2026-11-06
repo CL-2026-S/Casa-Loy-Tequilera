@@ -185,14 +185,41 @@ export default async function handler(req, res) {
         return res.status(200).json(data);
       }
 
-      // Fetch Blog Posts
+      // Fetch Blog Posts (enriched with real comments_count from blog_comments)
       if (type === 'blog') {
         const { data, error } = await supabase
           .from('blog_posts')
           .select('*')
           .order('published_at', { ascending: false });
         if (error) throw error;
-        return res.status(200).json(data);
+
+        // Fetch approved comment counts per post_slug
+        const commentCountsBySlug = {};
+        try {
+          const { data: commentsData } = await supabase
+            .from('blog_comments')
+            .select('post_slug')
+            .eq('is_approved', true);
+          if (Array.isArray(commentsData)) {
+            commentsData.forEach((c) => {
+              if (c.post_slug) {
+                commentCountsBySlug[c.post_slug] = (commentCountsBySlug[c.post_slug] || 0) + 1;
+              }
+            });
+          }
+        } catch (commErr) {
+          console.warn("Could not count blog_comments:", commErr.message);
+        }
+
+        const enriched = (data || []).map((post) => ({
+          ...post,
+          views_count: Number(post.views_count || 0),
+          likes_count: Number(post.likes_count || 0),
+          reactions: post.reactions || { corazon: 0, brindis: 0, aplauso: 0, fuego: 0 },
+          comments_count: Number(commentCountsBySlug[post.slug] || 0)
+        }));
+
+        return res.status(200).json(enriched);
       }
 
       // Fetch Blog Authors
@@ -588,10 +615,14 @@ export default async function handler(req, res) {
           id, // uuid if updating
           slug,
           title,
+          title_es,
+          title_en,
           description,
           category,
           label,
           image_url,
+          image_base64,
+          image_filename,
           body_es,
           body_en,
           author_es,
@@ -604,25 +635,40 @@ export default async function handler(req, res) {
           seo_keywords
         } = req.body || {};
 
-        if (!slug || !title || !description || !category || !label || !image_url) {
+        let resolvedImageUrl = image_url;
+        if (image_base64) {
+          try {
+            const uploadedUrl = await uploadMediaFile(image_base64, image_filename || 'blog_cover.webp', 'blog_cover');
+            if (uploadedUrl) resolvedImageUrl = uploadedUrl;
+          } catch (uploadErr) {
+            console.warn("Blog cover image upload failed:", uploadErr.message);
+          }
+        }
+
+        const finalTitleEs = title_es || title;
+        const finalTitleEn = title_en || finalTitleEs;
+
+        if (!slug || !finalTitleEs || !description || !category || !label || !resolvedImageUrl) {
           return res.status(400).json({ error: 'Campos obligatorios del blog incompletos.' });
         }
 
         const blogData = {
           slug: slug.toLowerCase().trim().replace(/\s+/g, '-'),
-          title,
+          title: finalTitleEs,
+          title_es: finalTitleEs,
+          title_en: finalTitleEn,
           description,
           category,
           label,
-          image_url,
+          image_url: resolvedImageUrl,
           body_es: body_es || description,
           body_en: body_en || body_es || description,
           author_es: author_es || 'Casa Loy Tequilera',
-          author_en: author_en || 'Casa Loy Tequilera',
+          author_en: author_en || author_es || 'Casa Loy Tequilera',
           author_photo: author_photo || '/Empleado Jimador Casa Loy Tequilera.webp',
           author_role: author_role || 'Maestro Tequilero & Selección de Origen',
           author_bio: author_bio || 'Guardián de la tradición centenaria y el terroir de Los Altos de Jalisco en Casa Loy.',
-          seo_title: seo_title || title,
+          seo_title: seo_title || finalTitleEs,
           seo_description: seo_description || description,
           seo_keywords: seo_keywords || category
         };
@@ -641,7 +687,7 @@ export default async function handler(req, res) {
           currentUser.email,
           currentUser.role,
           id ? 'update_blog' : 'create_blog',
-          `Entrada de blog guardada: ${blogData.slug} (${title})`
+          `Entrada de blog guardada: ${blogData.slug} (${finalTitleEs})`
         );
 
         return res.status(200).json({ success: true });

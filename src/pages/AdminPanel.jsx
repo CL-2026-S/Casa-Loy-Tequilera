@@ -453,6 +453,9 @@ export default function AdminPanel({
   const [showAuthorModal, setShowAuthorModal] = useState(false);
   const [editingAuthor, setEditingAuthor] = useState(null);
   const [selectedAuthorId, setSelectedAuthorId] = useState("");
+  const [blogCommentsList, setBlogCommentsList] = useState([]);
+  const [adminReplyTarget, setAdminReplyTarget] = useState(null);
+  const [adminReplyText, setAdminReplyText] = useState("");
   const [editingPos, setEditingPos] = useState(null);
   const [posFilterRegion, setPosFilterRegion] = useState("all"); // "all" | "mx" | "usa"
   const [posFilterSeller, setPosFilterSeller] = useState("all"); // "all" | seller name
@@ -1150,13 +1153,20 @@ export default function AdminPanel({
             if (cmsTab === "blog") {
               setBlogList(data);
               try {
-                const aRes = await fetch("/api/cms?type=blog_authors", { headers });
+                const [aRes, cRes] = await Promise.all([
+                  fetch("/api/cms?type=blog_authors", { headers }),
+                  fetch("/api/blog-comments?all=true", { headers })
+                ]);
                 if (aRes.ok) {
                   const aData = await aRes.json();
                   setAuthorsList(aData);
                 }
+                if (cRes.ok) {
+                  const cData = await cRes.json();
+                  if (Array.isArray(cData)) setBlogCommentsList(cData);
+                }
               } catch (aErr) {
-                console.error("Error loading authors in CMS:", aErr);
+                console.error("Error loading authors/comments in CMS:", aErr);
               }
             }
             if (cmsTab === "applications") {
@@ -1253,13 +1263,20 @@ export default function AdminPanel({
             if (cmsTab === "blog") {
               setBlogList(data);
               try {
-                const aRes = await fetch("/api/cms?type=blog_authors", { headers });
+                const [aRes, cRes] = await Promise.all([
+                  fetch("/api/cms?type=blog_authors", { headers }),
+                  fetch("/api/blog-comments?all=true", { headers })
+                ]);
                 if (aRes.ok) {
                   const aData = await aRes.json();
                   setAuthorsList(aData);
                 }
+                if (cRes.ok) {
+                  const cData = await cRes.json();
+                  if (Array.isArray(cData)) setBlogCommentsList(cData);
+                }
               } catch (aErr) {
-                console.error("Error loading authors in CMS:", aErr);
+                console.error("Error loading authors/comments in CMS:", aErr);
               }
             }
             if (cmsTab === "applications") {
@@ -2536,6 +2553,73 @@ export default function AdminPanel({
       }
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  // --- BLOG COMMENTS MODERATION (ADMIN) ---
+  const handleModerateBlogComment = async (id, updates) => {
+    try {
+      const res = await fetch("/api/blog-comments?action=moderate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ id, ...updates })
+      });
+      if (res.ok) {
+        loadTabData();
+      }
+    } catch (e) {
+      console.error("Error moderating comment:", e);
+    }
+  };
+
+  const handleDeleteBlogComment = async (id, post_slug) => {
+    if (!confirm("¿Eliminar este comentario de forma permanente?")) return;
+    try {
+      const res = await fetch("/api/blog-comments", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ id, post_slug })
+      });
+      if (res.ok) {
+        setBlogCommentsList(prev => prev.filter(c => c.id !== id && c.parent_id !== id));
+        loadTabData();
+      }
+    } catch (e) {
+      console.error("Error deleting comment:", e);
+    }
+  };
+
+  const handleSendOfficialBlogReply = async (e) => {
+    e.preventDefault();
+    if (!adminReplyTarget || !adminReplyText.trim()) return;
+    try {
+      const res = await fetch("/api/blog-comments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          post_slug: adminReplyTarget.post_slug,
+          parent_id: adminReplyTarget.parent_id || adminReplyTarget.id,
+          author_name: user?.name || "Casa Loy Tequilera",
+          author_email: user?.email || null,
+          comment_text: adminReplyText.trim()
+        })
+      });
+      if (res.ok) {
+        setAdminReplyTarget(null);
+        setAdminReplyText("");
+        loadTabData();
+      }
+    } catch (e) {
+      console.error("Error sending official reply:", e);
     }
   };
 
@@ -5801,25 +5885,32 @@ export default function AdminPanel({
                       <thead>
                         <tr className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[9px] border-b border-stone-200 font-semibold">
                           <th className="p-3">Título</th>
-                          <th className="p-3">Slug</th>
                           <th className="p-3">Categoría</th>
-                          <th className="p-3">Resumen</th>
-                          <th className="p-3">Fecha de publicación</th>
+                          <th className="p-3 text-center">Visitas</th>
+                          <th className="p-3 text-center">Reacciones</th>
+                          <th className="p-3 text-center">Comentarios</th>
+                          <th className="p-3">Fecha</th>
                           <th className="p-3 text-center">Acciones</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-stone-100">
                         {blogList.length === 0 ? (
                           <tr>
-                            <td colSpan="6" className="p-8 text-center text-stone-400 italic">No hay entradas de blog guardadas en Supabase (mostrando fallbacks locales).</td>
+                            <td colSpan="7" className="p-8 text-center text-stone-400 italic">No hay entradas de blog guardadas en Supabase.</td>
                           </tr>
                         ) : (
                           blogList.map(b => (
                             <tr key={b.id} className="hover:bg-stone-50/40 text-stone-700">
-                              <td className="p-3 font-semibold text-stone-900">{b.title}</td>
-                              <td className="p-3 font-mono text-[11px] text-stone-500">{b.slug}</td>
+                              <td className="p-3">
+                                <div className="font-semibold text-stone-900">{b.title}</div>
+                                <a href={`/blog/${b.slug}`} target="_blank" rel="noopener noreferrer" className="font-mono text-[10px] text-[#8C4723] hover:underline">
+                                  /blog/{b.slug} ↗
+                                </a>
+                              </td>
                               <td className="p-3"><span className="bg-stone-100 text-stone-600 px-2 py-0.5 text-[10px] font-bold uppercase">{b.category}</span></td>
-                              <td className="p-3 text-stone-500 max-w-xs truncate">{b.description}</td>
+                              <td className="p-3 text-center font-semibold text-stone-800">{b.views_count || 0}</td>
+                              <td className="p-3 text-center font-semibold text-rose-700">{b.likes_count || 0}</td>
+                              <td className="p-3 text-center font-semibold text-[#8C4723]">{b.comments_count || 0}</td>
                               <td className="p-3 text-stone-400">{b.published_at ? new Date(b.published_at).toLocaleDateString() : 'Borrador'}</td>
                               <td className="p-3 text-center space-x-2">
                                 <button onClick={() => setEditingBlog(b)} className="text-blue-700 hover:underline font-bold uppercase cursor-pointer">Editar</button>
@@ -5830,6 +5921,109 @@ export default function AdminPanel({
                         )}
                       </tbody>
                     </table>
+                  </div>
+
+                  {/* Blog Community Comments Moderation Panel */}
+                  <div className="border-t border-stone-200 pt-6 mt-6 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h6 className="text-xs uppercase tracking-widest text-[#8C4723] font-bold flex items-center gap-1.5">
+                          <span className="material-symbols-outlined text-[16px]">forum</span>
+                          Moderación de Comentarios del Journal ({blogCommentsList.length})
+                        </h6>
+                        <p className="text-xs text-stone-400 mt-0.5">
+                          Fija comentarios destacados, responde oficialmente como Equipo Casa Loy o elimina comentarios inapropiados.
+                        </p>
+                      </div>
+                    </div>
+
+                    {adminReplyTarget && (
+                      <form onSubmit={handleSendOfficialBlogReply} className="bg-stone-50 border border-[#8C4723]/30 p-4 rounded space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-[#8C4723]">
+                            Responder oficialmente a {adminReplyTarget.author_name} en /{adminReplyTarget.post_slug}
+                          </span>
+                          <button type="button" onClick={() => setAdminReplyTarget(null)} className="text-xs text-stone-400 hover:text-stone-700 cursor-pointer">✕</button>
+                        </div>
+                        <textarea
+                          required
+                          rows="2"
+                          value={adminReplyText}
+                          onChange={(e) => setAdminReplyText(e.target.value)}
+                          placeholder="Escribe la respuesta oficial de Casa Loy Tequilera..."
+                          className="w-full bg-white border border-stone-300 p-2.5 text-xs focus:outline-none"
+                        />
+                        <div className="flex justify-end gap-2">
+                          <button type="button" onClick={() => setAdminReplyTarget(null)} className="px-3 py-1.5 text-xs border border-stone-200 cursor-pointer">Cancelar</button>
+                          <button type="submit" className="px-4 py-1.5 text-xs bg-[#8C4723] text-white font-semibold cursor-pointer">Publicar Respuesta Verificada</button>
+                        </div>
+                      </form>
+                    )}
+
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-xs border-collapse">
+                        <thead>
+                          <tr className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[9px] border-b border-stone-200 font-semibold">
+                            <th className="p-3">Autor</th>
+                            <th className="p-3">Artículo</th>
+                            <th className="p-3">Comentario</th>
+                            <th className="p-3 text-center">Likes</th>
+                            <th className="p-3">Fecha</th>
+                            <th className="p-3 text-center">Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-stone-100">
+                          {blogCommentsList.length === 0 ? (
+                            <tr>
+                              <td colSpan="6" className="p-6 text-center text-stone-400 italic">No hay comentarios registrados aún.</td>
+                            </tr>
+                          ) : (
+                            blogCommentsList.map((comm) => (
+                              <tr key={comm.id} className="hover:bg-stone-50/40 text-stone-700">
+                                <td className="p-3">
+                                  <div className="font-semibold text-stone-900 flex items-center gap-1">
+                                    {comm.is_pinned && <span className="text-[#8C4723]" title="Fijado">📌</span>}
+                                    {comm.author_name}
+                                  </div>
+                                  {comm.author_email && <div className="text-[10px] text-stone-400">{comm.author_email}</div>}
+                                  {comm.author_role_badge && <span className="inline-block bg-[#8C4723] text-white text-[9px] px-1.5 py-0.5 rounded mt-0.5">{comm.author_role_badge}</span>}
+                                </td>
+                                <td className="p-3 font-mono text-[10px] text-stone-500">{comm.post_slug}</td>
+                                <td className="p-3 text-stone-700 max-w-md">{comm.comment_text}</td>
+                                <td className="p-3 text-center font-semibold text-rose-700">{comm.likes || 0}</td>
+                                <td className="p-3 text-stone-400 whitespace-nowrap">{comm.created_at ? new Date(comm.created_at).toLocaleDateString() : ''}</td>
+                                <td className="p-3 text-center space-x-2 whitespace-nowrap">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setAdminReplyTarget(comm);
+                                      setAdminReplyText("");
+                                    }}
+                                    className="text-[#8C4723] hover:underline font-bold uppercase cursor-pointer"
+                                  >
+                                    Responder
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleModerateBlogComment(comm.id, { is_pinned: !comm.is_pinned })}
+                                    className="text-amber-700 hover:underline font-bold uppercase cursor-pointer"
+                                  >
+                                    {comm.is_pinned ? "Desfijar" : "Fijar"}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDeleteBlogComment(comm.id, comm.post_slug)}
+                                    className="text-red-700 hover:underline font-bold uppercase cursor-pointer"
+                                  >
+                                    Eliminar
+                                  </button>
+                                </td>
+                              </tr>
+                            ))
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               )}
