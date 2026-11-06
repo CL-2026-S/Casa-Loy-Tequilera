@@ -744,6 +744,21 @@ export default function AdminPanel({
   // Maquila Leads States
   const [maquilaLeadsList, setMaquilaLeadsList] = useState([]);
   const [subscribersList, setSubscribersList] = useState([]); // Newsletter Subscribers
+  const [newsletterSearchQuery, setNewsletterSearchQuery] = useState("");
+  const [newsletterStatusFilter, setNewsletterStatusFilter] = useState("all");
+  const [newsletterSourceFilter, setNewsletterSourceFilter] = useState("all");
+  const [newsletterDateFrom, setNewsletterDateFrom] = useState("");
+  const [newsletterDateTo, setNewsletterDateTo] = useState("");
+  const [newsletterSortBy, setNewsletterSortBy] = useState("newest");
+  const [newsletterPage, setNewsletterPage] = useState(1);
+  const [newsletterPageSize, setNewsletterPageSize] = useState(50);
+  const [selectedSubscriberIds, setSelectedSubscriberIds] = useState([]);
+  const [showAddSubscriberForm, setShowAddSubscriberForm] = useState(false);
+  const [newSubscriberEmail, setNewSubscriberEmail] = useState("");
+  const [newSubscriberSource, setNewSubscriberSource] = useState("manual_cms");
+  const [newSubscriberSendWelcome, setNewSubscriberSendWelcome] = useState(true);
+  const [isSubmittingSubscriber, setIsSubmittingSubscriber] = useState(false);
+  const [newsletterFeedbackMsg, setNewsletterFeedbackMsg] = useState("");
   const [maquilaDownloadStartDate, setMaquilaDownloadStartDate] = useState("");
   const [maquilaDownloadEndDate, setMaquilaDownloadEndDate] = useState("");
   const [maquilaSearchQuery, setMaquilaSearchQuery] = useState("");
@@ -1163,7 +1178,7 @@ export default function AdminPanel({
           } catch (kErr) {
             console.error("Error loading KAMs:", kErr);
           }
-        } else {
+        } else if (cmsTab !== "newsletter") {
           const res = await fetch(`/api/cms?type=${cmsTab}`, { headers });
           if (res.ok) {
             const data = await res.json();
@@ -1273,7 +1288,7 @@ export default function AdminPanel({
           } catch (kErr) {
             console.error("Error loading KAMs on refresh:", kErr);
           }
-        } else {
+        } else if (cmsTab !== "newsletter") {
           const res = await fetch(`/api/cms?type=${cmsTab}`, { headers });
           if (res.ok) {
             const data = await res.json();
@@ -1367,7 +1382,7 @@ export default function AdminPanel({
       }
     }
 
-    if (activeTab === "dashboard") {
+    if (activeTab === "dashboard" || (activeTab === "cms" && cmsTab === "newsletter") || subscribersList.length === 0) {
       try {
         const res = await fetch("/api/newsletter", {
           headers: {
@@ -2733,6 +2748,171 @@ export default function AdminPanel({
     }
   };
 
+  // --- NEWSLETTER SUBSCRIBERS MANAGEMENT HANDLERS ---
+  const fetchSubscribers = async () => {
+    try {
+      const res = await fetch("/api/newsletter", {
+        headers: { "Authorization": `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setSubscribersList(Array.isArray(data) ? data : []);
+      }
+    } catch (e) {
+      console.error("Error fetching subscribers:", e);
+    }
+  };
+
+  const handleAddSubscriber = async (e) => {
+    e.preventDefault();
+    if (!newSubscriberEmail.trim()) return;
+    setIsSubmittingSubscriber(true);
+    setNewsletterFeedbackMsg("");
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          action: "admin_add",
+          email: newSubscriberEmail.trim(),
+          source_page: newSubscriberSource,
+          send_welcome: newSubscriberSendWelcome
+        })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        setNewsletterFeedbackMsg(`Suscriptor ${newSubscriberEmail.trim()} registrado correctamente.`);
+        setNewSubscriberEmail("");
+        setShowAddSubscriberForm(false);
+        await fetchSubscribers();
+      } else {
+        alert(data.error || "Error al registrar suscriptor.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error de conexión al registrar suscriptor.");
+    } finally {
+      setIsSubmittingSubscriber(false);
+    }
+  };
+
+  const handleToggleSubscriberStatus = async (sub) => {
+    const nextStatus = sub.status === "active" ? "unsubscribed" : "active";
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          action: "toggle_status",
+          id: sub.id,
+          status: nextStatus
+        })
+      });
+      if (res.ok) {
+        setSubscribersList(prev => prev.map(item => item.id === sub.id ? { ...item, status: nextStatus } : item));
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert(err.error || "No se pudo cambiar el estado del suscriptor.");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleDeleteSubscriber = async (sub) => {
+    if (!confirm(`¿Eliminar permanentemente al suscriptor "${sub.email}" de la base de datos?`)) return;
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          action: "delete_subscriber",
+          id: sub.id,
+          email: sub.email
+        })
+      });
+      if (res.ok) {
+        setSubscribersList(prev => prev.filter(item => item.id !== sub.id));
+        setSelectedSubscriberIds(prev => prev.filter(id => id !== sub.id));
+        setNewsletterFeedbackMsg(`Suscriptor ${sub.email} eliminado.`);
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert(err.error || "Error al eliminar el suscriptor.");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleBulkDeleteSubscribers = async () => {
+    if (selectedSubscriberIds.length === 0) return;
+    if (!confirm(`¿Estás seguro de eliminar permanentemente ${selectedSubscriberIds.length} suscriptores seleccionados?`)) return;
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          action: "bulk_delete",
+          ids: selectedSubscriberIds
+        })
+      });
+      if (res.ok) {
+        const count = selectedSubscriberIds.length;
+        setSubscribersList(prev => prev.filter(item => !selectedSubscriberIds.includes(item.id)));
+        setSelectedSubscriberIds([]);
+        setNewsletterFeedbackMsg(`Se eliminaron ${count} suscriptores correctamente.`);
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert(err.error || "Error en la eliminación masiva.");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleExportSubscribersCSV = (listToExport) => {
+    const rows = listToExport || subscribersList;
+    if (!rows.length) {
+      alert("No hay suscriptores para exportar con los filtros actuales.");
+      return;
+    }
+    const headers = ["ID", "Correo Electronico", "Estado", "Origen", "Bienvenida Enviada", "Boletin Mensual", "Fecha de Registro"];
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(s => [
+        `"${s.id || ''}"`,
+        `"${(s.email || '').replace(/"/g, '""')}"`,
+        `"${s.status === 'active' ? 'Activo' : 'Baja / Desuscrito'}"`,
+        `"${s.source_page || 'general'}"`,
+        `"${s.welcome_email_sent ? 'Si' : 'No'}"`,
+        `"${s.monthly_newsletter ? 'Si' : 'No'}"`,
+        `"${s.created_at ? new Date(s.created_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' }) : ''}"`
+      ].join(","))
+    ].join("\n");
+
+    const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `suscriptores_newsletter_casaloy_${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   const handleSelectSavedAuthor = (authorId) => {
     setSelectedAuthorId(authorId);
     if (!authorId) return;
@@ -3347,6 +3527,14 @@ export default function AdminPanel({
           icon: "auto_awesome",
         };
       }
+      if (cmsTab === "newsletter") {
+        return {
+          group: "Contenido Web & Comunidad",
+          title: "Suscriptores del Newsletter",
+          subtitle: "Visualización, filtrado por origen/estado, alta manual, exportación CSV y baja de inscritos al boletín",
+          icon: "mail",
+        };
+      }
       if (cmsTab === "pos") {
         return {
           group: "Contenido Web",
@@ -3635,6 +3823,15 @@ export default function AdminPanel({
           roles: ["admin", "editor"],
           onClick: () => { setActiveTab("cms"); setCmsTab("blog"); setSidebarOpen(false); },
           isActive: activeTab === "cms" && cmsTab === "blog",
+        },
+        {
+          id: "cms_newsletter",
+          label: "Newsletter (Inscritos)",
+          icon: "mail",
+          badge: subscribersList.length > 0 ? subscribersList.length : null,
+          roles: ["admin", "editor", "viewer", "lead_maquila"],
+          onClick: () => { setActiveTab("cms"); setCmsTab("newsletter"); setSidebarOpen(false); },
+          isActive: activeTab === "cms" && cmsTab === "newsletter",
         },
         {
           id: "cms_pos",
@@ -5502,8 +5699,8 @@ export default function AdminPanel({
             </div>
           )}
 
-          {/* TAB: CMS modules (Banners, Dishes, Blog with IA, Jobs, POS CRUD) */}
-          {(userHasRole("admin") || userHasRole("editor") || userHasRole("rh") || userHasRole("lead_maquila") || userHasRole("kam")) && activeTab === "cms" && (
+          {/* TAB: CMS modules (Banners, Dishes, Blog with IA, Newsletter, Jobs, POS CRUD) */}
+          {(userHasRole("admin") || userHasRole("editor") || userHasRole("rh") || userHasRole("lead_maquila") || userHasRole("kam") || userHasRole("viewer")) && activeTab === "cms" && (
             <div className="space-y-6 text-left">
               
               {/* CMS Quick Pill Switcher (Shopify Polaris Segmented Control) */}
@@ -5512,6 +5709,7 @@ export default function AdminPanel({
                   { id: "banners", label: "Banners & Portadas", icon: "image", roles: ["admin", "editor"] },
                   { id: "dishes", label: "Platillos Nativo", icon: "dinner_dining", roles: ["admin", "editor"] },
                   { id: "blog", label: "Blog & Redactor IA", icon: "auto_awesome", roles: ["admin", "editor"] },
+                  { id: "newsletter", label: `Newsletter (${subscribersList.length})`, icon: "mail", roles: ["admin", "editor", "viewer", "lead_maquila"] },
                   { id: "pos", label: "Puntos de Venta", icon: "storefront", roles: ["admin", "editor", "kam"] },
                   { id: "jobs", label: "Vacantes", icon: "work", roles: ["admin", "editor", "rh"] },
                   { id: "applications", label: "Postulantes / CVs", icon: "badge", roles: ["admin", "rh"] },
@@ -7486,6 +7684,572 @@ export default function AdminPanel({
                             onClick={() => setPosCurrentPage(prev => Math.min(prev + 1, totalPages))}
                             disabled={currentPageClamped >= totalPages}
                             className="flex items-center gap-1 px-3 py-1.5 border border-stone-300 rounded bg-white text-stone-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 transition-colors cursor-pointer"
+                          >
+                            <span>Siguiente</span>
+                            <span className="material-symbols-outlined text-sm">chevron_right</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* CMS NEWSLETTER: Suscriptores del Newsletter */}
+              {cmsTab === "newsletter" && (() => {
+                const totalSubs = subscribersList.length;
+                const activeSubsCount = subscribersList.filter(s => s.status === "active").length;
+                const unsubscribedCount = subscribersList.filter(s => s.status !== "active").length;
+                const popupCount = subscribersList.filter(s => s.source_page === "popup_global").length;
+                const footerCount = subscribersList.filter(s => s.source_page === "footer").length;
+                const blogCount = subscribersList.filter(s => s.source_page === "blog").length;
+
+                const filteredSubs = subscribersList.filter(sub => {
+                  if (newsletterStatusFilter !== "all") {
+                    if (newsletterStatusFilter === "active" && sub.status !== "active") return false;
+                    if (newsletterStatusFilter === "unsubscribed" && sub.status === "active") return false;
+                  }
+                  if (newsletterSourceFilter !== "all") {
+                    if ((sub.source_page || "unknown") !== newsletterSourceFilter) return false;
+                  }
+                  if (newsletterSearchQuery.trim()) {
+                    const q = newsletterSearchQuery.trim().toLowerCase();
+                    const emailMatch = (sub.email || "").toLowerCase().includes(q);
+                    const idMatch = (sub.id || "").toLowerCase().includes(q);
+                    const sourceMatch = (sub.source_page || "").toLowerCase().includes(q);
+                    if (!emailMatch && !idMatch && !sourceMatch) return false;
+                  }
+                  if (newsletterDateFrom && sub.created_at) {
+                    const subDate = sub.created_at.slice(0, 10);
+                    if (subDate < newsletterDateFrom) return false;
+                  }
+                  if (newsletterDateTo && sub.created_at) {
+                    const subDate = sub.created_at.slice(0, 10);
+                    if (subDate > newsletterDateTo) return false;
+                  }
+                  return true;
+                }).sort((a, b) => {
+                  if (newsletterSortBy === "oldest") {
+                    return new Date(a.created_at || 0) - new Date(b.created_at || 0);
+                  }
+                  if (newsletterSortBy === "email_asc") {
+                    return (a.email || "").localeCompare(b.email || "");
+                  }
+                  return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+                });
+
+                const totalSubPages = Math.max(1, Math.ceil(filteredSubs.length / newsletterPageSize));
+                const currentSubPage = Math.min(Math.max(1, newsletterPage), totalSubPages);
+                const subStartIndex = (currentSubPage - 1) * newsletterPageSize;
+                const paginatedSubs = filteredSubs.slice(subStartIndex, subStartIndex + newsletterPageSize);
+
+                const allPageSelected = paginatedSubs.length > 0 && paginatedSubs.every(s => selectedSubscriberIds.includes(s.id));
+
+                const sourceLabelMap = {
+                  popup_global: { label: "Popup Global", badgeClass: "bg-amber-50 text-amber-800 border-amber-200", icon: "auto_awesome" },
+                  footer: { label: "Pie de Página (Footer)", badgeClass: "bg-stone-100 text-stone-700 border-stone-200", icon: "south" },
+                  blog: { label: "Blog / Journal", badgeClass: "bg-[#8C4723]/10 text-[#8C4723] border-[#8C4723]/20", icon: "menu_book" },
+                  manual_cms: { label: "Alta Manual CMS", badgeClass: "bg-blue-50 text-blue-700 border-blue-200", icon: "person_add" },
+                  reactivation: { label: "Reactivación", badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200", icon: "autorenew" }
+                };
+
+                return (
+                  <div className="space-y-6">
+                    {/* Header & Top Actions */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone-200 pb-4">
+                      <div>
+                        <h6 className="font-serif text-base font-bold text-[#8C4723] uppercase flex items-center gap-2">
+                          <span className="material-symbols-outlined text-lg">mail</span>
+                          Comunidad & Suscriptores del Newsletter ({totalSubs})
+                        </h6>
+                        <p className="text-xs text-stone-500 mt-0.5">
+                          Gestiona todos los correos inscritos en el sitio web, filtra por canal de captación, exporta en CSV o administra bajas.
+                        </p>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const activeEmails = filteredSubs.filter(s => s.status === "active").map(s => s.email).join(", ");
+                            if (!activeEmails) {
+                              alert("No hay correos activos en la selección actual.");
+                              return;
+                            }
+                            navigator.clipboard.writeText(activeEmails);
+                            setNewsletterFeedbackMsg(`¡${filteredSubs.filter(s => s.status === "active").length} correos activos copiados al portapapeles!`);
+                          }}
+                          className="text-xs bg-stone-100 hover:bg-stone-200 text-stone-700 border border-stone-200 px-3 py-2 font-semibold flex items-center gap-1.5 cursor-pointer rounded shadow-2xs"
+                          title="Copiar lista de correos activos filtrados separados por coma"
+                        >
+                          <span className="material-symbols-outlined text-sm">content_copy</span>
+                          Copiar Correos
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleExportSubscribersCSV(filteredSubs)}
+                          className="text-xs bg-stone-800 hover:bg-stone-900 text-white px-3.5 py-2 font-semibold flex items-center gap-1.5 cursor-pointer rounded shadow-2xs"
+                        >
+                          <span className="material-symbols-outlined text-sm">download</span>
+                          Exportar CSV ({filteredSubs.length})
+                        </button>
+
+                        {(userHasRole("admin") || userHasRole("editor")) && (
+                          <button
+                            type="button"
+                            onClick={() => setShowAddSubscriberForm(!showAddSubscriberForm)}
+                            className="text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white px-3.5 py-2 font-semibold flex items-center gap-1.5 cursor-pointer rounded shadow-2xs"
+                          >
+                            <span className="material-symbols-outlined text-sm">{showAddSubscriberForm ? "close" : "person_add"}</span>
+                            {showAddSubscriberForm ? "Cerrar Formulario" : "+ Nuevo Suscriptor"}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Feedback Toast Banner */}
+                    {newsletterFeedbackMsg && (
+                      <div className="bg-emerald-50 border border-emerald-200 text-emerald-900 px-4 py-3 rounded flex items-center justify-between text-xs font-semibold">
+                        <div className="flex items-center gap-2">
+                          <span className="material-symbols-outlined text-emerald-600 text-base">check_circle</span>
+                          <span>{newsletterFeedbackMsg}</span>
+                        </div>
+                        <button onClick={() => setNewsletterFeedbackMsg("")} className="text-emerald-700 hover:text-emerald-950 font-bold cursor-pointer">✕</button>
+                      </div>
+                    )}
+
+                    {/* Manual Add Subscriber Form */}
+                    {showAddSubscriberForm && (
+                      <form onSubmit={handleAddSubscriber} className="bg-stone-50 border border-stone-200 p-5 rounded-lg space-y-4 max-w-2xl">
+                        <div className="flex items-center justify-between border-b border-stone-200 pb-2">
+                          <h6 className="font-serif text-xs font-bold text-stone-800 uppercase flex items-center gap-1.5">
+                            <span className="material-symbols-outlined text-sm text-[#8C4723]">person_add</span>
+                            Registrar Suscriptor Manualmente
+                          </h6>
+                          <span className="text-[10px] text-stone-400">Se guardará directamente en Supabase</span>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                          <div className="sm:col-span-2">
+                            <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Correo Electrónico *</label>
+                            <input
+                              type="email"
+                              required
+                              value={newSubscriberEmail}
+                              onChange={(e) => setNewSubscriberEmail(e.target.value)}
+                              placeholder="cliente@ejemplo.com"
+                              className="w-full bg-white border border-stone-300 p-2 rounded focus:outline-none focus:border-[#8C4723]"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Origen de Captación</label>
+                            <select
+                              value={newSubscriberSource}
+                              onChange={(e) => setNewSubscriberSource(e.target.value)}
+                              className="w-full bg-white border border-stone-300 p-2 rounded focus:outline-none focus:border-[#8C4723]"
+                            >
+                              <option value="manual_cms">Alta Manual CMS</option>
+                              <option value="popup_global">Popup Global</option>
+                              <option value="footer">Pie de Página (Footer)</option>
+                              <option value="blog">Blog / Journal</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+                          <label className="inline-flex items-center gap-2 text-xs text-stone-700 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={newSubscriberSendWelcome}
+                              onChange={(e) => setNewSubscriberSendWelcome(e.target.checked)}
+                              className="accent-[#8C4723]"
+                            />
+                            <span>Enviar correo automático de bienvenida de Casa Loy</span>
+                          </label>
+
+                          <button
+                            type="submit"
+                            disabled={isSubmittingSubscriber}
+                            className="bg-[#8C4723] hover:bg-[#70381b] text-white px-5 py-2 rounded text-xs font-bold uppercase tracking-wider cursor-pointer disabled:opacity-50"
+                          >
+                            {isSubmittingSubscriber ? "Guardando..." : "Guardar Suscriptor"}
+                          </button>
+                        </div>
+                      </form>
+                    )}
+
+                    {/* Interactive KPI Metric Cards */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                      <div
+                        onClick={() => { setNewsletterStatusFilter("all"); setNewsletterSourceFilter("all"); setNewsletterPage(1); }}
+                        className={`bg-white border p-3.5 text-center cursor-pointer transition-all rounded-lg hover:border-[#8C4723] ${newsletterStatusFilter === "all" && newsletterSourceFilter === "all" ? "border-[#8C4723] ring-1 ring-[#8C4723]/30 bg-[#8C4723]/5" : "border-stone-200"}`}
+                      >
+                        <span className="text-[10px] uppercase font-bold text-stone-400 block tracking-wider">Total Inscritos</span>
+                        <span className="text-xl font-bold text-stone-900 font-serif">{totalSubs}</span>
+                      </div>
+
+                      <div
+                        onClick={() => { setNewsletterStatusFilter("active"); setNewsletterPage(1); }}
+                        className={`bg-white border p-3.5 text-center cursor-pointer transition-all rounded-lg hover:border-emerald-600 ${newsletterStatusFilter === "active" ? "border-emerald-600 ring-1 ring-emerald-600/30 bg-emerald-50/40" : "border-stone-200"}`}
+                      >
+                        <span className="text-[10px] uppercase font-bold text-stone-500 block tracking-wider">Activos</span>
+                        <span className="text-xl font-bold text-emerald-700 font-serif">{activeSubsCount}</span>
+                      </div>
+
+                      <div
+                        onClick={() => { setNewsletterStatusFilter("unsubscribed"); setNewsletterPage(1); }}
+                        className={`bg-white border p-3.5 text-center cursor-pointer transition-all rounded-lg hover:border-red-500 ${newsletterStatusFilter === "unsubscribed" ? "border-red-500 ring-1 ring-red-500/30 bg-red-50/40" : "border-stone-200"}`}
+                      >
+                        <span className="text-[10px] uppercase font-bold text-stone-500 block tracking-wider">Bajas / Inactivos</span>
+                        <span className="text-xl font-bold text-red-600 font-serif">{unsubscribedCount}</span>
+                      </div>
+
+                      <div
+                        onClick={() => { setNewsletterSourceFilter(newsletterSourceFilter === "footer" ? "all" : "footer"); setNewsletterPage(1); }}
+                        className={`bg-white border p-3.5 text-center cursor-pointer transition-all rounded-lg hover:border-stone-700 ${newsletterSourceFilter === "footer" ? "border-stone-800 ring-1 ring-stone-800/30 bg-stone-100" : "border-stone-200"}`}
+                      >
+                        <span className="text-[10px] uppercase font-bold text-stone-500 block tracking-wider">Origen: Footer</span>
+                        <span className="text-xl font-bold text-stone-800 font-serif">{footerCount}</span>
+                      </div>
+
+                      <div
+                        onClick={() => { setNewsletterSourceFilter(newsletterSourceFilter === "blog" ? "all" : "blog"); setNewsletterPage(1); }}
+                        className={`bg-white border p-3.5 text-center cursor-pointer transition-all rounded-lg hover:border-[#8C4723] ${newsletterSourceFilter === "blog" ? "border-[#8C4723] ring-1 ring-[#8C4723]/30 bg-[#8C4723]/5" : "border-stone-200"}`}
+                      >
+                        <span className="text-[10px] uppercase font-bold text-stone-500 block tracking-wider">Origen: Blog</span>
+                        <span className="text-xl font-bold text-[#8C4723] font-serif">{blogCount}</span>
+                      </div>
+
+                      <div
+                        onClick={() => { setNewsletterSourceFilter(newsletterSourceFilter === "popup_global" ? "all" : "popup_global"); setNewsletterPage(1); }}
+                        className={`bg-white border p-3.5 text-center cursor-pointer transition-all rounded-lg hover:border-amber-600 ${newsletterSourceFilter === "popup_global" ? "border-amber-600 ring-1 ring-amber-600/30 bg-amber-50/40" : "border-stone-200"}`}
+                      >
+                        <span className="text-[10px] uppercase font-bold text-stone-500 block tracking-wider">Origen: Popup</span>
+                        <span className="text-xl font-bold text-amber-700 font-serif">{popupCount}</span>
+                      </div>
+                    </div>
+
+                    {/* Filter & Search Bar */}
+                    <div className="bg-stone-50 border border-stone-200 p-4 rounded-lg space-y-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                        {/* Search Input */}
+                        <div className="lg:col-span-2 relative">
+                          <label className="block text-[10px] uppercase font-bold text-stone-500 mb-1">Buscar por Correo o ID</label>
+                          <div className="relative">
+                            <span className="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400 text-base">search</span>
+                            <input
+                              type="text"
+                              value={newsletterSearchQuery}
+                              onChange={(e) => { setNewsletterSearchQuery(e.target.value); setNewsletterPage(1); }}
+                              placeholder="Ej. @gmail.com, nombre, etc..."
+                              className="w-full bg-white border border-stone-200 pl-8 pr-7 py-2 text-xs text-stone-800 rounded focus:outline-none focus:border-[#8C4723]"
+                            />
+                            {newsletterSearchQuery && (
+                              <button
+                                type="button"
+                                onClick={() => { setNewsletterSearchQuery(""); setNewsletterPage(1); }}
+                                className="absolute right-2 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 text-xs cursor-pointer"
+                              >
+                                ✕
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Status Filter */}
+                        <div>
+                          <label className="block text-[10px] uppercase font-bold text-stone-500 mb-1">Estado</label>
+                          <select
+                            value={newsletterStatusFilter}
+                            onChange={(e) => { setNewsletterStatusFilter(e.target.value); setNewsletterPage(1); }}
+                            className="w-full bg-white border border-stone-200 p-2 text-xs text-stone-800 rounded focus:outline-none focus:border-[#8C4723]"
+                          >
+                            <option value="all">Todos ({totalSubs})</option>
+                            <option value="active">Activos ({activeSubsCount})</option>
+                            <option value="unsubscribed">Bajas / Desuscritos ({unsubscribedCount})</option>
+                          </select>
+                        </div>
+
+                        {/* Source Filter */}
+                        <div>
+                          <label className="block text-[10px] uppercase font-bold text-stone-500 mb-1">Canal de Origen</label>
+                          <select
+                            value={newsletterSourceFilter}
+                            onChange={(e) => { setNewsletterSourceFilter(e.target.value); setNewsletterPage(1); }}
+                            className="w-full bg-white border border-stone-200 p-2 text-xs text-stone-800 rounded focus:outline-none focus:border-[#8C4723]"
+                          >
+                            <option value="all">Todos los Canales</option>
+                            <option value="footer">Footer ({footerCount})</option>
+                            <option value="blog">Blog / Journal ({blogCount})</option>
+                            <option value="popup_global">Popup Global ({popupCount})</option>
+                            <option value="manual_cms">Alta Manual CMS</option>
+                          </select>
+                        </div>
+
+                        {/* Sort Order */}
+                        <div>
+                          <label className="block text-[10px] uppercase font-bold text-stone-500 mb-1">Ordenar por</label>
+                          <select
+                            value={newsletterSortBy}
+                            onChange={(e) => { setNewsletterSortBy(e.target.value); setNewsletterPage(1); }}
+                            className="w-full bg-white border border-stone-200 p-2 text-xs text-stone-800 rounded focus:outline-none focus:border-[#8C4723]"
+                          >
+                            <option value="newest">Más recientes primero</option>
+                            <option value="oldest">Más antiguos primero</option>
+                            <option value="email_asc">Correo (A - Z)</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Second Row: Date Range + Bulk Actions + Reset */}
+                      <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-stone-200/70 text-xs">
+                        <div className="flex flex-wrap items-center gap-3">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px] uppercase font-bold text-stone-500">Desde:</span>
+                            <input
+                              type="date"
+                              value={newsletterDateFrom}
+                              onChange={(e) => { setNewsletterDateFrom(e.target.value); setNewsletterPage(1); }}
+                              className="bg-white border border-stone-200 px-2 py-1 text-xs rounded"
+                            />
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px] uppercase font-bold text-stone-500">Hasta:</span>
+                            <input
+                              type="date"
+                              value={newsletterDateTo}
+                              onChange={(e) => { setNewsletterDateTo(e.target.value); setNewsletterPage(1); }}
+                              className="bg-white border border-stone-200 px-2 py-1 text-xs rounded"
+                            />
+                          </div>
+
+                          {(newsletterSearchQuery || newsletterStatusFilter !== "all" || newsletterSourceFilter !== "all" || newsletterDateFrom || newsletterDateTo) && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setNewsletterSearchQuery("");
+                                setNewsletterStatusFilter("all");
+                                setNewsletterSourceFilter("all");
+                                setNewsletterDateFrom("");
+                                setNewsletterDateTo("");
+                                setNewsletterPage(1);
+                              }}
+                              className="text-xs text-[#8C4723] hover:underline font-bold cursor-pointer"
+                            >
+                              Limpiar filtros
+                            </button>
+                          )}
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                          {selectedSubscriberIds.length > 0 && (userHasRole("admin") || userHasRole("editor")) && (
+                            <button
+                              type="button"
+                              onClick={handleBulkDeleteSubscribers}
+                              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
+                            >
+                              <span className="material-symbols-outlined text-sm">delete_sweep</span>
+                              Eliminar seleccionados ({selectedSubscriberIds.length})
+                            </button>
+                          )}
+
+                          <span className="text-stone-500">
+                            Mostrando <strong className="text-stone-900">{filteredSubs.length === 0 ? 0 : subStartIndex + 1}</strong>–<strong className="text-stone-900">{Math.min(subStartIndex + newsletterPageSize, filteredSubs.length)}</strong> de <strong className="text-stone-900">{filteredSubs.length}</strong>
+                          </span>
+
+                          <select
+                            value={newsletterPageSize}
+                            onChange={(e) => { setNewsletterPageSize(Number(e.target.value)); setNewsletterPage(1); }}
+                            className="bg-white border border-stone-200 px-2 py-1 text-xs rounded"
+                          >
+                            <option value={25}>25 / pág</option>
+                            <option value={50}>50 / pág</option>
+                            <option value={100}>100 / pág</option>
+                            <option value={250}>250 / pág</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Subscribers Data Table */}
+                    <div className="bg-white border border-stone-200 rounded-lg overflow-hidden shadow-2xs">
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left text-xs border-collapse">
+                          <thead>
+                            <tr className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[10px] border-b border-stone-200 font-bold">
+                              {(userHasRole("admin") || userHasRole("editor")) && (
+                                <th className="p-3 w-8 text-center">
+                                  <input
+                                    type="checkbox"
+                                    checked={allPageSelected}
+                                    onChange={(e) => {
+                                      if (e.target.checked) {
+                                        const pageIds = paginatedSubs.map(s => s.id);
+                                        setSelectedSubscriberIds(prev => Array.from(new Set([...prev, ...pageIds])));
+                                      } else {
+                                        const pageIds = new Set(paginatedSubs.map(s => s.id));
+                                        setSelectedSubscriberIds(prev => prev.filter(id => !pageIds.has(id)));
+                                      }
+                                    }}
+                                    className="accent-[#8C4723] cursor-pointer"
+                                  />
+                                </th>
+                              )}
+                              <th className="p-3">Correo Electrónico</th>
+                              <th className="p-3 text-center">Estado</th>
+                              <th className="p-3">Origen de Captación</th>
+                              <th className="p-3 text-center">Email Bienvenida</th>
+                              <th className="p-3">Fecha de Suscripción</th>
+                              {(userHasRole("admin") || userHasRole("editor")) && (
+                                <th className="p-3 text-center">Acciones</th>
+                              )}
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-stone-100">
+                            {paginatedSubs.length === 0 ? (
+                              <tr>
+                                <td colSpan="7" className="p-10 text-center text-stone-400 italic">
+                                  No se encontraron suscriptores con los criterios seleccionados.
+                                </td>
+                              </tr>
+                            ) : (
+                              paginatedSubs.map((sub) => {
+                                const srcMeta = sourceLabelMap[sub.source_page] || {
+                                  label: sub.source_page || "Sitio Web",
+                                  badgeClass: "bg-stone-100 text-stone-600 border-stone-200",
+                                  icon: "language"
+                                };
+                                const isSelected = selectedSubscriberIds.includes(sub.id);
+
+                                return (
+                                  <tr key={sub.id} className={`hover:bg-stone-50/70 transition-colors ${isSelected ? "bg-amber-50/30" : ""}`}>
+                                    {(userHasRole("admin") || userHasRole("editor")) && (
+                                      <td className="p-3 text-center">
+                                        <input
+                                          type="checkbox"
+                                          checked={isSelected}
+                                          onChange={(e) => {
+                                            if (e.target.checked) {
+                                              setSelectedSubscriberIds(prev => [...prev, sub.id]);
+                                            } else {
+                                              setSelectedSubscriberIds(prev => prev.filter(id => id !== sub.id));
+                                            }
+                                          }}
+                                          className="accent-[#8C4723] cursor-pointer"
+                                        />
+                                      </td>
+                                    )}
+                                    <td className="p-3">
+                                      <div className="font-bold text-stone-900 select-all">{sub.email}</div>
+                                      <div className="text-[10px] text-stone-400 font-mono">{sub.id}</div>
+                                    </td>
+                                    <td className="p-3 text-center whitespace-nowrap">
+                                      {sub.status === "active" ? (
+                                        <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
+                                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                          Activo
+                                        </span>
+                                      ) : (
+                                        <span className="inline-flex items-center gap-1 bg-red-50 text-red-600 border border-red-200 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
+                                          <span className="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+                                          Baja
+                                        </span>
+                                      )}
+                                    </td>
+                                    <td className="p-3 whitespace-nowrap">
+                                      <span className={`inline-flex items-center gap-1 border px-2 py-0.5 rounded text-[10px] font-semibold ${srcMeta.badgeClass}`}>
+                                        <span className="material-symbols-outlined text-xs">{srcMeta.icon}</span>
+                                        {srcMeta.label}
+                                      </span>
+                                    </td>
+                                    <td className="p-3 text-center whitespace-nowrap">
+                                      {sub.welcome_email_sent ? (
+                                        <span className="text-emerald-700 font-semibold text-[11px] inline-flex items-center gap-1">
+                                          <span className="material-symbols-outlined text-sm">mark_email_read</span>
+                                          Enviado
+                                        </span>
+                                      ) : (
+                                        <span className="text-stone-400 text-[11px] inline-flex items-center gap-1">
+                                          <span className="material-symbols-outlined text-sm">schedule</span>
+                                          Pendiente
+                                        </span>
+                                      )}
+                                    </td>
+                                    <td className="p-3 text-stone-600 whitespace-nowrap font-mono text-[11px]">
+                                      {sub.created_at
+                                        ? new Date(sub.created_at).toLocaleString("es-MX", {
+                                            timeZone: "America/Mexico_City",
+                                            day: "2-digit",
+                                            month: "short",
+                                            year: "numeric",
+                                            hour: "2-digit",
+                                            minute: "2-digit"
+                                          })
+                                        : "—"}
+                                    </td>
+                                    {(userHasRole("admin") || userHasRole("editor")) && (
+                                      <td className="p-3 text-center whitespace-nowrap space-x-2">
+                                        <button
+                                          type="button"
+                                          onClick={() => handleToggleSubscriberStatus(sub)}
+                                          className={`inline-flex items-center gap-1 text-[10px] font-bold uppercase px-2 py-1 rounded border cursor-pointer transition-colors ${
+                                            sub.status === "active"
+                                              ? "text-amber-700 border-amber-200 bg-amber-50 hover:bg-amber-100"
+                                              : "text-emerald-700 border-emerald-200 bg-emerald-50 hover:bg-emerald-100"
+                                          }`}
+                                          title={sub.status === "active" ? "Dar de baja temporalmente" : "Reactivar suscripción"}
+                                        >
+                                          <span className="material-symbols-outlined text-xs">
+                                            {sub.status === "active" ? "person_off" : "person_check"}
+                                          </span>
+                                          {sub.status === "active" ? "Dar Baja" : "Activar"}
+                                        </button>
+
+                                        <button
+                                          type="button"
+                                          onClick={() => handleDeleteSubscriber(sub)}
+                                          className="inline-flex items-center gap-0.5 text-red-600 hover:text-red-800 bg-red-50 hover:bg-red-100 border border-red-200 px-2 py-1 rounded font-bold uppercase text-[10px] cursor-pointer transition-colors"
+                                          title="Eliminar suscriptor permanentemente"
+                                        >
+                                          <span className="material-symbols-outlined text-xs">delete</span>
+                                          Eliminar
+                                        </button>
+                                      </td>
+                                    )}
+                                  </tr>
+                                );
+                              })
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+
+                      {/* Pagination Footer */}
+                      {totalSubPages > 1 && (
+                        <div className="flex items-center justify-between px-4 py-3 bg-stone-50 border-t border-stone-200 text-xs">
+                          <button
+                            type="button"
+                            onClick={() => setNewsletterPage(prev => Math.max(prev - 1, 1))}
+                            disabled={currentSubPage <= 1}
+                            className="flex items-center gap-1 px-3 py-1.5 border border-stone-300 rounded bg-white text-stone-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 cursor-pointer"
+                          >
+                            <span className="material-symbols-outlined text-sm">chevron_left</span>
+                            <span>Anterior</span>
+                          </button>
+
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-stone-500">Página</span>
+                            <span className="font-bold text-stone-900">{currentSubPage}</span>
+                            <span className="text-stone-500">de</span>
+                            <span className="font-bold text-stone-900">{totalSubPages}</span>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => setNewsletterPage(prev => Math.min(prev + 1, totalSubPages))}
+                            disabled={currentSubPage >= totalSubPages}
+                            className="flex items-center gap-1 px-3 py-1.5 border border-stone-300 rounded bg-white text-stone-700 disabled:opacity-40 disabled:cursor-not-allowed hover:bg-stone-100 cursor-pointer"
                           >
                             <span>Siguiente</span>
                             <span className="material-symbols-outlined text-sm">chevron_right</span>
