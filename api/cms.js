@@ -648,7 +648,7 @@ export default async function handler(req, res) {
           related_slugs
         } = req.body || {};
 
-        let resolvedImageUrl = image_url;
+        let resolvedImageUrl = (image_url || '').trim();
         if (image_base64) {
           try {
             const uploadedUrl = await uploadMediaFile(image_base64, image_filename || 'blog_cover.webp', 'blog_cover');
@@ -657,12 +657,29 @@ export default async function handler(req, res) {
             console.warn("Blog cover image upload failed:", uploadErr.message);
           }
         }
+        if (!resolvedImageUrl) {
+          resolvedImageUrl = '/Barra Casa Loy Experiencias.webp';
+        }
 
-        const finalTitleEs = title_es || title;
-        const finalTitleEn = title_en || finalTitleEs;
+        const finalTitleEs = (title_es || title || '').trim();
+        const finalTitleEn = (title_en || finalTitleEs).trim();
 
-        if (!slug || !finalTitleEs || !description || !category || !label || !resolvedImageUrl) {
-          return res.status(400).json({ error: 'Campos obligatorios del blog incompletos.' });
+        const rawSlug = (slug || finalTitleEs)
+          .toString()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/(^-|-$)/g, '');
+
+        const finalCategory = (category || 'Noticias').trim();
+        const finalLabel = (label || finalCategory || 'CRÓNICAS').trim().toUpperCase();
+        const cleanBodyStrip = String(body_es || '').replace(/<[^>]*>?/gm, ' ').trim();
+        const finalDescription = (description || cleanBodyStrip.slice(0, 220) || finalTitleEs).trim();
+
+        if (!rawSlug || !finalTitleEs) {
+          return res.status(400).json({ error: 'El título del artículo es obligatorio.' });
         }
 
         let normalizedRelatedSlugs = [];
@@ -678,32 +695,32 @@ export default async function handler(req, res) {
         }
 
         const blogData = {
-          slug: slug.toLowerCase().trim().replace(/\s+/g, '-'),
+          slug: rawSlug,
           title: finalTitleEs,
           title_es: finalTitleEs,
           title_en: finalTitleEn,
-          description,
-          category,
-          label,
+          description: finalDescription,
+          category: finalCategory,
+          label: finalLabel,
           image_url: resolvedImageUrl,
-          body_es: body_es || description,
-          body_en: body_en || body_es || description,
-          author_es: author_es || 'Casa Loy Tequilera',
-          author_en: author_en || author_es || 'Casa Loy Tequilera',
-          author_photo: author_photo || '/Empleado Jimador Casa Loy Tequilera.webp',
-          author_role: author_role || 'Maestro Tequilero & Selección de Origen',
-          author_bio: author_bio || 'Guardián de la tradición centenaria y el terroir de Los Altos de Jalisco en Casa Loy.',
-          seo_title: seo_title || finalTitleEs,
-          seo_description: seo_description || description,
-          seo_keywords: seo_keywords || category,
+          body_es: body_es || finalDescription,
+          body_en: body_en || body_es || finalDescription,
+          author_es: (author_es || 'Casa Loy Tequilera').trim(),
+          author_en: (author_en || author_es || 'Casa Loy Tequilera').trim(),
+          author_photo: (author_photo || '/Logotipo Casa Loy Tequilera.webp').trim(),
+          author_role: (author_role || 'Casa Tequilera & Guardián del Origen').trim(),
+          author_bio: (author_bio || 'Guardián de la tradición centenaria y el terroir de Los Altos de Jalisco en Casa Loy.').trim(),
+          seo_title: (seo_title || finalTitleEs).trim(),
+          seo_description: (seo_description || finalDescription).trim(),
+          seo_keywords: (seo_keywords || finalCategory).trim(),
           related_slugs: normalizedRelatedSlugs
         };
 
         let dbRes;
         if (id) {
-          dbRes = await supabase.from('blog_posts').update(blogData).eq('id', id);
+          dbRes = await supabase.from('blog_posts').update(blogData).eq('id', id).select().single();
         } else {
-          dbRes = await supabase.from('blog_posts').insert(blogData);
+          dbRes = await supabase.from('blog_posts').upsert(blogData, { onConflict: 'slug' }).select().single();
         }
 
         if (dbRes.error) throw dbRes.error;
@@ -716,7 +733,7 @@ export default async function handler(req, res) {
           `Entrada de blog guardada: ${blogData.slug} (${finalTitleEs})`
         );
 
-        return res.status(200).json({ success: true });
+        return res.status(200).json({ success: true, post: dbRes.data || blogData });
       }
 
       // Action: Delete Blog Post
@@ -740,39 +757,50 @@ export default async function handler(req, res) {
 
       // Action: Save Author
       if (action === 'save_author') {
-        const { id, name, role, photo, bio } = req.body || {};
-        if (!name || !role || !photo) {
-          return res.status(400).json({ error: 'Nombre, cargo y foto son campos obligatorios.' });
+        const { id, name, role, photo, photo_base64, photo_filename, bio } = req.body || {};
+        if (!name || !role) {
+          return res.status(400).json({ error: 'Nombre y cargo son campos obligatorios.' });
         }
 
+        let resolvedPhoto = (photo || '').trim();
+        if (photo_base64) {
+          try {
+            const uploadedUrl = await uploadMediaFile(photo_base64, photo_filename || 'author.webp', 'author_photo');
+            if (uploadedUrl) resolvedPhoto = uploadedUrl;
+          } catch (uploadErr) {
+            console.warn("Author photo upload failed:", uploadErr.message);
+          }
+        }
+        if (!resolvedPhoto) {
+          resolvedPhoto = '/Logotipo Casa Loy Tequilera.webp';
+        }
+
+        const authorId = id || `auth_${Date.now()}`;
         const authorData = {
+          id: authorId,
           name: name.trim(),
           role: role.trim(),
-          photo: photo.trim(),
+          photo: resolvedPhoto,
           bio: (bio || '').trim()
         };
 
-        let authorId = id;
-        if (id) {
-          try {
-            await supabase.from('blog_authors').update(authorData).eq('id', id);
-          } catch (e) {
-            console.warn("Supabase update blog_authors notice:", e.message);
-          }
-          // Update in-memory
-          const idx = memoryAuthorsStore.findIndex(a => a.id === id);
-          if (idx !== -1) {
-            memoryAuthorsStore[idx] = { ...memoryAuthorsStore[idx], ...authorData };
-          }
+        const { data: savedAuthor, error: authorErr } = await supabase
+          .from('blog_authors')
+          .upsert(authorData, { onConflict: 'id' })
+          .select()
+          .single();
+
+        if (authorErr) {
+          console.error("Supabase upsert blog_authors error:", authorErr.message);
+          throw authorErr;
+        }
+
+        const finalAuthor = savedAuthor || authorData;
+        const idx = memoryAuthorsStore.findIndex(a => a.id === finalAuthor.id);
+        if (idx !== -1) {
+          memoryAuthorsStore[idx] = finalAuthor;
         } else {
-          authorId = `auth_${Date.now()}`;
-          try {
-            const { data } = await supabase.from('blog_authors').insert(authorData).select().single();
-            if (data?.id) authorId = data.id;
-          } catch (e) {
-            console.warn("Supabase insert blog_authors notice:", e.message);
-          }
-          memoryAuthorsStore.push({ id: authorId, ...authorData });
+          memoryAuthorsStore.push(finalAuthor);
         }
 
         await auditLog(
@@ -783,7 +811,7 @@ export default async function handler(req, res) {
           `Autor guardado: ${name}`
         );
 
-        return res.status(200).json({ success: true, author: { id: authorId, ...authorData } });
+        return res.status(200).json({ success: true, author: finalAuthor });
       }
 
       // Action: Delete Author

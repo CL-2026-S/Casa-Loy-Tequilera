@@ -451,9 +451,13 @@ export default function AdminPanel({
   const [editingBlog, setEditingBlog] = useState(null);
   const [blogTagsInput, setBlogTagsInput] = useState("");
   const [blogRelatedSlugs, setBlogRelatedSlugs] = useState([]);
+  const [blogImageBase64, setBlogImageBase64] = useState("");
+  const [blogImageFilename, setBlogImageFilename] = useState("");
   const [authorsList, setAuthorsList] = useState([]);
   const [showAuthorModal, setShowAuthorModal] = useState(false);
   const [editingAuthor, setEditingAuthor] = useState(null);
+  const [authorPhotoBase64, setAuthorPhotoBase64] = useState("");
+  const [authorPhotoFilename, setAuthorPhotoFilename] = useState("");
   const [selectedAuthorId, setSelectedAuthorId] = useState("");
   const [blogCommentsList, setBlogCommentsList] = useState([]);
   const [adminReplyTarget, setAdminReplyTarget] = useState(null);
@@ -463,9 +467,13 @@ export default function AdminPanel({
     if (editingBlog) {
       setBlogTagsInput(editingBlog.seo_keywords || "Casa Loy, Tequila, Agave Azul, Los Altos de Jalisco");
       setBlogRelatedSlugs(Array.isArray(editingBlog.related_slugs) ? editingBlog.related_slugs : []);
+      setBlogImageBase64("");
+      setBlogImageFilename("");
     } else {
       setBlogTagsInput("");
       setBlogRelatedSlugs([]);
+      setBlogImageBase64("");
+      setBlogImageFilename("");
     }
   }, [editingBlog]);
   const [editingPos, setEditingPos] = useState(null);
@@ -2537,19 +2545,23 @@ export default function AdminPanel({
         body: JSON.stringify({
           ...data,
           id: editingBlog?.id,
+          image_base64: blogImageBase64 || undefined,
+          image_filename: blogImageFilename || undefined,
           seo_keywords: blogTagsInput || data.seo_keywords || "",
           related_slugs: blogRelatedSlugs
         })
       });
       if (res.ok) {
-        alert("Artículo de blog guardado.");
+        alert("¡Artículo de blog guardado exitosamente!");
         setEditingBlog(null);
         loadTabData();
       } else {
-        alert("Error al guardar blog.");
+        const errData = await res.json().catch(() => ({}));
+        alert(`Error al guardar blog: ${errData.error || errData.message || "Verifica los campos obligatorios."}`);
       }
     } catch (e) {
       console.error(e);
+      alert("Error de conexión al guardar el artículo.");
     }
   };
 
@@ -2665,14 +2677,35 @@ export default function AdminPanel({
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({ ...data, id: editingAuthor?.id })
+        body: JSON.stringify({
+          ...data,
+          id: editingAuthor?.id,
+          photo_base64: authorPhotoBase64 || undefined,
+          photo_filename: authorPhotoFilename || undefined
+        })
       });
       if (res.ok) {
-        alert("Autor guardado correctamente en el directorio.");
+        const resData = await res.json().catch(() => ({}));
+        const saved = resData.author;
+        alert("¡Autor guardado correctamente en el directorio!");
         setEditingAuthor(null);
-        fetchAuthors();
+        setAuthorPhotoBase64("");
+        setAuthorPhotoFilename("");
+        await fetchAuthors();
+        if (saved && editingBlog) {
+          setSelectedAuthorId(saved.id);
+          const nameInput = document.querySelector('input[name="author_es"]');
+          const roleInput = document.querySelector('input[name="author_role"]');
+          const photoInput = document.querySelector('input[name="author_photo"]');
+          const bioInput = document.querySelector('input[name="author_bio"]');
+          if (nameInput) nameInput.value = saved.name || "";
+          if (roleInput) roleInput.value = saved.role || "";
+          if (photoInput) photoInput.value = saved.photo || "";
+          if (bioInput) bioInput.value = saved.bio || "";
+        }
       } else {
-        alert("Error al guardar autor.");
+        const errData = await res.json().catch(() => ({}));
+        alert(`Error al guardar autor: ${errData.error || errData.message || "Error del servidor"}`);
       }
     } catch (e) {
       console.error(e);
@@ -3451,7 +3484,10 @@ export default function AdminPanel({
               <span>Redactor IA</span>
             </button>
             <button
-              onClick={() => setEditingBlog({ title: "", slug: "", category: "Tequila", excerpt: "", content: "", cover_image: "", published: true })}
+              onClick={() => {
+                setSelectedAuthorId("");
+                setEditingBlog({ slug: "", title: "", description: "", category: "Noticias", label: "CRÓNICAS", image_url: "/Barra Casa Loy Experiencias.webp", body_es: "", body_en: "" });
+              }}
               className="inline-flex items-center gap-1.5 bg-[#2F403E] hover:bg-[#8C4723] text-white px-3.5 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-colors shadow-2xs"
             >
               <span className="material-symbols-outlined text-base">add</span>
@@ -5730,7 +5766,9 @@ export default function AdminPanel({
                       <button
                         onClick={() => {
                           setSelectedAuthorId("");
-                          setEditingBlog({ slug: "", title: "", description: "", category: "Noticias", label: "PROCESOS", image_url: "", body_es: "", body_en: "" });
+                          setBlogImageBase64("");
+                          setBlogImageFilename("");
+                          setEditingBlog({ slug: "", title: "", description: "", category: "Noticias", label: "CRÓNICAS", image_url: "/Barra Casa Loy Experiencias.webp", body_es: "", body_en: "", seo_keywords: "", related_slugs: [] });
                         }}
                         className="text-xs bg-[#2F403E] hover:bg-[#8C4723] text-white px-3.5 py-2 font-semibold flex items-center gap-1 cursor-pointer shadow-xs"
                       >
@@ -5740,7 +5778,7 @@ export default function AdminPanel({
                   </div>
 
                   {editingBlog && (
-                    <form onSubmit={handleSaveBlog} className="bg-stone-50 border border-stone-200 p-6 space-y-4 max-w-2xl mx-auto">
+                    <form key={editingBlog.id || "new_blog_post"} onSubmit={handleSaveBlog} className="bg-stone-50 border border-stone-200 p-6 space-y-4 max-w-2xl mx-auto">
                       <div className="flex justify-between items-center border-b border-stone-200 pb-2">
                         <h6 className="font-serif text-sm font-bold text-stone-800 uppercase">
                           {editingBlog.id ? "Editar Entrada de Blog" : "Nuevo Artículo de Blog"}
@@ -5763,8 +5801,9 @@ export default function AdminPanel({
                           <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Título *</label>
                           <input type="text" name="title" required defaultValue={editingBlog.title} onChange={(e) => {
                             if (!editingBlog.id) {
-                              const s = e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-                              document.getElementById("blog_slug_input").value = s;
+                              const s = e.target.value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+                              const slugInput = document.getElementById("blog_slug_input");
+                              if (slugInput) slugInput.value = s;
                             }
                           }} className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" />
                         </div>
@@ -5774,11 +5813,12 @@ export default function AdminPanel({
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-3 gap-3">
+                      <div className="grid grid-cols-2 gap-3">
                         <div>
                           <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Categoría *</label>
-                          <select name="category" defaultValue={editingBlog.category} className="w-full bg-white border border-stone-200 p-2.5 text-xs">
+                          <select name="category" defaultValue={editingBlog.category || "Noticias"} className="w-full bg-white border border-stone-200 p-2.5 text-xs">
                             <option value="Noticias">Noticias</option>
+                            <option value="Cultura & Gastronomía">Cultura & Gastronomía</option>
                             <option value="Lanzamientos">Lanzamientos</option>
                             <option value="Datos Relevantes">Datos Relevantes</option>
                             <option value="Festividades">Festividades</option>
@@ -5790,9 +5830,56 @@ export default function AdminPanel({
                           <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Etiqueta (Filtro)*</label>
                           <input type="text" name="label" required defaultValue={editingBlog.label || "PROCESOS"} placeholder="PROCESOS" className="w-full bg-white border border-stone-200 p-2 text-xs" />
                         </div>
-                        <div>
-                          <label className="block text-[10px] text-stone-500 uppercase font-bold mb-1">Imagen de Portada *</label>
-                          <input type="text" name="image_url" required defaultValue={editingBlog.image_url} placeholder="/Agave.webp" className="w-full bg-white border border-stone-200 p-2 text-xs focus:outline-none" />
+                      </div>
+
+                      <div className="bg-white border border-stone-200 p-3 rounded-sm space-y-2">
+                        <label className="block text-[10px] text-stone-500 uppercase font-bold">Imagen de Portada *</label>
+                        <div className="flex flex-col sm:flex-row gap-2">
+                          <input type="text" id="blog_image_url_input" name="image_url" required defaultValue={editingBlog.image_url || "/Barra Casa Loy Experiencias.webp"} placeholder="/Barra Casa Loy Experiencias.webp" className="flex-1 bg-stone-50 border border-stone-200 p-2 text-xs focus:outline-none" />
+                          <label className="bg-stone-800 hover:bg-[#8C4723] text-white text-[10px] font-bold uppercase px-3 py-2 flex items-center justify-center gap-1 cursor-pointer shrink-0">
+                            <span className="material-symbols-outlined text-sm">upload</span>
+                            {blogImageFilename ? "Archivo listo" : "Subir Imagen"}
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+                                setBlogImageFilename(file.name);
+                                const reader = new FileReader();
+                                reader.onload = (ev) => {
+                                  setBlogImageBase64(ev.target.result);
+                                  const inp = document.getElementById("blog_image_url_input");
+                                  if (inp) inp.value = `Subiendo: ${file.name}`;
+                                };
+                                reader.readAsDataURL(file);
+                              }}
+                            />
+                          </label>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5 pt-1">
+                          {[
+                            { label: "Barra Cata", path: "/Barra Casa Loy Experiencias.webp" },
+                            { label: "Gastronomía", path: "/Gastronomia Casa Loy Experiencias.webp" },
+                            { label: "Campos Agave", path: "/Campos de Agave Casa Loy Experiencias.webp" },
+                            { label: "Hacienda", path: "/Hacienda Casa Loy Experiencias.webp" },
+                            { label: "Tahona", path: "/Tahona Casa Loy.webp" }
+                          ].map((imgOpt) => (
+                            <button
+                              key={imgOpt.path}
+                              type="button"
+                              onClick={() => {
+                                setBlogImageBase64("");
+                                setBlogImageFilename("");
+                                const inp = document.getElementById("blog_image_url_input");
+                                if (inp) inp.value = imgOpt.path;
+                              }}
+                              className="text-[10px] bg-stone-100 hover:bg-stone-200 border border-stone-200 px-2 py-0.5 rounded text-stone-600 cursor-pointer"
+                            >
+                              {imgOpt.label}
+                            </button>
+                          ))}
                         </div>
                       </div>
 
@@ -8852,14 +8939,18 @@ export default function AdminPanel({
 
             {/* Form to create/edit author */}
             {editingAuthor ? (
-              <form onSubmit={handleSaveAuthor} className="bg-stone-50 border border-stone-200 p-4 rounded-lg space-y-4">
+              <form key={editingAuthor.id || "new_author"} onSubmit={handleSaveAuthor} className="bg-stone-50 border border-stone-200 p-4 rounded-lg space-y-4">
                 <div className="flex items-center justify-between border-b border-stone-200 pb-2">
                   <h6 className="font-serif text-xs font-bold text-stone-900 uppercase">
                     {editingAuthor.id ? "Editar Autor" : "Registrar Nuevo Autor"}
                   </h6>
                   <button
                     type="button"
-                    onClick={() => setEditingAuthor(null)}
+                    onClick={() => {
+                      setAuthorPhotoBase64("");
+                      setAuthorPhotoFilename("");
+                      setEditingAuthor(null);
+                    }}
                     className="text-xs text-stone-400 hover:text-stone-700 font-semibold"
                   >
                     Cancelar
@@ -8892,20 +8983,44 @@ export default function AdminPanel({
                 </div>
 
                 <div className="text-xs space-y-1.5">
-                  <label className="block text-[10px] text-stone-500 uppercase font-bold">Foto del Autor (URL o Ruta) *</label>
-                  <input
-                    type="text"
-                    id="author_photo_modal_input"
-                    name="photo"
-                    required
-                    defaultValue={editingAuthor.photo || "/Don Manuel Loy.webp"}
-                    className="w-full bg-white border border-stone-300 p-2 rounded focus:outline-none focus:border-[#8C4723]"
-                  />
+                  <label className="block text-[10px] text-stone-500 uppercase font-bold">Foto del Autor (URL o Subir Archivo) *</label>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      type="text"
+                      id="author_photo_modal_input"
+                      name="photo"
+                      required
+                      defaultValue={editingAuthor.photo || "/Logotipo Casa Loy Tequilera.webp"}
+                      className="flex-1 bg-white border border-stone-300 p-2 rounded focus:outline-none focus:border-[#8C4723]"
+                    />
+                    <label className="bg-stone-800 hover:bg-[#8C4723] text-white text-[10px] font-bold uppercase px-3 py-2 rounded flex items-center justify-center gap-1 cursor-pointer shrink-0">
+                      <span className="material-symbols-outlined text-sm">upload</span>
+                      {authorPhotoFilename ? "Foto lista" : "Subir Foto"}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          setAuthorPhotoFilename(file.name);
+                          const reader = new FileReader();
+                          reader.onload = (ev) => {
+                            setAuthorPhotoBase64(ev.target.result);
+                            const input = document.getElementById("author_photo_modal_input");
+                            if (input) input.value = `Subiendo: ${file.name}`;
+                          };
+                          reader.readAsDataURL(file);
+                        }}
+                      />
+                    </label>
+                  </div>
                   {/* Quick-pick photos from project */}
                   <div className="pt-1">
                     <span className="text-[10px] text-stone-400 block mb-1">Fotos sugeridas de Casa Loy (clic para seleccionar):</span>
                     <div className="flex flex-wrap gap-1.5">
                       {[
+                        { label: "Casa Loy (Logo)", path: "/Logotipo Casa Loy Tequilera.webp" },
                         { label: "Don Manuel Loy", path: "/Don Manuel Loy.webp" },
                         { label: "Sergio Chef", path: "/Sergio Chef.webp" },
                         { label: "Jimador de Origen", path: "/Empleado Jimador Casa Loy Tequilera.webp" },
@@ -8916,6 +9031,8 @@ export default function AdminPanel({
                           key={opt.path}
                           type="button"
                           onClick={() => {
+                            setAuthorPhotoBase64("");
+                            setAuthorPhotoFilename("");
                             const input = document.getElementById("author_photo_modal_input");
                             if (input) input.value = opt.path;
                           }}
