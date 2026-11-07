@@ -226,50 +226,154 @@ export default function BlogPost({ lang = "es", setPage }) {
       }
       updateMeta("og:url", window.location.href);
 
-      const schema = {
-        "@context": "https://schema.org",
-        "@type": "BlogPosting",
-        "headline": postTitle,
-        "description": postDesc,
-        "image": post.image_url || "https://casaloy.com/Barra%20Casa%20Loy%20Experiencias.webp",
-        "datePublished": post.published_at || post.created_at,
-        "dateModified": post.published_at || post.created_at,
-        "interactionStatistic": [
-          {
-            "@type": "InteractionCounter",
-            "interactionType": "https://schema.org/ReadAction",
-            "userInteractionCount": viewsCount
-          },
-          {
-            "@type": "InteractionCounter",
-            "interactionType": "https://schema.org/LikeAction",
-            "userInteractionCount": likesCount
-          },
-          {
-            "@type": "InteractionCounter",
-            "interactionType": "https://schema.org/CommentAction",
-            "userInteractionCount": comments.length
+      const schema = post.slug === "manuel-loy-reconocimiento-industriales-de-jalisco"
+        ? {
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "NewsArticle",
+                "headline": "¿Quién es Manuel Loy, el agavero reconocido en Jalisco?",
+                "description": "Manuel Loy sembró sus primeros agaves a los 17 años en Ayotlán. Industriales de Jalisco lo reconoció en 2026. Qué significa su historia para una marca.",
+                "keywords": "Manuel Loy, Grupo Orbe XXI, productor de tequila en Los Altos de Jalisco, Casa Loy Tequilera",
+                "inLanguage": "es-MX",
+                "datePublished": "2026-11-05",
+                "dateModified": "2026-11-05",
+                "author": {
+                  "@type": "Person",
+                  "name": "Luis Loy Valdez",
+                  "jobTitle": "Director General"
+                },
+                "publisher": {
+                  "@type": "Organization",
+                  "name": "Casa Loy Tequilera"
+                },
+                "about": {
+                  "@type": "Person",
+                  "name": "Manuel Loy Aceves",
+                  "birthDate": "1937",
+                  "birthPlace": {
+                    "@type": "Place",
+                    "name": "Ayotlán, Jalisco, México"
+                  },
+                  "worksFor": {
+                    "@type": "Organization",
+                    "name": "Grupo Orbe XXI"
+                  }
+                },
+                "mentions": [
+                  {
+                    "@type": "Organization",
+                    "name": "Casa Loy Tequilera",
+                    "parentOrganization": {
+                      "@type": "Organization",
+                      "name": "Grupo Orbe XXI"
+                    },
+                    "address": {
+                      "@type": "PostalAddress",
+                      "addressLocality": "Ayotlán",
+                      "addressRegion": "Jalisco",
+                      "addressCountry": "MX"
+                    }
+                  },
+                  {
+                    "@type": "Organization",
+                    "name": "Consejo de Cámaras Industriales de Jalisco"
+                  },
+                  {
+                    "@type": "Organization",
+                    "name": "Consejo Coordinador Industrial Altos Sur"
+                  }
+                ],
+                "citation": [
+                  "https://www.informador.mx/jalisco/industriales-de-jalisco-entregan-de-manera-postuma-la-medalla-al-merito-industrial-a-raymundo-gomez-flores-20261104-0217.html",
+                  "https://www.metropolijal.mx/jalisco/industriales-de-jalisco-entregan-de-manera-postuma-la-medalla-al-merito-industrial-a-raymundo-gomez-flores-20261104-0012.html",
+                  "https://foodandpleasure.com/experiencia-tequilera-casa-loy/",
+                  "https://bartenderspiritsawards.com/en/winner-companies/2025/tequilera-casa-loy-3233.htm"
+                ]
+              },
+              {
+                "@type": "FAQPage",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "¿Quién es Manuel Loy?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Manuel Loy Aceves es un agavero y empresario nacido en 1937 en Ayotlán, Jalisco. Es la cabeza de la familia detrás de Grupo Orbe XXI y de Casa Loy Tequilera, productor con NOM 1633 en Los Altos de Jalisco."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "¿Qué reconocimiento recibió Manuel Loy en 2026?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Industriales de Jalisco (CCIJ) lo reconoció el 4 de noviembre de 2026 entre 23 empresarios destacados en su ramo, en el 60 aniversario del Consejo. Lo propuso el Consejo Coordinador Industrial Altos Sur, por Grupo Orbe XXI."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "¿Qué es Grupo Orbe XXI?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Es el grupo de la familia Loy, con más de 60 años de trayectoria en el campo y la industria de alimentos. Cultiva agave desde 1992, y de él forma parte Casa Loy Tequilera."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "¿Casa Loy Tequilera produce tequila artesanal?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "Sí, cuando ese es el perfil que busca la marca. Hay métodos para cada etapa, de lo más artesanal (horno de mampostería, tahona, tanque abierto, alambique de cobre) a lo más comercial, y en cada etapa se usa el que define el cliente."
+                    }
+                  }
+                ]
+              }
+            ]
           }
-        ],
-        "author": {
-          "@type": "Person",
-          "name": post.author_es || "Maestro Tequilero Casa Loy",
-          "jobTitle": post.author_role || "Maestro Tequilero",
-          "worksFor": {
-            "@type": "Organization",
-            "name": "Casa Loy Tequilera"
-          }
-        },
-        "publisher": {
-          "@type": "Organization",
-          "name": "Casa Loy Tequilera",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://casaloy.com/Logotipo%20Casa%20Loy%20Tequilera.webp"
-          }
-        },
-        "keywords": postKeywords
-      };
+        : {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": postTitle,
+            "description": postDesc,
+            "image": post.image_url || "https://casaloy.com/Barra%20Casa%20Loy%20Experiencias.webp",
+            "datePublished": post.published_at || post.created_at,
+            "dateModified": post.published_at || post.created_at,
+            "interactionStatistic": [
+              {
+                "@type": "InteractionCounter",
+                "interactionType": "https://schema.org/ReadAction",
+                "userInteractionCount": viewsCount
+              },
+              {
+                "@type": "InteractionCounter",
+                "interactionType": "https://schema.org/LikeAction",
+                "userInteractionCount": likesCount
+              },
+              {
+                "@type": "InteractionCounter",
+                "interactionType": "https://schema.org/CommentAction",
+                "userInteractionCount": comments.length
+              }
+            ],
+            "author": {
+              "@type": "Person",
+              "name": post.author_es || "Maestro Tequilero Casa Loy",
+              "jobTitle": post.author_role || "Maestro Tequilero",
+              "worksFor": {
+                "@type": "Organization",
+                "name": "Casa Loy Tequilera"
+              }
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "Casa Loy Tequilera",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://casaloy.com/Logotipo%20Casa%20Loy%20Tequilera.webp"
+              }
+            },
+            "keywords": postKeywords
+          };
 
       scriptTag = document.createElement("script");
       scriptTag.id = "blog-post-jsonld";
