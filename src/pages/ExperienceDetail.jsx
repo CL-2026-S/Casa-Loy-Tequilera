@@ -463,10 +463,21 @@ export default function ExperienceDetail({
   const [cfdiUse, setCfdiUse] = useState("");
   const [cardType, setCardType] = useState("");
   const [paypalPendingCode, setPaypalPendingCode] = useState(null);
+  const [isResendingEmail, setIsResendingEmail] = useState(false);
+  const [emailCooldownSeconds, setEmailCooldownSeconds] = useState(0);
 
   // Coupon / Discount states
   const [couponCodeInput, setCouponCodeInput] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState(null); // { code, discount_type, value }
+
+  // Countdown timer for email resend button
+  useEffect(() => {
+    if (emailCooldownSeconds <= 0) return;
+    const interval = setInterval(() => {
+      setEmailCooldownSeconds((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [emailCooldownSeconds]);
   const [couponError, setCouponError] = useState("");
   const [couponSuccess, setCouponSuccess] = useState("");
   const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
@@ -1189,9 +1200,12 @@ export default function ExperienceDetail({
                           <span>WhatsApp</span>
                         </a>
 
-                        {/* Email trigger */}
+                        {/* Email trigger with anti-spam cooldown and loading state */}
                         <button
+                          disabled={isResendingEmail || emailCooldownSeconds > 0}
                           onClick={async () => {
+                            if (isResendingEmail || emailCooldownSeconds > 0) return;
+                            setIsResendingEmail(true);
                             try {
                               const res = await fetch("/api/tourism", {
                                 method: "POST",
@@ -1202,23 +1216,43 @@ export default function ExperienceDetail({
                                   email: clientEmail
                                 })
                               });
+                              const data = await res.json().catch(() => ({}));
                               if (res.ok) {
+                                setEmailCooldownSeconds(60);
                                 alert(lang === "es" 
                                   ? `¡Ticket de acceso enviado con éxito a ${clientEmail}!` 
                                   : `Access ticket successfully sent to ${clientEmail}!`
                                 );
+                              } else if (res.status === 429) {
+                                setEmailCooldownSeconds(data.wait_seconds || 60);
+                                alert(data.message || (lang === "es" ? "Por favor espera antes de volver a enviar." : "Please wait before resending."));
                               } else {
                                 alert(lang === "es" ? "Error al enviar el correo." : "Error sending email.");
                               }
                             } catch (e) {
                               console.error(e);
                               alert(lang === "es" ? "Error de conexión." : "Connection error.");
+                            } finally {
+                              setIsResendingEmail(false);
                             }
                           }}
-                          className="flex items-center justify-center gap-2 border border-primary text-primary hover:bg-primary/5 py-2.5 font-sans font-bold text-xs transition-colors cursor-pointer text-center"
+                          className={`flex items-center justify-center gap-2 border py-2.5 font-sans font-bold text-xs transition-colors text-center ${
+                            isResendingEmail || emailCooldownSeconds > 0
+                              ? "border-stone-300 text-stone-400 bg-stone-100 cursor-not-allowed"
+                              : "border-primary text-primary hover:bg-primary/5 cursor-pointer"
+                          }`}
                         >
-                          <span className="material-symbols-outlined text-sm">mail</span>
-                          <span>{lang === "es" ? "Enviar por Correo" : "Send to Email"}</span>
+                          <span className={`material-symbols-outlined text-sm ${isResendingEmail ? 'animate-spin' : ''}`}>
+                            {isResendingEmail ? 'sync' : emailCooldownSeconds > 0 ? 'schedule' : 'mail'}
+                          </span>
+                          <span>
+                            {isResendingEmail 
+                              ? (lang === "es" ? "Enviando..." : "Sending...")
+                              : emailCooldownSeconds > 0 
+                                ? (lang === "es" ? `Reenviar en ${emailCooldownSeconds}s` : `Resend in ${emailCooldownSeconds}s`)
+                                : (lang === "es" ? "Enviar por Correo" : "Send to Email")
+                            }
+                          </span>
                         </button>
                       </div>
                     </div>

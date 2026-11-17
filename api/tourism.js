@@ -2,6 +2,9 @@ import { supabase, authorizeInternal } from './_utils/clients.js';
 import { sendBookingEmail } from './_utils/emails.js';
 import { getAuthUser, auditLog, userHasRole } from './_utils/auth.js';
 
+// Rate-limiting map for manual resend requests: code -> timestamp
+const resendRateLimitMap = new Map();
+
 const getCurrentGuadalajaraTime = () => {
   try {
     const formatter = new Intl.DateTimeFormat('en-US', {
@@ -613,17 +616,31 @@ export default async function handler(req, res) {
         return res.status(200).json({ success: true });
       }
 
-      // Action 8: Resend Booking Confirmation Email
+      // Action 8: Resend Booking Confirmation Email (Rate-limited to 1 request per 60 seconds per reservation code)
       if (action === 'resend_email') {
         const { code, email } = req.body;
         if (!code || !email) {
           return res.status(400).json({ error: 'Code and email are required.' });
         }
 
+        const normalizedCode = code.trim().toUpperCase();
+
+        // Enforce 60-second cooldown per booking code to prevent email spam / flooding
+        const now = Date.now();
+        const lastSent = resendRateLimitMap.get(normalizedCode);
+        if (lastSent && (now - lastSent) < 60000) {
+          const waitSecs = Math.ceil((60000 - (now - lastSent)) / 1000);
+          return res.status(429).json({
+            error: 'RATE_LIMITED',
+            message: `El correo ya fue enviado recientemente. Por favor espera ${waitSecs} segundos antes de solicitar otro reenvío.`,
+            wait_seconds: waitSecs
+          });
+        }
+
         const { data: ticket, error: tErr } = await supabase
           .from('reservations')
           .select('*')
-          .eq('code', code.trim().toUpperCase())
+          .eq('code', normalizedCode)
           .maybeSingle();
 
         if (tErr) throw tErr;
@@ -638,6 +655,7 @@ export default async function handler(req, res) {
           });
         }
 
+        // Send to customer only (notifyAdmins = false) to avoid spamming staff inboxes on customer clicks
         const emailRes = await sendBookingEmail(email, {
           code: ticket.code,
           customer_name: ticket.customer_name,
@@ -656,11 +674,14 @@ export default async function handler(req, res) {
           postal_code: ticket.postal_code || '',
           regimen_fiscal: ticket.regimen_fiscal || '',
           cfdi_use: ticket.cfdi_use || ''
-        });
+        }, false);
 
         if (!emailRes.success) {
           return res.status(500).json({ error: 'EMAIL_SEND_FAILED', message: emailRes.error });
         }
+
+        // Record cooldown timestamp
+        resendRateLimitMap.set(normalizedCode, now);
 
         return res.status(200).json({ success: true });
       }

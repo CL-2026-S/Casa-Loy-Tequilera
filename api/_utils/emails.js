@@ -336,8 +336,9 @@ export async function sendMonthlyNewsletter(subscribers, articles, siteUrl) {
  * Sends a confirmation email for a booking, containing the QR ticket.
  * @param {string} email 
  * @param {object} bookingDetails 
+ * @param {boolean} notifyAdmins - Whether to also send notification copy to internal staff (false for manual resends)
  */
-export async function sendBookingEmail(email, bookingDetails) {
+export async function sendBookingEmail(email, bookingDetails, notifyAdmins = true) {
   if (!resend) {
     console.warn("Resend client not configured. Skipping booking email.");
     return { success: false, error: "Resend not initialized" };
@@ -588,14 +589,15 @@ export async function sendBookingEmail(email, bookingDetails) {
       html: html,
     });
 
-    // Send admin notification automatically to tour and invoicing departments
-    try {
-      const adminEmails = ['turismo@casaloy.com', 'turismo2@casaloy.com', 'turismo3@casaloy.com', 'turismocasaloy@gmail.com'];
-      if (requires_invoice) {
-        adminEmails.push('cuentasporcobrar@casaloy.com');
-      }
+    // Send admin notification automatically to tour and invoicing departments (only for initial bookings, skipped on customer resends)
+    if (notifyAdmins) {
+      try {
+        const adminEmails = ['turismo@casaloy.com', 'turismo2@casaloy.com', 'turismo3@casaloy.com', 'turismocasaloy@gmail.com'];
+        if (requires_invoice) {
+          adminEmails.push('cuentasporcobrar@casaloy.com');
+        }
 
-      const adminHtml = `
+        const adminHtml = `
         <!DOCTYPE html>
         <html lang="es">
         <head>
@@ -655,15 +657,16 @@ export async function sendBookingEmail(email, bookingDetails) {
         </html>
       `;
 
-      await resend.emails.send({
-        from: fromEmail,
-        to: adminEmails,
-        bcc: ['jgutierrez@casaloy.com'],
-        subject: `Nueva Reserva Tour: ${code} - ${customer_name}`,
-        html: adminHtml
-      });
-    } catch (adminMailErr) {
-      console.error("Error sending notification copy to tour admin emails:", adminMailErr);
+        await resend.emails.send({
+          from: fromEmail,
+          to: adminEmails,
+          bcc: ['jgutierrez@casaloy.com'],
+          subject: `Nueva Reserva Tour: ${code} - ${customer_name}`,
+          html: adminHtml
+        });
+      } catch (adminMailErr) {
+        console.error("Error sending notification copy to tour admin emails:", adminMailErr);
+      }
     }
 
     if (error) {
