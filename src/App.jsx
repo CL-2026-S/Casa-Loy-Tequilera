@@ -78,6 +78,7 @@ const routesMap = {
   "/mfqm": { page: "vcard-mfqm", lang: null },
 
   // English Paths
+  "/en": { page: "home", lang: "en" },
   "/about": { page: "about", lang: "en" },
   "/about-us": { page: "about", lang: "en" },
   "/private-label": { page: "maquilas", lang: "en" },
@@ -266,7 +267,7 @@ export default function App() {
         "vcard-mfqm": "/contact/mfqm"
       },
       en: {
-        "home": "/",
+        "home": "/en",
         "home-interactive": "/interactivo",
         "about": "/about",
         "maquilas": "/private-label",
@@ -544,6 +545,7 @@ export default function App() {
         <main className="min-h-screen">
           <Routes>
             <Route path="/" element={<Home lang={lang} setPage={setPage} setLang={setLang} />} />
+            <Route path="/en" element={<Home lang="en" setPage={setPage} setLang={setLang} />} />
             <Route path="/editorial-preview" element={<Home lang={lang} setPage={setPage} setLang={setLang} />} />
             <Route path="/interactivo" element={<HomeInteractive lang={lang} setPage={setPage} />} />
             
