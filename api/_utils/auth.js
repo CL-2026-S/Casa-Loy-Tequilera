@@ -58,6 +58,12 @@ export async function auditLog(userId, email, role, action, details) {
   }
 }
 
+// Helper for logging audit actions from decoded JWT user objects
+export async function logAuditAction(user, action, details) {
+  if (!user) return;
+  return auditLog(user.id, user.email, user.role, action, details);
+}
+
 // Helper to extract and verify JWT user from request headers
 export function getAuthUser(req) {
   const authHeader = req.headers.authorization;

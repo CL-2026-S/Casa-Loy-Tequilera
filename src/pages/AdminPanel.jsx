@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { jobsData } from "../data/jobs";
 import ExecutiveAnalyticsDashboard from "../components/admin/ExecutiveAnalyticsDashboard";
