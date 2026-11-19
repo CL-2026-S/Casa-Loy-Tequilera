@@ -59,6 +59,7 @@ const routesMap = {
   "/turismo/oro": { page: "experience-oro", lang: "es" },
   "/turismo/platino": { page: "experience-platino", lang: "es" },
   "/turismo/diamante": { page: "experience-diamante", lang: "es" },
+  "/1937-nativo-restaurante": { page: "nativo", lang: "es" },
   "/nativo": { page: "nativo", lang: "es" },
   "/donde-comprar": { page: "where-to-buy", lang: "es" },
   "/blog": { page: "blog", lang: null }, // Shared
@@ -103,6 +104,7 @@ const routesMap = {
   "/tourism/gold": { page: "experience-oro", lang: "en" },
   "/tourism/platinum": { page: "experience-platino", lang: "en" },
   "/tourism/diamond": { page: "experience-diamante", lang: "en" },
+  "/1937-nativo-restaurant": { page: "nativo", lang: "en" },
   "/restaurant-nativo": { page: "nativo", lang: "en" },
   "/where-to-buy": { page: "where-to-buy", lang: "en" },
   "/careers": { page: "careers", lang: "en" },
@@ -254,7 +256,7 @@ export default function App() {
         "experience-oro": "/turismo/oro",
         "experience-platino": "/turismo/platino",
         "experience-diamante": "/turismo/diamante",
-        "nativo": "/nativo",
+        "nativo": "/1937-nativo-restaurante",
         "where-to-buy": "/donde-comprar",
         "blog": "/blog",
         "careers": "/bolsa-de-trabajo",
@@ -280,7 +282,7 @@ export default function App() {
         "experience-oro": "/tourism/gold",
         "experience-platino": "/tourism/platinum",
         "experience-diamante": "/tourism/diamond",
-        "nativo": "/restaurant-nativo",
+        "nativo": "/1937-nativo-restaurant",
         "where-to-buy": "/where-to-buy",
         "blog": "/blog",
         "careers": "/careers",
@@ -335,7 +337,7 @@ export default function App() {
         "experience-oro": "/turismo/oro",
         "experience-platino": "/turismo/platino",
         "experience-diamante": "/turismo/diamante",
-        nativo: "/nativo",
+        nativo: "/1937-nativo-restaurante",
         "where-to-buy": "/donde-comprar",
         blog: "/blog",
         "blog-post": "/blog/el-arte-de-la-cata",
@@ -367,7 +369,7 @@ export default function App() {
         "experience-oro": "/tourism/gold",
         "experience-platino": "/tourism/platinum",
         "experience-diamante": "/tourism/diamond",
-        nativo: "/restaurant-nativo",
+        nativo: "/1937-nativo-restaurant",
         "where-to-buy": "/where-to-buy",
         blog: "/blog",
         "blog-post": "/blog/el-arte-de-la-cata",
@@ -691,8 +693,10 @@ export default function App() {
               />
             } />
             
-            <Route path="/nativo" element={<Nativo1937 t={t} lang={lang} />} />
-            <Route path="/restaurant-nativo" element={<Nativo1937 t={t} lang={lang} />} />
+            <Route path="/1937-nativo-restaurante" element={<Nativo1937 t={t} lang={lang} />} />
+            <Route path="/1937-nativo-restaurant" element={<Nativo1937 t={t} lang={lang} />} />
+            <Route path="/nativo" element={<Navigate to="/1937-nativo-restaurante" replace />} />
+            <Route path="/restaurant-nativo" element={<Navigate to="/1937-nativo-restaurant" replace />} />
             
             <Route path="/donde-comprar" element={<WhereToBuy t={t} lang={lang} country={country} />} />
             <Route path="/where-to-buy" element={<WhereToBuy t={t} lang={lang} country={country} />} />

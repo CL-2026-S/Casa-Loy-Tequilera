@@ -1200,7 +1200,7 @@ export default function ExecutiveAnalyticsDashboard({
           <div className="bg-white border border-stone-200/90 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all hover:border-stone-500/60 group relative overflow-hidden">
             <div className="flex items-center justify-between">
               <span className="text-[11px] uppercase tracking-wider font-bold text-stone-500">
-                Leads Maquilas B2B
+                Leads Maquila & Bulk
               </span>
               <div className="w-8 h-8 rounded-xl bg-stone-100 text-stone-700 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
                 <span className="material-symbols-outlined text-lg">business_center</span>
@@ -1213,7 +1213,7 @@ export default function ExecutiveAnalyticsDashboard({
               </div>
               <div className="flex items-center justify-between mt-2 pt-2 border-t border-stone-100 text-xs">
                 <span className="text-blue-700 font-bold bg-blue-50 px-2 py-0.5 rounded-full text-[11px]">
-                  Marca Privada
+                  Marca Privada & Granel
                 </span>
                 <span className="text-stone-600 font-medium text-[11px]">
                   {filteredMaquilaLeads.filter((m) => m.stage === "new" || !m.stage).length} nuevos por atender
@@ -1994,7 +1994,7 @@ export default function ExecutiveAnalyticsDashboard({
               { id: "tours", label: "Reservas de Tours", count: filteredTourBookings.length, icon: "confirmation_number" },
               { id: "newsletter", label: "Inscritos al Newsletter", count: filteredSubscribers.length, icon: "mark_email_read" },
               { id: "restaurant", label: "Mesas Reservas Nativo", count: filteredRestBookings.length, icon: "restaurant" },
-              { id: "maquila", label: "Leads Maquilas B2B", count: filteredMaquilaLeads.length, icon: "business_center" },
+              { id: "maquila", label: "Leads Maquilas & Bulk", count: filteredMaquilaLeads.length, icon: "business_center" },
             ].map((tab) => {
               const isActive = activeTableTab === tab.id;
               return (

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+﻿import { useState, useEffect, useRef } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { jobsData } from "../data/jobs";
 import ExecutiveAnalyticsDashboard from "../components/admin/ExecutiveAnalyticsDashboard";
@@ -3438,8 +3438,9 @@ export default function AdminPanel({
       (lead.origin && lead.origin.toLowerCase().includes(query));
 
     const activeLeadType = lead.lead_type || lead.objective || '';
+    const isBulkLead = lead.lead_type === 'bulk_tequila' || lead.origin === 'bulk' || lead.origin === 'granel';
     const matchesType = maquilaLeadTypeFilter === 'all' || 
-      activeLeadType.toLowerCase() === maquilaLeadTypeFilter.toLowerCase();
+      (maquilaLeadTypeFilter === 'bulk_tequila' ? isBulkLead : activeLeadType.toLowerCase() === maquilaLeadTypeFilter.toLowerCase());
 
     return matchesSearch && matchesType;
   });
@@ -3788,7 +3789,7 @@ export default function AdminPanel({
       items: [
         {
           id: "maquila_leads",
-          label: "Leads Maquila",
+          label: "Leads Maquila & Bulk",
           icon: "business_center",
           badge: maquilaLeadsList.length > 0 ? maquilaLeadsList.length : null,
           roles: ["admin", "lead_maquila", "editor", "viewer"],
@@ -9021,9 +9022,9 @@ export default function AdminPanel({
               <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-stone-100 pb-4">
                 <div>
                   <h5 className="text-sm uppercase tracking-wider text-[#8C4723] font-bold font-sans">
-                    Leads de Maquila B2B
+                    Leads de Maquila B2B & Granel (Bulk)
                   </h5>
-                  <p className="text-xs text-stone-400 font-sans">Listado y registro de prospectos para maquila de marca privada.</p>
+                  <p className="text-xs text-stone-400 font-sans">Listado y registro de prospectos para maquila de marca privada y tequila a granel.</p>
                 </div>
                 
                 {!userHasRole("viewer") && (
@@ -9236,6 +9237,7 @@ export default function AdminPanel({
                     <option value="Importador">Importador</option>
                     <option value="Empresario">Empresario</option>
                     <option value="Marca Existente">Marca Existente</option>
+                    <option value="bulk_tequila">Tequila a Granel / Bulk</option>
                     <option value="Otro">Otro</option>
                   </select>
                 </div>
@@ -9305,7 +9307,8 @@ export default function AdminPanel({
                       </tr>
                     ) : (
                       filteredMaquilaLeads.map((lead) => {
-                        const leadTypeVal = lead.lead_type || lead.objective || 'Empresario';
+                        const isBulk = lead.lead_type === 'bulk_tequila' || lead.origin === 'bulk' || lead.origin === 'granel';
+                        const leadTypeVal = isBulk ? 'Granel / Bulk' : (lead.lead_type || lead.objective || 'Empresario');
                         return (
                           <tr key={lead.id} className="hover:bg-stone-50/40 text-stone-700">
                             <td className="p-3 text-stone-400 whitespace-nowrap">
@@ -9324,6 +9327,7 @@ export default function AdminPanel({
                             <td className="p-3 font-medium">{lead.solution || 'No especificado'}</td>
                             <td className="p-3 text-center">
                               <span className={`inline-block px-2 py-0.5 text-[9px] uppercase tracking-wider font-bold rounded-sm border ${
+                                isBulk ? "bg-teal-50 text-teal-800 border-teal-200" :
                                 leadTypeVal === "Importador" ? "bg-blue-50 text-blue-800 border-blue-200" :
                                 leadTypeVal === "Marca Existente" ? "bg-purple-50 text-purple-800 border-purple-200" :
                                 leadTypeVal === "Empresario" ? "bg-amber-50 text-amber-800 border-amber-200" :
@@ -9420,7 +9424,8 @@ export default function AdminPanel({
                   </div>
                 ) : (
                   filteredMaquilaLeads.map((lead) => {
-                    const leadTypeVal = lead.lead_type || lead.objective || 'Empresario';
+                    const isBulk = lead.lead_type === 'bulk_tequila' || lead.origin === 'bulk' || lead.origin === 'granel';
+                    const leadTypeVal = isBulk ? 'Granel / Bulk' : (lead.lead_type || lead.objective || 'Empresario');
                     return (
                       <div key={lead.id} className="bg-white border border-stone-200 p-4 rounded shadow-sm text-left space-y-2">
                         <div className="flex justify-between items-start">
@@ -9433,6 +9438,7 @@ export default function AdminPanel({
                           </div>
                           
                           <span className={`inline-block px-2 py-0.5 text-[9px] uppercase tracking-wider font-bold rounded-sm border ${
+                            isBulk ? "bg-teal-50 text-teal-800 border-teal-200" :
                             leadTypeVal === "Importador" ? "bg-blue-50 text-blue-800 border-blue-200" :
                             leadTypeVal === "Marca Existente" ? "bg-purple-50 text-purple-800 border-purple-200" :
                             leadTypeVal === "Empresario" ? "bg-amber-50 text-amber-800 border-amber-200" :

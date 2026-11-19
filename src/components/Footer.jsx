@@ -201,7 +201,7 @@ export default function Footer({ lang = "es", setPage }) {
                       granel: "/granel",
                       solutions: "/soluciones",
                       turismo: "/turismo",
-                      nativo: "/nativo",
+                      nativo: "/1937-nativo-restaurante",
                       blog: "/blog",
                       careers: "/bolsa-de-trabajo"
                     },
@@ -210,7 +210,7 @@ export default function Footer({ lang = "es", setPage }) {
                       granel: "/bulk",
                       solutions: "/solutions",
                       turismo: "/tourism",
-                      nativo: "/restaurant-nativo",
+                      nativo: "/1937-nativo-restaurant",
                       blog: "/blog",
                       careers: "/careers"
                     }

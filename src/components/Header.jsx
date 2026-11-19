@@ -15,7 +15,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
         granel: "/granel",
         brands: "/marcas",
         turismo: "/turismo",
-        nativo: "/nativo",
+        nativo: "/1937-nativo-restaurante",
         "where-to-buy": "/donde-comprar"
       },
       en: {
@@ -25,7 +25,7 @@ export default function Header({ lang, setLang, t, page, setPage }) {
         granel: "/bulk",
         brands: "/brands",
         turismo: "/tourism",
-        nativo: "/restaurant-nativo",
+        nativo: "/1937-nativo-restaurant",
         "where-to-buy": "/where-to-buy"
       }
     };

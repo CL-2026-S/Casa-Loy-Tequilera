@@ -628,7 +628,7 @@ const pathMap = {
   "experience-oro": { es: "/turismo/oro", en: "/tourism/gold" },
   "experience-platino": { es: "/turismo/platino", en: "/tourism/platinum" },
   "experience-diamante": { es: "/turismo/diamante", en: "/tourism/diamond" },
-  nativo: { es: "/nativo", en: "/restaurant-nativo" },
+  nativo: { es: "/1937-nativo-restaurante", en: "/1937-nativo-restaurant" },
   "where-to-buy": { es: "/donde-comprar", en: "/where-to-buy" },
   blog: { es: "/blog", en: "/blog" },
   careers: { es: "/bolsa-de-trabajo", en: "/careers" },

@@ -155,20 +155,20 @@
 
   <!-- Restaurante 1937 Nativo / 1937 Nativo Restaurant -->
   <url>
-    <loc>https://casaloy.com/nativo</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/nativo" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/restaurant-nativo" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/nativo" />
-    <lastmod>2026-07-28</lastmod>
+    <loc>https://casaloy.com/1937-nativo-restaurante</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/1937-nativo-restaurante" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/1937-nativo-restaurant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/1937-nativo-restaurante" />
+    <lastmod>2026-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://casaloy.com/restaurant-nativo</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/nativo" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/restaurant-nativo" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/nativo" />
-    <lastmod>2026-07-28</lastmod>
+    <loc>https://casaloy.com/1937-nativo-restaurant</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://casaloy.com/1937-nativo-restaurante" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://casaloy.com/1937-nativo-restaurant" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://casaloy.com/1937-nativo-restaurante" />
+    <lastmod>2026-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
